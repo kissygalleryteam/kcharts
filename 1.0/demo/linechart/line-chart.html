@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>A Simple Linechart</title>
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style type="text/css">
+#demo1{
+	width:800px;
+	height:300px;
+	border: 1px solid #ccc;
+	margin:40px auto;
+}
+</style>
+</head>
+<body>
+<h3>A Simple Linechart Demo</h3>
+<div id="demo1"></div>
+<script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy-min.js"></script>
+<script>
+(function(S){
+
+	S.Config.debug = true;
+
+	S.config({
+	  packages:[
+	    {
+	      name:"gallery",
+	      tag:"20130118",
+	       path:"http://a.tbcdn.cn/s/kissy/",
+	      charset:"utf-8"
+	    }
+	  ]
+	});
+
+	S.use('gallery/kcharts/1.0/linechart/index',function(S,LineChart){
+	
+		var lineChart = new LineChart({
+			renderTo:"#demo1",
+			title:{
+            	content:"1周消费记录",
+            	css:{
+            	}
+            },
+            anim:{},
+            subTitle:{
+            	content:"week fee record",
+            	css:{
+
+            	}
+            },
+			 xAxis: {
+			 		text:['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
+            },
+            yAxis:{
+            	min:0
+            },
+			series:[
+				{
+					data:[{y:100,week:'星期一'},{y:4000,week:'星期二'},{y:120,week:'星期三'},{y:234,week:'星期四'},{y:234,week:'星期五'},{y:234,week:'星期六'},{y:234,week:'星期日'}]
+				}
+			],
+			defineKey:{
+				x:"week",
+				y:"y"
+			},
+			tip:{
+				template:"总支出：<span>{{y}}</span> 元<br/>",
+				css:{"border-color":"{COLOR}"}
+			}
+		});
+
+	});
+
+})(KISSY);
+</script>
+</body>
+</html>

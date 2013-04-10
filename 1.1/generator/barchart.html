@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>在线图表生成器 KCharts 1.1 beta</title>
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<link rel="stylesheet" href="index.css" />
+</head>
+<body>
+<div class="banner">KCharts 1.1 在线图表生成器 beta</div>
+<div class="nav">
+	<ul>
+		<li><a href="index.html">线图</a></li>
+		<li><a href="barchart.html" class="cur">柱图</a></li>
+		<li><a href="piechart.html">饼图</a></li>
+	</ul>
+</div>
+<div class="config-panel">
+<table>
+
+	<tr>
+		<td class="attr-name" colspan="2">皮肤(themeCls)</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name"></td>
+		<td>
+			<select class="ks-chart-gen-attrs" attrname="themeCls">
+				<option value="ks-chart-default">default</option>
+				<option value="ks-chart-analytiks">analytiks</option>
+				<option value="ks-chart-rainbow">rainbow</option>
+			</select>
+		</td>
+	</tr>
+
+
+
+
+	<tr>
+		<td class="attr-name" colspan="2">标题(title)</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="title" subattrname="isShow" checked="checked"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">文本\html(content):</td>
+		<td><input type="text" class="ks-chart-gen-attrs" attrname="title" subattrname="content" value="请输入标题"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体颜色(css:color):</td>
+		<td><input type="text" id="J_title_color" class="ks-chart-gen-attrs iColorPicker" attrname="title" attrtype="css" subattrname="color"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体(css:font-family):</td>
+		<td>
+			<select class="ks-chart-gen-attrs" attrname="title" attrtype="css" subattrname="font-family">
+				<option value="宋体">宋体</option>
+				<option value="黑体">黑体</option>
+				<option value="Microsoft Yahei">微软雅黑</option>
+				<option value="tahoma">tahoma</option>
+				<option value="arial">arial</option>
+				<option value="fantasy">fantasy</option>
+				<option value="verdana">verdana</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体大小(css:font-size):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="title" attrtype="css" subattrname="font-size"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体粗细(css:font-weight):</td>
+		<td>
+		<select class="ks-chart-gen-attrs" attrname="title" attrtype="css" subattrname="font-weight">
+			<option value="normal">正常(normal)</option>
+			<option value="bold">加粗(bold)</option>
+		</select>
+		</td>
+	</tr>
+
+
+
+
+
+	<tr>
+		<td class="attr-name" colspan="2">子标题(subTitle)</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="subTitle" subattrname="isShow" checked="checked"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">文本\html(content):</td>
+		<td><input type="text" class="ks-chart-gen-attrs" attrname="subTitle" subattrname="content" value="请输入子标题"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体颜色(css:color):</td>
+		<td><input type="text" id="J_subtitle_color"  class="ks-chart-gen-attrs iColorPicker" attrname="subTitle" attrtype="css" subattrname="color"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体(css:font-family):</td>
+		<td>
+			<select class="ks-chart-gen-attrs" attrname="subTitle" attrtype="css" subattrname="font-family">
+				<option value="宋体">宋体</option>
+				<option value="黑体">黑体</option>
+				<option value="Microsoft Yahei">微软雅黑</option>
+				<option value="tahoma">tahoma</option>
+				<option value="arial">arial</option>
+				<option value="fantasy">fantasy</option>
+				<option value="verdana">verdana</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体大小(css:font-size):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="subTitle" attrtype="css" subattrname="font-size"></td>
+	</tr>
+
+	<tr>
+		<td class="sub-attr-name">字体粗细(css:font-weight):</td>
+		<td>
+		<select class="ks-chart-gen-attrs" attrname="subTitle" attrtype="css" subattrname="font-weight">
+			<option value="normal">正常(normal)</option>
+			<option value="bold">加粗(bold)</option>
+		</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="attr-name" colspan="2">横轴标注(xLabels)：</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="xLabels" subattrname="isShow" checked="checked"></td>
+	</tr>
+	<td class="sub-attr-name">字体(css:font-family):</td>
+		<td>
+			<select class="ks-chart-gen-attrs" attrname="xLabels" attrtype="css" subattrname="font-family">
+				<option value="宋体">宋体</option>
+				<option value="黑体">黑体</option>
+				<option value="Microsoft Yahei">微软雅黑</option>
+				<option value="tahoma">tahoma</option>
+				<option value="arial">arial</option>
+				<option value="fantasy">fantasy</option>
+				<option value="verdana">verdana</option>
+			</select>
+		</td>
+	<tr>
+		<td class="sub-attr-name">字体颜色(css:color):</td>
+		<td><input type="text" id="J_xlabels_color"  class="ks-chart-gen-attrs iColorPicker" attrname="xLabels" attrtype="css" subattrname="color"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体大小(css:font-size):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="xLabels" attrtype="css" subattrname="font-size"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体粗细(css:font-weight):</td>
+		<td>
+		<select class="ks-chart-gen-attrs" attrname="xLabels" attrtype="css" subattrname="font-weight">
+			<option value="normal">正常(normal)</option>
+			<option value="bold">加粗(bold)</option>
+		</select>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td class="attr-name" colspan="2">纵轴标注(yLabels)：</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="yLabels" subattrname="isShow" checked="checked"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体(css:font-family):</td>
+		<td>
+			<select class="ks-chart-gen-attrs" attrname="yLabels" attrtype="css" subattrname="font-family">
+				<option value="宋体">宋体</option>
+				<option value="黑体">黑体</option>
+				<option value="Microsoft Yahei">微软雅黑</option>
+				<option value="tahoma">tahoma</option>
+				<option value="arial">arial</option>
+				<option value="fantasy">fantasy</option>
+				<option value="verdana">verdana</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体颜色(css:color):</td>
+		<td><input type="text" id="J_ylabels_color"  class="ks-chart-gen-attrs iColorPicker" attrname="yLabels" attrtype="css" subattrname="color"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体大小(css:font-size):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="yLabels" attrtype="css" subattrname="font-size"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体粗细(css:font-weight):</td>
+		<td>
+		<select class="ks-chart-gen-attrs" attrname="yLabels" attrtype="css" subattrname="font-weight">
+			<option value="normal">正常(normal)</option>
+			<option value="bold">加粗(bold)</option>
+		</select>
+		</td>
+	</tr>
+
+	<tr>
+		<td class="attr-name" colspan="2">纵向网格线(xGrids)：</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="xGrids" subattrname="isShow" checked="checked"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">线(border-left):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="xGrids" attrtype="css" subattrname="border-left" value="1px solid #eee"></td>
+	</tr>
+
+	<tr>
+		<td class="attr-name" colspan="2">横向网格线(yGrids)：</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="yGrids" subattrname="isShow" checked="checked"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">线(border-top):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="yGrids" attrtype="css" subattrname="border-top" value="1px dashed #eee"></td>
+	</tr>
+
+
+	<tr>
+		<td class="attr-name" colspan="2">y轴标注(yAxis)：</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">最小值(min):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="yAxis" subattrname="min" value="0"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">最大刻度(max):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="yAxis" subattrname="max" value="1000"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">刻度系数(num):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="yAxis" subattrname="num" value="5"></td>
+	</tr>
+
+	<tr>
+		<td class="attr-name" colspan="2">x轴标注(xAxis)：</td>
+	</tr>
+	<tr>
+		<td colspan="2"><textarea id="J_xaxis" class="ks-chart-gen-attrs large-area" attrname="series">
+		{
+			text:['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
+		}
+		</textarea></td>
+	</tr>
+
+	<tr>
+		<td class="attr-name" colspan="2">数据(series)：</td>
+	</tr>
+	<tr>
+		<td colspan="2"><textarea id="J_series" class="ks-chart-gen-attrs large-area" attrname="series">
+		[{
+			data:[1000,4000,820,234,454,334,243]
+		},
+		{
+			data:[120,4200,1220,2134,2334,2234,122]
+		}]
+		</textarea></td>
+	</tr>
+
+	<tr>
+		<td class="attr-name" colspan="2">提示(tip)：</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="tip" subattrname="isShow" checked="checked"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体颜色(css:color):</td>
+		<td><input type="text" id="J_tip_color"  class="ks-chart-gen-attrs iColorPicker" attrname="tip" attrtype="css" subattrname="color" value="#444"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体大小(css:font-size):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="tip" attrtype="css" subattrname="font-size" value="12px"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">背景色(background-color):</td>
+		<td><input type="text"  id="J_tip_bgcolor"  class="ks-chart-gen-attrs iColorPicker" attrname="tip" attrtype="css" subattrname="background-color" value="#fff"></td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">字体粗细(css:font-weight):</td>
+		<td>
+		<select class="ks-chart-gen-attrs" attrname="tip" attrtype="css" subattrname="font-weight">
+			<option value="normal">正常(normal)</option>
+			<option value="bold">加粗(bold)</option>
+		</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">边框(border):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="tip" attrtype="css" subattrname="border" value="3px solid {COLOR}"></td>
+	</tr>
+
+
+	<tr>
+		<td class="sub-attr-name">内容模版(template):</td>
+		<td><input type="text"  class="ks-chart-gen-attrs" attrname="tip" subattrname="template" value="总共支出：{{y}}元"></td>
+	</tr>
+
+	<tr>
+		<td class="attr-name" colspan="2">图例(legend)：</td>
+	</tr>
+	<tr>
+		<td class="sub-attr-name">是否展示(isShow):</td>
+		<td><input type="checkbox" class="ks-chart-gen-attrs" attrname="legend" subattrname="isShow" checked="checked"></td>
+	</tr>
+
+
+
+</table>
+
+</div>
+<div class="preview-pane">
+<div id="demo1" class="preview"></div>
+配置代码:
+<textarea id="J_codePane" class="preview"></textarea>
+<div class="btn-pane"><input id="J_btnGen" type="button" value="generate"></div>
+</div>
+<script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="iColorPicker.js"></script>
+<script type="text/javascript" src="barchart.js"></script>
+</body>
+</html>

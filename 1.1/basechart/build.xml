@@ -1,0 +1,12 @@
+<project name="kcharts/basechart.build" default="build" basedir=".">
+    <description>kcharts/basechart Build File</description>
+
+    <property name="src.dir" value="."/>
+    <property name="component.name" value="kcharts/1.1/basechart"/>
+    <property name="component.version" value=""/>
+
+    <import file="../../../common.xml"/>
+
+    <target name="build" depends="common.build">
+    </target>
+</project>

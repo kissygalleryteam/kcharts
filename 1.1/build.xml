@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project name="kcharts-build" default="build">
+
+    <target name="build">
+    	<subant target="" failonerror="false" inheritall="false">
+            <fileset dir="." includes="**/build.xml"/>
+        </subant>	
+    </target>
+
+</project>

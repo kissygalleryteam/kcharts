@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+   <title>KCharts doc 1.1</title>
+  <link rel="stylesheet" href="./custom/index.css" type="text/css" media="screen" />
+</head>
+<body>
+  <xmp theme="spacelab" style="display:none;">
+# Tips使用文档
+
+---
+最简单的例子
+---
+```
+  KISSY.use("kissychart/tips/index,kissychart/tips/tip.css",function(S,Tip){
+	  var tip = new Tip('#canvas',{
+		content:'价格',//tip内容
+		x:150.5,//tip初始化的x y坐标
+		y:240.5
+	  });
+      //动态移动到[200,200]
+      tip.animateTo(200,200);
+  });
+```
+
+---
+详细参数
+---
+### Tip(container,cfg);
+`container` 为tip定位的参考容器
+
+`cfg` 为一个`object`包含字段：
+
+- `content` tip内容，可以为html
+- `x`  tip尖角的横坐标
+- `y` tip尖角的纵坐标
+- `offset` 为一个`object`，包含`x` `y`两个方向的偏移量
+- `boundryDetect` 边缘检测，开启器后tip不会超过指定的容器，默认开
+- `arrowPos` 字符串 `"t"` 或 `"b"` 表示尖角的位置为top或bottom
+- `tipContainerCls` HTML容器的class
+- `tipArrowCls` 尖角class
+- `tipContentCls` 内容容器的class
+
+----
+使用自己定义的tip样式
+----
+```
+  KISSY.use("kissychart/tips/index,kissychart/tips/YOUR_CSS_HERE.css",function(S,Tip){
+
+  })
+```
+
+  </xmp>
+
+<script src="./strapdown.js"></script>
+</body>
+</html>

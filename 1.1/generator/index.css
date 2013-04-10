@@ -1,0 +1,85 @@
+.config-panel{
+	width:450px;
+	height:600px;
+	overflow-y: scroll;
+	overflow-x:hidden;
+	float: left;
+	border:2px solid #eee;
+	padding: 4px;
+}
+.config-panel table{
+	table-layout: fixed;
+	border-left:1px solid #ddd;
+	border-right:1px solid #ddd;
+}
+.config-panel td{
+	white-space: nowrap;
+	padding: 2px;
+}
+.config-panel .attr-name{
+	font-weight: bolder;
+	line-height: 16px;
+	background: #eee;
+	border:1px solid #ddd;
+	padding: 2px;
+}
+.config-panel .sub-attr-name{
+	text-align: right;
+}
+.config-panel .large-area{
+	width:400px;
+	height:200px;
+}
+.preview-pane{
+	border:2px solid #eee;
+	float: left;
+	margin:0px 0px 0px 10px;
+	padding: 10px;
+}
+.preview{
+	width:600px;
+	height:300px;
+	border:1px solid #ccc;
+	display: block;
+}
+.btn-pane{
+	text-align: center;
+}
+#J_btnGen{
+	font-size: 14px;
+	height:30px;
+	line-height: 30px;
+	width:100px;
+	margin-top:10px;
+}
+.warn{
+	font-size: 12px;
+	color:red;
+	font-weight: normal;
+}
+.banner{
+	font-size: 20px;
+	font-family: Microsoft Yahei;
+	color:#444;
+}
+.nav ul li{
+	display: inline-block;
+}
+.nav ul li a{
+	display: block;
+	width:80px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+	border:1px solid #f7f7f7;
+	border-bottom: none;
+	color:#f60;
+}
+.nav ul li a.cur,.nav ul li a:hover{
+	background: #7f7f7f;
+	color:#fff;
+}
+.split{
+	background: #f7f7f7;
+	color:#444;
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>KCharts doc 1.1</title>
+  <link rel="stylesheet" href="./custom/index.css" type="text/css" media="screen" />
+</head>
+<body>
+  <xmp theme="spacelab" style="display:none;">
+
+---
+快速上手——以linechart为例
+---
+
+```
+//包配置 
+KISSY.config({
+  packages:[
+      {
+        name:"gallery",
+        path:"http://a.tbcdn.cn/s/kissy/",
+        charset:"utf-8"
+      }
+    ]
+});
+
+KISSY.use("gallery/kcharts/1.1/linechart/index",function(S,LineChart){
+
+  var linechart = new LineChart({
+      renderTo:"#demo1",
+      title:{
+              content:"1周消费记录",
+              css:{
+              }
+            },
+            anim:{},
+            subTitle:{
+              content:"week fee record",
+              css:{
+
+              }
+            },
+       xAxis: {
+          text:['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
+            },
+            yAxis:{
+              min:0
+            },
+      series:[
+        {
+          data:[{y:100,week:'星期一'},{y:4000,week:'星期二'},{y:120,week:'星期三'},{y:234,week:'星期四'},{y:234,week:'星期五'},{y:234,week:'星期六'},{y:234,week:'星期日'}]
+        }
+      ],
+      defineKey:{
+        x:"week",
+        y:"y"
+      },
+      tip:{
+        template:"总支出：<span>{{y}}</span> 元<br/>"
+      }
+  });
+
+});
+```
+##组件文档
+- [linechart](linechart.html)
+- [barchart](barchart.html)
+- [piechart](piechart.html)
+- [scatterchart](scatterchart.html)
+- [ratiochart](ratiochart.html)
+- [sumdetailchart](sumdetailchart.html)
+- [tip](tip.html)
+  </xmp>
+
+<script src="./strapdown.js"></script>
+</body>
+</html>

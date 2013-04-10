@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>chinaMap</title>
+    <style type="text/css">
+        #demo1 {
+            width: 600px;
+            height: 600px;
+            border: 1px solid #ccc;
+            margin:0px auto;
+        }
+
+        #b1 {
+            background-color: #ececec;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+<h3>China Map</h3>
+
+<div id="demo1"></div>
+<div style="position: absolute;right:10%;top:200px;">
+    <button id="b1">
+        缩小
+    </button>
+</div>
+<script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy-min.js"></script>
+<script type="text/javascript">
+    (function (S) {
+        S.Config.debug = true;
+        S.config({
+                     packages:[
+                         {
+                             name:"gallery",
+                             path:"http://a.tbcdn.cn/s/kissy/",
+                             charset:"utf-8"
+                         }
+                     ]
+                 });
+
+        S.use('gallery/kcharts/1.1/mapchart/index', function (S, MapChart) {
+            var map = new MapChart('#demo1', {
+                themeCls:"ks-chart-orange",
+                title:{
+                    content:"这是一个地图"
+                },
+                tip:{
+                    template:"这里妹子的质量是{{rate}}颗星"
+                },
+                cssGroup:{style1:{attr:{"fill":"#f46", "stroke":"#fff"}, hoverAttr:{"fill":"#999"}}, style2:{attr:{"fill":"#999"}, hoverAttr:{"fill":"#f46"}}, defaultCls:"style1"},
+                series:{
+                    "Heihongjiang":{"rate":3},
+                    "Jilin":{"rate":3},
+                    "Liaoning":{"rate":3, "groupKey":"style2"},
+                    "Hebei":{"rate":2, "groupKey":"style2"},
+                    "Shandong":{"rate":3},
+                    "Jiangsu":{"rate":3, "groupKey":"style2"},
+                    "Zhejiang":{"rate":3},
+                    "Anhui":{"rate":5, "groupKey":"style2"},
+                    "Henan":{"rate":3},
+                    "Shaanxi":{"rate":3},
+                    "Shanxi":{"rate":4},
+                    "Gansu":{"rate":3, "groupKey":"style2"},
+                    "Hubei":{"rate":4, "groupKey":"style2"},
+                    "Jiangxi":{"rate":3},
+                    "Hunan":{"rate":3, "groupKey":"style2"},
+                    "Guizhou":{"rate":4},
+                    "Sichuan":{"rate":3},
+                    "Yunnan":{"rate":3},
+                    "Qinghai":{"rate":2},
+                    "Hainan":{"rate":3, "groupKey":"style2"},
+                    "Chongqing":{"rate":3},
+                    "Beijing":{"rate":4},
+                    "Ningxia":{"rate":3, "groupKey":"style2"},
+                    "NeiMongol":{"rate":3},
+                    "Guangxi":{"rate":5},
+                    "Fujian":{"rate":3, "groupKey":"style2"},
+                    "Xinjiang":{"rate":4},
+                    "Tibet":{"rate":3},
+                    "Guangdong":{"rate":3},
+                    "Taiwan":{"rate":2}
+                }
+            });
+            var $ = S.all;
+            $("#b1").on('click', function () {
+                $("#demo1").css({
+                                    width:"500px", height:"500px"
+                                });
+                map.rePaint();
+            })
+        });
+    })(KISSY);
+</script>
+</body>
+</html>

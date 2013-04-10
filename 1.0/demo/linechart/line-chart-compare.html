@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>A Linechart Width Common Tip</title>
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style type="text/css">
+.demo{
+	width:1000px;
+	height:330px;
+	border: 1px solid #ccc;
+	margin:40px auto;
+}
+.demo img{
+	margin: 140px 0px 0px 480px;
+}
+/*hover*/
+.demo .ks-chart-default-areas-hover{
+	background: #fff;
+}
+.demo .tip-title{
+	color:#000;
+}
+.demo .num{
+	font-family: monospace;
+}
+.demo .unit{
+	font-family: '宋体';
+}
+</style>
+</head>
+<body>
+<h3 style="text-align:center">A Linechart Width Common Tip</h3>
+<div id="demo1" class="demo"></div>
+<script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy-min.js"></script>
+<script>
+(function(S){
+	S.Config.debug = true;
+	S.config({
+	  packages:[
+	    {
+	      name:"gallery",
+	      tag:"20130118",
+	      path:"http://a.tbcdn.cn/s/kissy/",
+	      charset:"utf-8"
+	    }
+	  ]
+	});
+
+	S.use('gallery/kcharts/1.0/linechart/index',function(S,LineChart){
+	
+		var lineChart = new LineChart({
+			renderTo:"#demo1",
+			title:{
+            	content:"1周消费记录",
+            	css:{
+            	}
+            },
+            anim:{},
+            subTitle:{
+            	content:"week fee record",
+            	css:{
+
+            	}
+            },
+			themeCls:"ks-chart-default",
+			comparable:true,
+			canvasAttr:{x:90,y:60},
+			line:{
+			 	attr:{
+			 		"stroke-width":"3px"
+			 	}
+			},
+			xGrids:{
+				isShow:false
+			},
+			xAxis: {
+			 		text:['星期一','星期二','星期三','星期四','星期五','星期六','星期日'],
+                    css:{
+
+                    }
+             },
+             yAxis:{
+             		num:10,
+                    min:0,
+                    max:4200
+             },
+             points:{
+					attr:{
+					 		stroke:"#fff",
+					 		"radius":4,
+					 		"stroke-width":1.5
+					}
+			},
+			pointLines:{
+					isShow:true
+			},
+			series:[
+				{
+						data:[{y:400,week:'星期一'},{y:1000,week:'星期二'},{y:400,week:'星期三'},{y:800,week:'星期四'},{y:2000,week:'星期五'},{y:100,week:'星期六'},{y:600,week:'星期日'}],
+						text:"张三"
+				},
+				{
+						data:[{y:800,week:'星期一'},{y:1500,week:'星期二'},{y:4200,week:'星期三'},{y:4000,week:'星期四'},{y:2900,week:'星期五'},{y:2000,week:'星期六'},{y:2000,week:'星期日'}],
+						text:"李四"
+				},
+				{
+						data:[{y:1200,week:'星期一'},{y:300,week:'星期二'},{y:2200,week:'星期三'},{y:400,week:'星期四'},{y:900,week:'星期五'},{y:300,week:'星期六'},{y:500,week:'星期日'}],
+						text:"王五"
+				}
+			],
+			defineKey:{
+				x:"week",
+				y:"y"
+			},
+			tip:{
+				template:"{{#each datas as data index}}{{#if index == 0}}<h3 class='tip-title'>{{data.week}}</h3>{{/if}}{{data.text}} <span class='num'>{{data.y}}</span> <span class='unit'>元</span><br/>{{/each}}",
+				css:{
+					border:"3px solid {COLOR}"
+				},
+				alignX:"right",
+				alignY:"bottom",
+				offset:{
+					x:-10,
+					y:-10
+				},
+				boundryDetect:true
+			}
+		});
+
+	});
+		
+
+})(KISSY);
+</script>
+</body>
+</html>

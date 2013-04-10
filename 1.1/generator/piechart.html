@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>在线图表生成器 KCharts 1.1 beta</title>
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<link rel="stylesheet" href="index.css" />
+</head>
+<body>
+<div class="banner">KCharts 1.1 在线图表生成器 beta</div>
+<div class="nav">
+	<ul>
+		<li><a href="index.html">线图</a></li>
+		<li><a href="barchart.html">柱图</a></li>
+		<li><a href="piechart.html" class="cur">饼图</a></li>
+	</ul>
+</div>
+<div class="config-panel">
+<!-- <table>
+<tr>
+		<td class="attr-name" colspan="2">数据(series)：</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<textarea id="J_series" class="ks-chart-gen-attrs large-area" attrname="data">
+			[
+				{data:30,label:'30%','tip':'per'},
+				{data:30,label:'30%','tip':'per'},
+				{data:40,label:'40%','tip':'percent'}
+			]
+			</textarea>
+		</td>
+	</tr>
+</table> -->
+</div>
+<div class="preview-pane">
+<div id="demo1" class="preview"></div>
+配置代码:
+<textarea id="J_codePane" class="preview"></textarea>
+<div class="btn-pane"><input id="J_btnGen" type="button" value="generate"></div>
+</div>
+<script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy.js"></script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="iColorPicker.js"></script>
+<script type="text/javascript" src="piechart.js"></script>
+</body>
+</html>

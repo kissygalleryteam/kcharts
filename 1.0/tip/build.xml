@@ -1,0 +1,12 @@
+<project name="kcharts/tip.build" default="build" basedir=".">
+    <description>kcharts/tip Build File</description>
+
+    <property name="src.dir" value="."/>
+    <property name="component.name" value="kcharts/1.0/tip"/>
+    <property name="component.version" value=""/>
+
+    <import file="../../../common.xml"/>
+
+    <target name="build" depends="common.build">
+    </target>
+</project>

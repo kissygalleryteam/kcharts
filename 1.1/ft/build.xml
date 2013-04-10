@@ -1,0 +1,12 @@
+<project name="kcharts/ft.build" default="build" basedir=".">
+    <description>kcharts/ft Build File</description>
+
+    <property name="src.dir" value="."/>
+    <property name="component.name" value="kcharts/1.1/ft"/>
+    <property name="component.version" value=""/>
+
+    <import file="../../../common.xml"/>
+
+    <target name="build" depends="common.build">
+    </target>
+</project>

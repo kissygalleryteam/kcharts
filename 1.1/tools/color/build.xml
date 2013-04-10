@@ -1,0 +1,12 @@
+<project name="kcharts/color.build" default="build" basedir=".">
+    <description>kcharts/color Build File</description>
+
+    <property name="src.dir" value="."/>
+    <property name="component.name" value="kcharts/1.1/tools/color"/>
+    <property name="component.version" value=""/>
+
+    <import file="../../../../common.xml"/>
+
+    <target name="build" depends="common.build">
+    </target>
+</project>

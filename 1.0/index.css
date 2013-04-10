@@ -1,0 +1,87 @@
+.J_banner{
+  height:50px;
+  font-size: 20px;
+  font-family: Microsoft Yahei;
+  line-height: 50px;
+  text-indent: 10px;
+  border-bottom: 1px solid #CACACA;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) , 0 0 10px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) , 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) , 0 0 10px rgba(0, 0, 0, 0.1);
+  min-height: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #F7F7F7;
+  background-image: -moz-linear-gradient(top, white, #EAEAEA);
+  background-image: -ms-linear-gradient(top, white, #EAEAEA);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#EAEAEA));
+  background-image: -webkit-linear-gradient(top, white, #EAEAEA);
+  background-image: -o-linear-gradient(top, white, #EAEAEA);
+  background-image: linear-gradient(top, white, #EAEAEA);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eaeaea', GradientType=0);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .25), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,.25), inset 0 -1px 0 rgba(0,0,0,.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  position: fixed;
+  left:0px;
+  right:0px;
+  top: 0px;
+  z-index: 1000;
+}
+.J_banner span{
+  font-size: 12px;
+}
+.J_container{
+  width:1200px;
+  margin: 0px auto;
+  padding-top:60px;
+}
+.J_nav ul li{
+  display: inline;
+}
+.ks-chart-wrapper{
+  width:560px;
+  height:200px;
+  border: 1px solid #eee;
+  margin:10px;
+  float: left;
+  /*margin:40px auto;*/
+}
+.ks-chart-inner-wrapper{
+   width:560px;
+    height:200px;
+}
+
+.ks-chart-legend{
+  width:44px;
+  height:44px;
+  border: 1px solid #f7f7f7;
+  position: absolute;
+  z-index: 100;
+  /*background: #000;*/
+  margin:-198px 0px 0px 490px;
+}
+.ks-chart-legend ul li{
+  cursor: pointer;
+  font-size: 10px;
+}
+.disable{
+  color:#ccc;
+}
+
+.ks-chart-wrapper-large{
+  height:300px;
+}
+
+.ks-chart-wrapper .loading{
+  background:url('http://img01.taobaocdn.com/tps/i1/T1cKm3XkRpXXXXXXXX-48-48.gif') no-repeat center center;
+  width:48px;
+  height:48px;
+  margin: 80px auto;
+  text-indent: 9999px;
+  overflow: hidden;
+}

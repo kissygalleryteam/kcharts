@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>linechar</title>
+<!-- 引入KissyJS -->
+<script src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css">
+<link rel="stylesheet" href="css/date.css">
+<link rel="stylesheet" href="http://a.tbcdn.cn/s/kissy/1.3.0/css/dpl/base.css,tables.css">
+  
+<style>
+#J_line, .demo1 {
+	width: 900px;
+	line-height: 24px;
+	font-family: "微软雅黑";
+	height: 350px;
+	border: 2px solid #CCC;
+	margin: 40px auto;
+}
+.demo2 {
+	width: 900px;
+	line-height: 24px;
+	font-family: "微软雅黑";
+	height: 550px;
+	border: 2px solid #CCC;
+	margin: 40px auto;
+}
+</style>
+</head>
+
+<body>
+<script>
+  // KISSY.Config.debug = true;
+
+		// 本地包配置
+		// if(/dev/.test(location.hostname)){
+		  KISSY.Config.debug = true;
+			KISSY.config({
+				packages:[{
+					name:"gallery",
+					path:"../../../../../",
+					charset:"utf-8"
+				}]
+			});
+		// }else{
+			// KISSY.config({
+			// 	packages:[{
+			// 		name:"gallery",
+			// 		// path:"http://a.tbcdn.cn/s/kissy/",
+			// 		path:"../../../../../",
+			// 		charset:"utf-8"
+			// 	}]
+			// });
+		// }
+
+	/*
+	KISSY.config({
+	  packages:[
+		  {
+			name:"gallery",
+			path:"http://a.tbcdn.cn/s/kissy/"
+		  }
+		]
+	});
+	*/
+
+	//饼图
+	KISSY.use('gallery/kcharts/1.1/piechart/index',function(S,PieChart){
+      
+	  var data = [{data:30,label:'30%','tip':'per'},{data:30,label:'30%','tip':'per'},{data:40,label:'40%','tip':'percent'}]
+	  var piechart = new PieChart({
+		renderTo:'#canvas',
+		themeCls:"ks-chart-rainbow",
+		cx:450,
+		cy:180,
+		R:100,
+		data:data,
+		anim:{
+		  type:'sector',
+		  easing:'bounceOut',
+		  duration:1000
+		},
+		 tip:{
+		  boundryDetect:true,
+		  tpl:"{{tip}} {{percent*100+'%'}}"
+		},
+		labelline:{
+		  attr:{
+			stroke:"red"
+		  }
+		}
+	  });
+	});
+	
+	// var S = KISSY;
+	// var c = {};
+	// var showdate = function (n, d) {
+	// 	//计算d天的前几天或者后几天，返回date,注：chrome下不支持date构造时的天溢出
+	// 	var uom = new Date(d - 0 + n * 86400000);
+	// 	uom = uom.getFullYear() + "/" + (uom.getMonth() + 1) + "/" + uom.getDate();
+	// 	return new Date(uom);
+	// };
+ 
+// 	KISSY.ready(function (S) {
+//     KISSY.use('node,calendar', function (S, Node, Calendar) {
+//         var S_Date = S.Date;
+//         var i = 0;
+//         //Popup日历,单选关闭
+//         new Calendar('#J_PopupClosable', {
+// 			showTime: true,
+//             popup: true,
+//             closable: true,
+//             triggerType: ['focus']
+//         }).on('select', function (e) {
+//                    alert(e.date);
+//                 });
+        
+//     });
+// });
+</script>
+<!-- <div id="J_line"></div>
+<div id="J_column1" class="demo1" ></div>
+<div id="demo1" class="demo1"></div> -->
+<!-- <div id="J_cicrle1" class="demo2"></div> -->
+<div id="canvas" class="demo1"></div>
+<div class="demo1">
+	<input type="text" id="J_PopupClosable" size="28" style="margin:50px 100px;"/>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>…</th>
+          <th>…</th>
+        </tr>
+      </thead>
+        <tr>
+          <td>…</td>
+          <td>…</td>
+        </tr>
+        <tr>
+          <td>…</td>
+          <td>…</td>
+        </tr>
+        <tr>
+          <td>…</td>
+          <td>…</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
