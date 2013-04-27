@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+	<title>chart test</title>
+	<style>
+	#demo1{
+		width:750px;
+		height:300px;
+		margin:0px auto;
+	}
+	</style>
+  </head>
+  <body>
+    <div id="demo1">
+    </div>
+	<script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+	<script type="text/javascript">
+	  // KISSY.Config.debug = true;
+	  KISSY.config({
+	    packages:[{
+	      name:"gallery",
+	      tag:"20130410",
+	      path:"http://a.tbcdn.cn/s/kissy/",
+	      charset:"utf-8"
+	    }]
+	  });
+KISSY.use('gallery/kcharts/1.1/sumdetailchart/index', function(S, SumDetail){
+    new SumDetail({
+        container: '#demo1',
+        r: 120,
+        meanDeg: 60,
+        startDeg: 30,
+        lineStyle: {
+            borderColor: '#48BAF4',
+            borderWidth: 3
+        },
+        father: {
+            cx: 375,
+            cy: 150,
+            r: 65,
+            style: {
+                background: '#ff7b6c'
+            },
+            h1: {
+                text: '¥1257865',
+                fontSize: 20,
+                color: '#fff'
+            },
+            h2: {
+                text: '成交总金额',
+                fontSize: 14,
+                color: '#fff'
+            }
+        },
+        son: [{
+            r: 40,
+            h1: {
+                text: '10000',
+                fontSize: 14,
+                color: '#fff'
+            },
+            h2: {
+                text: '成交件数',
+                fontSize: 12,
+                color: '#fff'
+            },
+            style: {
+                background: '#48BAF4'
+            }
+        },{
+            r: 40,
+            h1: {
+                text: '3786',
+                fontSize: 14,
+                color: '#fff'
+            },
+            h2: {
+                text: '成交用户',
+                fontSize: 12,
+                color: '#fff'
+            },
+            style: {
+                background: '#48BAF4'
+            }
+        },{
+            r: 40,
+            h1: {
+                text: '57866',
+                fontSize: 14,
+                color: '#fff'
+            },
+            h2: {
+                text: '成交订单数',
+                fontSize: 12,
+                color: '#fff'
+            },
+            style: {
+                background: '#48BAF4'
+            }
+        },{
+            r: 40,
+            h1: {
+                text: '57866',
+                fontSize: 14,
+                color: '#fff'
+            },
+            h2: {
+                text: '成交订单数',
+                fontSize: 12,
+                color: '#fff'
+            },
+            style: {
+                background: '#48BAF4'
+            }
+        },{
+            r: 40,
+            h1: {
+                text: '57866',
+                fontSize: 14,
+                color: '#fff'
+            },
+            h2: {
+                text: '成交订单数',
+                fontSize: 12,
+                color: '#fff'
+            },
+            style: {
+                background: '#48BAF4'
+            }
+        },{
+            r: 40,
+            h1: {
+                text: '57866',
+                fontSize: 14,
+                color: '#fff'
+            },
+            h2: {
+                text: '成交订单数',
+                fontSize: 12,
+                color: '#fff'
+            },
+            style: {
+                background: '#48BAF4'
+            }
+        }]
+    });
+});
+	</script>
+  </body>
+</html>

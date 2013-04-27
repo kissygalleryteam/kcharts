@@ -19,14 +19,26 @@
 
 	<script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.2.0/kissy-min.js"></script>
 	<script type="text/javascript">
-	  KISSY.Config.debug = true;
-	  KISSY.config({
-	    packages:[{
-	      name:"gallery",
-	       path:"http://a.tbcdn.cn/s/kissy/",
-	      charset:"utf-8"
-	    }]
-	  });
+		// 本地包配置
+		if(/dev/.test(location.hostname)){
+		  KISSY.Config.debug = true;
+			KISSY.config({
+				packages:[{
+					name:"gallery",
+					path:"../../../../../",
+					charset:"utf-8"
+				}]
+			});
+		}else{
+			KISSY.config({
+				packages:[{
+					name:"gallery",
+					// path:"http://a.tbcdn.cn/s/kissy/",
+					path:"http://fed.ued.taobao.net/2012/kissycharts/", // for fed debug
+					charset:"utf-8"
+				}]
+			});
+		}
 	</script>
 	<script type="text/javascript" src="dashboard-dev.js"></script>
   </body>

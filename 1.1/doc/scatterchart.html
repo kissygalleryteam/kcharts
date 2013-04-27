@@ -7,7 +7,7 @@
 </head>
 <body>
   <xmp theme="spacelab" style="display:none;">
-# LineChart
+# ScatterChart
 ---
 代码示例
 ---
@@ -25,41 +25,46 @@ KISSY.config({
 KISSY.use('gallery/kcharts/1.1/scatterchart/index',function(S,ScatterChart){
 
   var scatterchart = new ScatterChart({
-        renderTo:"#demo1",
-         xAxis: {
-            text:['星期一','星期二','星期三','星期四','星期五','星期六','星期日'],
-                      css:{
-
-                      }
+            renderTo:"#demo1",
+            title:{
+                content:"散点图"
+            },
+            subTitle:{
+                content:"scatterchart"
+            },
+            xGrids:{
+                isShow:false
+            },
+            xAxis: {
+                num:20
+             },
+             yAxis:{
+                    num:10
+             },
+            series: series, //如 [[100,200],[420,44] .... ] 这样的数据
+            points:{
+                "strick-width":"2px",
+                fill:"#000"
+            },
+            tip:{
+                template:function(data){
+                    return data.y[0]+","+data.y[1];
                 },
-                yAxis:{
-                    css:{
-                      },
-                      num:10,
-                      min:0,  
-                      max:4200
-                 },
-        series:[
-          {
-            data:[
-                    {y:100,week:'星期一'},
-                    {y:4000,week:'星期二'},
-                    {y:120,week:'星期三'},
-                    {y:234,week:'星期四'},
-                    {y:234,week:'星期五'},
-                    {y:234,week:'星期六'},
-                    {y:234,week:'星期日'}
-            ]
-          }
-        ],
-        defineKey:{
-          x:"week",
-          y:"y"
-        },
-        tip:{
-          template:"总支出：<span>{{y}}</span> 元<br/>"
-        }
-      });
+                css:{
+                    border:"3px solid {COLOR}"
+                },
+                alignX:"right",
+                alignY:"bottom",
+                offset:{
+                    x:-10,
+                    y:-10
+                },
+                boundryDetect:true
+            },
+            legend:{
+                        isShow:true
+            }
+        });
   
 });
 ```
@@ -84,17 +89,13 @@ Config（详细配置）
   - `width` { number } 宽度
   - `height` { number } 高度 
 
-### lineType 
-
-{ string } 线图类型 默认 "straight"  如：弧线 "arc"
-
 ### themeCls 
 
 { string } 主题className 默认："ks-chart-default"
 
 ### colors 
 
-{ array } 手动配置线的颜色 （可选） 如 [{"DEFAULT":"#fff","HOVER":"#ccc"},{"DEFAULT":"#fff","HOVER":"#ccc"}]
+{ array } 手动配置颜色 （可选） 如 [{"DEFAULT":"#fff","HOVER":"#ccc"},{"DEFAULT":"#fff","HOVER":"#ccc"}]
   
   - `DEFAULT` { string } 默认颜色
   - `HOVER` { string } hover颜色
@@ -126,13 +127,18 @@ Config（详细配置）
 
 {object} x 轴配置
 
-   - `isShow` { boolean } 是否渲染显示
+   - `isShow` { boolean } 是否展示
    - `css` { object } css样式
+   - `min` { number } 横坐标最小值
+   - `max` { number } 横坐标最大值
+   - `num` { number } 横轴刻度的份数
 
 ### yAxis
 
-{object} y 轴配置 同 xAxis
+{object} y 轴配置 
 
+   - `isShow` { boolean } 是否展示
+   - `css` { object } css样式
    - `min` { number } 纵坐标最小值
    - `max` { number } 纵坐标最大值
    - `num` { number } 纵轴刻度的份数
@@ -140,27 +146,59 @@ Config（详细配置）
 
 ### xGrids
 
-{object} 横向网格配置 同 xAxis
+{object} 横向网格配置 
+
+- `isShow` { boolean } 是否展示
+   - `css` { object } css样式
 
 ### yGrids
 
- {object} 纵向网格配置 同 xAxis
+ {object} 纵向网格配置 
+
+ - `isShow` { boolean } 是否展示
+   - `css` { object } css样式
 
 ###  xLabels
 
- {object} x轴刻度文本 同 xAxis
+   {object} x轴刻度文本
+
+- `isShow` { boolean } 是否渲染显示
+- `css` { object } css样式
+- `template` { number | function } 输出的html文本 
+
+  建议使用function方式  返回分别是index和text 
+  ```
+  template:function(index,text){
+      if(index % 7 == 0){ //每隔7个输出一次
+        return text;
+      }else{
+        return "";
+      }
+  }
+
+  ```
 
 ###  yLabels
 
- {object} y轴刻度文本 同 xAxis
+ {object} y轴刻度文本 同 xLabels
 
 ### series
    
    {array} 数据
 
-### defineKey
+```
 
-   {object} 针对数据 data 对应的key定义
+  //example 普通散点图
+  series:[
+      [190.5, 108.6], [177.8, 86.4], [190.5, 80.9], [177.8, 87.7], [184.2, 94.5]
+  ]
+
+  //example 气泡图 
+   series:[
+      [190.5, 108.6,2], [177.8, 86.4,1], [190.5, 80.9,3], [177.8, 87.7,4], [184.2, 94.5,2] //数组中第三个参数代表气泡的半径大小
+  ]
+
+```
 
 ### tip  
 
@@ -174,16 +212,6 @@ Config（详细配置）
    - `alignX` { string } 水平对齐方式 有"left" "center" "right"三种 默认 "left"
    - `alignY` { string } 水平对齐方式 有"top" "middle" "bottom"三种 默认 "top"
 
-### comparable
-
-  {boolean} 是否为多线比较，公用tip数据 默认false
-
-### anim
-  
-  {object} 渲染动画配置 配置该项则具有动画效果
-  
-   - `duration` { number } 动画周期
-   - `easing` { object } 动画效果 默认"easeIn"
    
 ---
 Method（方法）
@@ -195,19 +223,32 @@ Method（方法）
 
 ### getPaper()
 
-获取html画布
+获取html画布 详见：[HtmlPaper文档](./htmlpaper.html)
 
-### data2GrapicData
+### data2GrapicData(data,isY,nagitive)
 
 根据实际数据 获取相应轴上的偏移像素
+```
+    /*
+      TODO 将实际数值转化为图上的值
+      @param data {Array|Number} 实际数值
+      @param isY  {Boolean} 可选，是否是纵向的(默认值：false) 
+      @param nagitive 可选，是否是反向的(默认值：false)
+    */
 
-### showLine(lineIndex)
+    var   scatterchart = new ScatterChart(cfg); 
+    var   y =  scatterchart.data2GrapicData(400); //将返回一个纵轴坐标值
+    scatterchart.getPaper().text(0,y,"400");//往图上写html文本
 
-展示直线
+```
 
-### hideLine(lineIndex)
+### showPoints(pointIndex)
 
-隐藏直线
+展示散点组
+
+### hidePoints(pointIndex)
+
+隐藏散点组
 
 ### clear()
 
@@ -228,8 +269,6 @@ Event（事件）
 ### stockChange
 
 点之间的切换 (可以用来触发tip的移动和数据渲染)
-
-
 
   </xmp>
 

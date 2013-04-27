@@ -5,9 +5,8 @@
     <title>chinaMap</title>
     <style type="text/css">
         #demo1 {
-            width: 600px;
-            height: 600px;
-            border: 1px solid #ccc;
+            width: 350px;
+            height: 350px;
             margin:0px auto;
         }
 
@@ -22,14 +21,12 @@
     </style>
 </head>
 <body>
-<h3>China Map</h3>
-
 <div id="demo1"></div>
-<div style="position: absolute;right:10%;top:200px;">
+<!-- <div style="position: absolute;right:10%;top:200px;">
     <button id="b1">
         缩小
     </button>
-</div>
+</div> -->
 <script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy-min.js"></script>
 <script type="text/javascript">
     (function (S) {
@@ -46,12 +43,13 @@
 
         S.use('gallery/kcharts/1.1/mapchart/index', function (S, MapChart) {
             var map = new MapChart('#demo1', {
-                themeCls:"ks-chart-orange",
+                themeCls:"ks-chart-default",
                 title:{
-                    content:"这是一个地图"
+                    content:"China Map"
                 },
                 tip:{
-                    template:"这里妹子的质量是{{rate}}颗星"
+                    template:"Lv.{{rate}}",
+                    css:{border:"1px solid #666"}
                 },
                 cssGroup:{style1:{attr:{"fill":"#f46", "stroke":"#fff"}, hoverAttr:{"fill":"#999"}}, style2:{attr:{"fill":"#999"}, hoverAttr:{"fill":"#f46"}}, defaultCls:"style1"},
                 series:{
@@ -87,13 +85,13 @@
                     "Taiwan":{"rate":2}
                 }
             });
-            var $ = S.all;
-            $("#b1").on('click', function () {
-                $("#demo1").css({
-                                    width:"500px", height:"500px"
-                                });
-                map.rePaint();
-            })
+            // var $ = S.all;
+            // $("#b1").on('click', function () {
+            //     $("#demo1").css({
+            //                         width:"500px", height:"500px"
+            //                     });
+                // map.rePaint();
+            // })
         });
     })(KISSY);
 </script>

@@ -1,5 +1,9 @@
+.main-container{
+	width:1000px;
+	margin:0px auto;
+}
 .config-panel{
-	width:450px;
+	width:425px;
 	height:600px;
 	overflow-y: scroll;
 	overflow-x:hidden;
@@ -32,12 +36,12 @@
 }
 .preview-pane{
 	border:2px solid #eee;
-	float: left;
+	float: right;
 	margin:0px 0px 0px 10px;
 	padding: 10px;
 }
 .preview{
-	width:600px;
+	width:500px;
 	height:300px;
 	border:1px solid #ccc;
 	display: block;
