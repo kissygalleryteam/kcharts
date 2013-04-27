@@ -57,7 +57,11 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
     this.paper = Paper(S.get(this.container));
     this.labelLayer = this.paper;
     this.textlabel = new Label();
-    this.cfg = S.mix(dftCfg,cfg);
+
+    this.cfg = {}
+    S.mix(this.cfg,dftCfg);
+    S.mix(this.cfg,cfg);
+
     this.sectors = null;
     this.percentData = null;
     this.drawSector();
@@ -239,7 +243,8 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
             path = that.sectorFull(cx,cy,_r,_from,_to);
           }
 
-          if(percentData.length == 1){
+          // if(percentData.length == 1){
+          if(percentData[j] == 1){
             if(emptyRadius){
               path[12] = parseFloat(path[12]) - 0.1
               path[path.length-2] = parseFloat(path[path.length-2]) + 0.1
@@ -580,7 +585,8 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
           this.tip.renderTemplate(tipcfg.tpl,tipdata);
           D.css(tip_el,{'borderColor':fillcolor});
           //tip的位置在扇形的中线处
-          this.tip.animateTo(x,y);
+          this.tip.fire('move',{x:x,y:y});
+          //this.tip.animateTo(x,y);
         },this);
       }
     },
@@ -609,9 +615,15 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
 
 /*
  * note:
+ * bug fix [2013-04-11 周四 11:53]
+ * 有一组数据所占的比例为100%时，饼图应该为一个圆形，但是实际显示不出来
+ *
+ * bug fix [2013-04-10 Wed 10:34]
+ * 一个页面中有一个以上piechart的时候，会出现piechart label都是用了第一个label
+ *
  * bug fix [2013-04-09 Tue 16:10]
  * 当只有一组数据的时候，本应该显示一个圆，但是现在不能展示
- * 
+ *
  * improvement [2013-04-02 周二 11:51]
  * 允许使用字符串数据
  * [

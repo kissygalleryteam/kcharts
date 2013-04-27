@@ -2,6 +2,7 @@ KISSY.add("gallery/kcharts/1.1/sumdetailchart/index",function(S, UA, Node, XTemp
 	var $ = Node.all;
 	function SumDetail(Cfg){
 		var self = this;
+        $('head').append('<style>v\\:*{behavior:url(#default#VML);position:absolute; display: inline-block;}</style>');
 		self.init(Cfg);
 	}
 
@@ -173,7 +174,8 @@ KISSY.add("gallery/kcharts/1.1/sumdetailchart/index",function(S, UA, Node, XTemp
 		 * @param  {[number]} dy    [end y]
 		 * @param  {[object]} style [style obj]
 		 * @return {[string]}       [line string]
-		 */
+		 **/
+
 		drawLine: function(arr){
 			var self = this,
 				svgline = self.SVGTEMPLATE.LINE,
@@ -246,6 +248,9 @@ KISSY.add("gallery/kcharts/1.1/sumdetailchart/index",function(S, UA, Node, XTemp
 			if(UA.ie == 8){
 				$(container).outerHTML = $(container).outerHTML;
 			}
+
+            //fix bug in ie
+            $(container).css('position', 'relative');
 			$(container).html(result);
 
 		},

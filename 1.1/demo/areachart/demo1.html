@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>浏览器分辨率分布图</title>
+    <link rel="stylesheet" media="all" type="text/css" href="http://twitter.github.io/bootstrap/assets/css/bootstrap.css"/>
+    <style type="text/css">
+        #demo1 {
+            position: absolute;
+        }
+
+        .ks-chart-sc-text {
+            font-size: 20px;
+        }
+
+        .br-x-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            padding: 5px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .br-y-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            padding: 5px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+        }
+
+        .ks-chart-rainbow {
+            z-index: 100;
+        }
+
+        .header-area {
+            font-size: 16px;
+            background: #ececec;
+            position: absolute;
+            width: 100%;
+            border: 1px solid #1B1B14;
+        }
+
+        .header-area .input-url {
+            position: absolute;
+            top: 0;
+            left: 30%;
+        }
+
+        .br-percent-text {
+            padding: 5px;
+            background-color: #fff;
+            border-radius: 5px;
+            color: #CD2626;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid #fff;
+        }
+    </style>
+</head>
+<body>
+<script src="http://a.tbcdn.cn/??s/kissy/1.2.0/kissy-min.js"></script>
+<div class="wrapper" style="position: relative">
+    <div class="header-area">
+        模拟系统和浏览器占用区域
+        <div class="input-url">
+            <input type="text" class="input-medium search-query" placeholder="请输入url">
+            <button type="button" class="btn go">go</button>
+        </div>
+    </div>
+    <iframe frameborder="0"
+            src="http://item.taobao.com/item.htm?spm=a1z10.4.w18133597775.3.kvDURn&id=19383359356"></iframe>
+    <div id="demo1"></div>
+</div>
+<script>
+    (function (S) {
+        var $ = S.all, Evt = S.Event;
+        S.Config.debug = true;
+        S.config({
+                     packages:[
+                         {
+                             name:"gallery",
+                             path:"http://fed.ued.taobao.net/2012/kissycharts/",
+                             charset:"utf-8"
+                         }
+                     ]
+                 });
+
+        var width = 1600, height = 1024, headerHeight = 83, footheight = 38;
+        $('.header-area').css({'height':headerHeight + footheight, 'line-height':headerHeight + footheight + 'px'});
+        $('iframe').css({
+                            'margin-top':headerHeight + footheight + 'px',
+                            'width':width + 'px',
+                            'height':height - headerHeight - footheight + 'px'
+                        });
+        $('.go').on('click', function (e) {
+            if ($('.search-query').val()) {
+                $('iframe').attr('src', $('.search-query').val());
+            }
+        });
+        $('.search-query').on('keyup', function (e) {
+            if (e.keyCode == 13 && this.value) {
+                $('iframe').attr('src', this.value);
+            }
+        });
+        $('.wrapper').on('mousemove', function (e) {
+            var tar = e.target;
+            if (e.offsetY <= (headerHeight+footheight)) {
+                $('.header-area').css('z-index', 1000);
+            } else {
+                $('.header-area').css('z-index', 0);
+            }
+        })
+        S.use('gallery/kcharts/1.1/areachart/index', function (S, AreaChart) {
+            new AreaChart({
+                              "renderTo":"#demo1",
+                              "themeCls":'ks-chart-rainbow',
+                              canvasAttr:{
+                                  x:0,
+                                  y:0,
+                                  width:1600,
+                                  height:1024
+                              },
+                              "defineKey":{
+                                  x:"x",
+                                  y:"y"
+                              },
+                              "xLabels":{
+                                  css:{
+                                      left:"41px",
+                                      top:"6px"
+                                  }
+                              },
+                              "yLabels":{
+                                  css:{
+                                      left:"45px",
+                                      top:"15px"
+                                  }
+                              },
+                              "origin":"mc",
+                              "xGrids":{"isShow":false},
+                              "xAxis":{"text":["1024", "1152", "1280", "1360", "1366", "1441", "1600"]},
+                              "yAxis":{"text":["600", "720", "768", "810", "900", "1024"]},
+                              "series":[
+                                  {"data":10., "label":"1366x768", "x":"1366", "y":"768"},
+                                  {"data":15, "label":"1600x900", "x":"1600", "y":"900"},
+                                  {"data":10, "label":"1280x1024", "x":"1280", "y":"1024"},
+                                  {"data":7, "label":"1280x768", "x":"1280", "y":"768"},
+                                  {"data":14, "label":"1280x720", "x":"1280", "y":"720"},
+                                  {"data":8, "label":"1024x600", "x":"1024", "y":"600"},
+                                  {"data":6, "label":"1152x720", "x":"1152", "y":"720"},
+                                  {"data":9, "label":"1441x810", "x":"1441", "y":"810"},
+                                  {"data":9, "label":"1360x768", "x":"1360", "y":"768"},
+                                  {"data":12, "label":"1024x768", "x":"1024", "y":"768"}
+                              ],
+                              "tip":{
+                                  "css":{
+                                      "border":"3px solid {COLOR}"
+                                  },
+                                  "alignX":"right", "alignY":"bottom",
+                                  "offset":{
+                                      "x":-10, "y":-10
+                                  },
+                                  "boundryDetect":true
+                              }
+                          });
+        });
+    })
+            (KISSY);
+</script>
+</body>
+</html>

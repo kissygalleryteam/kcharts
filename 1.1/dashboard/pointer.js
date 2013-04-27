@@ -17,34 +17,45 @@ KISSY.add('gallery/kcharts/1.1/dashboard/pointer',function(S){
         , pointer
         , paperCx = dashboard.get('cx')
         , paperCy = dashboard.get('cy')
-        , cfg = dashboard.get('vectorPointer') || {}
-        , cx = cfg.cx || 0 // 指针头偏离x y
+        , cfg = dashboard.get('pointer') || {}
+        , cx = cfg.cx || 0 // 指针头中心x y
         , cy = cfg.cy || 0
-        , x = paperCx      // 指针头实际开始位置x y
+        , x = paperCx+cx      // 指针头实际开始位置x y
         , y = paperCy+cy
         , w = dashboard.get('width')
         , h = dashboard.get('height')
 
       // 指针主题
       var themes = {
-        "a":function(){
-          var transform = ['r',angle,paperCx,paperCy].join(',')
+        "a":function(cfg){
+          var transform = ['r',angle-90,x,y].join(',')
             , pathString
             , circlepath
           if(!that.pointer){
-            that.pointer = pointer1(paper,paperCx,paperCy,5,80,{})
+            that.pointer = pointer1(paper,x,y,cfg.r || 5,cfg.R || 80,cfg)
           }
           if(angle){
             that.pointer.animate({transform:transform},effect.ms,effect.easing,effect.callback)
           }
+        },
+        "b":function(){
+
         }
       }
-      var render = themes[cfg.theme] || themes['a']
-      render && render()
+      var render = (cfg.theme && cfg.theme.name && themes[cfg.theme.name]) || themes['a']
+      render && render(cfg.theme)
     }
   })
 
   // 圆头指针
+  /**
+   * @param paper
+   * @param x 指针的中心点x
+   * @param y
+   * @param r 圆头指针的“圆头”半径
+   * @param R 指针半径
+   * @param cfg
+   */
   function pointer1(paper,x,y,r,R,cfg){
     var x1
       , y1
@@ -54,15 +65,15 @@ KISSY.add('gallery/kcharts/1.1/dashboard/pointer',function(S){
       , y3
       , theta = Math.asin(r/R)
 
-    cfg = S.merge({
+    cfg = S.mix({
       fill:'#000',
       stroke:'#000'
-    },cfg)
+    },cfg,true,['stroke','stroke-width','fill'])
 
     x1 = x
     y1 = y - R
     var l = r*Math.cos(theta)
-    x2 = x + l//Math.sqrt(Math.pow(R,2) - Math.pow(r,2))
+    x2 = x + l //Math.sqrt(Math.pow(R,2) - Math.pow(r,2))
     y2 = y - r*r/R
     x3 = x - l
     y3 = y - r*r/R
