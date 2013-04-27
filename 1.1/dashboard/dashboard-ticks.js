@@ -36,14 +36,17 @@ KISSY.add('gallery/kcharts/1.1/dashboard/dashboard-ticks',function(S){
       start = cfg.start || 0
       end = cfg.end  || 2*Math.PI
       n = cfg.n || 60
-      m = cfg.m || 5
+      m = cfg.m
+
+      start -= Math.PI
+      end -= Math.PI
 
       totalAngle = end - start
       // step = parseFloat((totalAngle / n).toFixed(2))
       step = totalAngle / n
 
       for(var i=0;i<=n;i+=1){
-        if(i%m == 0){
+        if(m && i%m == 0){
           continue
         }
         var theta = start+i*step
@@ -58,22 +61,32 @@ KISSY.add('gallery/kcharts/1.1/dashboard/dashboard-ticks',function(S){
         patharray.push("M",x1,y1,"L",x2,y2)
       }
       pathstring = patharray.join(',')
-      paper.path(pathstring)
+      var thinTick = paper.path(pathstring)
+        , style4thin = {
 
-      var patharray4thick = []
-      for(var j=0;j<n;j+=m){
-        var theta = start+j*step
-        unit_x = Math.cos(theta)
-        unit_y = Math.sin(theta)
-        x1 = cx + r*unit_x
-        y1 = cy + r*unit_y
-        x2 = cx + R*unit_x
-        y2 = cy + R*unit_y
-        patharray4thick.push("M",x1,y1,"L",x2,y2)
+        }
+      S.mix(style4thin,cfg.thinStyle,true,['stroke-width','stroke'])
+      thinTick.attr(style4thin)
+      if(m){
+        var patharray4thick = []
+        for(var j=0;j<=n;j+=m){
+          var theta = start+j*step
+          unit_x = Math.cos(theta)
+          unit_y = Math.sin(theta)
+          x1 = cx + r*unit_x
+          y1 = cy + r*unit_y
+          x2 = cx + R*unit_x
+          y2 = cy + R*unit_y
+          patharray4thick.push("M",x1,y1,"L",x2,y2)
+        }
+        pathstring = patharray4thick.join(',')
+        var thick = paper.path(pathstring)
+          , style4thick = {
+            'stroke-width':2
+          }
+        S.mix(style4thick,cfg.thickStyle,true,['stroke-width','stroke'])
+        thick.attr(style4thick)
       }
-      pathstring = patharray4thick.join(',')
-      var thick = paper.path(pathstring)
-      thick.attr('stroke-width','2')
     }
   })
   return Ticks

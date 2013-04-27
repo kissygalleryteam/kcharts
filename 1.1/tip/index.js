@@ -6,7 +6,6 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
 
     var $ = S.all,
         Event = S.Event;
-
     function Tip(cfg) {
 
         if(!cfg) return;
@@ -157,7 +156,6 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
         },
         animateTo:function (x, y, callback) {
             var self = this;
-
             self.show();
 
             var $tip = self.getInstance(),
@@ -230,32 +228,15 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
                     by = boundry.y || 0,
                     w = boundry.width,
                     h = boundry.height;
-                     
-                // if(marginTop < y){
-                //     marginTop = y;
-                //     // S.log("out of boundry at top!");
-                // }else if(marginTop > y + h - height){
-                //     marginTop = y + h - height;
-                //     // S.log("out of boundry at bottom!");
-                // }
-
-                // if(marginLeft < x){
-                //     marginLeft = x;
-                //     // S.log("out of boundry at left!");
-                // }else if(marginLeft > x + w - width){
-                //     marginLeft = x + w - width;
-                //     // S.log("out of boundry at right!");
-                // }
-
                 //躲闪
                 if(marginTop < by){
-                    marginTop = y + Math.abs(offset.y);
+                    marginTop = y -(-Math.abs(offset.y));
                 }else if(marginTop > by + h - height){
                     marginTop = y - height - Math.abs(offset.y); 
                 }
 
                 if(marginLeft < bx){
-                    marginLeft = x + Math.abs(offset.x);
+                    marginLeft = x - (-Math.abs(offset.x));
                 }else if(marginLeft > bx + w - width){
                      marginLeft = x - width - Math.abs(offset.x);
                 }

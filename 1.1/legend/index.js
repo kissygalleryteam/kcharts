@@ -100,7 +100,7 @@
 					});
 				});
 
-			}else if(chartType == "barchart"){
+			}else{
 
 				$(".legend-icon",self.$legend).each(function(obj,index){
 					//获取颜色对象
@@ -162,9 +162,11 @@
 	          if(!$li.hasClass("disable")){
 	            "linechart" === chartType && chart.showLine(index);
 	            "barchart" === chartType && chart.showBar(index);
+	            "scatterchart" === chartType && chart.showPoints(index);
 	          }else{
 	            "linechart" === chartType && chart.hideLine(index);
 	            "barchart" === chartType && chart.hideBar(index);
+	            "scatterchart" === chartType && chart.hidePoints(index);
 	          }
 	      });
 

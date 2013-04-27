@@ -1,0 +1,31 @@
+.ks-charts-legend{
+	position: absolute;
+}
+.ks-charts-legend ul li{
+	display: block;
+	padding: 2px 3px;
+	line-height: 12px;
+	cursor: pointer;
+}
+.ks-charts-legend ul li .legend-icon{
+	width:16px;
+	height:10px;
+	float: left;
+}
+.ks-charts-legend ul li .legend-text{
+	float: left;
+}
+.ks-charts-legend ul li.disable{
+	color:#ccc;
+}
+.clearfix:after {
+      visibility: hidden;
+      display: block;
+      font-size: 0;
+      content: " ";
+      clear: both;
+      height: 0;
+}
+.clearfix{
+      *zoom:1;
+}

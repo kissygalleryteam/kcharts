@@ -1,0 +1,118 @@
+html { -webkit-text-size-adjust:none; }
+
+svg{
+	position: absolute;
+}
+.ks-chart-default{
+	background: #fff;
+}
+.ks-chart-default-title{
+	font-size: 16px;
+	color:#666;
+	font-weight: bold;
+}
+.ks-chart-default-subtitle{
+	font-size: 12px;
+	color:#666;
+}
+.ks-chart-default-gridsx,.ks-chart-default-gridsy{
+	color:#eee;
+}
+.ks-chart-default-axisx,.ks-chart-default-axisy{
+	color:#ccc;
+}
+.ks-chart-default-areas{
+	background: #fff;
+	border: none;
+}
+.ks-chart-default-areas-hover{
+	background: #f7f7f7;
+}
+.ks-chart-default-ylabels,.ks-chart-default-xlabels{
+	color:#666;
+	font-size: 12px;
+}
+
+.ks-chart-default-pointlines{
+	color:#ccc;
+}
+
+
+
+.ks-chart-analytiks{
+	font-family: Microsoft Yahei;
+}
+.ks-chart-analytiks-title{
+	font-size: 16px;
+	color:#ccc;
+	font-weight: bold;
+}
+.ks-chart-analytiks-subtitle{
+	font-size: 12px;
+	color:#666;
+}
+.ks-chart-analytiks-gridsx{
+	color:#f7f7f7;
+}
+
+.ks-chart-analytiks-gridsy{
+	color:#f7f7f7;
+}
+.ks-chart-analytiks-axisx{
+	color: #eee;
+}
+
+.ks-chart-analytiks-axisy{
+	color: #fff;
+}
+.ks-chart-analytiks-areas{
+	background: #fff;
+	border: none;
+}
+.ks-chart-analytiks-areas-hover{
+	background: #fff;
+}
+.ks-chart-analytiks-ylabels,.ks-chart-analytiks-xlabels{
+	color:#999;
+}
+
+
+.ks-chart-darkgreen{
+	background: #1A3C20;
+}
+.ks-chart-darkgreen-title{
+	font-size: 16px;
+	color:#666;
+	font-weight: bold;
+}
+.ks-chart-darkgreen-subtitle{
+	font-size: 12px;
+	color:#666;
+}
+.ks-chart-darkgreen-gridsx{
+	color: #7f7f7f;
+}
+
+.ks-chart-darkgreen-gridsy{
+	color: #7f7f7f;
+}
+.ks-chart-darkgreen-axisx,.ks-chart-darkgreen-axisy{
+	border: 2px solid;
+	color: #999;
+}
+.ks-chart-darkgreen-areas{
+	background: #1A3C20;
+	border: none;
+}
+.ks-chart-darkgreen-ylabels,.ks-chart-darkgreen-xlabels{
+	color:#999;
+}
+
+.ks-chart-evtlayout{
+	z-index: 20;
+	background: #fff;
+	filter:alpha(opacity =1);
+	-moz-opacity:0.01 ;
+	-khtml-opacity: 0.01;
+	opacity: 0.01;
+}

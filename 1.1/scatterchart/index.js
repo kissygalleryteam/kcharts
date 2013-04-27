@@ -65,8 +65,11 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 					 		"r":5,
 					 		"fill":COLOR_TPL,
 					 		"stroke-width":0,
-					 		"opacity":0.6
+					 		"opacity":1
 					 	}
+					 },
+					 legend:{
+					 	isShow:false
 					 },
 					xLabels:{
 						isShow:true,
@@ -82,6 +85,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 						css:{
 							"color":"#666",
 							"font-size": "12px",
+							"white-space":"nowrap",
 							"position":"absolute" 	//修复ie7被遮住的Bug
 						}
 					},
@@ -89,12 +93,14 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 					xAxis:{
 						isShow:true,
 						css:{
+							zIndex:10
 						}
 					},
 					//纵轴
 					yAxis:{
 						isShow:true,
 						css:{
+							zIndex:10
 						},
 						num:5
 					},
@@ -196,17 +202,24 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 		diffStocksSize:function(){
 			var self = this,
 				r = self._cfg.points['attr']['r'],
-				datas = self._datas['cur'],
+				datas = self._datas['total'],
 				allData = [],
 				min,
 				ratio;
 			for(var i in datas){
 				allData = allData.concat(BaseChart.prototype.getArrayByKey.call(null,datas[i]['data'],2));
 			}
-			S.log(allData);
-			if(!allData.length) return;
+			if(!allData.length){
+				S.log("haha")
+				for(var i in self._points){
+					for(var j in self._points[i]){
+						self._points[i][j]['r'] = r;
+					}
+				}
+				return;
+			} 
 			//归一化之后 混入points 半径 定义最小半径 为 配置的半径 权重为1
-			min = Math.min.apply(null,allData);
+			// min = Math.min.apply(null,allData);
 
 			for(var i in self._points){
 				var tmp = BaseChart.prototype.getArrayByKey.call(null,datas[i]['data'],2);
@@ -216,19 +229,22 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 			}
 		},
 		//画圆点
-		drawStocks:function(){
+		drawAllStocks:function(){
 			var self = this;
-
-			self._stocks = {};
-			
+				self._stocks = {_stocks:[]};
 				for(var i in self._points){
-					var stocks = [];
-					for(var j in self._points[i]){
-						var defaultColor = self.color.getColor(i).DEFAULT;
-						stocks[j] = self.drawStock(self._points[i][j].x,self._points[i][j].y,self._points[i][j].r,S.mix(self._cfg.points.attr,{stroke:defaultColor,fill:defaultColor,r:self._points[i][j].r}));
-					}
-					self._stocks[i] = {stocks:stocks}
+					self._stocks[i] = {stocks:self.drawStocks(i)}
 				}
+		},
+		drawStocks:function(index){
+			var self = this,
+				stocks = [],
+				defaultColor = self.color.getColor(index).DEFAULT;
+			for(var i in self._points[index]){
+				var point = self._points[index][i];
+				stocks[i] = self.drawStock(point.x,point.y,point.r,{stroke:defaultColor,fill:defaultColor,r:point.r});
+			}
+			return stocks;
 		},
 		//画单个圆点
 		drawStock:function(x,y,r,attr){
@@ -418,6 +434,9 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 				}
 
 		},
+		/**
+			清除事件代理层节点
+		**/
 		clearEvtLayout:function(){
 			var self = this;
 			if(self._evtEls._rects){
@@ -426,6 +445,122 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 							self._evtEls._rects[i][j].remove();
 						}
 				}
+			}
+		},
+		/**
+			渲染legend
+		**/
+		renderLegend:function(){
+			var self = this,
+				legendCfg = self._cfg.legend,
+				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
+				self.legend = new Legend({
+					container:container,
+					chart:self,
+					evtBind:true,
+					css:legendCfg.css || {}
+				});
+			return self.legend;
+		},
+		/**
+			展示index组散点
+			@param index {number} 索引 
+		**/
+		showPoints:function(index){
+			var self = this;
+
+			BaseChart.prototype.recoveryData.call(self,index);
+
+			self._clonePoints[index] = self._points[index];
+
+			self.animateGridsAndLabels();
+
+			self.animateSiblingsPoints(index);
+
+			self.diffStocksSize();
+
+			self._stocks[index] = {stocks:self.drawStocks(index)};
+
+			self.clearEvtLayout();
+
+			self.renderEvtLayout();
+
+			self.bindEvt();
+
+			S.log(self);
+
+		},
+		
+		/**
+			隐藏index组散点
+			@param index {number} 索引 
+		**/
+		hidePoints:function(index){
+			var self = this;
+
+			BaseChart.prototype.removeData.call(self,index);
+
+			delete self._clonePoints[index];
+
+			self.animateGridsAndLabels();
+
+			for(var i in self._stocks[index]['stocks']){
+					self._stocks[index]['stocks'][i].remove();
+			}
+
+			self.animateSiblingsPoints(index);
+
+			self.clearEvtLayout();
+
+			self.renderEvtLayout();
+
+			self.bindEvt();
+		},
+		/**
+			移动除index外的其他点集
+			@param index {number} 索引 
+		**/
+		animateSiblingsPoints:function(index){
+			var self = this;
+			for(var i in self._stocks)if(index != i){
+				for(var j in self._stocks[i]['stocks']){
+					self._points[i] && 
+					self._stocks[i]['stocks'][j].animate({cx:self._points[i][j]['x'],cy:self._points[i][j]['y']},400);
+				}
+			}
+		},
+		//处理网格和标注
+		animateGridsAndLabels:function(){
+			var self = this,
+				zoomType = self._cfg.zoomType;
+			if(zoomType == "y"){
+				for(var i in self._labelX){
+					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
+					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
+				}
+				self.drawGridsX();
+				self.drawLabelsX();
+			}else if(zoomType == "x"){
+				for(var i in self._labelY){
+					self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
+					self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
+				}	
+				self.drawGridsY();
+				self.drawLabelsY();
+			}else if(zoomType == "xy"){
+				for(var i in self._labelY){
+					self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
+					self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
+				}	
+				self.drawGridsY();
+				self.drawLabelsY();
+
+				for(var i in self._labelX){
+					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
+					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
+				}
+				self.drawGridsX();
+				self.drawLabelsX();
 			}
 		},
 		/**
@@ -448,6 +583,8 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 					clsName:themeCls
 				});
 
+				self._clonePoints = self._points;
+
 				self.drawTitle();
 
 				self.drawSubTitle();
@@ -468,7 +605,9 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 
 				self.diffStocksSize();
 
-				self.drawStocks();
+				self.drawAllStocks();
+
+				_cfg.legend.isShow && self.renderLegend();
 				//事件层
 				self.renderEvtLayout();
 
@@ -480,7 +619,8 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 		},
 		bindEvt:function(){
 			var self = this,
-				evtEls = self._evtEls;
+				evtEls = self._evtEls,
+				hoverAttr = S.clone(self._cfg.points.hoverAttr);
 
 			Evt.detach($("."+evtLayoutRectsCls,$("."+evtLayoutCls,self._$ctnNode)),"mouseenter");
 			Evt.on($("."+evtLayoutRectsCls,$("."+evtLayoutCls,self._$ctnNode)),"mouseenter",function(e){
@@ -488,13 +628,11 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 					rectIndex = $rect.attr("index"),
 					lineIndex = $rect.attr("line_index");
 					if(self._points[lineIndex][rectIndex].dataInfo){
-
 						 self.stockChange(lineIndex,rectIndex);
 						 // 操作tip
 						 self._cfg.tip.isShow && self.tipHandler(lineIndex,rectIndex);
 					   }						
 				});
-			
 			// 绑定画布mouseleave事件
 			Evt.detach(evtEls.paper.$paper,"mouseleave");
 			Evt.on(evtEls.paper.$paper,"mouseleave",function(e){

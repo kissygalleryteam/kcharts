@@ -66,6 +66,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 						css:{
 							"color":"#666",
 							"font-size": "12px",
+							"white-space":"nowrap",
 							"position":"absolute" 	//修复ie7被遮住的Bug
 						}
 					},
@@ -246,7 +247,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 				stackable = self._cfg.stackable,
 				ctn = self._innerContainer,
 				isY = zoomType == "y",
-				len = stackable ? 1 : BaseChart.prototype.obj2Array(self._barPoints).length, //若是堆叠图 则为1
+				len = stackable ? 1 : BaseChart.prototype.obj2Array(self._clonePoints).length, //若是堆叠图 则为1
 				barsRatio = self._cfg.bars.barsRatio, //一组柱的占空比
 				barRatio = self._cfg.bars.barRatio,  //单根柱子的占空比
 				areaWidth =  isY ? (self._pointsY.length > 1 ? (self._pointsY[1].y - self._pointsY[0].y) : ctn.height): (self._pointsX.length > 1?(self._pointsX[1].x - self._pointsX[0].x):ctn.width)  , //area总宽度
@@ -608,7 +609,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 					top:ctn.tl.y
 				});
 				//clone
-				self._barPoints = self._points;
+				self._clonePoints = self._points;
 
 				self.getBarsPos();
 				//渲染html画布
@@ -720,7 +721,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 				if(!tpl) return;
 
 				tip.fire("setcontent",{data:tipData})
-
+				// S.log(posx)
 				tip.fire("move",{x:posx,y:posy,style:self.processAttr(_cfg.tip.css,defaultColor)});
 		},
 		//处理网格和标注
@@ -762,7 +763,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 
 				BaseChart.prototype.recoveryData.call(self,barIndex);
 
-				self._barPoints[barIndex] = self._points[barIndex];
+				self._clonePoints[barIndex] = self._points[barIndex];
 
 				self.animateGridsAndLabels();
 
@@ -817,7 +818,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 
 				BaseChart.prototype.removeData.call(self,barIndex);
 
-				delete self._barPoints[barIndex];
+				delete self._clonePoints[barIndex];
 
 				self.animateGridsAndLabels();
 
