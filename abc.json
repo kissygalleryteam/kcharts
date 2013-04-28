@@ -1,0 +1,11 @@
+{
+    "name": "kcharts",
+    "version":"1.1",
+    "author":{
+      "name":"胡潇琪",
+    	"email":"382850581@qq.com",
+    	"page":"https://github.com/huxiaoqi567"
+    },
+    "cover":"http://img02.taobaocdn.com/tps/i2/T1TQygXEteXXXr6JI6-109-50.png",
+    "desc":"Kissy图表组件集合"
+}
