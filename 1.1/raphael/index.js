@@ -4032,7 +4032,7 @@ window.Raphael.svg && function (R) {
                 i = value.length;
             while (i--) {
                 //fixed px bug by huxiaoqi
-                dashes[i] = value[i] * (width+"").repalce("px","") + ((i % 2) ? 1 : -1) * butt;
+                dashes[i] = value[i] * (width+"").replace("px","") + ((i % 2) ? 1 : -1) * butt;
             }
 
             $(o.node, {"stroke-dasharray": dashes.join(",")});
