@@ -116,27 +116,20 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 				numbers,
 				arg = arguments[0],
 				dataType = self.getDataType();
-
 				if(_cfg.stackable){
 					//堆叠图 需要叠加多组数据 进行计算
 					for(var i in self._datas['cur']){
-							if(dataType == "object" && _cfg.defineKey.y && _cfg.defineKey.x){
-								numbers = self.getArrayByKey(self._datas['cur'][i]['data'],_cfg.defineKey.y);
-							}
-							else if(S.isArray(self._datas['cur'][i]['data'])){
-								if(zoomType == "xy"){
-									numbers = self.getArrayByKey(self._datas['cur'][i]['data'],arg)
-								}else{
-									numbers = self._datas['cur'][i]['data'];
-								}
-							}
+						if(dataType == "object" && _cfg.defineKey.y && _cfg.defineKey.x){
+							numbers = self.getArrayByKey(self._datas['cur'][i]['data'],_cfg.defineKey.y);
+						}else if(S.isArray(self._datas['cur'][i]['data'])){
+							numbers = self._datas['cur'][i]['data'];
 						}
 						for(var j in numbers){
 							allDatas[j] = allDatas[j] ? numbers[j] + allDatas[j] : numbers[j];
 						}
+					}
 				}else{
 					for(var i in self._datas['cur']){
-
 							if(dataType == "object" && _cfg.defineKey.y && _cfg.defineKey.x){
 								numbers = self.getArrayByKey(self._datas['cur'][i]['data'],_cfg.defineKey.y);
 							}
@@ -154,11 +147,11 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 		},
 		getDataType:function(){
 			var self = this;
-			if(!self._datas['cur'][0] || !self._datas['cur'][0]['data']) return;
-			for(var i in self._datas['cur'][0]['data']){
-				if(S.isPlainObject(self._datas['cur'][0]['data'][i])){
+			if(!self._datas['total'][0] || !self._datas['total'][0]['data']) return;
+			for(var i in self._datas['total'][0]['data']){
+				if(S.isPlainObject(self._datas['total'][0]['data'][i])){
 					return "object";
-				}else if(S.isNumber(self._datas['cur'][0]['data'][i] - 0)){
+				}else if(S.isNumber(self._datas['total'][0]['data'][i] - 0)){
 					return "number";
 				}
 			}
@@ -249,6 +242,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 														dataInfo:data[j],	//数据信息 暂时将series.data的数据 和 series下的数据 耦合
 														index:Math.round(i)		//索引
 													};
+													
 													j++;
 												}else{
 													points[i] = {
@@ -321,13 +315,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 									}
 									return points;
 								};
-
-				// S.log(allDatas);
-				// S.log(allDatasX);
-				// S.log(coordNum);
-				// S.log(coordNumX);
-				// S.log(coordPos);
-				// S.log(coordPosX);
 
 				if(zoomType == "x"){
 					for(var i in coordPos){
@@ -567,17 +554,11 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 			@return array
 		*/
 		getArrayByKey:function(array,key){
-
 			var tmp = [];
-
 			for(var i  in array){
-
 				array[i][key] ? tmp.push(array[i][key]) : undefined;
-
 			}
-
 			return tmp;
-
 		},
 		/*
 			TODO 判断是否是浮点数

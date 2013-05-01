@@ -291,7 +291,6 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 					tmpStocks[i] = "";
 				}
 
-
 				first_index = self.getFirstUnEmptyPointIndex(lineIndex);
 
 			    tmpStocks[first_index] = self.drawStock(points[first_index]['x'],points[first_index]['y'],self.processAttr(_cfg.points.attr,_attr.stroke),type);
@@ -340,22 +339,28 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 			TODO 获取直线的路径
 		**/
 		getLinePath:function(points){
+			// S.log(points)
 			var self = this,
 				path = "",
 				ctnY = self._innerContainer.bl.y,
 				len = self.getRealPointsNum(points),
-				// len = self.
 				start = 0;
 			//找出起始点
-			while(!points || !points[start] || !points[start]['x'] || !points[start]['y']){
-					start ++;
-			}
+			if(!points) return "";
+
+			start = (function(){
+				for(var i in points){
+					if(!self.isEmptyPoint(points[i])){
+						return Math.round(i);
+					}
+				}
+			})();
 
 			path += "M" + points[start]['x'] + "," + points[start]['y'];
 			//当只有2个点的时候 则用直线绘制
 			if(self._cfg.lineType == "arc" && len > 2){
 				path += " R";
-				for(var i = start+1,len = points.length;i < len;i++)if(points[i]['x'] && points[i]['y']){
+				for(var i = start + 1,len = points.length;i < len;i++)if(points[i]['x'] && points[i]['y']){
 					//贝塞尔曲线 
 					path +=  points[i]['x'] + "," + points[i]['y'] + " ";
 				}
@@ -974,12 +979,11 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 				stock;
 			if(!self._lines[lineIndex]['isShow']) return;
 
+			self._lines[lineIndex]['isShow'] = false;
+
 			if(lineIndex == self.curIndex){
 				self.curIndex = self.getFirstVisibleLineIndex();
 			}
-
-			self._lines[lineIndex]['isShow'] = false;
-
 			//删除某条线的数据
 			BaseChart.prototype.removeData.call(self,lineIndex);
 			self.animateGridsAndLabels();
@@ -994,13 +998,15 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 				}
 				self._stocks[i]['points'] = self._points[i];
 			}
-			//线动画
 			for(var i in self._lines)if(i != lineIndex){
 				var newPath = self.getLinePath(self._points[i]),
 					oldPath = self._lines[i]['path'];
+
+					// S.log("newPath:"+newPath);
+					// S.log("oldPath:"+oldPath);
 				//防止不必要的动画	
 				if(oldPath != newPath && newPath != ""){
-					//动画状态
+					// 动画状态
 					self._isAnimating = true;
 					self._lines[i]['line'] && self._lines[i]['line'].stop() && self._lines[i]['line'].animate({path:newPath},duration,function(){
 						self._isAnimating = false;

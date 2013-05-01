@@ -5,7 +5,7 @@
 ;KISSY.add('gallery/kcharts/1.1/legend/index',function(S,HtmlPaper,Raphael,Template,graphTool,undefined){
 	var $ = S.all,
 		Evt = S.Event;
-
+		
 	function Legend(cfg){
 		var self = this;
 			self._cfg = S.mix({
