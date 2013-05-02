@@ -1138,9 +1138,9 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 				tip.fire("setcontent",{data:tipData});
 				tip.fire("move",{x:curPoint.x,y:curPoint.y,style:self.processAttr(_cfg.tip.css,color)});
 		},
-		areaChange:function(){
+		areaChange:function(index){
 			var self = this;
-				self.fire("areaChange",self);
+				self.fire("areaChange",{index:index});
 		},
 		paperLeave:function(){
 			var self = this;

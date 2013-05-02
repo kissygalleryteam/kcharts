@@ -1,0 +1,39 @@
+.main-container{
+	width:1000px;
+	min-height: 200px;
+	margin:0px auto;
+}
+.preview-wrapper{
+	width:600px;
+	height:400px;
+	float: left;
+	border: 1px solid;
+}
+.config-wrapper{
+	width:390px;
+	height:400px;
+	float: right;
+	border: 1px solid;
+}
+.config-wrapper .config-item{
+	padding: 4px;
+}
+.config-wrapper .config-item .txt{
+	width:360px;
+	height:26px;
+	border:2px solid #ccc;
+}
+.config-wrapper .config-item textarea{
+	width:360px;
+	height: 100px;
+	border:2px solid #ccc;
+}
+.tbl-series{
+
+}
+.tbl-series td{
+	padding: 2px
+}
+.tbl-series td input{
+	width:40px;
+}
