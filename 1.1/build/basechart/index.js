@@ -556,7 +556,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 		getArrayByKey:function(array,key){
 			var tmp = [];
 			for(var i  in array){
-				array[i][key] ? tmp.push(array[i][key]) : undefined;
+				tmp.push(array[i][key]);
 			}
 			return tmp;
 		},
