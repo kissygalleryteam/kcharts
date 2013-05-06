@@ -1,9 +1,7 @@
 KISSY.add('gallery/kcharts/1.2/tools/color/index',function(S){
 
-	var Color = function(cfg){
-
+	function Color(cfg){
 		this.init(cfg);
-
 	};
 
 	//see http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color
@@ -27,7 +25,7 @@ KISSY.add('gallery/kcharts/1.2/tools/color/index',function(S){
 	    return "#"+RR+GG+BB;
 	  }
 
-	S.augment(Color,{
+	Color.prototype = {
 		init:function(cfg){
 			var themeCls = cfg && cfg.themeCls || "ks-chart-default";
 				this._colors = this.colorCfg[themeCls] || this.colorCfg["ks-chart-default"];
@@ -104,8 +102,9 @@ KISSY.add('gallery/kcharts/1.2/tools/color/index',function(S){
 			}
 			return colors;
 		}
-	});
-
+	};
+  Color.prototype.constructor = Color;
+  S.namespace('KCharts.Tools');
+  S.KCharts.Tools.Color = Color;
 	return Color;
-
 });

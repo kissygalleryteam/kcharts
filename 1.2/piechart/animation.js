@@ -1,6 +1,6 @@
 // -*- coding: utf-8; -*-
 KISSY.add('gallery/kcharts/1.2/piechart/animation',function(S,Anim){
-  var Easing = Anim.Easing
+  var Easing = (Anim && Anim.Easing) || S.Easing
     , requestAnimFrame = window.requestAnimationFrame       ||
                          window.webkitRequestAnimationFrame ||
                          window.mozRequestAnimationFrame    ||
@@ -16,6 +16,7 @@ KISSY.add('gallery/kcharts/1.2/piechart/animation',function(S,Anim){
                              window.msCancelAnimationFrame     ||
                              clearTimeout
     , dft
+
   dft = {
     duration:1000,
     easing:'easeNone'
@@ -28,7 +29,7 @@ KISSY.add('gallery/kcharts/1.2/piechart/animation',function(S,Anim){
       , end = begin + opts.duration
       , now = begin
       , diff = opts.duration
-      , fx = Easing[opts.easing]
+      , fx = Easing[opts.easing] || Easing.easeNone
       , step = opts.step || S.noop
       , isArray = S.isArray(fromProps)
       , props = isArray ? [] : {}
@@ -117,6 +118,8 @@ KISSY.add('gallery/kcharts/1.2/piechart/animation',function(S,Anim){
     run();
     return api;
   }
+  S.namespace('KCharts');
+  S.KCharts.Animate = Animate;
   return Animate;
 },{
   requires:['anim']

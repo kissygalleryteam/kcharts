@@ -1,13 +1,11 @@
-﻿{
+{
     "name": "kcharts",
     "version": "1.1",
-    "desc": "请修改组件描述",
-    "cover": "",
+    "desc": "KISSY图表组件集",
+    "cover": "http://img02.taobaocdn.com/tps/i2/T1TQygXEteXXXr6JI6-109-50.png",
     "author": {
         "name": "huxiaoqi",
         "email": "382850581@qq.com",
         "page": "http://v.idcnc.com.cn"
-    },
-    "type": "kissy-pie",
-    "type-url": "http://abc.alibaba-inc.com/r/kissy-pie"
+    }
 }
