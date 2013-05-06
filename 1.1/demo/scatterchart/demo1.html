@@ -20,14 +20,13 @@
 <script>
 (function(S){
     var $ = S.all,Evt = S.Event;
-	// S.Config.debug = true;
+	S.Config.debug = true;
 	S.config({
-       combine:true,
 	  packages:[
 	    {
 	      name:"gallery",
-	       path:"http://a.tbcdn.cn/s/kissy/",
-           // path:"../../../../../",
+	       // path:"http://a.tbcdn.cn/s/kissy/",
+           path:"../../../../../",
 	      charset:"utf-8"
 	    }
 	  ]
@@ -238,7 +237,17 @@ var series = [{
                 isShow:false
             },
             xAxis: {
-                num:20
+                num:14
+             },
+             xLabels:{
+               css:{
+                    "padding-top":"5px"
+               }
+             },
+              yLabels:{
+               css:{
+                    "text-indent":"-5px"
+               }
              },
              yAxis:{
                     num:10

@@ -171,9 +171,11 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					_min = Math.min.apply(null,allDatas),
 					//纵轴上下各有10%的延展
 					offset = (_max - _min) * 0.1 || min * 1 || 10,
-					//修复最大值最小值的问题 
-					max = cmax || cmax == 0 ? (cmax >= _max ? (cmax >= _max + offset ? _max + offset : cmax) : _max + offset) : _max + offset,
-					min = (cmin || cmin == 0) ? (cmin <= _min ? (cmin <= _min - offset ? _min - offset : cmin) : _min - offset) : _min - offset;
+					//修复最大值最小值的问题  bug
+					// max = cmax || cmax == 0 ? (cmax >= _max ? (cmax >= _max + offset ? _max + offset : cmax) : _max + offset) : _max + offset,
+					// min = (cmin || cmin == 0) ? (cmin <= _min ? (cmin <= _min - offset ? _min - offset : cmin) : _min - offset) : _min - offset;
+					max = (cmax || cmax == 0) ? (cmax >= _max ? cmax: _max + offset) : _max + offset,
+					min = (cmin || cmin == 0) ? (cmin <= _min ? cmin : _min - offset) : _min - offset;
 				return self.getScales(max,min,num);
 			}
 		},
@@ -208,6 +210,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 				coordPos = self.data2GrapicData(coordNum,false,true);
 			}else if(zoomType == "y"){
 				allDatasX = self.getAllDatas();
+				S.log(allDatasX)
 				curCoordNum = coordNumX = self.coordNumX = self._getScales(allDatasX,_cfg.xAxis);
 				coordPosX = self.data2GrapicData(coordNumX,true,false);
 			}else if(zoomType == "xy"){
@@ -556,7 +559,9 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 		getArrayByKey:function(array,key){
 			var tmp = [];
 			for(var i  in array){
-				tmp.push(array[i][key]);
+				if(array[i][key] || S.isNumber(array[i][key])){
+					tmp.push(array[i][key]);
+				}
 			}
 			return tmp;
 		},
