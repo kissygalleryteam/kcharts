@@ -18,21 +18,95 @@ module.exports = function(grunt) {
             options: {
                 packages: [
                     {
-                        name: '<%= pkg.name %>',
-                        path: '../'
+                        name:"gallery",
+                        path: '../../'
                     }
                 ],
-                map: [["<%= pkg.name %>/", "gallery/<%= pkg.name %>/"]]
+                map: [["<%= pkg.name %>/", "gallery/<%= pkg.name %>/"]],
+                // exclude :['base','event','template','anim']
+                // ignoreFiles:[/tools/]
+                // ignoreFiles:['/tools/*','/legend/*','/tip/*','/raphael/*','/ft/*','/basechart/*']
+               exclude: ['event','template','/tools/*','/legend/*','/tip/*','/raphael/*','/ft/*','/basechart/*']
             },
             main: {
                 files: [
                     {
-                        src: "<%= pkg.version %>/index.js",
-                        dest: "<%= pkg.version %>/build/index.js"
+                        src: "<%= pkg.version %>/areachart/index.js",
+                        dest: "<%= pkg.version %>/build/areachart/index.js"
                     },
+                    {
+                        src: "<%= pkg.version %>/barchart/index.js",
+                        dest: "<%= pkg.version %>/build/barchart/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/basechart/index.js",
+                        dest: "<%= pkg.version %>/build/basechart/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/dashboard/index.js",
+                        dest: "<%= pkg.version %>/build/dashboard/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/ft/index.js",
+                        dest: "<%= pkg.version %>/build/ft/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/label/index.js",
+                        dest: "<%= pkg.version %>/build/label/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/legend/index.js",
+                        dest: "<%= pkg.version %>/build/legend/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/mapchart/index.js",
+                        dest: "<%= pkg.version %>/build/mapchart/index.js"
+                    },
+
                     {
                         src: "<%= pkg.version %>/linechart/index.js",
                         dest: "<%= pkg.version %>/build/linechart/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/piechart/index.js",
+                        dest: "<%= pkg.version %>/build/piechart/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/raphael/index.js",
+                        dest: "<%= pkg.version %>/build/raphael/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/ratiochart/index.js",
+                        dest: "<%= pkg.version %>/build/ratiochart/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/scatterchart/index.js",
+                        dest: "<%= pkg.version %>/build/scatterchart/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/sumdetailchart/index.js",
+                        dest: "<%= pkg.version %>/build/sumdetailchart/index.js"
+                    },
+
+                    {
+                        src: "<%= pkg.version %>/tip/index.js",
+                        dest: "<%= pkg.version %>/build/tip/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/tools/color/index.js",
+                        dest: "<%= pkg.version %>/build/tools/color/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/tools/graphtool/index.js",
+                        dest: "<%= pkg.version %>/build/tools/graphtool/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/tools/htmlpaper/index.js",
+                        dest: "<%= pkg.version %>/build/tools/htmlpaper/index.js"
+                    },
+                    {
+                        src: "<%= pkg.version %>/tools/touch/index.js",
+                        dest: "<%= pkg.version %>/build/tools/touch/index.js"
                     }
                 ]
             }
@@ -45,8 +119,26 @@ module.exports = function(grunt) {
             },
             base: {
                 files: {
-                    '<%= pkg.version %>/build/index-min.js': ['<%= pkg.version %>/build/index.js'],
-                    '<%= pkg.version %>/build/linechart/index-min.js': ['<%= pkg.version %>/build/linechart/index.js']
+                    '<%= pkg.version %>/build/areachart/index-min.js': ['<%= pkg.version %>/build/areachart/index.js'],
+                    '<%= pkg.version %>/build/barchart/index-min.js': ['<%= pkg.version %>/build/barchart/index.js'],
+                    '<%= pkg.version %>/build/basechart/index-min.js': ['<%= pkg.version %>/build/basechart/index.js'],
+                    '<%= pkg.version %>/build/dashboard/index-min.js': ['<%= pkg.version %>/build/dashboard/index.js'],
+                    '<%= pkg.version %>/build/ft/index-min.js': ['<%= pkg.version %>/build/ft/index.js'],
+                    '<%= pkg.version %>/build/label/index-min.js': ['<%= pkg.version %>/build/label/index.js'],
+                    '<%= pkg.version %>/build/legend/index-min.js': ['<%= pkg.version %>/build/legend/index.js'],
+                    '<%= pkg.version %>/build/mapchart/index-min.js': ['<%= pkg.version %>/build/mapchart/index.js'],
+                    '<%= pkg.version %>/build/linechart/index-min.js': ['<%= pkg.version %>/build/linechart/index.js'],
+                    '<%= pkg.version %>/build/piechart/index-min.js': ['<%= pkg.version %>/build/piechart/index.js'],
+                    '<%= pkg.version %>/build/raphael/index-min.js': ['<%= pkg.version %>/build/raphael/index.js'],
+                    '<%= pkg.version %>/build/ratiochart/index-min.js': ['<%= pkg.version %>/build/ratiochart/index.js'],
+                    '<%= pkg.version %>/build/scatterchart/index-min.js': ['<%= pkg.version %>/build/scatterchart/index.js'],
+                    '<%= pkg.version %>/build/sumdetailchart/index-min.js': ['<%= pkg.version %>/build/sumdetailchart/index.js'],
+                    '<%= pkg.version %>/build/tip/index-min.js': ['<%= pkg.version %>/build/tip/index.js'],
+                   '<%= pkg.version %>/build/tools/color/index-min.js': ['<%= pkg.version %>/build/tools/color/index.js'],
+                   '<%= pkg.version %>/build/tools/graphtool/index-min.js': ['<%= pkg.version %>/build/tools/graphtool/index.js'],
+                   '<%= pkg.version %>/build/tools/htmlpaper/index-min.js': ['<%= pkg.version %>/build/tools/htmlpaper/index.js'],
+                   '<%= pkg.version %>/build/tools/touch/index-min.js': ['<%= pkg.version %>/build/tools/touch/index.js']
+
                 }
             }
         }
