@@ -1,11 +1,15 @@
 /**
- * @fileOverview KChart 1.1  tip
+ * @fileOverview KChart 1.2  tip
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) {
+KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) {
 
     var $ = S.all,
+        D = S.DOM,
         Event = S.Event;
+
+    Base || (Base = S.Base);
+    Template || (Template = S.Template);
 
     function Tip(cfg) {
 
@@ -112,7 +116,7 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
         },
         isVisable:function () {
 
-            return this.$tip.css("display") == "none" ? false : true;
+            return D.css(this.$tip,"display") == "none" ? false : true;
 
         },
         show:function () {
@@ -129,7 +133,7 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
 
             var self = this;
 
-            self.$tip && self.$tip.stop() && self.$tip.hide();
+            self.$tip && self.$tip.stop && self.$tip.stop() && self.$tip.hide();
 
             return self;
 
@@ -198,10 +202,14 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
                 alignX = _cfg.alignX,
                 alignY = _cfg.alignY,
                 $tip = self.getInstance(),
-                width = $tip.outerWidth(),
-                height = $tip.outerHeight(),
+                // kissy1.1.6 不支持
+                // width = $tip.outerWidth(),
+                // height = $tip.outerHeight(),
+                width = ($tip.outerWidth && $tip.outerWidth()) || $tip.width(),
+                height = ($tip.outerHeight && $tip.outerHeight()) || $tip.height(),
                 boundry = _cfg.boundry;
 
+            // TODO kissy.1.1.6不支持set get方法
             self.set("x",x || 0);
 
             self.set("y",y || 0);
@@ -230,7 +238,7 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
                     by = boundry.y || 0,
                     w = boundry.width,
                     h = boundry.height;
-                     
+
                 // if(marginTop < y){
                 //     marginTop = y;
                 //     // S.log("out of boundry at top!");
@@ -251,7 +259,7 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
                 if(marginTop < by){
                     marginTop = y + Math.abs(offset.y);
                 }else if(marginTop > by + h - height){
-                    marginTop = y - height - Math.abs(offset.y); 
+                    marginTop = y - height - Math.abs(offset.y);
                 }
 
                 if(marginLeft < bx){
@@ -279,24 +287,37 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
 
             if (!_cfg.rootNode.offset()) return;
 
-            self.$tip = !self._isExist() && $('<span class="' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
-                .css({"display":display})
-                .appendTo(_cfg.rootNode);
+            self.$tip = !self._isExist() && D.create('<span class="' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>');
+            self.$tip = S.Node(self.$tip);
+
+            D.css(self.$tip,{"display":display})
+            // KISSY.1.16 不支持此方法
+            // D.appendTo(self.$tip,_cfg.rootNode);
+            D.append(self.$tip,_cfg.rootNode);
 
             self.$corner = (_cfg.corner.isShow && _cfg.corner.tpl) ? $("<div class='" + _cfg.clsName + "-corner'>" + _cfg.corner.tpl + "</div>").css(_cfg.corner.css).appendTo(self.$tip) : undefined;
 
-            self.$tip.css({
+            D.css(self.$tip,{
                               "margin-top":rootNodeOffset.top + _cfg.offset.y,
                               "margin-left":rootNodeOffset.left + _cfg.offset.x,
                               "position":"absolute"
                           });
-
             self.renderTemplate(_tpl, _data);
-
             return self.$tip;
         }
     });
 
+    if (!S.KCharts || !S.KCharts.Tip){
+      S.namespace('S.KCharts.Tip');
+    }
+    S.KCharts.Tip = Tip;
     return Tip;
 
 }, {requires:['base','gallery/template/1.0/index', './assets/tip.css']});
+
+
+
+
+
+
+
