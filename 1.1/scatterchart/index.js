@@ -223,6 +223,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 
 			for(var i in self._points){
 				var tmp = BaseChart.prototype.getArrayByKey.call(null,datas[i]['data'],2);
+				S.log(tmp)
 				for(var j in self._points[i])if(tmp.length > 0){
 					self._points[i][j]['r'] = tmp[j] * r;
 				}

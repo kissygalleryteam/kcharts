@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.1  legend
  * @author huxiaoqi567@gmail.com
  */
-;KISSY.add('gallery/kcharts/1.1/legend/index',function(S,HtmlPaper,Raphael,Template,graphTool,undefined){
+;KISSY.add('gallery/kcharts/1.1/legend/index',function(S,Raphael,Template,graphTool,undefined){
 	var $ = S.all,
 		Evt = S.Event;
 		
@@ -184,8 +184,7 @@
 	return Legend;
 
 },{requires:[
-	'gallery/kcharts/1.1/tools/htmlpaper/index'
-	,'gallery/kcharts/1.1/raphael/index'
+	'gallery/kcharts/1.1/raphael/index'
 	,'gallery/template/1.0/index'
 	,'gallery/kcharts/1.1/tools/graphtool/index'
 	,'./assets/legend.css'
