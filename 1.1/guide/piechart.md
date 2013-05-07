@@ -1,0 +1,106 @@
+# PieChart
+---
+代码示例
+---
+```
+KISSY.use('gallery/kcharts/1.1/piechart/index',function(S,PieChart){
+  function helperRand(a,b){
+    return Math.floor(Math.random()*(b-a+1)+a);
+  }
+  var data = [{data:30,label:'30%','tip':'per'},{data:30,label:'30%','tip':'per'},{data:40,label:'40%','tip':'percent'}]
+    ,labels = ['30%','40%','30%']
+    ,colors = [{DEFAULT:'red'}]
+
+  var piechart = new PieChart({
+    renderTo:'#canvas',
+    cx:150,
+    cy:150,
+    r:100,
+    data:data,
+    colors:colors,
+    labelIndside:false, //label不标注在扇形内
+    anim:{
+      type:'sector',
+      easing:'bounceOut',
+      duration:1000
+    },
+    tip:{
+      boundryDetect:true,
+      tpl:"{{tip}} {{percent*100+'%'}}"
+    },
+    labelline:{
+      attr:{
+        stroke:"red"
+      }
+    }
+  });
+});
+
+```
+
+---
+Config（详细配置）
+---
+### renderTo 
+{ id|HTMLElement } 容器
+
+### cx
+饼图中心点x坐标
+
+### cy
+饼图中心点y坐标
+
+### R
+半径
+
+### r
+空心半径，必须小于R
+
+### data
+数据，每个数据段可以包含一些额外的数据，共tip在渲染模板时调用
+
+### colors
+扇形的颜色，长度和data对应
+
+### labelIndside
+label标注在扇形区域内
+
+### anim
+动画配置
+- `type` { string } 动画类型 可选"r","sector"
+- `easing` { string } 动画效果
+- `duration` { number } 动画运行时间
+
+### tip
+提示，同linechart的tip
+
+### label
+设为`false`，表示不展示label，否则展示
+
+### labelline
+饼图标注线条的配置
+- `attr` { object } 线条的属性
+
+
+---
+Event（事件）
+---
+
+### mouseenter
+
+```
+piechart.on("mouseenter",function(e){
+    e.sector //扇形
+    e.data //对应的数据data
+    e.index //数据索引
+})
+```
+
+### mouseleave
+同mouseenter
+
+### click
+同mouseenter
+
+### afterRender
+同mouseenter
