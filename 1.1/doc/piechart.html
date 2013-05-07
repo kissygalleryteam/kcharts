@@ -48,38 +48,71 @@ KISSY.use('gallery/kcharts/1.1/piechart/index',function(S,PieChart){
 ```
 
 ---
-API
+Config（详细配置）
 ---
-### 配置 PieChart(cfg)
+### renderTo 
+{ id|HTMLElement } 容器
 
-`cfg` 为一个`object`包含字段：
-- `renderTo` piechart容器
-- `cx` 饼图中心点x坐标
-- `cy` 饼图中心点y坐标
-- `R` 半径
-- `r` 空心半径，必须小于R
-- `data` 数据，每个数据段可以包含一些额外的数据，共tip在渲染模板时调用
-- `colors` 扇形的颜色，长年和data对应
-- `labelIndside` label标注在扇形区域内
-- `anim` 动画配置 `type:r` 半径动画，`type:sector`扇形展开动画，`easing` Kissy动画效果，`duration`动画运行时间
-- `tip` 提示，同linechart的tip
-- `label` 设为`false`，表示不展示label，否则展示
-- `labelline` 饼图标注线条的配置
->- `attr` 线条的属性`object`
+### cx
+饼图中心点x坐标
 
-### 事件 Event
+### cy
+饼图中心点y坐标
 
-- `mouseenter` `function(e){}`，事件对象`e` 包含：
+### R
+半径
 
->- `e.sector` 扇形
->- `e.data` 对应的数据data
->- `e.index` 数据索引
+### r
+空心半径，必须小于R
 
-- `mouseleave` 同mouseenter
+### data
+数据，每个数据段可以包含一些额外的数据，共tip在渲染模板时调用
 
-- `click` 同mouseenter
+### colors
+扇形的颜色，长度和data对应
 
-- `afterRender` 
+### labelIndside
+label标注在扇形区域内
+
+### anim
+动画配置
+- `type` { string } 动画类型 可选"r","sector"
+- `easing` { string } 动画效果
+- `duration` { number } 动画运行时间
+
+### tip
+提示，同linechart的tip
+
+### label
+设为`false`，表示不展示label，否则展示
+
+### labelline
+饼图标注线条的配置
+- `attr` { object } 线条的属性
+
+
+---
+Event（事件）
+---
+
+### mouseenter
+
+```
+piechart.on("mouseenter",function(e){
+    e.sector //扇形
+    e.data //对应的数据data
+    e.index //数据索引
+})
+```
+
+### mouseleave
+同mouseenter
+
+### click
+同mouseenter
+
+### afterRender
+同mouseenter
 
 
   </xmp>

@@ -942,7 +942,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 			},
 			tip:{
 				css:{
-					"border":"2px solid {COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		},
@@ -1000,7 +1000,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 			},
 			tip:{
 				css:{
-					"background":"{COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		},
@@ -1058,7 +1058,7 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 			},
 			tip:{
 				css:{
-					background:"{COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		}

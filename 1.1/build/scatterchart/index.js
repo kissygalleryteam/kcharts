@@ -788,7 +788,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 			},
 			tip:{
 				css:{
-					"border":"2px solid {COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		},
@@ -865,7 +865,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 			},
 			tip:{
 				css:{
-					"background":"{COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 
@@ -943,7 +943,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 			},
 			tip:{
 				css:{
-					background:"{COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		}
