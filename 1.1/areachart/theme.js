@@ -77,7 +77,7 @@ KISSY.add("gallery/kcharts/1.1/areachart/theme",function(S){
 			},
 			tip:{
 				css:{
-					"border":"2px solid {COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		},
@@ -154,7 +154,7 @@ KISSY.add("gallery/kcharts/1.1/areachart/theme",function(S){
 			},
 			tip:{
 				css:{
-					"background":"{COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 
@@ -234,7 +234,7 @@ KISSY.add("gallery/kcharts/1.1/areachart/theme",function(S){
 			},
 			tip:{
 				css:{
-					background:"{COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		}
