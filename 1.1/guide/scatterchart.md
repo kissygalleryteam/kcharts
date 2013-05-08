@@ -1,5 +1,11 @@
 # ScatterChart
 ---
+Demo
+---
+[scatter](../demo/scatterchart/demo1.html) 散点图<br/>
+[bubble](../demo/scatterchart/demo2.html) 气泡图<br/>
+
+---
 代码示例
 ---
 ```
