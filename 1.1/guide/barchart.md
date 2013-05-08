@@ -1,5 +1,13 @@
 # BarChart
 ---
+Demo
+---
+[basic column](../demo/barchart/demo1.html) 纵向柱形图<br/>
+[stack column](../demo/barchart/demo2.html) 纵向堆叠柱形图<br/>
+[stack bar](../demo/barchart/demo3.html) 横向堆叠柱形图<br/>
+[multi column](../demo/barchart/demo4.html) 纵向多柱形图<br/>
+
+---
 代码示例
 ---
 ```
