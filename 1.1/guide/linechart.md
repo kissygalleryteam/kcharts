@@ -1,4 +1,12 @@
 # LineChart
+
+---
+Demo
+---
+[line-chart](../demo/linechart/demo1.html) 单个数据曲线<br/>
+[line-chart-compare](../demo/linechart/demo2.html) 多线比较<br/>
+
+
 ---
 代码示例
 ---
