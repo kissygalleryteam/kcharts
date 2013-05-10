@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, HtmlPaper, Legend, Tip, Theme, MapData) {
+KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, HtmlPaper, Legend, Tip, Theme, MapData){
               var $ = S.all,
                   Event = S.Event;
 
@@ -86,9 +86,8 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                   drawMap:function (d) {
                       var self = this,
                           _cfg = self._cfg;
-
-                      self.areaText = self.formatText(d);
                       self.drawPath(d);
+                      self.areaText = self.formatText(d);
                       self.drawAreaText(self.areaText);
                   },
                   processAttr:function (attrs, color) {
@@ -128,8 +127,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
 
                       var color = getDefaultColor();
                       S.each(paths, function (ph, index) {
-                          var path = paper.path(ph.path),
-                              box = path.getBBox();
+                          var path = paper.path(ph.path);
                           path.attr(self.getAreaCss(index, color, 'attr'));
                           path['index'] = index;
                           self.pathList[index] = path;
@@ -199,10 +197,10 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                   drawAreaText:function (o) {
                       var self = this,
                           _cfg = self._cfg,
-                          tpl = '<span style="{defStyle}" class="{cls}">{text}</span>',
-                          style = "position: absolute;left:{x}px;top:{y}px",
+                          tpl = '<div style="{defStyle}" class="{cls}">{text}</div>',
+                          style = "position: absolute;left:{x}px;top:{y}px;width:3em;",
                           defStyle = self.formatCss(_cfg.areaText.css),
-                          textContainer = $('<div class="area-text" style="position: relative;"></div>');
+                          textContainer = $('<div class="ks-chart-area-text" style="position: absolute;left: 0;top: 0"></div>');
 
                       textContainer.appendTo(self._container);
                       self.areaList = {};
@@ -301,10 +299,15 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                       return self._innerContainer;
                   },
                   formatText:function (o) {
-                      var self = this, textList = {}, str;
+                      var self = this,
+                          textList = {},
+                          str,
+                          w = parseFloat(MapData.svgWidth / self._cfg.width),
+                          h = parseFloat(MapData.svgHeight / self._cfg.height);
+
                       S.each(o, function (item, i) {
-                          item.x = parseInt(self._cfg.width * item.x / MapData.svgWidth);
-                          item.y = parseInt(self._cfg.height * item.y * 0.9 / MapData.svgHeight);
+                          item.x = parseInt(item.x / w);
+                          item.y = parseInt(item.y / h);
                           textList[i] = {x:item.x, y:item.y, text:decodeURIComponent(item.text)};
                       });
                       return textList;
@@ -312,12 +315,12 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                   resize:function (val) {
                       var self = this,
                           _cfg = self._cfg,
-                          char = ',';
+                          SPLIT = ',';
 
-                      val = val.split(char);
+                      val = val.split(SPLIT);
                       val[0] = (val[0] * _cfg.width).toFixed(4);
                       val[1] = (val[1] * _cfg.height).toFixed(4);
-                      return val.join(char);
+                      return val.join(SPLIT);
                   },
                   formatPath:function (paths) {
                       var self = this,
@@ -343,16 +346,17 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                       return pathList;
                   },
                   formatNumber:function (val, j) {
-                      var char = ',',
+                      var SPLIT = ',',
                           offset;
-                      val = val.split(char);
+                      val = val.split(SPLIT);
                       val[0] = parseFloat(val[0] / MapData.svgWidth);
                       val[1] = parseFloat(val[1] / MapData.svgHeight);
-                      return val.join(char);
+                      return val.join(SPLIT);
                   },
                   initPaper:function () {
                       var self = this,
                           _cfg = self._cfg;
+
                       _cfg.width = self._container.width() || MapData.svgWidth;
                       _cfg.height = self._container.height() || MapData.svgHeight;
                       self.initTitle();
@@ -367,7 +371,6 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                           tpl = '<h3 class="ks-chart-title"></h3>';
                       if (_cfg.title.content) {
                           $(tpl).css(_cfg.title.css).text(_cfg.title.content).appendTo(self._container);
-                          _cfg.height -= self._container.one(".ks-chart-title").height();
                       }
                   },
                   calculateSize:function () {
@@ -396,11 +399,15 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                       self.tip = new Tip(tipCfg);
                       return self.tip;
                   }
-              })
-              ;
+              });
 
               return MapChart;
-          },
-          {requires:['../raphael/index', '../tools/color/index', '../tools/htmlpaper/index', '../legend/index', '../tip/index', './theme', './mapdata']}
-)
-;
+          },{requires:[
+            '../raphael/index', 
+            '../tools/color/index', 
+            '../tools/htmlpaper/index', 
+            '../legend/index', 
+            '../tip/index', 
+            './theme', 
+            './mapdata']
+          });

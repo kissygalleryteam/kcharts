@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.1  linechart
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Ft,graphTool){
+KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
 	var $ = S.all,
 		Evt = S.Event,
 		clsPrefix = "ks-chart-",
@@ -260,7 +260,11 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 		},
 		//曲线动画
 		animateLine:function(lineIndex,callback){
-			var self = this,
+			var self = this,sub_path,
+				tmpStocks = [],idx = 0,
+				from = 0,to,box,
+				show_num,
+				first_index,
 				_cfg = self._cfg,
 				paper = self.paper,
 				points = self._points[lineIndex],
@@ -275,15 +279,6 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 				easing = "easeNone",
 				// 每段直线的宽度
 				aver_len = self.get("area-width"),
-				tmpStocks = [],
-				sub_path,
-				idx = 0,
-				from = 0,
-				to,
-				show_num,
-				box,
-				ft,
-				first_index,
 				_attr = S.mix({"stroke":color.getColor(lineIndex).DEFAULT},_cfg.line.attr),
 				$line = paper.path(sub_path).attr(_attr);
 				for(var i in self._points[lineIndex]){
@@ -297,10 +292,10 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 			    //默认显示的直线条数
 				show_num = self.getVisableLineNum();
 				//动画
-				ft = new Ft({
+				var anim = new Anim({},{},{
 					duration:duration,
 					easing:easing,
-					onstep:function(){
+					step:function(){
 							//arguments[1] 代表经过缓动函数处理后的0到1之间的数值
 							to = arguments[1] * total_len;
 							//获取子路径
@@ -313,13 +308,16 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 							if(!tmpStocks[idx] && points[idx]){
 								tmpStocks[idx] = self.drawStock(points[idx]['x'],points[idx]['y'],self.processAttr(_cfg.points.attr,_attr.stroke),type);
 							}
+
+							for(var i in points)if(i < idx){
+								if(!tmpStocks[i]){
+									tmpStocks[i] = self.drawStock(points[i]['x'],points[i]['y'],self.processAttr(_cfg.points.attr,_attr.stroke),type);
+								}
+							}
+
 							$line && $line.attr({path:sub_path});
 					},
-					onend:function(){
-						//做最后点的补偿
-						if(real_num > 1 && !tmpStocks[real_num - 1] && points[real_num - 1]){
-							tmpStocks[real_num - 1] = self.drawStock(points[real_num - 1]['x'],points[real_num - 1]['y'],self.processAttr(_cfg.points.attr,_attr.stroke),type);
-						}
+					end:function(){
 						self._stocks[lineIndex]['stocks'] = tmpStocks;
 						//finish state
 						self._finished.push(true);
@@ -329,9 +327,6 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 						}
 					}
 				});
-
-				ft.INTERVAL = duration / total_num / 8 || 25;
-				ft.run();
 
 				return $line;
 		},
@@ -1190,6 +1185,6 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 	'gallery/kcharts/1.1/linechart/theme',
 	'gallery/kcharts/1.1/tools/touch/index',
 	'gallery/kcharts/1.1/tip/index',
-	'gallery/kcharts/1.1/ft/index',
+	'gallery/kcharts/1.1/animate/index',
 	'gallery/kcharts/1.1/tools/graphtool/index'
 ]});
