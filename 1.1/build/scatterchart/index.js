@@ -455,12 +455,12 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
-				self.legend = new Legend({
+				self.legend = new Legend(S.mix(legendCfg,{
 					container:container,
 					chart:self,
 					evtBind:true,
 					css:legendCfg.css || {}
-				});
+				}));
 			return self.legend;
 		},
 		/**

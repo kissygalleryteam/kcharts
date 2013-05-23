@@ -20,16 +20,7 @@
 <script>
 (function(S){
     var $ = S.all,Evt = S.Event;
-	S.config({
-       combine:true,
-	  packages:[
-	    {
-	      name:"gallery",
-	       path:"http://a.tbcdn.cn/s/kissy/",
-	      charset:"utf-8"
-	    }
-	  ]
-	});
+	S.Config.combine = true;
 
 var series = [{
                 text: 'Female',
@@ -84,10 +75,6 @@ var series = [{
                 template:function(data){
                     return data.y[0]+","+data.y[1];
                 },
-                css:{
-                    border:"3px solid {COLOR}"
-                },
-                alignX:"right",
                 alignY:"bottom",
                 offset:{
                     x:-10,

@@ -86,7 +86,6 @@ KISSY.add('gallery/kcharts/1.1/tip/index', function (S,Base,Template,undefined) 
                         var x = ev.x,
                             y = ev.y,
                             style = ev.style;
-
                         self.isVisable() ? self.animateTo(x, y) : self.moveTo(x, y);
                         style && self.$tip.css(style);
                     }

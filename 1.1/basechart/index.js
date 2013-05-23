@@ -30,8 +30,8 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					"-webkit-text-size-adjust":"none",			//chrome最小字体限制
 					"-webkit-tap-highlight-color": "rgba(0,0,0,0)"			//去除touch时的闪烁背景
 				})
-
-				self.getInnerContainer();
+				//构建内部容器
+				self.createContainer();
 
 				S.mix(self,{
 					_datas:{
@@ -56,6 +56,11 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 				});
 
 				series = _cfg.series || null;
+				//若为堆叠图 则最小值为0 暂时不兼容负值
+				if(_cfg.stackable){
+						_cfg.xAxis.min = 0;
+						_cfg.yAxis.min = 0;
+				}
 
 				if(!series || series.length <= 0 || !series[0].data) return;
 
@@ -81,7 +86,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 			self.dataFormat();
 		},
 		//获取内部容器信息
-		getInnerContainer:function(){
+		createContainer:function(){
 			var self = this,
 				_$ctnNode = self._$ctnNode,
 				canvasAttr = S.mix(self._cfg.canvasAttr),
@@ -106,7 +111,10 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					bl:bl,
 					br:br
 				};
-				return self._innerContainer;
+		},
+		//获取内部容器
+		getInnerContainer:function(){
+			return this._innerContainer;
 		},
 		getAllDatas:function(){
 			var self = this,
@@ -125,8 +133,10 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 							numbers = self._datas['cur'][i]['data'];
 						}
 						for(var j in numbers){
-							allDatas[j] = allDatas[j] ? numbers[j] + allDatas[j] : numbers[j];
+							//fixed number bug
+							allDatas[j] = allDatas[j] ? (numbers[j] - 0) + (allDatas[j] - 0) : numbers[j];
 						}
+						S.log(allDatas)
 					}
 				}else{
 					for(var i in self._datas['cur']){
@@ -172,8 +182,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					//纵轴上下各有10%的延展
 					offset = (_max - _min) * 0.1 || min * 1 || 10,
 					//修复最大值最小值的问题  bug
-					// max = cmax || cmax == 0 ? (cmax >= _max ? (cmax >= _max + offset ? _max + offset : cmax) : _max + offset) : _max + offset,
-					// min = (cmin || cmin == 0) ? (cmin <= _min ? (cmin <= _min - offset ? _min - offset : cmin) : _min - offset) : _min - offset;
 					max = (cmax || cmax == 0) ? (cmax >= _max ? cmax: _max + offset) : _max + offset,
 					min = (cmin || cmin == 0) ? (cmin <= _min ? cmin : _min - offset) : _min - offset;
 				return self.getScales(max,min,num);
@@ -521,7 +529,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 			if(self.isFloat(step)){
 				var stepstr = (step+"");
 				if(stepstr.indexOf(".") > -1){
-					fixlen = stepstr.split(".")[1]['length'];
+					fixlen = stepstr.split(".")[1]['length'] > 4 ? 4 : stepstr.split(".")[1]['length'];
 				}
 			}
 			for(var i = min; i <= max; i+=step){
@@ -572,6 +580,13 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 		isFloat:function(num){
 			return /^([+-]?)\d*\.\d+$/.test(num);
 		},
+		/*
+			TODO 对象转数组
+			@example 
+			{1:'aa',2:'bb'} => ['aa','bb']
+			{"defineKey":"aa","defineKey":"bb"} = > ['aa','bb']
+			@return array
+		*/
 		obj2Array:function(obj,defineKey){
 			var a = [];
 			for(var i in obj){
@@ -579,6 +594,12 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 			}
 			return a;
 		},
+		/*
+			TODO 获取对象的key
+			@example 
+			{'name':'aa','age':'bb'} => ['name','age']
+			@return array
+		*/
 		getObjKeys:function(obj){
 			var a=[];
 			for(b in obj){
