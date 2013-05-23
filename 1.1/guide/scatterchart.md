@@ -209,7 +209,18 @@ Config（详细配置）
    - `alignX` { string } 水平对齐方式 有"left" "center" "right"三种 默认 "left"
    - `alignY` { string } 水平对齐方式 有"top" "middle" "bottom"三种 默认 "top"
 
-   
+  
+### legend
+
+  {object} 图例配置
+  
+  - `isShow` { boolean } 是否渲染显示
+  - `css` { object } css样式
+  - `layout` {string} 垂直或水平展示 可选："horizontal" 水平  "vertical" 垂直
+  - `align`  {string} 水平对齐方式 可选："left" 左对齐 "center" 居中 "right" 右对齐
+  - `verticalAlign` {string} 垂直对齐方式 可选："top" 顶部对齐 "middle" 垂直居中 "bottom" 底部对齐
+
+
 ---
 Method（方法）
 ---
