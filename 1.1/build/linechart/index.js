@@ -308,13 +308,11 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 							if(!tmpStocks[idx] && points[idx]){
 								tmpStocks[idx] = self.drawStock(points[idx]['x'],points[idx]['y'],self.processAttr(_cfg.points.attr,_attr.stroke),type);
 							}
-
 							for(var i in points)if(i < idx){
 								if(!tmpStocks[i]){
 									tmpStocks[i] = self.drawStock(points[i]['x'],points[i]['y'],self.processAttr(_cfg.points.attr,_attr.stroke),type);
 								}
 							}
-
 							$line && $line.attr({path:sub_path});
 					},
 					end:function(){
@@ -450,14 +448,14 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 			if(x && y){
 				switch(type){
 					case "triangle":
-						$stock = graphTool.triangle(paper,x,y,6);
+						$stock = graphTool.triangle(paper,x,y,_attr["r"]*1.4);
 						break;
 					case "rhomb":
-						$stock = graphTool.rhomb(paper,x,y,10,10);
+						$stock = graphTool.rhomb(paper,x,y,_attr["r"]*2.4,_attr["r"]*2.4);
 						break;
 					case "square":
 						//菱形旋转45度
-						$stock = graphTool.rhomb(paper,x,y,10,10,45);
+						$stock = graphTool.rhomb(paper,x,y,_attr["r"]*2.4,_attr["r"]*2.4,45);
 						break;
 					default:
 						$stock = paper.circle(x,y,_attr["r"],attr);
@@ -726,13 +724,13 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
-				self.legend = new Legend({
+				self.legend = new Legend(S.mix(legendCfg,{
 					container:container,
 					evtBind:true,
 					chart:self,
 					iconType:"circle",
 					css:legendCfg.css || {}
-				});
+				}));
 			return self.legend;
 		},
 		/**
@@ -981,6 +979,7 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 			}
 			//删除某条线的数据
 			BaseChart.prototype.removeData.call(self,lineIndex);
+
 			self.animateGridsAndLabels();
 			self._lines[lineIndex]['line'].remove();
 			for(var i in self._stocks){
@@ -1078,7 +1077,8 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 		animateGridsAndLabels:function(){
 			var self = this,
 				maxLen = Math.max(self._pointsY.length,self._gridsY.length),
-				coordNum = self.coordNum,
+				coordNum = self.coordNum,max,min,middle;
+				if(!coordNum) return;
 				max = Math.max.apply(null,coordNum),
 				min = Math.min.apply(null,coordNum),
 				middle = max/2 + min/2; 
