@@ -581,12 +581,12 @@ KISSY.add('gallery/kcharts/1.1/barchart/index',function(S,Template,BaseChart,Col
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
-				self.legend = new Legend({
+				self.legend = new Legend(S.mix(legendCfg,{
 					container:container,
 					chart:self,
 					evtBind:true,
 					css:legendCfg.css || {}
-				});
+				}));
 			return self.legend;
 		},
 		render:function(clear){

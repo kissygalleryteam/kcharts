@@ -1,0 +1,46 @@
+.kc-gen-container{
+	width:950px;
+	margin:0px auto;
+}
+.kc-gen-container .kc-gen-graph{
+	float: left;
+	border:1px dashed #ccc;
+	margin: 5px;
+}
+.kc-gen-to-add{
+	font-family: Microsoft Yahei;
+	color:#ddd;
+	font-size: 30px;
+	display: block;
+	text-decoration: none;
+	text-align: center;
+	margin-top: 10px;
+}
+.kc-gen-to-add:hover{
+	text-decoration: none;
+	color: #f60;
+}
+.kc-gen-container .f-l{
+	float: left;
+}
+.kc-gen-container .f-r{
+	float: right;
+}
+.kc-gen-container .f-n{
+	float: none;
+}
+.kc-gen-container .w-500{
+	width:500px;
+}
+.kc-gen-container .w-400{
+	width:400px;
+}
+.kc-gen-container .h-400{
+	height:400px;
+}
+.kc-gen-container .h-350{
+	height:350px;
+}
+.kc-gen-container .h-300{
+	height:300px;
+}

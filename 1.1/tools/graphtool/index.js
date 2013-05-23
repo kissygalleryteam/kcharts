@@ -15,7 +15,7 @@
 			el;
 
 		if(paper && paper.path){
-			el = paper.path(path).attr({cx:x,cy:y});	//伪造中心点
+			el = paper.path(path).attr({cx:x,cy:y,r:r});	//伪造中心点
 			el.rotate(deg,x,y);
 			return el;
 		}
