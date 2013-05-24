@@ -136,7 +136,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 							//fixed number bug
 							allDatas[j] = allDatas[j] ? (numbers[j] - 0) + (allDatas[j] - 0) : numbers[j];
 						}
-						S.log(allDatas)
 					}
 				}else{
 					for(var i in self._datas['cur']){
@@ -218,7 +217,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 				coordPos = self.data2GrapicData(coordNum,false,true);
 			}else if(zoomType == "y"){
 				allDatasX = self.getAllDatas();
-				S.log(allDatasX)
 				curCoordNum = coordNumX = self.coordNumX = self._getScales(allDatasX,_cfg.xAxis);
 				coordPosX = self.data2GrapicData(coordNumX,true,false);
 			}else if(zoomType == "xy"){
