@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.1/areachart/theme",function(S){
+KISSY.add("gallery/kcharts/1.1/others/resolutiontool/theme",function(S){
 
 	var COLOR_TPL = "{COLOR}";
 

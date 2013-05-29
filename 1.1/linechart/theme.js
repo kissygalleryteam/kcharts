@@ -70,7 +70,7 @@ KISSY.add("gallery/kcharts/1.1/linechart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
+			pointLine:{
 				css:{
 					color:"#ccc"
 				}
@@ -149,7 +149,7 @@ KISSY.add("gallery/kcharts/1.1/linechart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
+			pointLine:{
 				css:{
 					color:"#ccc"
 				}
@@ -228,7 +228,7 @@ KISSY.add("gallery/kcharts/1.1/linechart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
+			pointLine:{
 				css:{
 					color:"#ccc"
 				}

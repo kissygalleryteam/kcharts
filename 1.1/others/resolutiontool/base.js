@@ -1,7 +1,7 @@
 /*
  TODO 坐标运算  画布大小计算
  */
-KISSY.add('gallery/kcharts/1.1/areachart/base', function (S, Base) {
+KISSY.add('gallery/kcharts/1.1/others/resolutiontool/base', function (S, Base) {
 
     var $ = S.all;
 
