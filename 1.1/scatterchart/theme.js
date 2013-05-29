@@ -70,11 +70,6 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
-				css:{
-					color:"#ccc"
-				}
-			},
 			tip:{
 				css:{
 					"border":"1px solid {COLOR}"
@@ -147,11 +142,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
-				css:{
-					color:"#ccc"
-				}
-			},
+			
 			tip:{
 				css:{
 					"border":"1px solid {COLOR}"
@@ -225,11 +216,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
-				css:{
-					color:"#ccc"
-				}
-			},
+			
 			tip:{
 				css:{
 					"border":"1px solid {COLOR}"
