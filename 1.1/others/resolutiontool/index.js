@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.1  areachart
  * @author yuxia0025@gmail.com
  */
-KISSY.add("gallery/kcharts/1.1/areachart/index", function (S, Base, Raphael, Template, BaseChart, ColorLib, HtmlPaper, Theme, touch, undefined) {
+KISSY.add("gallery/kcharts/1.1/others/resolutiontool/index", function (S, Base, Raphael, Template, BaseChart, ColorLib, HtmlPaper, Theme, touch, undefined) {
 
               var $ = S.all,
                   Evt = S.Event,
@@ -720,10 +720,10 @@ KISSY.add("gallery/kcharts/1.1/areachart/index", function (S, Base, Raphael, Tem
                   'gallery/kcharts/1.1/raphael/index',
                   'gallery/template/1.0/index',
                   './base',
-                  '../tools/color/index',
-                  '../tools/htmlpaper/index',
+                  '../../tools/color/index',
+                  '../../tools/htmlpaper/index',
                   './theme',
-                  '../tools/touch/index'
+                  '../../tools/touch/index'
               ]
           }
 )

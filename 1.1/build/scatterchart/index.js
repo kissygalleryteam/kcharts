@@ -781,11 +781,6 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
-				css:{
-					color:"#ccc"
-				}
-			},
 			tip:{
 				css:{
 					"border":"1px solid {COLOR}"
@@ -858,11 +853,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
-				css:{
-					color:"#ccc"
-				}
-			},
+			
 			tip:{
 				css:{
 					"border":"1px solid {COLOR}"
@@ -936,11 +927,7 @@ KISSY.add("gallery/kcharts/1.1/scatterchart/index",function(S,Base,Template,Base
 					"font-size": "12px"
 				}
 			},
-			pointLines:{
-				css:{
-					color:"#ccc"
-				}
-			},
+			
 			tip:{
 				css:{
 					"border":"1px solid {COLOR}"
