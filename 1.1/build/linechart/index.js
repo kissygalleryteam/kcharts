@@ -163,6 +163,8 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 			themeCls = self._cfg.themeCls || _defaultConfig.themeCls;
 
 			self._cfg = S.mix(S.mix(_defaultConfig,Theme[themeCls],undefined,undefined,true),self._cfg,undefined,undefined,true);
+			//克隆详细配置 line points 	
+			self.__cfg = self.cloneSeriesConfig(['line','points']);			
 
 			self.color = color = new ColorLib({themeCls:themeCls});
 
@@ -176,11 +178,31 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 
 			points = self._points[0];
 
-			w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || ctn.width)
+			w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || self.getInnerContainer().width)
 
 			w && self.set("area-width",w);
 
 			self._cfg.autoRender && self.render(true);
+		},
+		//获取属性
+		cloneSeriesConfig:function(wl){
+			var self = this,
+				cfgs = {},
+				cfg;
+			if(!wl) return;
+			for(var i in wl){
+				for(var j in self._cfg.series){
+					cfg = self._cfg.series[j][wl[i]] ? S.mix(self._cfg[wl[i]],self._cfg.series[j][wl[i]]) : self._cfg[wl[i]];
+					S.log(cfg)
+					if(cfg){
+						if(!cfg[wl[i]]){
+							cfg[wl[i]] = [];
+						}
+						cfg[wl[i]][j] = cfg;
+					}
+				}
+			}
+			return cfgs;
 		},
 		//主标题
 		drawTitle:function(){
@@ -243,9 +265,12 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 			var	path = self.getLinePath(points),
 				paper = self.paper,
 				color = self.color.getColor(lineIndex).DEFAULT,
-				line = paper.path(path).attr(S.mix(self._cfg.line.attr,{"stroke":color})),
+				//获取线配置
+				lineAttr = S.mix(S.mix(self._cfg.line.attr,{"stroke":color}),self.getSeriesAttr('line',lineIndex)['attr'],undefined,undefined,true),
+				line = paper.path(path).attr(lineAttr),
 				//默认显示的直线条数
 				show_num = self.getVisableLineNum();
+				S.log(lineAttr)
 				self._stocks[lineIndex]['stocks'] = self.drawStocks(lineIndex,self.processAttr(self._cfg.points.attr,color));
 				//finish state
 				self._finished.push(true);
@@ -255,11 +280,20 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 				return line; 
 			}
 		},
+		//从数据中 获取属性
+		getSeriesAttr:function(attrName,index){
+			var self = this;
+			if(self._cfg.series){
+				if(self._cfg.series[index] && self._cfg.series[index][attrName]){
+					return self._cfg.series[index][attrName];
+				}
+			}
+			return {attr:{}};
+		},
 		//获取第一个不为空数据的索引
 		getFirstUnEmptyPointIndex:function(lineIndex){
 			var self = this,
 				points = self._points[lineIndex];
-
 				for(var i in points){
 					if(!self.isEmptyPoint(points[i])) return i;
 				}
@@ -956,7 +990,7 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 					//删除data 避免不必要的数据
 						delete tipData.data;
 				}
-				self.areaChange(curLineIndex);
+				self.areaChange(curStockIndex);
 				if(!self.isEmptyPoint(currentPoints[curStockIndex])){
 					tip.fire("setcontent",{data:tipData});
 					tip.fire("move",{x:curPoint.x,y:curPoint.y,style:self.processAttr(_cfg.tip.css,color)});
@@ -1125,7 +1159,8 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 		**/
 		lineChangeTo:function(lineIndex){
 			var self = this,
-				_cfg = self._cfg;
+				_cfg = self._cfg,
+				hoverLineAttr = S.mix(_cfg.line.hoverAttr,self.getSeriesAttr('line',lineIndex));
 			//若正在动画 则return
 			if(self._isAnimating) return;
 			//若为当前选中直线 则return
@@ -1146,7 +1181,7 @@ KISSY.add("gallery/kcharts/1.1/linechart/index",function(S,Base,Template,Raphael
 					&&self._stocks[lineIndex]['stocks'][i].remove
 				    && self._stocks[lineIndex]['stocks'][i].remove();
 			}
-			self._lines[lineIndex]['line'] = self.drawLine(lineIndex).attr(_cfg.line.hoverAttr);
+			self._lines[lineIndex]['line'] = self.drawLine(lineIndex).attr(hoverLineAttr);
 			
 			for(var i in self._stocks){
 				for(var j in self._stocks[i]['stocks']){
