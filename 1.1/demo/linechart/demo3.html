@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style>
+#demo1{
+  width:750px;
+  height:300px;
+  background: #333;
+}
+</style>
+</head>
+<body>
+<div id="demo1">
+
+</div>
+<script src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+<script type="text/javascript">
+var S = KISSY;
+// S.Config.combine = true;
+  KISSY.Config.debug = true;
+//包配置 
+KISSY.config({
+  packages:[
+      {
+        name:"gallery",
+        path:"../../../../../",
+        charset:"utf-8"
+      }
+    ]
+});
+var cfg = {
+      renderTo:"#demo1",
+      canvasAttr:{
+        x:20,
+        y:30,
+        width:700,
+        height:240
+      },
+      points:{
+        attr:{
+          type:"auto",
+          fill:"#333",
+          stroke:"#3f72bf",
+          "stroke-width":"2px"
+        },
+        hoverAttr:{
+          fill:"#333",
+           stroke:"#3f72bf",
+           "stroke-width":"2px",
+           r:"6"
+        }
+      },
+      yLabels:{
+        isShow:false,
+        css:{
+          "marginLeft":"-4px",
+          "font-family":"Microsoft Yahei",
+          "font-size":"10px",
+          "color":"#fff"
+        },
+        template:function(txt){
+          return parseFloat(txt).toFixed(2);
+        }
+      },
+      colors:['#3f72bf'],
+      xGrids:{
+        isShow:false,
+        css:{
+          "border-color":"#000"
+        }
+      },
+      yGrids:{
+        css:{
+          "border-color":"#000"
+        }
+      },
+      line:{
+        attr:{
+          "stroke-width":"4px",
+        },
+        hoverAttr:{
+          "stroke-width":"5px",
+        }
+      },
+      xLabels:{
+        css:{
+          "font-family":"Microsoft Yahei",
+           "font-size":"10px",
+           "color":"#fff"
+        }
+      },
+            // anim:{},
+            lineType:"arc",
+       xAxis: {
+         css:{
+          "border-color":"#000"
+        },
+          text:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+            },
+            yAxis:{isShow:false,
+               css:{
+          "border-color":"#000"
+        },
+              num:12
+            },
+          // comparable:true,
+      series:[{
+                text: 'Tokyo',
+                data: [8,
+                    25,
+                    27,
+                    25,
+                    54,
+                    59,
+                    79,
+                    47,
+                    27,
+                    44,
+                    44,
+                    51,
+                    56,
+                    83,
+                    12,
+                    91,
+                    52,
+                    12,
+                    40,
+                    8,
+                    60,
+                    29,
+                    7,
+                    33,
+                    56,
+                    25,
+                    1,
+                    78,
+                    70,
+                    68,
+                    2]
+            }
+            ],
+      legend:{
+        isShow:false
+      },
+      tip:{
+        corner:{
+          isShow:true,
+          tpl:""
+        },
+        offset:{
+                    // y:10
+                },
+                css:{
+                  padding:"5px",
+                  border:"3px solid #666",
+                  opacity:0.7,
+                  background:"#000",
+                  "color":"#fff"
+                },
+          alignX:"center", //left center right
+          alignY:"bottom",
+        template:function(e){
+          var html = "";
+          html +=   e['y'] + " hits"+"</br><span style='font-size:10px;color:#3f72bf'>September 2012</span>"
+          return html;
+        }
+      }
+  };
+KISSY.use("gallery/kcharts/1.1/linechart/index",function(S,LineChart){
+  var linechart = new LineChart(S.mix(cfg,{renderTo:"#demo1"}));
+  for(var i in linechart._pointsX){
+    if(i%3==0){
+      linechart.drawGridX(linechart._pointsX[i])
+    }
+  }
+  var ctn = linechart.getInnerContainer();
+    var areawidth = linechart.get("area-width")
+        var path = linechart.getLinePath(linechart._points[0]) + " L"+(ctn.br.x-areawidth/2)+","+ctn.br.y+" "+(ctn.bl.x+areawidth/2)+","+ctn.bl.y+" z"
+        linechart.paper.path(path).attr({
+            fill:"#3f72bf",
+            "stroke-width":0,
+            opacity:0.3
+        });
+});
+</script>
+</body>
+</html>
