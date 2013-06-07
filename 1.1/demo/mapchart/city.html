@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>chinaMap</title>
+    <script type="text/javascript" src="../../mapchart/data.js"></script>
+    <script type="text/javascript" src="../../mapchart/test.js"></script>
+    <style type="text/css">
+        #demo1 {
+            width: 2000px;
+            height: 2000px;
+            margin: 0px auto;
+        }
+
+        #b1 {
+            background-color: #ececec;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 14px;
+            border: 1px solid #000;
+        }
+
+        .ks-chart-area-text {
+            font-family: Microsoft Yahei;
+        }
+
+        .ks-chart-city-text {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="demo1"></div>
+<script src="http://a.tbcdn.cn/??s/kissy/1.3.0/kissy-min.js"></script>
+<script type="text/javascript">
+    (function (S) {
+        $ = KISSY.all;
+        S.Config.debug = true;
+        S.config({
+                     packages:[
+                         {
+                             name:"gallery", // 包名
+                             tag:"20130323", // 动态加载包内的模块js文件时,
+                             // 自动加上 ?t=20110323, 用于文件更新
+                             path:"../../../../../", // 包对应路径, 相对路径指相对于当前页面路径
+                             charset:"gbk" // 包里模块文件编码格式
+                         }
+                     ]
+                 });
+
+        S.use('gallery/kcharts/1.1/mapchart/index', function (S, MapChart) {
+            var map = new MapChart('#demo1', {
+                themeCls:"ks-chart-default",
+                title:{
+                    content:"全国cdn节点分布",
+                    css:{
+                        "font-family":"Microsoft Yahei",
+                        "font-size":"16px",
+                        "font-weight":"bold"
+                    }
+                },
+                autoRender:false,
+                tip:{
+                    template:"Lv.{{rate}}",
+                    css:{border:"1px solid #666"}
+                },
+                cssGroup:{style1:{attr:{"fill":"#8cc63e", "stroke":"#ffffff", 'stroke-width':3}, hoverAttr:{"fill":"#066839"}}, style2:{attr:{"fill":"#00adef"}, hoverAttr:{"fill":"#1176ba"}}, style3:{attr:{"fill":"#bf1e2d", "stroke":"#ffffff", 'stroke-width':3}, hoverAttr:{"fill":"#ec1d23"}}, defaultCls:"style1"},
+                series:{
+                    "xizang":{groupKey:'style2', rate:4}, "guizhou":{rate:4}, "fujian":{groupKey:'style3', rate:6}, "chongqing":{rate:4}, "sichuan":{groupKey:'style3', rate:6}, "shanghai":{groupKey:'style2', rate:4}, "jiangsu":{rate:4}, "zhejiang":{rate:4}, "shanxi":{rate:3}, "neimongol":{groupKey:'style2', rate:6}, "tianjin":{groupKey:'style3', rate:6}, "hebei":{rate:3}, "beijing":{groupKey:'style2'}, "anhui":{rate:3}, "yunnan":{rate:4}, "jiangxi":{rate:3}, "shandong":{groupKey:'style2'}, "henan":{rate:2}, "hunan":{rate:3}, "guangxi":{groupKey:'style3,rate:6'}, "guangdong":{rate:2}, "hainan":{groupKey:'style3', rate:6}, "xinjiang":{groupKey:'style2', rate:6}, "ningxia":{rate:3}, "qinghai":{rate:6}, "gansu":{rate:3}, "shaanxi":{rate:3}, "heilongjiang":{rate:3}, "jilin":{rate:3}, "liaoning":{rate:3}, "hubei":{rate:3}
+                }
+            });
+
+
+            map.on('afterRender', function () {
+                var cs = this._cfg.city.css,
+                        self = this,
+                        span = '<span></span>',
+                        container = '.ks-chart-area-text';
+
+                S.each(allCdnNode, function (item, index) {
+                    var style = self.converPix(item.x, item.y);
+                    style = S.merge(style, cs, {"width":"4em"});
+                    $(span).html(index).css(style).appendTo(container);
+                })
+            })
+            map.render();
+
+        });
+    })(KISSY);
+</script>
+</body>
+</html>
