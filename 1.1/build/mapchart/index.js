@@ -48941,40 +48941,40 @@ var mapDataSource = {
     }
 
     S.augment(MapChart, S.Event.Target, {
-        init: function () {
+        init:function () {
             var self = this;
             if (!self._container) return;
 
             var _defaultConfig = {
-                themeCls: "ks-chart-default",
-                canvasAttr: {x: 0, y: 0},
-                offset: {
-                    x: 15, y: 15
+                themeCls:"ks-chart-default",
+                canvasAttr:{x:0, y:0},
+                offset:{
+                    x:15, y:15
                 },
-                city: {
-                    css: {
-                        "padding-left": "10px",
-                        "font-size": '12px',
-                        "background": "url(http://img01.taobaocdn.com/tps/i1/T1sMCSXExfXXa9hgfr-5-5.png) no-repeat 0 6px",
-                        "height": "17px",
-                        "display": "inline-block",
-                        "position": "absolute"
+                city:{
+                    css:{
+                        "padding-left":"10px",
+                        "font-size":'12px',
+                        "background":"url(http://img01.taobaocdn.com/tps/i1/T1sMCSXExfXXa9hgfr-5-5.png) no-repeat 0 6px",
+                        "height":"17px",
+                        "display":"inline-block",
+                        "position":"absolute"
                     },
-                    isShow: false
+                    isShow:false
                 },
-                tip: {
-                    isShow: true,
-                    template: "",
-                    offset: {
-                        x: 0,
-                        y: 0
+                tip:{
+                    isShow:true,
+                    template:"",
+                    offset:{
+                        x:0,
+                        y:0
                     },
-                    boundryDetect: true
+                    boundryDetect:true
                 },
-                title: {
-                    isShow: true
+                title:{
+                    isShow:true
                 },
-                autoRender: true
+                autoRender:true
             }
 
             var themeCls = self._cfg.themeCls || _defaultConfig.themeCls;
@@ -48987,9 +48987,10 @@ var mapDataSource = {
 
             self.scaleVal = 1;
 
+            self.offset = self._container.offset();
             self.autoRender && self.render();
         },
-        render: function () {
+        render:function () {
             var self = this,
                 _cfg = self._cfg;
             //初始化paper等
@@ -49000,7 +49001,7 @@ var mapDataSource = {
             _cfg.tip.isShow && self.renderTip();
             self.fire('afterRender');
         },
-        rePaint: function () {
+        rePaint:function () {
             var self = this,
                 _cfg = self._cfg;
             self.paper.clear();
@@ -49010,7 +49011,7 @@ var mapDataSource = {
             self.drawMap(MapData);
             _cfg.tip.isShow && self.renderTip();
         },
-        proceedSeries: function () {
+        proceedSeries:function () {
             var self = this,
                 _cfg = self._cfg;
 
@@ -49021,18 +49022,18 @@ var mapDataSource = {
                 item.areaName = pro.text = decodeURIComponent(pro.text);
             });
         },
-        initContainer: function () {
+        initContainer:function () {
             var self = this;
-            self._container.css({"-webkit-text-size-adjust": "none", "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)", "position": "relative"});
+            self._container.css({"-webkit-text-size-adjust":"none", "-webkit-tap-highlight-color":"rgba(0, 0, 0, 0)", "position":"relative"});
         },
-        drawMap: function (d) {
+        drawMap:function (d) {
             var self = this,
                 _cfg = self._cfg;
             self.drawPath(d.mapScale);
             self.areaText = self.formatText(d);
             self.drawAreaText(self.areaText);
         },
-        processAttr: function (attrs, color) {
+        processAttr:function (attrs, color) {
             var COLOR_TPL = "{COLOR}";
             var newAttrs = S.clone(attrs);
             for (var i in newAttrs) {
@@ -49042,7 +49043,7 @@ var mapDataSource = {
             }
             return newAttrs;
         },
-        getAreaCss: function (index, color, attr) {
+        getAreaCss:function (index, color, attr) {
             var self = this,
                 _cfg = self._cfg,
                 cfg = S.clone(color);
@@ -49058,10 +49059,11 @@ var mapDataSource = {
             }
             return cfg;
         },
-        drawPath: function (paths) {
+        drawPath:function (paths) {
             var self = this,
                 _cfg = self._cfg,
                 cb = _cfg.cb,
+                offset = self.offset,
                 paper = self.paper;
 
             self.pathList = {};
@@ -49099,18 +49101,18 @@ var mapDataSource = {
 
             function over(ev) {
                 var index = this.index;
-                self.fire('over', [index, self.series[index].areaName]);
+                self.series[index] && self.fire('over', [index, self.series[index].areaName]);
             }
 
+            // 有其他参数
             function move(ev) {
                 self.isInPaper = true;
                 var index = this.index,
-                    x = self.isIE ? document.documentElement.scrollLeft + ev.clientX - self._container.offset().left : ev.offsetX,
-                    y = self.isIE ? document.documentElement.scrollTop + ev.clientY - self._container.offset().top : ev.offsetY;
+                    x = ev.mapX || (self.isIE ? document.documentElement.scrollLeft + ev.clientX - offset.left : ev.offsetX || ev.clientX - offset.left + window.scrollX),
+                    y = ev.mapY || (self.isIE ? document.documentElement.scrollTop + ev.clientY - offset.top : ev.offsetY || ev.clientY - offset.top + +window.scrollY);
 
-                self.fire('move', [index, self.series[index].areaName]);
+                self.series[index] && self.fire('move', [index, self.series[index].areaName]);
                 self.areaList[index].css(_cfg.areaText.hoverCss);
-                y += (self.scaleVal * 40);
                 if (!this.c) {
                     this.c = {};
                     var attr = this.attr();
@@ -49125,11 +49127,11 @@ var mapDataSource = {
                     col = getHoverCss();
                 this.attr(self.getAreaCss(index, col, 'hoverAttr'));
                 if (_cfg.tip.isShow && self.series[index]) {
-                    self.tip.fire("setcontent", {data: self.series[index]});
+                    self.tip.fire("setcontent", {data:self.series[index]});
                     self.tip.fire("move", {
-                        x: x,
-                        y: y,
-                        style: self.processAttr(_cfg.tip.css, this.attr("stroke"))
+                        x:x,
+                        y:y,
+                        style:self.processAttr(_cfg.tip.css, this.attr("stroke"))
                     });
                 }
             }
@@ -49137,7 +49139,7 @@ var mapDataSource = {
             function out(ev) {
                 var index = this.index;
                 self.isInPaper = false;
-                self.fire('out', [index, self.series[index].areaName]);
+                self.series[index] && self.fire('out', [index, self.series[index].areaName]);
                 self.areaList[index].css(_cfg.areaText.css);
                 // transform bug
                 var attr = this.c;
@@ -49151,14 +49153,14 @@ var mapDataSource = {
             map.mousemove(move);
             map.mouseout(out);
         },
-        converPix: function (x, y) {
+        converPix:function (x, y) {
             var self = this,
                 w = self._cfg.width,
                 h = self._cfg.height;
 
-            return {left: parseInt(w * x) + 'px', top: parseInt(h * y) + 'px'};
+            return {left:parseInt(w * x) + 'px', top:parseInt(h * y) + 'px'};
         },
-        drawAreaText: function (o) {
+        drawAreaText:function (o) {
             var self = this,
                 _cfg = self._cfg,
                 list = {};
@@ -49174,7 +49176,7 @@ var mapDataSource = {
             S.each(o.pro, function (item, i) {
                 var str = S.substitute(style, item);
                 str += (";" + proStyle);
-                var el = $(S.substitute(proTpl, {text: item.text, defStyle: str, cls: i + "-text"}));
+                var el = $(S.substitute(proTpl, {text:item.text, defStyle:str, cls:i + "-text"}));
                 el.data('index', i).appendTo(textContainer);
                 Event.on(el, "mouseenter", move);
                 Event.on(el, "mouseleave", out);
@@ -49185,7 +49187,7 @@ var mapDataSource = {
                 if (!list[item.text]) {
                     var str = S.substitute(style, item);
                     str += (";" + cityStyle);
-                    var el = $(S.substitute(cityTpl, {text: item.text, defStyle: str}));
+                    var el = $(S.substitute(cityTpl, {text:item.text, defStyle:str}));
                     el.appendTo(textContainer);
                 }
             });
@@ -49194,10 +49196,13 @@ var mapDataSource = {
                 var tar = $(this),
                     index = tar.data("index"),
                     path = self.pathList[index],
-                    x = tar.css("left"),
-                    y = tar.css("top");
+                    offset = self._container.offset(),
+                    x = offset.left,
+                    y = offset.top;
 
                 self.isInPaper = true;
+                ev.mapX = ev.pageX - x;
+                ev.mapY = ev.pageY - y;
                 path.customMove(ev);
                 tar.css(_cfg.areaText.hoverCss);
             }
@@ -49211,7 +49216,7 @@ var mapDataSource = {
                 path.customOut(ev);
             }
         },
-        formatCss: function (d) {
+        formatCss:function (d) {
             if (S.isObject(d)) {
                 var cssText = "";
                 for (var i in d) {
@@ -49220,7 +49225,7 @@ var mapDataSource = {
                 return cssText.substring(0, cssText.length - 1);
             }
         },
-        toPath: function (paths) {
+        toPath:function (paths) {
             var self = this, list = {};
             S.each(paths, function (ph, i) {
                 var l = ph.path.length , html = '', str;
@@ -49234,7 +49239,7 @@ var mapDataSource = {
 
             return list;
         },
-        getInnerContainer: function () {
+        getInnerContainer:function () {
             var self = this,
                 _$ctnNode = self._container,
                 canvasAttr = S.mix(self._cfg.canvasAttr),
@@ -49244,26 +49249,26 @@ var mapDataSource = {
                 y = canvasAttr.y,
                 width = innerWidth,
                 height = innerHeight,
-                tl = {x: x, y: y},
-                tr = {x: x + innerWidth, y: y},
-                bl = {x: x, y: y + height},
-                br = {x: x + innerWidth, y: y + height};
+                tl = {x:x, y:y},
+                tr = {x:x + innerWidth, y:y},
+                bl = {x:x, y:y + height},
+                br = {x:x + innerWidth, y:y + height};
             //内部容器的信息
             self._innerContainer = {
-                x: x,
-                y: y,
-                width: width,
-                height: height,
-                tl: tl,
-                tr: tr,
-                bl: bl,
-                br: br
+                x:x,
+                y:y,
+                width:width,
+                height:height,
+                tl:tl,
+                tr:tr,
+                bl:bl,
+                br:br
             };
             return self._innerContainer;
         },
-        formatText: function (o) {
+        formatText:function (o) {
             var self = this,
-                textList = {pro: {}, city: {}},
+                textList = {pro:{}, city:{}},
                 str,
                 w = self._cfg.width,
                 h = self._cfg.height;
@@ -49271,18 +49276,18 @@ var mapDataSource = {
             S.each(o.mapScale, function (item, i) {
                 item.x = parseInt(item.x * w);
                 item.y = parseInt(item.y * h);
-                textList.pro[i] = {x: item.x, y: item.y, text: decodeURIComponent(item.text)};
+                textList.pro[i] = {x:item.x, y:item.y, text:decodeURIComponent(item.text)};
             });
 
             //省会城市
             S.each(o.city, function (item, i) {
                 item.x = parseInt(item.x * w);
                 item.y = parseInt(item.y * h);
-                textList.city[i] = {x: item.x, y: item.y, text: decodeURIComponent(i)};
+                textList.city[i] = {x:item.x, y:item.y, text:decodeURIComponent(i)};
             });
             return textList;
         },
-        resize: function (val) {
+        resize:function (val) {
             var self = this,
                 _cfg = self._cfg,
                 SPLIT = ',';
@@ -49292,7 +49297,7 @@ var mapDataSource = {
             val[1] = (val[1] * _cfg.height).toFixed(4);
             return val.join(SPLIT);
         },
-        formatPath: function (paths) {
+        formatPath:function (paths) {
             var self = this,
                 _cfg = self._cfg,
                 SPLIT = ',',
@@ -49311,11 +49316,11 @@ var mapDataSource = {
                         ar[index] = self.formatNumber(item);
                     });
                 }
-                pathList[i] = {path: ar, other: str};
+                pathList[i] = {path:ar, other:str};
             });
             return pathList;
         },
-        formatNumber: function (val, j) {
+        formatNumber:function (val, j) {
             var SPLIT = ',',
                 offset;
             val = val.split(SPLIT);
@@ -49323,7 +49328,7 @@ var mapDataSource = {
             val[1] = parseFloat(val[1] / MapData.svgHeight);
             return val.join(SPLIT);
         },
-        initPaper: function () {
+        initPaper:function () {
             var self = this,
                 _cfg = self._cfg;
 
@@ -49335,7 +49340,7 @@ var mapDataSource = {
             self.paper.setViewBox(0, 0, MapData.svgWidth, MapData.svgHeight);
             self.scaleVal = (_cfg.width / MapData.svgWidth).toFixed(2);
         },
-        initTitle: function () {
+        initTitle:function () {
             var self = this,
                 _cfg = self._cfg,
                 tpl = '<h3 class="ks-chart-title"></h3>';
@@ -49343,7 +49348,7 @@ var mapDataSource = {
                 $(tpl).css(_cfg.title.css).text(_cfg.title.content).appendTo(self._container);
             }
         },
-        calculateSize: function () {
+        calculateSize:function () {
             var self = this,
                 _cfg = self._cfg,
                 w, h;
@@ -49360,19 +49365,19 @@ var mapDataSource = {
             _cfg.width = w;
             _cfg.height = h;
         },
-        renderTip: function () {
+        renderTip:function () {
             var self = this,
                 _cfg = self._cfg,
                 ctn = self.getInnerContainer(),
-                boundryCfg = _cfg.tip.boundryDetect ? {x: ctn.tl.x, y: ctn.tl.y, width: ctn.width, height: ctn.height} : {},
-                tipCfg = S.mix(_cfg.tip, {rootNode: self._container, clsName: _cfg.themeCls, boundry: boundryCfg}, undefined, undefined, true);
+                boundryCfg = _cfg.tip.boundryDetect ? {x:ctn.tl.x, y:ctn.tl.y, width:ctn.width, height:ctn.height} : {},
+                tipCfg = S.mix(_cfg.tip, {rootNode:self._container, clsName:_cfg.themeCls, boundry:boundryCfg}, undefined, undefined, true);
             self.tip = new Tip(tipCfg);
             return self.tip;
         }
     });
 
     return MapChart;
-}, {requires: [
+}, {requires:[
     '../raphael/index',
     '../tools/color/index',
     '../tools/htmlpaper/index',
@@ -49526,6 +49531,12 @@ var mapDataSource = {
 				"text": "%E6%96%B0%E7%96%86",
 				"x": 0.19,
 				"y": 0.35
+			},
+			"taiwan":{
+				"path":"M747.31,489.67L742.14,514.96L739.47,522.97V529.72L737.17,531.61L731.62,524.85L725.69,521.08L720.52,509.78C720.52,509.78,719.8,502.36,721.09,499.57C722.39,496.77,729.7,481.03,729.7,481.03L739.85,473.97L746.36,476.48L747.31,489.67Z",
+				"text":"%E5%8F%B0%E6%B9%BE",
+				"x":0.20,
+				"y":0.80
 			},
 			"ningxia": {
 				"path": "M453.32,296.26l0.57,-0.91l1.08,-0.31l2.03,0.39l4.62,-0.77l1.54,-1.72l2.56,-1.24l1.66,-0.46l2.0,0.5l2.11,-0.19l2.47,-1.4l0.54,-3.5l-1.04,-2.51l1.34,-1.95l-0.36,-2.31l0.27,-2.94l0.79,-2.76l2.4,-4.15l0.71,-2.31l1.68,-0.0l0.85,-0.66l-0.03,-2.05l2.98,-0.04l1.86,-1.28l1.99,-0.14l0.25,2.73l1.21,2.03l1.31,0.86l-3.98,6.27l-0.95,3.19l-2.49,2.78l0.09,0.63l5.39,2.44l3.47,0.61l1.41,-0.41l2.2,1.13l1.44,2.72l3.39,0.95l-0.26,0.72l-2.01,0.24l-0.46,1.22l-2.36,2.01l0.13,0.95l-1.24,3.84l1.3,2.55l-0.34,0.81l-2.16,-0.68l-2.98,0.27l-2.53,-1.64l-1.35,0.05l-0.64,0.57l-0.39,2.06l0.26,0.98l-0.93,1.43l1.12,2.04l-0.42,0.98l-0.8,-0.06l-0.98,0.65l-0.13,2.75l-0.9,0.7l0.94,1.3l0.12,1.26l-0.42,1.05l0.84,0.96l1.4,-0.26l1.96,1.16l1.16,-0.03l1.54,1.94l-0.13,1.47l-0.17,0.94l-1.15,0.59l0.9,1.72l-0.58,0.57l-1.55,0.91l-2.6,-0.92l-2.14,0.55l-0.14,0.71l0.63,1.71l-0.73,0.17l-0.15,0.51l0.41,0.86l0.81,0.35l-0.11,0.98l-0.39,1.15l-1.18,0.99l-2.08,-2.41l-1.88,-0.4l0.26,-0.5l-0.47,-0.55l-2.05,-0.64l-1.29,0.59l-1.89,-2.41l0.56,-0.79l-0.27,-0.46l-2.43,0.14l-1.84,-0.93l-1.54,-3.26l0.34,-1.08l1.4,-0.96l0.18,-2.79l-0.6,-1.95l-2.03,-3.11l-0.7,-2.42l1.3,-0.96l0.13,-0.82l-2.55,-3.46l-3.35,-1.69l-1.01,-2.08l-1.57,-0.65l-0.96,0.61l-0.72,-0.27l1.38,-1.1l-0.35,-1.89l-3.56,-0.63l-1.0,0.55Z",

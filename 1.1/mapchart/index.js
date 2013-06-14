@@ -10,40 +10,40 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
     }
 
     S.augment(MapChart, S.Event.Target, {
-        init: function () {
+        init:function () {
             var self = this;
             if (!self._container) return;
 
             var _defaultConfig = {
-                themeCls: "ks-chart-default",
-                canvasAttr: {x: 0, y: 0},
-                offset: {
-                    x: 15, y: 15
+                themeCls:"ks-chart-default",
+                canvasAttr:{x:0, y:0},
+                offset:{
+                    x:15, y:15
                 },
-                city: {
-                    css: {
-                        "padding-left": "10px",
-                        "font-size": '12px',
-                        "background": "url(http://img01.taobaocdn.com/tps/i1/T1sMCSXExfXXa9hgfr-5-5.png) no-repeat 0 6px",
-                        "height": "17px",
-                        "display": "inline-block",
-                        "position": "absolute"
+                city:{
+                    css:{
+                        "padding-left":"10px",
+                        "font-size":'12px',
+                        "background":"url(http://img01.taobaocdn.com/tps/i1/T1sMCSXExfXXa9hgfr-5-5.png) no-repeat 0 6px",
+                        "height":"17px",
+                        "display":"inline-block",
+                        "position":"absolute"
                     },
-                    isShow: false
+                    isShow:false
                 },
-                tip: {
-                    isShow: true,
-                    template: "",
-                    offset: {
-                        x: 0,
-                        y: 0
+                tip:{
+                    isShow:true,
+                    template:"",
+                    offset:{
+                        x:0,
+                        y:0
                     },
-                    boundryDetect: true
+                    boundryDetect:true
                 },
-                title: {
-                    isShow: true
+                title:{
+                    isShow:true
                 },
-                autoRender: true
+                autoRender:true
             }
 
             var themeCls = self._cfg.themeCls || _defaultConfig.themeCls;
@@ -56,9 +56,10 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
 
             self.scaleVal = 1;
 
+            self.offset = self._container.offset();
             self.autoRender && self.render();
         },
-        render: function () {
+        render:function () {
             var self = this,
                 _cfg = self._cfg;
             //初始化paper等
@@ -69,7 +70,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             _cfg.tip.isShow && self.renderTip();
             self.fire('afterRender');
         },
-        rePaint: function () {
+        rePaint:function () {
             var self = this,
                 _cfg = self._cfg;
             self.paper.clear();
@@ -79,7 +80,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             self.drawMap(MapData);
             _cfg.tip.isShow && self.renderTip();
         },
-        proceedSeries: function () {
+        proceedSeries:function () {
             var self = this,
                 _cfg = self._cfg;
 
@@ -90,18 +91,18 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 item.areaName = pro.text = decodeURIComponent(pro.text);
             });
         },
-        initContainer: function () {
+        initContainer:function () {
             var self = this;
-            self._container.css({"-webkit-text-size-adjust": "none", "-webkit-tap-highlight-color": "rgba(0, 0, 0, 0)", "position": "relative"});
+            self._container.css({"-webkit-text-size-adjust":"none", "-webkit-tap-highlight-color":"rgba(0, 0, 0, 0)", "position":"relative"});
         },
-        drawMap: function (d) {
+        drawMap:function (d) {
             var self = this,
                 _cfg = self._cfg;
             self.drawPath(d.mapScale);
             self.areaText = self.formatText(d);
             self.drawAreaText(self.areaText);
         },
-        processAttr: function (attrs, color) {
+        processAttr:function (attrs, color) {
             var COLOR_TPL = "{COLOR}";
             var newAttrs = S.clone(attrs);
             for (var i in newAttrs) {
@@ -111,7 +112,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             }
             return newAttrs;
         },
-        getAreaCss: function (index, color, attr) {
+        getAreaCss:function (index, color, attr) {
             var self = this,
                 _cfg = self._cfg,
                 cfg = S.clone(color);
@@ -127,10 +128,11 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             }
             return cfg;
         },
-        drawPath: function (paths) {
+        drawPath:function (paths) {
             var self = this,
                 _cfg = self._cfg,
                 cb = _cfg.cb,
+                offset = self.offset,
                 paper = self.paper;
 
             self.pathList = {};
@@ -168,18 +170,18 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
 
             function over(ev) {
                 var index = this.index;
-                self.fire('over', [index, self.series[index].areaName]);
+                self.series[index] && self.fire('over', [index, self.series[index].areaName]);
             }
 
+            // 有其他参数
             function move(ev) {
                 self.isInPaper = true;
                 var index = this.index,
-                    x = self.isIE ? document.documentElement.scrollLeft + ev.clientX - self._container.offset().left : ev.offsetX,
-                    y = self.isIE ? document.documentElement.scrollTop + ev.clientY - self._container.offset().top : ev.offsetY;
+                    x = ev.mapX || (self.isIE ? document.documentElement.scrollLeft + ev.clientX - offset.left : ev.offsetX || ev.clientX - offset.left + window.scrollX),
+                    y = ev.mapY || (self.isIE ? document.documentElement.scrollTop + ev.clientY - offset.top : ev.offsetY || ev.clientY - offset.top + +window.scrollY);
 
-                self.fire('move', [index, self.series[index].areaName]);
+                self.series[index] && self.fire('move', [index, self.series[index].areaName]);
                 self.areaList[index].css(_cfg.areaText.hoverCss);
-                y += (self.scaleVal * 40);
                 if (!this.c) {
                     this.c = {};
                     var attr = this.attr();
@@ -194,11 +196,11 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                     col = getHoverCss();
                 this.attr(self.getAreaCss(index, col, 'hoverAttr'));
                 if (_cfg.tip.isShow && self.series[index]) {
-                    self.tip.fire("setcontent", {data: self.series[index]});
+                    self.tip.fire("setcontent", {data:self.series[index]});
                     self.tip.fire("move", {
-                        x: x,
-                        y: y,
-                        style: self.processAttr(_cfg.tip.css, this.attr("stroke"))
+                        x:x,
+                        y:y,
+                        style:self.processAttr(_cfg.tip.css, this.attr("stroke"))
                     });
                 }
             }
@@ -206,7 +208,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             function out(ev) {
                 var index = this.index;
                 self.isInPaper = false;
-                self.fire('out', [index, self.series[index].areaName]);
+                self.series[index] && self.fire('out', [index, self.series[index].areaName]);
                 self.areaList[index].css(_cfg.areaText.css);
                 // transform bug
                 var attr = this.c;
@@ -220,14 +222,14 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             map.mousemove(move);
             map.mouseout(out);
         },
-        converPix: function (x, y) {
+        converPix:function (x, y) {
             var self = this,
                 w = self._cfg.width,
                 h = self._cfg.height;
 
-            return {left: parseInt(w * x) + 'px', top: parseInt(h * y) + 'px'};
+            return {left:parseInt(w * x) + 'px', top:parseInt(h * y) + 'px'};
         },
-        drawAreaText: function (o) {
+        drawAreaText:function (o) {
             var self = this,
                 _cfg = self._cfg,
                 list = {};
@@ -243,7 +245,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             S.each(o.pro, function (item, i) {
                 var str = S.substitute(style, item);
                 str += (";" + proStyle);
-                var el = $(S.substitute(proTpl, {text: item.text, defStyle: str, cls: i + "-text"}));
+                var el = $(S.substitute(proTpl, {text:item.text, defStyle:str, cls:i + "-text"}));
                 el.data('index', i).appendTo(textContainer);
                 Event.on(el, "mouseenter", move);
                 Event.on(el, "mouseleave", out);
@@ -254,7 +256,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 if (!list[item.text]) {
                     var str = S.substitute(style, item);
                     str += (";" + cityStyle);
-                    var el = $(S.substitute(cityTpl, {text: item.text, defStyle: str}));
+                    var el = $(S.substitute(cityTpl, {text:item.text, defStyle:str}));
                     el.appendTo(textContainer);
                 }
             });
@@ -263,10 +265,13 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 var tar = $(this),
                     index = tar.data("index"),
                     path = self.pathList[index],
-                    x = tar.css("left"),
-                    y = tar.css("top");
+                    offset = self._container.offset(),
+                    x = offset.left,
+                    y = offset.top;
 
                 self.isInPaper = true;
+                ev.mapX = ev.pageX - x;
+                ev.mapY = ev.pageY - y;
                 path.customMove(ev);
                 tar.css(_cfg.areaText.hoverCss);
             }
@@ -280,7 +285,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 path.customOut(ev);
             }
         },
-        formatCss: function (d) {
+        formatCss:function (d) {
             if (S.isObject(d)) {
                 var cssText = "";
                 for (var i in d) {
@@ -289,7 +294,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 return cssText.substring(0, cssText.length - 1);
             }
         },
-        toPath: function (paths) {
+        toPath:function (paths) {
             var self = this, list = {};
             S.each(paths, function (ph, i) {
                 var l = ph.path.length , html = '', str;
@@ -303,7 +308,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
 
             return list;
         },
-        getInnerContainer: function () {
+        getInnerContainer:function () {
             var self = this,
                 _$ctnNode = self._container,
                 canvasAttr = S.mix(self._cfg.canvasAttr),
@@ -313,26 +318,26 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 y = canvasAttr.y,
                 width = innerWidth,
                 height = innerHeight,
-                tl = {x: x, y: y},
-                tr = {x: x + innerWidth, y: y},
-                bl = {x: x, y: y + height},
-                br = {x: x + innerWidth, y: y + height};
+                tl = {x:x, y:y},
+                tr = {x:x + innerWidth, y:y},
+                bl = {x:x, y:y + height},
+                br = {x:x + innerWidth, y:y + height};
             //内部容器的信息
             self._innerContainer = {
-                x: x,
-                y: y,
-                width: width,
-                height: height,
-                tl: tl,
-                tr: tr,
-                bl: bl,
-                br: br
+                x:x,
+                y:y,
+                width:width,
+                height:height,
+                tl:tl,
+                tr:tr,
+                bl:bl,
+                br:br
             };
             return self._innerContainer;
         },
-        formatText: function (o) {
+        formatText:function (o) {
             var self = this,
-                textList = {pro: {}, city: {}},
+                textList = {pro:{}, city:{}},
                 str,
                 w = self._cfg.width,
                 h = self._cfg.height;
@@ -340,18 +345,18 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             S.each(o.mapScale, function (item, i) {
                 item.x = parseInt(item.x * w);
                 item.y = parseInt(item.y * h);
-                textList.pro[i] = {x: item.x, y: item.y, text: decodeURIComponent(item.text)};
+                textList.pro[i] = {x:item.x, y:item.y, text:decodeURIComponent(item.text)};
             });
 
             //省会城市
             S.each(o.city, function (item, i) {
                 item.x = parseInt(item.x * w);
                 item.y = parseInt(item.y * h);
-                textList.city[i] = {x: item.x, y: item.y, text: decodeURIComponent(i)};
+                textList.city[i] = {x:item.x, y:item.y, text:decodeURIComponent(i)};
             });
             return textList;
         },
-        resize: function (val) {
+        resize:function (val) {
             var self = this,
                 _cfg = self._cfg,
                 SPLIT = ',';
@@ -361,7 +366,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             val[1] = (val[1] * _cfg.height).toFixed(4);
             return val.join(SPLIT);
         },
-        formatPath: function (paths) {
+        formatPath:function (paths) {
             var self = this,
                 _cfg = self._cfg,
                 SPLIT = ',',
@@ -380,11 +385,11 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                         ar[index] = self.formatNumber(item);
                     });
                 }
-                pathList[i] = {path: ar, other: str};
+                pathList[i] = {path:ar, other:str};
             });
             return pathList;
         },
-        formatNumber: function (val, j) {
+        formatNumber:function (val, j) {
             var SPLIT = ',',
                 offset;
             val = val.split(SPLIT);
@@ -392,7 +397,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             val[1] = parseFloat(val[1] / MapData.svgHeight);
             return val.join(SPLIT);
         },
-        initPaper: function () {
+        initPaper:function () {
             var self = this,
                 _cfg = self._cfg;
 
@@ -404,7 +409,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             self.paper.setViewBox(0, 0, MapData.svgWidth, MapData.svgHeight);
             self.scaleVal = (_cfg.width / MapData.svgWidth).toFixed(2);
         },
-        initTitle: function () {
+        initTitle:function () {
             var self = this,
                 _cfg = self._cfg,
                 tpl = '<h3 class="ks-chart-title"></h3>';
@@ -412,7 +417,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 $(tpl).css(_cfg.title.css).text(_cfg.title.content).appendTo(self._container);
             }
         },
-        calculateSize: function () {
+        calculateSize:function () {
             var self = this,
                 _cfg = self._cfg,
                 w, h;
@@ -429,19 +434,19 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             _cfg.width = w;
             _cfg.height = h;
         },
-        renderTip: function () {
+        renderTip:function () {
             var self = this,
                 _cfg = self._cfg,
                 ctn = self.getInnerContainer(),
-                boundryCfg = _cfg.tip.boundryDetect ? {x: ctn.tl.x, y: ctn.tl.y, width: ctn.width, height: ctn.height} : {},
-                tipCfg = S.mix(_cfg.tip, {rootNode: self._container, clsName: _cfg.themeCls, boundry: boundryCfg}, undefined, undefined, true);
+                boundryCfg = _cfg.tip.boundryDetect ? {x:ctn.tl.x, y:ctn.tl.y, width:ctn.width, height:ctn.height} : {},
+                tipCfg = S.mix(_cfg.tip, {rootNode:self._container, clsName:_cfg.themeCls, boundry:boundryCfg}, undefined, undefined, true);
             self.tip = new Tip(tipCfg);
             return self.tip;
         }
     });
 
     return MapChart;
-}, {requires: [
+}, {requires:[
     '../raphael/index',
     '../tools/color/index',
     '../tools/htmlpaper/index',
