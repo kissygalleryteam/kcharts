@@ -26,6 +26,14 @@ KISSY.add("gallery/kcharts/1.1/datetime/theme",function(S){
 		        },
 		        isShow:true
 		    },
+		    line:{
+              attr:{
+                "stroke-width":1
+              },
+                hoverAttr:{
+                    "stroke-width":1
+                }
+            },
 			points:{
 				attr:{
 					stroke:"#fff",
