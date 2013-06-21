@@ -553,8 +553,8 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					}
 					return b-a;
 				} 
-			}); 
-　　	},
+			});
+		},
 		/*
 			TODO 获取键值为key的数据 拼成数组
 			@example getArrayByKey([{key:"1"},{key:"2"}],"key") => ["1","2"]
