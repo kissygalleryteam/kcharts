@@ -1190,6 +1190,14 @@ KISSY.add("gallery/kcharts/1.1/datetime/index",function(S,Base,Template,Raphael,
 		        },
 		        isShow:true
 		    },
+		    line:{
+              attr:{
+                "stroke-width":1
+              },
+                hoverAttr:{
+                    "stroke-width":1
+                }
+            },
 			points:{
 				attr:{
 					stroke:"#fff",

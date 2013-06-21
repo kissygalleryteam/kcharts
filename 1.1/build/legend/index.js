@@ -9,6 +9,7 @@
 		var self = this;
 			self._cfg = S.mix({
 				themeCls:"ks-charts-legend",
+				switchable:true,//是否可以切换
 				css:{},
 				x:0,		//offsetX 水平偏移量
 				y:0,		//offsetY 垂直偏移量
@@ -207,6 +208,7 @@
 				chart = _cfg.chart,
 				chartType = chart.chartType,
 				$ctn = self.$ctn;
+				if(!_cfg.switchable) return;
 		  Evt.on($("li",$ctn),"click",function(e){
 	          var $li = $(e.currentTarget).toggleClass("disable"),
 	          	  index = S.indexOf(e.currentTarget,$("li",$ctn));
