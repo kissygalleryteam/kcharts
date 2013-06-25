@@ -55,17 +55,18 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					stackable:false
 				});
 
+				for(var i in  Array.prototype){
+					delete Array.prototype[i];
+				}
+				
 				series = _cfg.series || null;
 				//若为堆叠图 则最小值为0 暂时不兼容负值
 				if(_cfg.stackable){
 						_cfg.xAxis.min = 0;
 						_cfg.yAxis.min = 0;
 				}
-
 				if(!series || series.length <= 0 || !series[0].data) return;
-
 				series.length > 1 ? self._multiple = true : undefined;
-
 				for(var i in series){
 					self._datas['total'][i] = {index:i,data:series[i].data};
 					self._datas['cur'][i] = {index:i,data:series[i].data};
@@ -262,6 +263,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 											}
 										//简单数据 data 的元素为 number 类型
 										}else{
+											S.log(self._pointsX)
 											for(var i in self._pointsX){
 												if(data[i] === '' || data[i] === null){
 													points[i] = {
@@ -352,6 +354,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					}
 				}
 				for(var i in self._datas['cur']){
+					S.log(self._datas['cur'][i]['data'])
 					self._points[i] = getDataPoints(self._datas['cur'][i]['data'],i,curCoordNum);
 				}
 		},

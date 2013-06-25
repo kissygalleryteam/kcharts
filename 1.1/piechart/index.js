@@ -294,7 +294,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
             var sector = paper.path(pathString)
               , color
             sectors[j] = sector
-            color = this.getcolor(j)
+            color = that.getcolor(j)
             sectors[j].attr({'fill':color,stroke:'#fff'});
             sectors[j].percent = percentData[j]
           }
