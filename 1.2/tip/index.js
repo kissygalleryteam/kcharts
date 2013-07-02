@@ -92,7 +92,7 @@ KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) 
                             y = ev.y,
                             style = ev.style;
 
-                        self.isVisable() ? self.animateTo(x, y) : self.moveTo(x, y);
+                        self.isVisable() && self._cfg.anim ? self.animateTo(x, y) : self.moveTo(x, y);
                         style && self.$tip.css(style);
                     }
             );
@@ -140,6 +140,7 @@ KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) 
         },
         moveTo:function (x, y) {
             var self = this;
+            self._prevtime = new Date().getTime();
             self.show();
             var $tip = self.getInstance(),
                 _cfg = self._cfg,
@@ -160,13 +161,20 @@ KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) 
 
         },
         animateTo:function (x, y, callback) {
-            var self = this;
-
-            self.show();
-
-            var $tip = self.getInstance(),
-                _cfg = self._cfg,
+            var self = this,
+                  _cfg = self._cfg,
                 anim = _cfg.anim,
+                now = new Date().getTime();
+            if(self._prevtime){
+                // S.log(now - self._prevtime)
+               if(now - self._prevtime < 100){
+                    //迅速移动
+                    self.animateFast(x,y,callback);
+               }
+            }
+            self.show();
+            self._prevtime = new Date().getTime();
+            var $tip = self.getInstance(),
                 pos = self.getPos(x, y),
                 marginTop = _cfg.corner.css["margin-top"] || _cfg.corner.css["marginTop"] || 0,
                 marginLeft = _cfg.corner.css["margin-left"] || _cfg.corner.css["marginLeft"] || 0,
@@ -175,7 +183,6 @@ KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) 
             $corner && $corner.css({
                                        "margin-left":marginLeft + x - pos.x
                                    });
-
             $tip.stop().animate({
                                     "margin-top":pos.y,
                                     "margin-left":pos.x
@@ -185,6 +192,52 @@ KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) 
                 , function () {
                     callback && callback();
                 });
+        },
+        //快速移动
+        animateFast:function(x,y,callback){
+            var self = this,
+                px = self.get("x"),
+                py = self.get("y"),
+                cx,
+                cy,
+                rate = 1/5,
+                offset = 0;
+            self._prevtime = new Date().getTime();
+            self.show();
+
+            if(px !== undefined){
+                cx = px/1 + (x - px) * rate;
+                cy = py/1 + (y - py) * rate;
+            }
+            var $tip = self.getInstance(),
+                _cfg = self._cfg,
+                anim = self._cfg.anim,
+                pos = self.getPos(cx, cy),
+                marginTop = _cfg.corner.css["margin-top"] || _cfg.corner.css["marginTop"] || 0,
+                marginLeft = _cfg.corner.css["margin-left"] || _cfg.corner.css["marginLeft"] || 0,
+                $corner = self.$corner;
+
+            $corner && $corner.css({
+                                       "margin-left":marginLeft + x - pos.x
+                                   });
+
+            $tip.css({
+                         "margin-top":pos.y,
+                         "margin-left":pos.x
+                     });
+
+             var posend = self.getPos(x, y);
+
+            $tip.stop().animate({
+                                    "margin-top":posend.y,
+                                    "margin-left":posend.x
+                                }
+                , anim.duration
+                , anim.easing
+                , function () {
+                    callback && callback();
+                });
+
         },
         renderTemplate:function (tpl, data) {
             return this.setContent(Template(tpl).render(data));
@@ -308,7 +361,7 @@ KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) 
     });
 
     if (!S.KCharts || !S.KCharts.Tip){
-      S.namespace('S.KCharts.Tip');
+      S.namespace('KISSY.KCharts');
     }
     S.KCharts.Tip = Tip;
     return Tip;
