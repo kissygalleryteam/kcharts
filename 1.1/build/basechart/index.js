@@ -263,7 +263,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 											}
 										//简单数据 data 的元素为 number 类型
 										}else{
-											S.log(self._pointsX)
 											for(var i in self._pointsX){
 												if(data[i] === '' || data[i] === null){
 													points[i] = {
@@ -354,7 +353,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					}
 				}
 				for(var i in self._datas['cur']){
-					S.log(self._datas['cur'][i]['data'])
 					self._points[i] = getDataPoints(self._datas['cur'][i]['data'],i,curCoordNum);
 				}
 		},
