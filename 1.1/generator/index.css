@@ -1,6 +1,6 @@
 .main-container{
 	width:1000px;
-	margin:0px auto;
+	margin:10px auto;
 }
 .config-panel{
 	width:425px;
@@ -72,15 +72,17 @@
 .nav ul li a{
 	display: block;
 	width:80px;
+	padding: 4px 5px;
 	text-align: center;
 	text-decoration: none;
-	font-size: 16px;
+	font-size: 12px;
 	border:1px solid #f7f7f7;
 	border-bottom: none;
 	color:#f60;
+	font-family: Microsoft Yahei;
 }
 .nav ul li a.cur,.nav ul li a:hover{
-	background: #7f7f7f;
+	background: #74aed2;
 	color:#fff;
 }
 .split{

@@ -209,6 +209,7 @@
 				chartType = chart.chartType,
 				$ctn = self.$ctn;
 				if(!_cfg.switchable) return;
+		  Evt.detach($("li",$ctn),"click");
 		  Evt.on($("li",$ctn),"click",function(e){
 	          var $li = $(e.currentTarget).toggleClass("disable"),
 	          	  index = S.indexOf(e.currentTarget,$("li",$ctn));
@@ -222,6 +223,7 @@
 	            "scatterchart" === chartType && chart.hidePoints(index);
 	          }
 	      });
+	      Evt.detach($("li",$ctn),"mouseenter");
 	      Evt.on($("li",$ctn),"mouseenter",function(e){
 	          var $li = $(e.currentTarget),
 	          	  index = S.indexOf(e.currentTarget,$("li",$ctn));
