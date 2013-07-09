@@ -45,6 +45,48 @@ KISSY.use('gallery/kcharts/1.1/piechart/index',function(S,PieChart){
       {data:6.2,label:'Opera '+getRate(4),'tip':'Opera'},
       {data:0.7,label:'Others '+getRate(5),'tip':'Others'}
   ]
+  data = [
+	{
+		"data":"35.0",
+		"label":"收到的商品质量有问题 35.0%",
+		"tip":"收到的商品质量有问题"
+	},
+	{
+		"data":"22.0",
+		"label":"未按时发货 22.0%",
+		"tip":"未按时发货"
+	},
+	{
+		"data":"20.0",
+		"label":"不想要了 20.0%",
+		"tip":"不想要了"
+	},
+	{
+		"data":"19.0",
+		"label":"排错了 19.0%",
+		"tip":"排错了"
+	},
+	{
+		"data":"18.0",
+		"label":"原因好多啊 18.0%",
+		"tip":"原因好多啊"
+	},
+	{
+		"data":"13.0",
+		"label":"试试看能想到的最长的 13.0%",
+		"tip":"试试看能想到的最长的"
+	},
+	{
+		"data":"11.0",
+		"label":"第七个原因想不出来了 11.0%",
+		"tip":"第七个原因想不出来了"
+	},
+	{
+		"data":"9.0",
+		"label":"倒数第二个原因 9.0%",
+		"tip":"倒数第二个原因"
+	}
+]
 
   var piechart = new PieChart({
     renderTo:'#demo1',
@@ -65,7 +107,7 @@ KISSY.use('gallery/kcharts/1.1/piechart/index',function(S,PieChart){
   });
 
   piechart.on('click',function(e){
-    var sector = e.target
+    var sector = e.sector
       ,unit = 10
     piechart.transformSector(sector,unit);
   });
