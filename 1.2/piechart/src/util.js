@@ -549,13 +549,21 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
       framedata:flatdata
     }
   }
+  //判断a，b的误差是否小于c
+  function closeto(a,b,c){
+    c || (c = 5);
+    return Math.abs(a-b) < c;
+  }
+
   var util = {
       initPath:initpath,
       fillColor:buildPropsArray3,
       adjustFrameData:buildPropsArray4,
       isRightAngel:isRightAngel,
-      filterdata:filterdata
+      filterdata:filterdata,
+      closeto:closeto
   }
+
   return util;
 },{
   requires:["gallery/kcharts/1.2/piechart/sector","gallery/kcharts/1.1/tools/color/index","gallery/kcharts/1.1/raphael/index"]

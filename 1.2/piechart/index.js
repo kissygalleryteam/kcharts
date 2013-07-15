@@ -5,9 +5,48 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
 
   function render(){
     this.destroy();
+    this.initPath();
     var framedata = this.get('framedata')
     this.animate(framedata)
   }
+
+  // 调整cfg
+  function setupcfg(cfg){
+    var w = this.get("width")
+      , h = this.get("height")
+      , min = Math.min(w,h)
+      , d
+      , rpadding = cfg.rpadding //留给label
+    if(!rpadding){
+      rpadding = 40;
+      this.set("rpadding",rpadding);
+    }
+    if(min>rpadding){
+      d = min - rpadding;
+    }else{
+      d = min;
+    }
+    cfg.rs = d/2;
+
+    //自动找圆心
+    if(!S.isNumber(cfg.cx)){
+      cfg.cx = w/2;
+    }
+    if(!S.isNumber(cfg.cy)){
+      cfg.cy = h/2;
+    }
+
+    //设置重绘频率
+    if(!S.isNumber(cfg.repaintRate)){
+      cfg.repaintRate = 200;
+    }
+  }
+
+  /**
+   * @param cfg {Object}
+   * cfg.rpadding 留来画label的距离
+   * cfg.repaintRate 重绘频率
+   * */
 
   function Pie(cfg){
     var container = S.get(cfg.renderTo)
@@ -15,12 +54,17 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       , height = D.height(container)
       , paper = Raphael(container)
       , isStatic = D.css(container,'position') == "static" ? true : false
-      , rs = cfg.rs
-
-    cfg.rs = S.isArray(rs) ? rs : [rs]
-    isStatic && D.css(container,"position","relative");
 
     this.set({"paper":paper,width:width,height:height,container:container})
+
+    //若没有cx|cy|r，则算一个默认的出来
+    this._setupcfg(cfg);
+
+    if(!S.isArray(cfg.rs)){
+      cfg.rs = [cfg.rs];
+    }
+
+    isStatic && D.css(container,"position","relative");
 
     this.set(cfg);
 
@@ -35,21 +79,23 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
   S.extend(Pie,S.Base,{
     bindEvent:function(){
       this.on("afterCxChange",function(){
-        this.drawChart();
+        this.render();
       });
       this.on("afterCyChange",function(){
-        this.drawChart();
+        this.render();
       });
       this.on("afterRsChange",function(){
-        this.drawChart();
+        this.render();
       });
       this.on("afterDataChange",function(){
-        this.drawChart();
+        this.render();
       });
       E.on(this.get("container"),"mouseleave",function(){
         this.fire("mouseleave");
       },this)
     },
+    _setupcfg:setupcfg,
+    //调整动画的配置
     adjustCfg:function(){
       var anim = this.get('anim')
         , that = this
@@ -88,10 +134,13 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       var framedata = this.get('framedata')
       this.animate(framedata)
       // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘
-      var bufferedDraw = S.buffer(render,100,this)
+      var bufferedDraw = S.buffer(render,200,this)
       this.render = bufferedDraw;
       this.bindEvent();
     },
+    /**
+     * 调整饼图：隐藏部分扇形
+     * */
     adjust:function(){
       var that = this
         , groups = this.get("groups").slice(0)
@@ -101,6 +150,24 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
                  })
       Util.adjustFrameData(groups,this);
       this.animate(framedata);
+    },
+    /**
+     * 自动调整r,cx,cy
+     * */
+    autoResize:function(){
+      var con = this.get("container")
+        , w = D.width(con)
+        , h = D.height(con)
+        , min = Math.min(w,h)
+        , cx = this.get("cx")
+        , cy = this.get("cy")
+        , cx1 = w/2 ,cy1 = h/2
+      if(!Util.closeto(cx1,cx)){
+        this.set("cx",cx1);
+      }
+      if(!Util.closeto(cy1,cy)){
+        this.set("cy",cy1);
+      }
     },
     animate:function(framedata){
       var that = this
@@ -175,12 +242,13 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     },
     destroy:function(){
       var $sectors = this.get("$sectors")
-      if($sectors){
-        S.each($sectors,function($sector){
-          $sector.destroy();
-        });
-        this.set("$sectors",null)
-      }
+        , $labels = this.get("$labels")
+        , litter = [].concat($sectors,$labels)
+      S.each(litter,function(i){
+        i && i.destroy();
+      });
+      this.set("$sectors",null);
+      this.set("$labels",null);
     }
   })
 

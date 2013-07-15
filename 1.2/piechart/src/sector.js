@@ -156,7 +156,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
         , $path = paper.path();
 
       pathcfg = S.merge({
-        stroke:"#000"
+        stroke:"#fff"
       },pathcfg)
       if(sectorcfg){
         pathcfg = S.merge(pathcfg,{

@@ -34,33 +34,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
     }
     return iter(l1,l2,[]);
   }
-
-  /** steal from Highcharts!
-   * Utility method that sorts an object array and keeping the order of equal items.
-   * ECMA script standard does not specify the behaviour when items are equal.
-   */
-  function stableSort(arr, sortFunction) {
-	  var length = arr.length,
-		    sortValue,
-		    i;
-    var ret;
-
-	  // Add index to each item
-	  for (i = 0; i < length; i++) {
-		  arr[i].ss_i = i; // stable sort index
-	  }
-
-	  ret = arr.sort(function (a, b) {
-		  sortValue = sortFunction(a, b);
-		  return sortValue ? a.ss_i - b.ss_i : sortValue;
-	  });
-
-	  // Remove index from items
-	  for (i = 0; i < length; i++) {
-		  delete arr[i].ss_i; // stable sort index
-	  }
-    return ret;
-  }
   // end
 
   var $detector
@@ -89,6 +62,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
 
       $label.css({"position":"absolute","left":x+'px',"top":y+'px',width:size.width+'px',"height":size.height+'px'}).appendTo(container);
       this.set('el',$label)
+    },
+    destroy:function(){
+      this.get("el").remove();
+      this.get("$path").remove();
     }
   })
   /**
@@ -250,7 +227,13 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
       that.labels.push(labelInstance);
     }
   }
-  S.extend(Labels,S.Base)
+  S.extend(Labels,S.Base,{
+    destroy:function(){
+      S.each(this.labels,function(label){
+        label.destroy();
+      });
+    }
+  })
   Labels.getSizeOf = blockSizeOf
   return Labels;
 })
