@@ -5,6 +5,9 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
 
   function render(){
     this.destroy();
+    var paper = Raphael(this.get("container"),this.get("width"),this.get("height"));
+    this.set("paper",paper);
+
     this.initPath();
     var framedata = this.get('framedata')
     this.animate(framedata)
@@ -17,17 +20,18 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       , min = Math.min(w,h)
       , d
       , rpadding = cfg.rpadding //留给label
-    if(!rpadding){
-      rpadding = 40;
-      this.set("rpadding",rpadding);
+    if(!cfg.rs){
+      if(!rpadding){
+        rpadding = 40;
+        this.set("rpadding",rpadding);
+      }
+      if(min>rpadding){
+        d = min - rpadding;
+      }else{
+        d = min;
+      }
+      cfg.rs = [d/2];
     }
-    if(min>rpadding){
-      d = min - rpadding;
-    }else{
-      d = min;
-    }
-    cfg.rs = d/2;
-
     //自动找圆心
     if(!S.isNumber(cfg.cx)){
       cfg.cx = w/2;
@@ -40,12 +44,24 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     if(!S.isNumber(cfg.repaintRate)){
       cfg.repaintRate = 200;
     }
+
+    //如果要画面包圈
+    if(cfg.donut){
+      cfg.donutSize || (cfg.donutSize = 30);
+      if(cfg.donutSize>cfg.rs[0]){
+        //设为半径的一半
+        cfg.donutSize = cfg.rs[0]/2;
+      }
+      cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
+    }
   }
 
   /**
    * @param cfg {Object}
    * cfg.rpadding 留来画label的距离
-   * cfg.repaintRate 重绘频率
+   * cfg.repaintRate {Number} 重绘频率
+   * cfg.donut {Bool} 是否为面包圈图
+   * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
    * */
 
   function Pie(cfg){
@@ -134,7 +150,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       var framedata = this.get('framedata')
       this.animate(framedata)
       // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘
-      var bufferedDraw = S.buffer(render,200,this)
+      var bufferedDraw = S.buffer(render,this.get("repaintRate"),this)
       this.render = bufferedDraw;
       this.bindEvent();
     },
@@ -159,14 +175,46 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , w = D.width(con)
         , h = D.height(con)
         , min = Math.min(w,h)
+        , d
+        , rpadding = this.get("rpadding")
         , cx = this.get("cx")
         , cy = this.get("cy")
         , cx1 = w/2 ,cy1 = h/2
+
+      var attrs = {"width":w,"height":h};
+      this.set(attrs);
+
       if(!Util.closeto(cx1,cx)){
         this.set("cx",cx1);
       }
       if(!Util.closeto(cy1,cy)){
         this.set("cy",cy1);
+      }
+
+      if(min>rpadding){
+        d = min - rpadding;
+      }else{
+        d = min;
+      }
+
+      //如果要画面包圈
+      var drawDonut = this.get("donut")
+        , donutSize = this.get("donutSize")
+        , r0 ,r1
+
+      if(drawDonut){
+        r0 = d/2
+        if(donutSize>r0){
+          r1 = r0/2;
+        }else{
+          r1 = r0 - donutSize;
+        }
+        this.set("rs",[r0,r1]);
+      }else{
+        var rs = this.get("rs")
+        if(rs.length == 1){
+          this.set("rs",[d/2]);
+        }
       }
     },
     animate:function(framedata){
@@ -249,6 +297,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       });
       this.set("$sectors",null);
       this.set("$labels",null);
+      this.get("paper").remove();
     }
   })
 
