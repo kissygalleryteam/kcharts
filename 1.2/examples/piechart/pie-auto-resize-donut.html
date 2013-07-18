@@ -94,7 +94,9 @@
 				});
 
 		    S.Event.on(window,"resize",S.buffer(function(){
-		      //
+		      var rs = pie.get("rs")
+		      //设置label的padding
+		      if(rs[0]<100){pie.set("padding",10)}else{pie.set("padding",20)}
 		      pie.autoResize();
 		    },100));
 			}
