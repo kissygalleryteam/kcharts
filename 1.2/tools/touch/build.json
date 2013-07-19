@@ -1,0 +1,7 @@
+{
+  "tasks":{
+    "combo":[
+      {"src":["index.js"],"dest":"../../build/tools/touch/index-min.js","min_file":true,"combo_file":"../../build/tools/touch/index.js"}
+		]
+  }
+}
