@@ -7,3 +7,5 @@
 
 
 kcharts 主页: http://v.idcnc.com.cn
+### changelog
+- 2013.07.15 饼图支持自适应容器
