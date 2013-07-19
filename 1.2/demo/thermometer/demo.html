@@ -1,0 +1,39 @@
+<!-- -*- coding: utf-8; -*- -->
+<!doctype html>
+<html>
+  <head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+		<title>chart test</title>
+		<style type="text/css" media="screen">
+		</style>
+  </head>
+  <body>
+    <div id="J_Thermometer" class="thermometer-con">
+    </div>
+		<script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+	  <script type="text/javascript">
+		 KISSY.config({
+			 packages:[{
+				 name:'gallery',
+				 path:'http://a.tbcdn.cn/s/kissy'
+			 }]
+		 });
+		</script>
+	<script type="text/javascript" src="../../thermometer/index.js"></script>
+	<script type="text/javascript">
+		KISSY.use("gallery/kcharts/1.2/thermometer/index",function(S,Thermometer){
+		  var radar = new Thermometer({
+        renderTo:"#J_Thermometer",
+        width:300, // 画布尺寸
+        height:300,
+        x:150,
+        y:150,
+        options:{}
+		  });
+
+		})
+	</script>
+  </body>
+</html>
