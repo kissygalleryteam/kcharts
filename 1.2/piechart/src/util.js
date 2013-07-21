@@ -479,7 +479,9 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
         }
 
         $path.attr("fill",c);
-        gradienton && $path.attr("gradient",(degsum+framedata.to.deg/2)+"-"+prevColor+"-"+c);
+        //渐变色
+        var gradientColor = framedata.gradientcolor || prevColor;
+        gradienton && $path.attr("gradient",(degsum+framedata.to.deg/2)+"-"+gradientColor+"-"+c);
         degsum += framedata.to.deg
         prevColor = c;
       }
