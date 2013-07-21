@@ -1,8 +1,0 @@
-{
-  "tasks":{
-    "combo":[
-      {"src":["src/*","index.js"],"dest":"index-min.js","min_file":true,"combo_file":true}
-    ]
-  }
-}
-

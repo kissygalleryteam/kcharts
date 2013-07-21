@@ -62,6 +62,8 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
    * cfg.repaintRate {Number} 重绘频率
    * cfg.donut {Bool} 是否为面包圈图
    * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
+   * cfg.initdeg {Number} 画扇形的起始位置，默认为90度
+   * cfg.gradient {Bool} 是否开启渐变
    * */
 
   function Pie(cfg){
