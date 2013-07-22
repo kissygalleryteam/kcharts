@@ -37,3 +37,8 @@
 - 图片表盘/指针主题二 http://v.idcnc.com.cn/gallery/kcharts/1.1/demo/dashboard/dashboard.html
 - 矢量绘制的表盘 http://v.idcnc.com.cn/gallery/kcharts/1.1/demo/dashboard/dashboard-half.html
 
+
+
+##其它一些自定义样式的例子
+- 柱状图上方添加自定义文案 http://jsbin.com/ukihet/1
+
