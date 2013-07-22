@@ -47,4 +47,7 @@
 ### 饼图自定义label
 - 单层饼图自定义label examples/pie-custom-label.html
 - 多层饼图自定label examples/pie-nest-custom-label.html
+- 自适应例子
+  - demo/piechart/pie-auto-resize.html
+  - demo/piechart/pie-auto-resize-donut.html
 
