@@ -40,5 +40,11 @@
 
 
 ##其它一些自定义样式的例子
+
+### 柱状图
 - 柱状图上方添加自定义文案 http://jsbin.com/ukihet/1
+
+### 饼图自定义label
+- 单层饼图自定义label examples/pie-custom-label.html
+- 多层饼图自定label examples/pie-nest-custom-label.html
 
