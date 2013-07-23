@@ -4,7 +4,7 @@
       {"src":["index.js"],"dest":"../build/tip/index-min.js","min_file":true,"combo_file":"../build/tip/index.js"}
     ],
 		"css-combo":[
-		  {"src":["./assets/tip.css"],"dest":"../build/tip/assets/tip.css","min_code":true}
+		  {"src":["./assets/tip.css"],"dest":"../build/tip/assets/tip-min.css","min_code":true}
 		]
   }
 }

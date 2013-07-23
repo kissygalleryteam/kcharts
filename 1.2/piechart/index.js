@@ -9,6 +9,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     this.set("paper",paper);
 
     this.initPath();
+    this.fire("beforeRender");
     var framedata = this.get('framedata')
     this.animate(framedata)
   }
@@ -62,6 +63,8 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
    * cfg.repaintRate {Number} 重绘频率
    * cfg.donut {Bool} 是否为面包圈图
    * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
+   * cfg.initdeg {Number} 画扇形的起始位置，默认为90度
+   * cfg.gradient {Bool} 是否开启渐变，可以手动配置framedata.gradientcolor
    * */
 
   function Pie(cfg){
@@ -89,7 +92,11 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     // adjustData
     this.adjustData();
     if(cfg.autoRender != false){
-      this.render();
+      var that = this;
+      //延迟渲染
+      setTimeout(function(){
+        that.render();
+      },0);
     }
   }
   S.extend(Pie,S.Base,{
@@ -147,6 +154,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     },
     render:function(){
       this.initPath();
+      this.fire("beforeRender");
       var framedata = this.get('framedata')
       this.animate(framedata)
       // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘

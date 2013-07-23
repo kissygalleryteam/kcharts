@@ -459,21 +459,20 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         label = data[labelO.i].label;
         labelO.text = label;
         var posxy = this.getLabelXY(x3,y3,label,true);
-        var textspan = D.create('<span class="ks-charts-label"/>');
-        D.html(textspan,label);
-        /*
-        D.css(textspan,{position:'absolute',left:(offset.left+posxy.x)+'px',top:(offset.top+posxy.y)+'px'});
-        D.append(textspan,document.body);
-         */
+        //若不隐藏这个label则
+        if(data[labelO.i].hidelabel != true){
+          var textspan = D.create('<span class="ks-charts-label"/>');
+          D.html(textspan,label);
 
-        D.css(this.container,'position','relative');
-        D.css(textspan,{position:'absolute',left:(posxy.x)+'px',top:(posxy.y)+'px'});
-        D.append(textspan,this.container);
+          D.css(this.container,'position','relative');
+          D.css(textspan,{position:'absolute',left:(posxy.x)+'px',top:(posxy.y)+'px'});
+          D.append(textspan,this.container);
 
-        var pathElement = paper.path(p.join(','));
-        pathElement.toBack();
-        if(cfg.labelline && cfg.labelline.attr){
-          pathElement.attr(cfg.labelline.attr);
+          var pathElement = paper.path(p.join(','));
+          pathElement.toBack();
+          if(cfg.labelline && cfg.labelline.attr){
+            pathElement.attr(cfg.labelline.attr);
+          }
         }
         ileft++;
       }
@@ -486,8 +485,8 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         var flag;
         labelO = labelRightCopy[iright];
         y3 = labelO.y2;
-        if(labelRightLen>0){
-          prevLabelO = labelRightCopy[labelRightLen-1];
+        if(iright>0){
+          prevLabelO = labelRightCopy[iright-1];
           if(prevLabelO.y3+14>y3){
             y3 = prevLabelO.y3+14;
           }
@@ -506,20 +505,19 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         label = data[labelO.i].label;
         labelO.text = label;
         var posxy = this.getLabelXY(x3,y3,label);
-        var textspan = D.create('<span class="ks-charts-label"/>');
-        D.html(textspan,label)
-        /*
-        D.css(textspan,{position:'absolute',left:(offset.left+posxy.x)+'px',top:(offset.top+posxy.y)+'px'});
-        D.append(textspan,document.body);
-         */
-        D.css(this.container,'position','relative');
-        D.css(textspan,{position:'absolute',left:(posxy.x)+'px',top:(posxy.y)+'px'});
-        D.append(textspan,this.container);
+        //若不隐藏这个label则
+        if(data[labelO.i].hidelabel != true){
+          var textspan = D.create('<span class="ks-charts-label"/>');
+          D.html(textspan,label)
+          D.css(this.container,'position','relative');
+          D.css(textspan,{position:'absolute',left:(posxy.x)+'px',top:(posxy.y)+'px'});
+          D.append(textspan,this.container);
 
-        var pathElement = paper.path(p.join(','));
-        pathElement.toBack();
-        if(cfg.labelline && cfg.labelline.attr){
-          pathElement.attr(cfg.labelline.attr);
+          var pathElement = paper.path(p.join(','));
+          pathElement.toBack();
+          if(cfg.labelline && cfg.labelline.attr){
+            pathElement.attr(cfg.labelline.attr);
+          }
         }
         iright++;
       }
@@ -597,7 +595,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         , color
 
       i = i%c_map_len
-                                
+
       if(colors && colors[i]){
         color = map[i].DEFAULT
       }else{
