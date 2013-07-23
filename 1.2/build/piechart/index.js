@@ -898,6 +898,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
       , cy = pie.get('cy')
       , pathcfg = pie.get('pathcfg')
       , donut = !!pie.get("donut")
+      , initdeg = pie.get("initdeg")
+    if(initdeg == undefined){
+      initdeg = 90;
+    }
 
     for(var i=0,l=groups.length;i<l;i++){
       var group = paper.set();
@@ -937,7 +941,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
           r = [rs[0],rs[1]]
         }
 
-        f.el = new Sector(paper,cx,cy,r,90,89,pathcfg,f);
+        f.el = new Sector(paper,cx,cy,r,initdeg,initdeg-1,pathcfg,f);
 
         $path = f.el.get("$path")
 
@@ -1072,16 +1076,19 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
       , initialColor = initial && Raphael.getRGB(initial)
       , min = color && getMinPercent(color.min)
       , icolor = new degrade(initialColor,len,min)
+      , degsum = 0
+      , prevColor = initialColor
+      , gradienton = pie.get("gradient")
 
     for(var i=0,l=set.length;i<l;i++){
       var rset = paper.set()
         , iniColor = set[i][0].color
         , llen = set[i].length
         , setcolor = new degrade(iniColor,llen)
-
       for(var j=0,ll=set[i].length;j<ll;j++){
         var setij = set[i][j]
           , setij$el = setij.el
+          , framedata = setij$el.get("framedata")
           , $path = setij$el.get('$path')
           , ss
           , c
@@ -1102,7 +1109,13 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
             }
           }
         }
+
         $path.attr("fill",c);
+        //渐变色
+        var gradientColor = framedata.gradientcolor || prevColor;
+        gradienton && $path.attr("gradient",(degsum+framedata.to.deg/2)+"-"+gradientColor+"-"+c);
+        degsum += framedata.to.deg
+        prevColor = c;
       }
     }
     return;
@@ -1211,6 +1224,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     this.set("paper",paper);
 
     this.initPath();
+    this.fire("beforeRender");
     var framedata = this.get('framedata')
     this.animate(framedata)
   }
@@ -1264,6 +1278,8 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
    * cfg.repaintRate {Number} 重绘频率
    * cfg.donut {Bool} 是否为面包圈图
    * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
+   * cfg.initdeg {Number} 画扇形的起始位置，默认为90度
+   * cfg.gradient {Bool} 是否开启渐变，可以手动配置framedata.gradientcolor
    * */
 
   function Pie(cfg){
@@ -1291,7 +1307,11 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     // adjustData
     this.adjustData();
     if(cfg.autoRender != false){
-      this.render();
+      var that = this;
+      //延迟渲染
+      setTimeout(function(){
+        that.render();
+      },0);
     }
   }
   S.extend(Pie,S.Base,{
@@ -1349,6 +1369,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     },
     render:function(){
       this.initPath();
+      this.fire("beforeRender");
       var framedata = this.get('framedata')
       this.animate(framedata)
       // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘

@@ -1,12 +1,11 @@
 <!-- -*- coding: utf-8; -*- -->
-<!-- 有问题请联系cookieu[at]gmail.com 或者 阿里旺旺:元晃 -->
 <!doctype html>
 <html>
   <head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
-		<title>面包圈图</title>
+		<title>开启颜色渐变</title>
 		<style type="text/css" media="screen">
 			.pi-con{
 					border:1px solid #999;width:750px;height:300px;margin:10px 0 0 10px;
@@ -20,51 +19,44 @@
 					color:#0579C6;
 					cursor:pointer;
 			}
-		</style>		
+		</style>
   </head>
   <body>
     <div id="J_Pie1" class="pi-con">
     </div>
 		<script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
 	  <script type="text/javascript">
-		 /* 如果你使用kissy 1.2，需要下面的包配置
 		 KISSY.config({
 			 packages:[{
 				 name:'gallery',
 				 path:'http://a.tbcdn.cn/s/kissy'
 			 }]
 		 });
-		 */
 		</script>
-	<!-- <script type="text/javascript" src="../../piechart/src/animation.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/src/util.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/src/sector.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/src/label.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/index.js"></script> -->
+	<script type="text/javascript" src="../../piechart/src/animation.js"></script>
+	<script type="text/javascript" src="../../piechart/src/util.js"></script>
+	<script type="text/javascript" src="../../piechart/src/sector.js"></script>
+	<script type="text/javascript" src="../../piechart/src/label.js"></script>
+	<script type="text/javascript" src="../../piechart/index.js"></script>
 	<script type="text/javascript">
-		//因为线上只有 http://a.tbcdn.cn/s/kissy/gallery/kcharts/1.2/tip/assets/tip.css 所以debug=true
-		KISSY.Config.debug = true;
-		KISSY.use("gallery/kcharts/1.2/piechart/index,gallery/kcharts/1.1/tip/index",function(S,Pie,Tip){
+		KISSY.use("gallery/kcharts/1.2/piechart/index",function(S,Pie){
 			function pie1(){
-				var tip
-				function getTip(){
-					if(!tip){
-						tip = new Tip({rootNode:S.one('#J_Pie1')});
-					}
-					return tip;
-				}
-
-				var data = [ {label:"Chrome", data:1 },{ label:"FireFox", data:2 },{ label:"IE", data:3 },{ label:"Opera",data:4 },{ label:"Safari", data:5 }];
+				var data = [
+					{label:"Chrome", data:1},
+					{ label:"FireFox", data:2 },
+					{ label:"IE", data:3 },
+					{ label:"Opera",data:4 },
+					{ label:"Safari", data:5 }];
 
 				var cfg = {
 					data:data,
 					color:{
 						initial:"#f00"
 					},
+					gradient:true,//开启渐变色
 					renderTo:"#J_Pie1",
 					cx:350,cy:150,
-					rs:[60,100],
-		      donut:true,
+					rs:80,
 					interval:5,
 					anim:{
 						easing:'swing',
@@ -72,7 +64,7 @@
 					}
 				}
 
-		    var pie = new Pie(cfg)
+				var pie = new Pie(cfg)
 					, ms = 600
 
 				function enter(e){
@@ -98,7 +90,7 @@
 				pie.on("mouseout",leave);
 
 				pie.on("afterRender",function(){
-		      // do sth
+					// do sth
 				});
 
 			}
