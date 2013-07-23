@@ -9,6 +9,7 @@
 		var self = this;
 			self._cfg = S.mix({
 				themeCls:"ks-charts-legend",
+				switchable:true,//是否可以切换
 				css:{},
 				x:0,		//offsetX 水平偏移量
 				y:0,		//offsetY 垂直偏移量
@@ -207,6 +208,8 @@
 				chart = _cfg.chart,
 				chartType = chart.chartType,
 				$ctn = self.$ctn;
+				if(!_cfg.switchable) return;
+		  Evt.detach($("li",$ctn),"click");
 		  Evt.on($("li",$ctn),"click",function(e){
 	          var $li = $(e.currentTarget).toggleClass("disable"),
 	          	  index = S.indexOf(e.currentTarget,$("li",$ctn));
@@ -220,6 +223,7 @@
 	            "scatterchart" === chartType && chart.hidePoints(index);
 	          }
 	      });
+	      Evt.detach($("li",$ctn),"mouseenter");
 	      Evt.on($("li",$ctn),"mouseenter",function(e){
 	          var $li = $(e.currentTarget),
 	          	  index = S.indexOf(e.currentTarget,$("li",$ctn));

@@ -51,7 +51,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
    * cfg = {cx:cx,cy:cy,r:r,values,opts}
    * */
   function PieChart(cfg){
-     ColorMap = new Color({themeCls:cfg.themeCls})._colors;
+    ColorMap = new Color({themeCls:cfg.themeCls})._colors;
     this.colorseed = 0;
     this.container = S.get(cfg.renderTo);
     this.paper = Paper(S.get(this.container));
@@ -89,11 +89,11 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
           sectors[i].mouseover(function(e){
             inpiechart = true
             tiptimer && clearTimeout(tiptimer)
-            that.fire('mouseenter',{sector:sectors[i],data:data[i],index:i});
+            that.fire('mouseenter',{sector:sectors[i],target:sectors[i],data:data[i],index:i});
           })
           .mouseout(function(e){
             inpiechart = false
-            that.fire('mouseleave',{target:sectors[i],data:data[i],index:i});
+            that.fire('mouseleave',{sector:sectors[i],target:sectors[i],data:data[i],index:i});
             tiptimer = setTimeout(function(){
                          if(!inpiechart){
                            that.tip && that.tip.hide()
@@ -101,7 +101,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
                        },500)
           })
           .click(function(e){
-            that.fire('click',{target:sectors[i],data:data[i],index:i});
+            that.fire('click',{sector:sectors[i],target:sectors[i],data:data[i],index:i});
           });
         })(i);
       }
@@ -294,7 +294,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
             var sector = paper.path(pathString)
               , color
             sectors[j] = sector
-            color = this.getcolor(j)
+            color = that.getcolor(j)
             sectors[j].attr({'fill':color,stroke:'#fff'});
             sectors[j].percent = percentData[j]
           }
@@ -313,6 +313,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         //ie大于8，开启动画；非ie，开启动画
         , bool_anim = (S.UA.ie && S.UA.ie>8 && cfg.anim) || (!S.UA.ie && cfg.anim)
       _draw = types[anim_cfg.type] || _draw1;
+
       if(bool_anim){
         var ft = new Ft(anim_cfg);
         ft.on('step',_draw,this);
@@ -329,7 +330,6 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
     transformSector:function(sector,unit){
       if(this.currentTransformedSector == sector)
         return;
-
       var x,y,angel
       unit || (unit = 10);
       if(this.currentTransformedSector){
@@ -505,7 +505,6 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         label = data[labelO.i].label;
         labelO.text = label;
         var posxy = this.getLabelXY(x3,y3,label);
-
         //若不隐藏这个label则
         if(data[labelO.i].hidelabel != true){
           var textspan = D.create('<span class="ks-charts-label"/>');

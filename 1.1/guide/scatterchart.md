@@ -216,6 +216,8 @@ Config（详细配置）
   
   - `isShow` { boolean } 是否渲染显示
   - `css` { object } css样式
+  - `x` { number } 水平偏移量
+  - `y` { number } 垂直偏移量
   - `layout` {string} 垂直或水平展示 可选："horizontal" 水平  "vertical" 垂直
   - `align`  {string} 水平对齐方式 可选："left" 左对齐 "center" 居中 "right" 右对齐
   - `verticalAlign` {string} 垂直对齐方式 可选："top" 顶部对齐 "middle" 垂直居中 "bottom" 底部对齐

@@ -55,17 +55,18 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					stackable:false
 				});
 
+				for(var i in  Array.prototype){
+					delete Array.prototype[i];
+				}
+				
 				series = _cfg.series || null;
 				//若为堆叠图 则最小值为0 暂时不兼容负值
 				if(_cfg.stackable){
 						_cfg.xAxis.min = 0;
 						_cfg.yAxis.min = 0;
 				}
-
 				if(!series || series.length <= 0 || !series[0].data) return;
-
 				series.length > 1 ? self._multiple = true : undefined;
-
 				for(var i in series){
 					self._datas['total'][i] = {index:i,data:series[i].data};
 					self._datas['cur'][i] = {index:i,data:series[i].data};
@@ -272,7 +273,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 													points[i] = {
 														x:self._pointsX[i].x,	//横坐标
 														y:self.data2Grapic(data[i],max,min,height,y,true),	//纵坐标
-														dataInfo:{y:data[i]},	//数据信息 暂时将series.data的数据 和 series下的数据 耦合
+														dataInfo:{y:data[i],x:_cfg.xAxis['text'][i]},	//数据信息 暂时将series.data的数据 和 series下的数据 耦合
 														index:Math.round(i)		//索引
 													};
 												}
@@ -304,12 +305,11 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 												points[i] = {
 														x:self.data2Grapic(data[i],max,min,width,x),	//横坐标
 														y:self._pointsY[i].y,	//纵坐标
-														dataInfo:{y:data[i]},	//数据信息
+														dataInfo:{y:data[i],x:_cfg.yAxis['text'][i]},	//数据信息
 														index:Math.round(i)		//索引
 													};
 											}
 										}
-
 									}else if(zoomType == "xy"){
 										var xs = self.data2GrapicData(self.getArrayByKey(series.data,0)),
 											ys = self.data2GrapicData(self.getArrayByKey(series.data,1),true,true);
@@ -554,8 +554,8 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
 					}
 					return b-a;
 				} 
-			}); 
-　　	},
+			});
+		},
 		/*
 			TODO 获取键值为key的数据 拼成数组
 			@example getArrayByKey([{key:"1"},{key:"2"}],"key") => ["1","2"]
@@ -618,7 +618,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
               offsetCoord;
             //非firefox
             if(e.offsetX) return {offsetX:e.offsetX,offsetY:e.offsetY};
-
             // 计算当前触发元素到文档的距离
             pageCoord = getPageCoord(target);
             // 计算光标到文档的距离
@@ -626,7 +625,7 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
               X : window.pageXOffset + e.clientX,
               Y : window.pageYOffset + e.clientY
             };
-                 // 相减获取光标到第一个定位的父元素的坐标
+            // 相减获取光标到第一个定位的父元素的坐标
             offsetCoord = {
               offsetX : eventCoord.X - pageCoord.X,
               offsetY : eventCoord.Y - pageCoord.Y
@@ -635,8 +634,6 @@ KISSY.add('gallery/kcharts/1.1/basechart/index',function(S,Base){
      }
 		
 	});
-
-	
 
      function getPageCoord(element){
           var coord = { X : 0, Y : 0 };
