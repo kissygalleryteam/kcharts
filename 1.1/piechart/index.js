@@ -1,5 +1,4 @@
 // -*- coding: utf-8-unix; -*-
-alert("hello");
 KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Color){
   var D = S.DOM
 	  , ColorMap;
