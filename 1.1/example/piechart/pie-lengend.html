@@ -1,0 +1,218 @@
+<!-- by 治修@taobao.com -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>饼图</title>
+		<script src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+		<style type="text/css">
+			.pieTips {
+			position:absolute;
+			left:300px;
+			top:25px;
+			list-style: none;
+			}
+			.pieTips li {
+			padding:5px;
+			width: 200px;
+			cursor: default;
+			}
+			.pieTips li i {
+			display:inline-block;
+			width:6px;
+			height:6px;
+			margin-right:10px;
+			}
+			.pieTips .current 
+			{
+			background: #f0f6fa;
+			font-weight: bold;
+			}
+			.pieTips .current span{
+			display: inline-block;
+			}
+			.pieTips .c_1 {
+			background-color:#094466;
+			}
+			.pieTips .c_2 {
+			background-color:#145c8c;
+			}
+			.pieTips .c_3 {
+			background-color:#1e88ba;
+			}
+			.pieTips .c_4 {
+			background-color:#18aeed;
+			}
+			.pieTips .c_5 {
+			background-color:#55cdff;
+			}
+			.pieTips .c_6 {
+			background-color:#89d9fc;
+			}
+			.pieTips .c_7 {
+			background-color:#555555;
+			}
+			.pieTips .c_8 {
+			background-color:#929292;
+			}
+			.pieTips .c_9 {
+			background-color:#b5b5b5;
+			}
+			.pieTips .c_10 {
+			background-color:#cacaca;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="demo1" style="width:300px;height:300px;">
+		</div>
+		<ul class="pieTips">
+			<li color="#094466">
+				<i class="c_1"></i>Firefox <span></span>
+			</li>
+			<li color="#145c8c">
+				<i class="c_2"></i>IE <span></span>
+			</li>
+			<li color="#1e88ba">
+				<i class="c_3"></i>Chrome <span></span>
+			</li>
+			<li color="#18aeed">
+				<i class="c_4"></i>Safari<span></span>
+			</li>
+			<li color="#55cdff">
+				<i class="c_5"></i>Opera<span></span>
+			</li>
+			<li color="#89d9fc">
+				<i class="c_6"></i>Others<span></span>
+			</li>
+		</ul>
+	</body>
+	<script type="text/javascript">
+
+KISSY.use('gallery/kcharts/1.1/piechart/index,dom,event', function (S, PieChart, D, E) {
+    var dataAry = [45, 26.8, 12.8, 8.5, 6.2, 0.7];
+    var getRate = function (index) {
+        var total = 0;
+        for (var i in dataAry) {
+            total += dataAry[i];
+        }
+        return dataAry[index] / total * 100 + "%";
+    };
+
+    var data = [{
+        data: 45,
+        label: 'Firefox ' + getRate(0),
+        'tip': 'Firefox'
+    }, {
+        data: 26.8,
+        label: 'IE ' + getRate(1),
+        'tip': 'IE'
+    }, {
+        data: 12.8,
+        label: 'Chrome ' + getRate(2),
+        'tip': 'Chrome'
+    }, {
+        data: 8.5,
+        label: 'Safari ' + getRate(3),
+        'tip': 'Safari'
+    }, {
+        data: 6.2,
+        label: 'Opera ' + getRate(4),
+        'tip': 'Opera'
+    }, {
+        data: 0.7,
+        label: 'Others ' + getRate(5),
+        'tip': 'Others'
+    }]
+    var tips = D.get(".pieTips").children;
+    var piechart = new PieChart({
+        renderTo: '#demo1',
+        cx: 105,
+        cy: 120,
+        R: 100,
+        colors: [{
+            "DEFAULT": "#094466"
+        }, {
+            "DEFAULT": "#145c8c"
+        }, {
+            "DEFAULT": "#1e88ba"
+        }, {
+            "DEFAULT": "#18aeed"
+        }, {
+            "DEFAULT": "#55cdff"
+        }, {
+            "DEFAULT": "#89d9fc"
+        }, {
+            "DEFAULT": "#555555"
+        }, {
+            "DEFAULT": "#929292"
+        }, {
+            "DEFAULT": "#b5b5b5"
+        }, {
+            "DEFAULT": "#cacaca"
+        }],
+        label: false,
+        data: data,
+        anim: {
+            type: 'sector',
+            easing: 'bounceOut',
+            duration: 1000
+        },
+        tip: {
+            boundryDetect: true,
+            tpl: "{{tip}} {{percent*100+'%'}}"
+        }
+    });
+    var sectorSoc = null,
+        colors = {
+            "#094466": 0,
+            "#145c8c": 1,
+            "#1e88ba": 2,
+            "#18aeed": 3,
+            "#55cdff": 4,
+            "#89d9fc": 5,
+            "#555555": 6,
+            "#929292": 7,
+            "#b5b5b5": 8,
+            "#cacaca": 9
+        };
+
+    function enter(e) {
+        var sector = e.sector,
+            middleangle = sector.middle.angel,
+            angel = middleangle * Math.PI / 180,
+            unit = 10,
+            x = unit * Math.cos(angel),
+            y = -unit * Math.sin(angel);
+        sectorSoc = e.sector;
+        sector.animate({
+            transform: 't' + x + " " + y
+        }, 400, 'elastic');
+        D.addClass(tips[colors[sectorSoc.attrs.fill]], "current");
+    }
+
+    function leave() {
+        D.removeClass(tips, "current");
+        sectorSoc.animate({
+            transform: ''
+        }, 400, 'elastic')
+    }
+    piechart.on("mouseenter", S.buffer(enter, 100));
+    piechart.on("mouseleave", S.buffer(leave, 100));
+
+    E.on(tips, "mouseenter", function () {
+        var self = this;
+        S.each(piechart.sectors, function (sector) {
+            if (sector.attrs.fill == D.attr(self, "color")) {
+                enter({
+                    "sector": sector
+                });
+            }
+        });
+    });
+
+    E.on(tips, "mouseleave", function () {
+        leave();
+    });
+});		
+	</script>
+</html>
