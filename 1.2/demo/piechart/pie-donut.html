@@ -42,8 +42,6 @@
 	<!-- <script type="text/javascript" src="../../piechart/src/label.js"></script> -->
 	<!-- <script type="text/javascript" src="../../piechart/index.js"></script> -->
 	<script type="text/javascript">
-		//因为线上只有 http://a.tbcdn.cn/s/kissy/gallery/kcharts/1.2/tip/assets/tip.css 所以debug=true
-		KISSY.Config.debug = true;
 		KISSY.use("gallery/kcharts/1.2/piechart/index,gallery/kcharts/1.1/tip/index",function(S,Pie,Tip){
 			function pie1(){
 				var tip
@@ -68,7 +66,7 @@
 					interval:5,
 					anim:{
 						easing:'swing',
-						duration:800
+						duration:1500
 					}
 				}
 
