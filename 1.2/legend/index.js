@@ -184,8 +184,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
 
       //动画属性
       var framedata = [];
-      var DIFF = D.width($container);
       var anim = this.get("anim")
+      var DIFF = anim ? D.width($container) : 0;
 
       S.each(config,function(item,key){
         var r = item.r || 5
@@ -328,7 +328,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       //动画属性
       var framedata = [];
       var anim = this.get("anim");
-      var DIFF = D.height($container);
+      var DIFF = anim ? D.height($container) : 0;
       S.each(config,function(item,key){
         var r = item.r || 5;
         var cx , cy

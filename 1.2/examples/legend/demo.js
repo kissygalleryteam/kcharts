@@ -22,8 +22,6 @@ KISSY.use("gallery/kcharts/1.2/raphael/index,gallery/kcharts/1.2/legend/index,do
   var $target = box;
 
   var lengend_cfg = {
-    target:$target,
-
     //legend需要的原始信息
     paper:paper,
     container:$con,
@@ -44,7 +42,7 @@ KISSY.use("gallery/kcharts/1.2/raphael/index,gallery/kcharts/1.2/legend/index,do
     align:"tc",//t r b l
     offset:[0,0],
     anim:{
-      
+
     },
     globalConfig:{
       shape:"square",

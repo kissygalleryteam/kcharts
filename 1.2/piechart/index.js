@@ -116,8 +116,78 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       E.on(this.get("container"),"mouseleave",function(){
         this.fire("mouseleave");
       },this)
+      this.on("afterRender",this.onafterrender,this
+);
     },
     _setupcfg:setupcfg,
+    onafterrender:function(){
+      var that = this,
+          paper,
+          container,
+          bbox
+      var config = this.get("legend")
+
+      if(config){
+        paper = this.get("paper")
+        container = this.get("container")
+
+        //bboxing
+        var rs = this.get("rs")
+          , rl = rs[rs.length-1]
+          , rpadding = this.get("rpadding") || 0
+          , padding = this.get("padding") || 0
+          , cx = this.get("cx")
+          , cy = this.get("cy")
+
+        var width = (rl+rpadding+padding)*2
+          , left = cx - width/2
+          , top = cy - width/2
+
+        bbox = {
+          width:width,
+          height:width,
+          left:left,
+          top:top
+        }
+
+        function buildparts(){
+          var $sectors = that.get("$sectors")
+            , ret
+          ret = S.map($sectors,function($sector){
+                  var el = $sector.get("$path")
+                    , fill = el.attr("fill")
+                    , framedata = $sector.get("framedata")
+                    , text = framedata.label
+                  return {color:fill,text:text,$path:el}
+                });
+          return ret;
+        }
+
+        S.use("gallery/kcharts/1.2/legend/index",function(S,Legend){
+          var parts = buildparts();
+          var dft = {
+            //legend需要的原始信息
+            paper:paper,
+            container:container,
+            bbox:bbox,//图表主体的信息
+            iconAttrHook:function(index){//每次绘制icon的时调用，返回icon的属性信息
+              return {
+                fill:parts[index].color
+              }
+            },
+            spanAttrHook:function(index){//每次绘制“文本描述”的时候调用，返回span的样式
+              var color = Raphael.getRGB(parts[index].color);
+              return {
+                color:color.hex
+              }
+            },
+            config:parts
+          }
+          var legend = new Legend(S.merge(dft,config));
+          that.set("legend",legend);
+        });
+      }
+    },
     //调整动画的配置
     adjustCfg:function(){
       var anim = this.get('anim')
