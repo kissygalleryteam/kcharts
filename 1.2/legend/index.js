@@ -68,13 +68,15 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var els = this.get("els")
         , that = this;
       S.each(els,function(el){
-        var $icon,$text
+        var $icon = el.icon
+          , $text = el.des
           , evtdata = {
-            icon:el.icon,
-            text:el.des
+            icon:$icon,
+            text:$text,
+            index:el.index
           };
         S.each(["click","mouseover","mouseout"],function(e,i){
-          $icon["on"+e](function(){
+          $icon[e](function(){
             that.fire(e,evtdata)
           })
           el.des.on(e,function(){
@@ -82,6 +84,9 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           });
         });
       });
+    },
+    onframeend :function(){
+      this.bindEvent();
     },
     item:function(n){
       var els = this.get("els")
@@ -170,7 +175,6 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       if(bottom){
         y = y + 4*r + bbox.height;
       }
-
       if(mode == "l"){
         x = 0+offset[0]+r;
       }else if(mode == "r"){
@@ -212,9 +216,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         }
         $text.appendTo($container);
         x+=text_size.width + 2*r + interval + iconright;
-        els.push({icon:$icon,des:$text});
         //动画属性构建
-        var el = {icon:$icon,des:$text};
+        var el = {icon:$icon,des:$text,index:key};
         els.push(el);
         if(!anim)return;
         framedata.push({
@@ -231,11 +234,9 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         });
       });
       this.set("els",els);
+      anim.endframe = function(){that.onframeend();}
       if(anim){
-        Animation.AnimateObject(framedata,{
-          easing:"swing",
-          duration:800
-        });
+        Animation.AnimateObject(framedata,anim);
       }
     },
     alignTopLeft:function(){
@@ -365,7 +366,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         var max_height = Math.max(cache_item.height,ibbox.height)
         y+=max_height+interval;
         //动画属性构建
-        var el = {icon:$icon,des:$text};
+        var el = {icon:$icon,des:$text,index:key};
         els.push(el);
         if(!anim)return;
         framedata.push({
@@ -382,11 +383,9 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         });
       });
       this.set("els",els);
+      anim.endframe = function(){that.onframeend();}
       if(anim){
-        Animation.AnimateObject(framedata,{
-          easing:"swing",
-          duration:800
-        });
+        Animation.AnimateObject(framedata,anim);
       }
     },
     alignLeftTop:function(){

@@ -185,6 +185,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
           }
           var legend = new Legend(S.merge(dft,config));
           that.set("legend",legend);
+          that.fire("afterLegendRender");
         });
       }
     },
