@@ -91,6 +91,8 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     this.adjustCfg();
     // adjustData
     this.adjustData();
+    // 有标题则显示标题
+    this.drawTitle();
     if(cfg.autoRender != false){
       var that = this;
       //延迟渲染
@@ -265,7 +267,15 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , rpadding = this.get("rpadding")
         , cx = this.get("cx")
         , cy = this.get("cy")
-        , cx1 = w/2 ,cy1 = h/2
+        , cx1 , cy1
+
+      cx1= w/2 ,cy1 = h/2;
+
+      //考虑title带来的影响
+      var titlebbox = this.get("titlebbox")
+      if(titlebbox){
+        cy1+=titlebbox.height;
+      }
 
       var attrs = {"width":w,"height":h};
       this.set(attrs);
@@ -281,6 +291,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         d = min - rpadding;
       }else{
         d = min;
+      }
+
+      if(titlebbox){
+        d -= titlebbox.height;
       }
 
       //如果要画面包圈
@@ -312,6 +326,38 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       }
       that.fire("beginRender");
       this.animateInstance = Animate.AnimateObject(framedata,anim);
+    },
+    drawTitle:function(){
+      var titleconfig = this.get("title")
+        , title = titleconfig.content
+        , offset = titleconfig.offset || [0,10]
+        , align = titleconfig.align || "center"
+
+      if(title){
+        var size = Labels.getSizeOf(title)
+          , container = this.get("container")
+          , w = D.width(container)
+          , h = D.height(container)
+          , left, top
+        if(align == "left"){
+          left = 0;
+        }else if(align == "right"){
+          left = w - size.width;
+        }else{//center
+          left = (w - size.width)/2 + offset[0]
+        }
+        top = offset[1];
+        var $title = S.Node("<div>"+title+"</div>");
+        $title.css({"top":top+"px","left":left+"px","position":"absolute"});
+        this.set("title",$title);
+        this.set("titlebbox",{
+          left:left,
+          top:top,
+          width:size.width,
+          height:size.height
+        });
+        $title.appendTo(container);
+      }
     },
     /**
      * 绘制外层label
@@ -387,7 +433,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       this.set("$labels",null);
       this.get("paper").remove();
     }
-  })
+  });
 
   Pie.getSizeOf =  Labels.getSizeOf
 
