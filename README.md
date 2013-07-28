@@ -5,7 +5,6 @@
 * 采用html+css定制非矢量图形样式
 * 包含全面文档和在线图表生成器
 
-
 kcharts 主页: http://v.idcnc.com.cn
 
 ### 旺旺交流群

@@ -442,7 +442,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         rad = Math.PI+asin(rate);
         x3 = normalizeNum(cx+R*cos(rad));
 
-        if(ileft>0){
+        if(ileft>0 && (data[labelO.i].hidelabel != true)){
           prevLabelO = labelLeft[ileft-1];
           prevy3 = prevLabelO.y3;
           if(prevy3-14<y3){
@@ -485,7 +485,7 @@ KISSY.add('gallery/kcharts/1.1/piechart/index',function(S,Paper,Ft,Label,Tip,Col
         var flag;
         labelO = labelRightCopy[iright];
         y3 = labelO.y2;
-        if(iright>0){
+        if(iright>0 && (data[labelO.i].hidelabel != true)){
           prevLabelO = labelRightCopy[iright-1];
           if(prevLabelO.y3+14>y3){
             y3 = prevLabelO.y3+14;
