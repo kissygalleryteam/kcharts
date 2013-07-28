@@ -329,11 +329,15 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     },
     drawTitle:function(){
       var titleconfig = this.get("title")
-        , title = titleconfig.content
-        , offset = titleconfig.offset || [0,10]
-        , align = titleconfig.align || "center"
+        , title
+        , offset
+        , align
 
       if(title){
+        title = titleconfig.content
+        offset = titleconfig.offset || [0,10]
+        align = titleconfig.align || "center"
+
         var size = Labels.getSizeOf(title)
           , container = this.get("container")
           , w = D.width(container)
