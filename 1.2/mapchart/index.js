@@ -233,7 +233,8 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
             var self = this,
                 _cfg = self._cfg,
                 list = {};
-            proTpl = '<div style="{defStyle}" class="{cls}">{text}</div>',
+
+            var proTpl = '<div style="{defStyle}" class="{cls}">{text}</div>',
                 cityTpl = '<span style="{defStyle}">{text}</span>',
                 style = "position: absolute;left:{x}px;top:{y}px;width:4em;",
                 proStyle = self.formatCss(_cfg.areaText.css),
@@ -241,6 +242,7 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
                 textContainer = $('<div class="ks-chart-area-text" style="position: absolute;left: 0;top: 0"></div>');
 
             textContainer.appendTo(self._container);
+
             self.areaList = {};
             S.each(o.pro, function (item, i) {
                 var str = S.substitute(style, item);
@@ -454,4 +456,16 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
     '../tip/index',
     './theme',
     './mapdata']
-          });
+   });
+
+/**
+ * note at [2013-07-28 日 17:36]:
+ * - 地图省份国标编码code，比如浙江330000
+ * - L236 - L242 有变量名全局污染 fixed
+ * - 南海岛屿缺失——可以考虑添加一个缩略图在右下角
+ * - 如何动态自适应？比如这样的API
+ * window.onresize = function(){
+ *   mapchart.autoResize();
+ * }
+ * - 层的功能，比如想添加一个动态icon到地图上，怎么加？
+ * */
