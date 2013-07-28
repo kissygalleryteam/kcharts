@@ -116,11 +116,14 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       E.on(this.get("container"),"mouseleave",function(){
         this.fire("mouseleave");
       },this)
-      this.on("afterRender",this.onafterrender,this
-);
+      this.on("afterRender",this.onafterrender,this);
     },
     _setupcfg:setupcfg,
     onafterrender:function(){
+      //只执行一次
+      if(this.legendrendered)return;
+      this.legendrendered = true;
+
       var that = this,
           paper,
           container,
@@ -195,13 +198,13 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , that = this
         , _end = S.isFunction(anim.endframe) && anim.endframe
         , lablecfg = that.get("label")
-        anim.endframe = function(){
-          if(lablecfg != false){
-            that.drawLabel(lablecfg);
-          }
-          _end && _end.call(that);
-          that.fire('afterRender');
+      anim.endframe = function(){
+        if(lablecfg != false){
+          that.drawLabel(lablecfg);
         }
+        _end && _end.call(that);
+        that.fire('afterRender');
+      }
     },
     /**
      * 过滤函数
@@ -244,6 +247,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
                    return !frame.hide;
                  })
       Util.adjustFrameData(groups,this);
+      var $labels = this.get("$labels")
+      S.each($labels,function(i){
+        i && i.destroy();
+      });
       this.animate(framedata);
     },
     /**
@@ -321,19 +328,22 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
           , groupLength = $sector.get("groupLength")
           , groupIndex = $sector.get("groupIndex")
           , isright = Util.isRightAngel(ma)
-
-        if(S.indexOf(groupLength-1,groupIndex) > -1){
-          if(isright){
-            rightSectors.push($sector);
+          , framedata = $sector.get("framedata")
+        //如果隐藏了，那么也不展示对应的label
+        if(!framedata.hide){
+          if(S.indexOf(groupLength-1,groupIndex) > -1){
+            if(isright){
+              rightSectors.push($sector);
+            }else{
+              $sector.set("isleft",true);
+              leftSectors.push($sector);
+            }
           }else{
-            $sector.set("isleft",true);
-            leftSectors.push($sector);
-          }
-        }else{
-          if(isright){
-            $sector.set("isright",true);
-          }else{
-            $sector.set("isleft",true);
+            if(isright){
+              $sector.set("isright",true);
+            }else{
+              $sector.set("isleft",true);
+            }
           }
         }
       });
@@ -349,7 +359,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
      * 绘制内部label，需配置
      * */
     drawSetLabel:function(){
-
     },
     onLabelClick:function(e){
       this.fire('labelclick',{

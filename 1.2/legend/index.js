@@ -27,7 +27,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       , $text = els.des
     //console.log(attrname,value,props,index,len);
     if(attrname === "cy"){
-      $icon.attr("cy",value);
+      $icon.transform("t0,"+value);
     }else if(attrname === "top"){
       $text.css("top",value+"px");
     }
@@ -39,7 +39,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       , $text = els.des
     //console.log(attrname,value,props,index,len);
     if(attrname === "cx"){
-      $icon.attr(attrname,value);
+      $icon.transform("t"+value+",0");
     }else if(attrname === "left"){
       $text.css(attrname,value+"px");
     }
@@ -144,6 +144,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         , config = this.get("config")
         , globalConfig = this.get("globalConfig")
         , that = this
+        , iconsize = globalConfig.iconsize || 6
+        , icontype = globalConfig.icontype
 
       //文案宽度
       var text_total_width = 0
@@ -158,31 +160,32 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var total_width = text_total_width
         , cache_icon = []
 
-      var r = config[0].r || 5;
-      var $icon = that.icon(-9999,9999,r)
+      var $icon = that.icon(-9999,9999,iconsize,icontype)
         , ibbox = $icon.getBBox()
         , iconright = globalConfig.iconright || 0
         , interval = globalConfig.interval||0
 
       $icon.remove();
       total_width+=(ibbox.width + iconright)*config.length + interval*(config.length-1);
-      var x0 = bbox.left + offset[0]
-        , y0 = bbox.top + offset[1] - 2*r
 
-      var x = x0 + (bbox.width - total_width)/2 + r
+      var x0 = bbox.left + offset[0]
+        , y0 = bbox.top + offset[1] - 2*iconsize
+
+      var x = x0 + (bbox.width - total_width)/2 + iconsize
         , y = y0;
 
       if(bottom){
-        y = y + 4*r + bbox.height;
+        y = y + 4*iconsize + bbox.height;
       }
       if(mode == "l"){
-        x = 0+offset[0]+r;
+        x = 0+offset[0]+iconsize;
       }else if(mode == "r"){
         var width = D.width($container)
         x = width - total_width;
       }
 
       var els = [];
+      var alignhook = this.get("alignhook");
       var attrhook = this.get("iconAttrHook");
       var spanhook = this.get("spanAttrHook")
 
@@ -191,31 +194,39 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var anim = this.get("anim")
       var DIFF = anim ? D.width($container) : 0;
 
+      var alignconfig = {
+          icontype:icontype,
+          iconsize:iconsize,
+          iconright:iconright
+      };
+
       S.each(config,function(item,key){
-        var r = item.r || 5
-          , cx = x
+        if(alignhook){
+          alignconfig = alignhook.call(that,alignconfig,key);
+        }
+        var cx = x
           , cy = y
         cx += DIFF;
-        var $icon = that.icon(cx,cy,r)
+        var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
           , ibbox = $icon.getBBox()
 
         if(attrhook){
-          $icon.attr(attrhook(key));
+          $icon.attr(attrhook.call(that,key));
         }
 
         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
         var text_size = sizeof($text)
           , left , top
 
-        left = x+r+iconright
+        left = x+alignconfig.iconsize+alignconfig.iconright
         top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 );
         left+=DIFF;
         $text.css({"left":left+'px',"top":top+"px","position":"absolute"});
         if(spanhook){
-          $text.css(spanhook(key));
+          $text.css(spanhook.call(that,key));
         }
         $text.appendTo($container);
-        x+=text_size.width + 2*r + interval + iconright;
+        x+=text_size.width + 2*alignconfig.iconsize + interval + alignconfig.iconright;
         //动画属性构建
         var el = {icon:$icon,des:$text,index:key};
         els.push(el);
@@ -224,18 +235,18 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           el:el,
           frame:onframeR2L,
           from:{
-            cx:cx,
+            cx:0,
             left:left
           },
           to:{
-            cx:cx-DIFF,
+            cx:-DIFF,
             left:left-DIFF
           }
         });
       });
       this.set("els",els);
-      anim.endframe = function(){that.onframeend();}
       if(anim){
+        anim.endframe = function(){that.onframeend();}
         Animation.AnimateObject(framedata,anim);
       }
     },
@@ -277,11 +288,13 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         , config = this.get("config")
         , globalConfig = this.get("globalConfig")
         , that = this
+        , iconsize = globalConfig.iconsize || 6
+        , icontype = globalConfig.icontype
 
       var total_height = 0
       var item = config[0]
-      var r = item.r || 5;
-      var $icon = that.icon(-9999,-9999,r)
+
+      var $icon = that.icon(-9999,-9999,iconsize,icontype)
         , ibbox = $icon.getBBox()
         , len = config.length
         , iconright = globalConfig.iconright || 0
@@ -306,7 +319,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         }
         cache.push({el:$text,width:text_size.width,height:text_size.height});
       });
-      text_max_width+=iconright;
+      text_max_width += iconright;
       if(!reverse){
         x0 = bbox.left + offset[0]
         y0 = bbox.top + offset[1]
@@ -314,7 +327,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       }else{
         x0 = bbox.left + bbox.width + offset[0];
         y0 = bbox.top + offset[1];
-        x = x0 + r, y = y0;
+        x = x0 + iconsize, y = y0;
       }
 
       if(mode == "m"){
@@ -323,6 +336,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         y = bbox.top + bbox.height - total_height;
       }
       var els = [];
+      var alignhook = this.get("alignhook");
       var attrhook = this.get("iconAttrHook");
       var spanhook = this.get("spanAttrHook");
 
@@ -330,37 +344,46 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var framedata = [];
       var anim = this.get("anim");
       var DIFF = anim ? D.height($container) : 0;
+
+      var alignconfig = {
+          icontype:icontype,
+          iconsize:iconsize,
+          iconright:iconright
+      };
+
       S.each(config,function(item,key){
-        var r = item.r || 5;
+        if(alignhook){
+          alignconfig = alignhook.call(that,alignconfig,key);
+        }
         var cx , cy
         if(!reverse){
-          cx = x - text_max_width - r + offset[0]
+          cx = x - text_max_width - iconsize + offset[0]
           cy = y + offset[1];
         }else{
           cx = x+offset[0];
           cy = y+offset[1];
         }
         cy+=DIFF;
-        var $icon = that.icon(cx,cy,r)
+        var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
           , ibbox = $icon.getBBox()
           , cache_item = cache[key];
         if(attrhook){
-          $icon.attr(attrhook(key));
+          $icon.attr(attrhook.call(that,key));
         }
         var $text = cache_item['el']
           , left
           , top
         if(!reverse){
-          left = x + offset[0] - text_max_width + iconright
+          left = x + offset[0] - text_max_width + alignconfig.iconright
           top = y - (ibbox.height/2 + (cache_item.height - ibbox.height)/2 ) + offset[1];
         }else{
-          left = x+r+ibbox.width+offset[0];
+          left = x+alignconfig.iconsize+ibbox.width+offset[0];
           top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 ) + offset[1];
         }
         top+=DIFF;
         $text.css({"left":left+'px',"top":top+"px","position":"absolute"});
         if(spanhook){
-          $text.css(spanhook(key));
+          $text.css(spanhook.call(that,key));
         }
         $text.appendTo($container);
         var max_height = Math.max(cache_item.height,ibbox.height)
@@ -373,18 +396,18 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           el:el,
           frame:onframeB2T,
           from:{
-            cy:cy,
+            cy:0,
             top:top
           },
           to:{
-            cy:cy-DIFF,
+            cy:-DIFF,
             top:top-DIFF
           }
         });
       });
       this.set("els",els);
-      anim.endframe = function(){that.onframeend();}
       if(anim){
+        anim.endframe = function(){that.onframeend();}
         Animation.AnimateObject(framedata,anim);
       }
     },
