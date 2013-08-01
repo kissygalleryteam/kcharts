@@ -219,7 +219,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
   /**
    * 每帧的操作
    * */
-  function onframe(attrname,value,props,index,len){
+  function onframe(attrname,value,props,index,len,opts){
     var start = this.el.get("start")
       , end
       , prev = this.prev
