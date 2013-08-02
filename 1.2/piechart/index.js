@@ -200,6 +200,8 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , that = this
         , _end = S.isFunction(anim.endframe) && anim.endframe
         , lablecfg = that.get("label")
+      //若无动画配置则duration设置为0
+      anim || (anim = {duration:0});
       anim.endframe = function(){
         if(lablecfg != false){
           that.drawLabel(lablecfg);
