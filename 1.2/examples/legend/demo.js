@@ -38,7 +38,6 @@ KISSY.use("gallery/kcharts/1.2/raphael/index,gallery/kcharts/1.2/legend/index,do
         color:colors[index]
       }
     },
-
     align:"tc",//t r b l
     offset:[0,0],
     anim:{

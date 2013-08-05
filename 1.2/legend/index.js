@@ -1,5 +1,8 @@
 // -*- coding: utf-8-unix; -*-
 KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation){
+  var win = window
+    , Raphael = win.Raphael
+
   //获取content的尺寸
   var $detector
     , $body = S.one(document.body)
@@ -45,6 +48,50 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
     }
   }
 
+  function disable(legend,item){
+    var o = legend.get("disablestyle"),
+        style = {
+          icon:{
+            "stroke":"#ccc",
+            "fill":"#eee"
+          },
+          text:{
+            "color":"#ccc"
+          }
+        };
+    if(S.isFunction(o)){
+      style = S.mix(style,o(this,this.index));
+    }else{
+      style = S.mix(style,o)
+    }
+    var $icon = this.icon,
+        $text = this.des
+    $icon.attr(style.icon);
+    $text.css(style.text);
+  }
+
+  function enable(legend,item){
+    var o = legend.get("enablestyle"),
+        style = {
+          icon:{
+            "stroke":"#333",
+            "fill":item.DEFAULT
+          },
+          text:{
+            "color":item.DEFAULT
+          }
+        };
+    if(S.isFunction(o)){
+      style = S.mix(style,o(this,this.index));
+    }else{
+      style = S.mix(style,o)
+    }
+    var $icon = this.icon,
+        $text = this.des
+    $icon.attr(style.icon);
+    $text.css(style.text);
+  }
+
   function Legend(opts){
     opts = S.merge(dft,opts);
     this.set(opts);
@@ -53,16 +100,32 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
 
   S.extend(Legend,S.Base,{
     init:function(){
+      this._setupPaper();
+      this._setupCon();
       var bbox = this.get("bbox")
         , paper = this.get("paper")
         , align = this.get("align")
         , icon = this.get("iconfn")
+
+      //this.set("paper")
       //自定义的icon绘制函数
       if(icon && S.isFunction(icon)){
         this.icon = icon;
       }
-
       this.align(align);
+    },
+    _setupPaper:function(){
+      var p = this.get("paper")
+      if(!p){
+        var con = this.get("container")
+        p = Raphael(con[0],D.width(con),D.height(con))
+        this.set("paper",p);
+      }
+      if(Raphael.type == "VML"){
+
+      }else{
+        p.canvas.style.zIndex = 10;
+      }
     },
     bindEvent:function(){
       var els = this.get("els")
@@ -73,13 +136,15 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           , evtdata = {
             icon:$icon,
             text:$text,
-            index:el.index
+            index:el.index,
+            el:el
           };
         S.each(["click","mouseover","mouseout"],function(e,i){
           $icon[e](function(){
             that.fire(e,evtdata)
           })
-          el.des.on(e,function(){
+
+          $text.on(e,function(){
             that.fire(e,evtdata)
           });
         });
@@ -87,6 +152,14 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
     },
     onframeend :function(){
       this.bindEvent();
+    },
+    //设置容器的样式：不能为static定位
+    _setupCon:function(){
+      var con = this.get("container")
+        , pos = D.css(con,"position")
+      if(pos == "static"){
+        D.css(con,"position","relative");
+      }
     },
     item:function(n){
       var els = this.get("els")
@@ -209,11 +282,12 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         cx += DIFF;
         var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
           , ibbox = $icon.getBBox()
-
+        var attr = {};
+        S.mix(attr,item,true,["DEFAULT","HOVER"]);
         if(attrhook){
-          $icon.attr(attrhook.call(that,key));
+          var att = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
+          $icon.attr(att);
         }
-
         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
         var text_size = sizeof($text)
           , left , top
@@ -223,12 +297,19 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         left+=DIFF;
         $text.css({"left":left+'px',"top":top+"px","position":"absolute"});
         if(spanhook){
-          $text.css(spanhook.call(that,key));
+          $text.css(S.merge({color:attr.DEFAULT},spanhook.call(that,key)));
         }
         $text.appendTo($container);
         x+=text_size.width + 2*alignconfig.iconsize + interval + alignconfig.iconright;
+
         //动画属性构建
-        var el = {icon:$icon,des:$text,index:key};
+        var el = {icon:$icon,des:$text,index:key,
+                  disable:function(){
+                    disable.call(el,that,item);
+                  },
+                  enable:function(){
+                    enable.call(el,that,item);
+                  }};
         els.push(el);
         if(!anim)return;
         framedata.push({
@@ -248,6 +329,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       if(anim){
         anim.endframe = function(){that.onframeend();}
         Animation.AnimateObject(framedata,anim);
+      }else{
+        that.onframeend();
       }
     },
     alignTopLeft:function(){
@@ -367,9 +450,13 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
           , ibbox = $icon.getBBox()
           , cache_item = cache[key];
+        var attr = {};
+        S.mix(attr,item,true,["DEFAULT","HOVER"]);
         if(attrhook){
-          $icon.attr(attrhook.call(that,key));
+          var att = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
+          $icon.attr(att);
         }
+
         var $text = cache_item['el']
           , left
           , top
@@ -383,7 +470,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         top+=DIFF;
         $text.css({"left":left+'px',"top":top+"px","position":"absolute"});
         if(spanhook){
-          $text.css(spanhook.call(that,key));
+          $text.css(S.merge({color:attr.DEFAULT},spanhook.call(that,key)));
         }
         $text.appendTo($container);
         var max_height = Math.max(cache_item.height,ibbox.height)
@@ -409,6 +496,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       if(anim){
         anim.endframe = function(){that.onframeend();}
         Animation.AnimateObject(framedata,anim);
+      }else{
+        that.onframeend();
       }
     },
     alignLeftTop:function(){
