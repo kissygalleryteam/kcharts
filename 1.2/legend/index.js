@@ -227,7 +227,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
         var text_size = sizeof($text);
         text_total_width+=text_size.width;
-        cache.push({el:$text,width:text_size.width,height:text_size.height});
+        cache.push({el:$text,width:text_size.width,height:text_size.height,zIndex:10,cursor:"pointer"});
       });
       //总宽度
       var total_width = text_total_width
@@ -295,7 +295,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         left = x+alignconfig.iconsize+alignconfig.iconright
         top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 );
         left+=DIFF;
-        $text.css({"left":left+'px',"top":top+"px","position":"absolute"});
+        $text.css({"left":left+'px',"top":top+"px","position":"absolute",zIndex:10,cursor:"pointer"});
         if(spanhook){
           $text.css(S.merge({color:attr.DEFAULT},spanhook.call(that,key)));
         }
