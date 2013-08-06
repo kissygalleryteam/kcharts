@@ -44,4 +44,4 @@
 	});
 
 	return graphTool;
-},{requires:['gallery/kcharts/1.1/raphael/index']});
+},{requires:['gallery/kcharts/1.2/raphael/index']});

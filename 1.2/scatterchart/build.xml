@@ -1,0 +1,12 @@
+<project name="kcharts/scatterchart.build" default="build" basedir=".">
+    <description>kcharts/scatterchart Build File</description>
+
+    <property name="src.dir" value="."/>
+    <property name="component.name" value="kcharts/1.1/scatterchart"/>
+    <property name="component.version" value=""/>
+
+    <import file="../../../common.xml"/>
+
+    <target name="build" depends="common.build">
+    </target>
+</project>

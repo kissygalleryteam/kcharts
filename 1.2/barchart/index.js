@@ -581,17 +581,11 @@ KISSY.add('gallery/kcharts/1.2/barchart/index',function(S,Template,BaseChart,Col
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
-      /*
-				self.legend = new Legend(S.mix(legendCfg,{
-					container:container,
-					chart:self,
-					evtBind:true,
-					css:legendCfg.css || {}
-				}));
-       */
+
       var innerContainer = self._innerContainer;
       var colors = self.color._colors,//legend icon 的颜色表，循环
           len = colors.length,
+          cfg = self._cfg,
           series = self._cfg.series
       var barconfig = S.map(series,function(serie,i){
                         i = i%len;
@@ -602,6 +596,14 @@ KISSY.add('gallery/kcharts/1.2/barchart/index',function(S,Template,BaseChart,Col
                         item.HOVER = color.HOVER;
                         return item;
                       });
+      var globalConfig = S.merge({
+        // icontype:"circle",
+        // iconsize:10,
+        interval:20,//legend之间的间隔
+        iconright:5,//icon后面的空白
+        showicon:true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
+      },cfg.legend.globalConfig);
+
       self.legend = new Legend({
         container:container,
         bbox:{
@@ -610,26 +612,9 @@ KISSY.add('gallery/kcharts/1.2/barchart/index',function(S,Template,BaseChart,Col
           left:innerContainer.x,
           top:innerContainer.y
         },
-        align:"bc",
-        offset:[0,0],
-        iconAttrHook:function(index){//每次绘制icon的时调用，返回icon的属性信息
-          // index = index%len;
-          // return {
-          //   fill:colors[index].DEFAULT
-          // }
-        },
-        spanAttrHook:function(index){//每次绘制“文本描述”的时候调用，返回span的样式
-          // var colors = ["#094466","#145c8c","#1e88ba","#18aeed","#55cdff","#89d9fc"]
-          // return {
-          //   color:colors[index]
-          // }
-        },
-        globalConfig:{
-          shape:"square",
-          interval:20,//legend之间的间隔
-          iconright:5,//icon后面的空白
-          showicon:true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
-        },
+        align:cfg.legend.align || "bc",
+        offset:cfg.legend.offset || [0,0],
+        globalConfig:globalConfig,
         config:barconfig
       });
 
@@ -648,7 +633,6 @@ KISSY.add('gallery/kcharts/1.2/barchart/index',function(S,Template,BaseChart,Col
           el.enable();
         }
       },this);
-
 			return self.legend;
 		},
 		render:function(clear){

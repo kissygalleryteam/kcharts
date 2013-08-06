@@ -284,10 +284,12 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           , ibbox = $icon.getBBox()
         var attr = {};
         S.mix(attr,item,true,["DEFAULT","HOVER"]);
+        var oo = {fill:attr.DEFAULT}
         if(attrhook){
-          var att = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
-          $icon.attr(att);
+          oo = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
         }
+        $icon.attr(oo);
+
         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
         var text_size = sizeof($text)
           , left , top
@@ -297,7 +299,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         left+=DIFF;
         $text.css({"left":left+'px',"top":top+"px","position":"absolute",zIndex:10,cursor:"pointer"});
         if(spanhook){
-          $text.css(S.merge({color:attr.DEFAULT},spanhook.call(that,key)));
+          var css = S.merge({color:attr.DEFAULT},spanhook.call(that,key));
+          $text.css(css);
         }
         $text.appendTo($container);
         x+=text_size.width + 2*alignconfig.iconsize + interval + alignconfig.iconright;
@@ -452,10 +455,12 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           , cache_item = cache[key];
         var attr = {};
         S.mix(attr,item,true,["DEFAULT","HOVER"]);
+        var oo = {fill:attr.DEFAULT}
         if(attrhook){
-          var att = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
-          $icon.attr(att);
+          oo = S.merge(oo,attrhook.call(that,key));
         }
+
+        $icon.attr(oo);
 
         var $text = cache_item['el']
           , left
@@ -512,5 +517,5 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
   });
   return Legend;
 },{
-  requires:["dom","event","gallery/kcharts/1.2/tools/graphtool/index","gallery/kcharts/1.2/animation/index"]
+  requires:["dom","event","gallery/kcharts/1.2/tools/graphtool/index","gallery/kcharts/1.2/animate/index"]
 });

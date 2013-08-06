@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-KISSY.add('gallery/kcharts/1.2/animation/index',function(S,Anim){
+KISSY.add('gallery/kcharts/1.2/animate/index',function(S,Anim){
   var Easing = Anim.Easing
     , requestAnimFrame = window.requestAnimationFrame       ||
                          window.webkitRequestAnimationFrame ||

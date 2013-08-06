@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
+KISSY.add("gallery/kcharts/1.2/scatterchart/theme",function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
@@ -70,11 +70,6 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLine:{
-				css:{
-					color:"#ccc"
-				}
-			},
 			tip:{
 				css:{
 					"border":"1px solid {COLOR}"
@@ -103,93 +98,12 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 		    },
 			points:{
 				attr:{
-				  type:"circle",
-	              stroke:"{COLOR}",
-	              fill:"#fff",
-	              "r":4,
-	              "stroke-width":2
-	            },
-	            hoverAttr:{
-	              type:"circle",
-	              stroke:"{COLOR}",
-	              fill:"#fff",
-	              "r":5,
-	              "stroke-width":2
-	            }
-			},
-			xGrids:{
-				css:{
-					color:"#eee"
-				}
-			},
-			yGrids:{
-				css:{
-					color:"#eee"
-				}
-			},
-			yAxis:{
-				css:{
-					color:"#ccc"
-				}
-			},
-			xAxis:{
-				css:{
-					color:"#ccc"
-				}
-			},
-			xLabels:{
-				css:{
-					"color":"#666",
-					"font-size": "12px"
-				}
-			},
-			yLabels:{
-				css:{
-					"color":"#666",
-					"font-size": "12px"
-				}
-			},
-			pointLine:{
-				css:{
-					color:"#ccc"
-				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
-				}
-			}
-		},
-		"ks-chart-rainbow":{
-			title:{
-		           content:"",
-		           css:{
-		            		"text-align":"center",
-		            		"font-size":"16px",
-		            		"font-weight": "bold",
-		            		"color":"#666"
-		           },
-		           isShow:true
-		    },
-		    subTitle:{
-		       content:"",
-		       css:{
-		            "text-align":"center",
-		            "font-size":"12px",
-		            "color":"#666"
-		        },
-		        isShow:true
-		    },
-			points:{
-				attr:{
-					type:"circle",
 					stroke:"#fff",
 					"r":4,
 					"stroke-width":1.5,
 					"fill":COLOR_TPL
 				},
 				hoverAttr:{
-					type:"circle",
 					stroke:"#fff",
 					"r":5,
 					"fill":COLOR_TPL,
@@ -228,17 +142,89 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLine:{
+
+			tip:{
+				css:{
+					"border":"1px solid {COLOR}"
+				}
+			}
+
+		},
+		"ks-chart-rainbow":{
+			title:{
+		           content:"",
+		           css:{
+		            		"text-align":"center",
+		            		"font-size":"16px",
+		            		"font-weight": "bold",
+		            		"color":"#666"
+		           },
+		           isShow:true
+		    },
+		    subTitle:{
+		       content:"",
+		       css:{
+		            "text-align":"center",
+		            "font-size":"12px",
+		            "color":"#666"
+		        },
+		        isShow:true
+		    },
+			points:{
+				attr:{
+					stroke:"#fff",
+					"r":4,
+					"stroke-width":1.5,
+					"fill":COLOR_TPL
+				},
+				hoverAttr:{
+					stroke:"#fff",
+					"r":5,
+					"fill":COLOR_TPL,
+					"stroke-width":0
+				}
+			},
+			xGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yAxis:{
 				css:{
 					color:"#ccc"
 				}
 			},
+			xAxis:{
+				css:{
+					color:"#ccc"
+				}
+			},
+			xLabels:{
+				css:{
+					"color":"#666",
+					"font-size": "12px"
+				}
+			},
+			yLabels:{
+				css:{
+					"color":"#666",
+					"font-size": "12px"
+				}
+			},
+
 			tip:{
 				css:{
-					border:"1px solid {COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		}
 	};
+
 	return themeCfg;
+
 });

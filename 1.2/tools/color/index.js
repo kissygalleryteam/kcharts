@@ -104,7 +104,5 @@ KISSY.add('gallery/kcharts/1.2/tools/color/index',function(S){
 		}
 	};
   Color.prototype.constructor = Color;
-  S.namespace('KCharts.Tools');
-  S.KCharts.Tools.Color = Color;
 	return Color;
 });

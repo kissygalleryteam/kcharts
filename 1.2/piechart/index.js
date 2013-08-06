@@ -125,7 +125,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       //只执行一次
       if(this.legendrendered)return;
       this.legendrendered = true;
-
       var that = this,
           paper,
           container,
@@ -445,5 +444,5 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
 
   return Pie;
 },{
-  requires:["gallery/kcharts/1.2/piechart/util","gallery/kcharts/1.2/piechart/sector","gallery/kcharts/1.2/piechart/animation","gallery/kcharts/1.2/piechart/label","gallery/kcharts/1.1/raphael/index","gallery/kcharts/1.1/tools/color/index"]
+  requires:["gallery/kcharts/1.2/piechart/util","gallery/kcharts/1.2/piechart/sector","gallery/kcharts/1.2/animate/index","gallery/kcharts/1.2/piechart/label","gallery/kcharts/1.1/raphael/index","gallery/kcharts/1.1/tools/color/index"]
 });
