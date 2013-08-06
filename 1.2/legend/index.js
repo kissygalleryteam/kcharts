@@ -491,7 +491,13 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         var max_height = Math.max(cache_item.height,ibbox.height)
         y+=max_height+interval;
         //动画属性构建
-        var el = {icon:$icon,des:$text,index:key};
+        var el = {icon:$icon,des:$text,index:key,
+                  disable:function(){
+                    disable.call(el,that,item);
+                  },
+                  enable:function(){
+                    enable.call(el,that,item);
+                  }};
         els.push(el);
         if(!anim)return;
         framedata.push({
