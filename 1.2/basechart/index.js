@@ -61,7 +61,7 @@ KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 
 				series = _cfg.series || null;
 				//若为堆叠图 则最小值为0 暂时不兼容负值
-				if(_cfg.stackable){
+				if(self.chartType == "barchart"){
 						_cfg.xAxis.min = 0;
 						_cfg.yAxis.min = 0;
 				}
@@ -168,8 +168,7 @@ KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 		},
 		//获取刻度
 		_getScales:function(allDatas,axis){
-			var self = this,
-				_cfg = self._cfg;
+			var self = this;
 			//若直接配置了text 则按照text返回
 			if(axis.text && S.isArray(axis.text)){
 				return axis.text;
@@ -363,7 +362,7 @@ KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 			@param nagitive 可选，是否是反向的(默认值：false)
 		*/
 		data2GrapicData:function(data,isY,nagitive){
-			if(!data) return;
+			if(undefined === data) return;
 			var self = this,
 				ictn = self._innerContainer,
 				margin = isY ? ictn.x : ictn.y,
@@ -463,6 +462,7 @@ KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 			@return {Array}
 		*/
 		getScales:function(cormax,cormin,cornum){
+			S.log(arguments)
 			var self = this,
 				corstep,
 				tmpstep,
