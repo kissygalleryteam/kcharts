@@ -297,11 +297,15 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         left = x+alignconfig.iconsize+alignconfig.iconright
         top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 );
         left+=DIFF;
-        $text.css({"left":left+'px',"top":top+"px","position":"absolute",zIndex:10,cursor:"pointer"});
-        if(spanhook){
-          var css = S.merge({color:attr.DEFAULT},spanhook.call(that,key));
-          $text.css(css);
+        var css = {"left":left+'px',"top":top+"px","position":"absolute",zIndex:10,cursor:"pointer"}
+
+        if(attr.DEFAULT){
+          css.color = attr.DEFAULT;
         }
+        if(spanhook){
+          css = S.merge(css,spanhook.call(that,key));
+        }
+        $text.css(css);
         $text.appendTo($container);
         x+=text_size.width + 2*alignconfig.iconsize + interval + alignconfig.iconright;
 
@@ -473,10 +477,16 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 ) + offset[1];
         }
         top+=DIFF;
-        $text.css({"left":left+'px',"top":top+"px","position":"absolute"});
-        if(spanhook){
-          $text.css(S.merge({color:attr.DEFAULT},spanhook.call(that,key)));
+        var css = {"left":left+'px',"top":top+"px","position":"absolute",zIndex:10,cursor:"pointer"}
+
+        if(attr.DEFAULT){
+          css.color = attr.DEFAULT;
         }
+        if(spanhook){
+          css = S.merge(css,spanhook.call(that,key));
+        }
+        $text.css(css);
+
         $text.appendTo($container);
         var max_height = Math.max(cache_item.height,ibbox.height)
         y+=max_height+interval;
