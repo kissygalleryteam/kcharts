@@ -295,9 +295,11 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         $icon.attr(oo);
 
         var text = item.text || "data"+key;
-        var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
+        var $text = D.create('<span class="kcharts-legend-item"></span>');
+        D.html($text,text);
         var text_size = sizeof($text)
           , left , top
+        $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
 
         left = x+alignconfig.iconsize+alignconfig.iconright
         top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 );
@@ -410,6 +412,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       S.each(config,function(item,key){
         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
         var text_size = sizeof($text)
+        var text = item.text || "data"+key;
+
         if(text_max_width < text_size.width){
           text_max_width = text_size.width;
         }
@@ -472,7 +476,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
 
         $icon.attr(oo);
 
-        var $text = cache_item['el']
+        var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>')//cache_item['el']
           , left
           , top;
         if(!reverse){
