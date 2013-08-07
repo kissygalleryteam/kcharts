@@ -1,4 +1,10 @@
-;/*
+/*
+combined files : 
+
+gallery/kcharts/1.2/tools/touch/index
+
+*/
+/*
   touch 事件的
   note:change touch event to mouse event
 */

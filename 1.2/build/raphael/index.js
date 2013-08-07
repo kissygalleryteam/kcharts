@@ -1,4 +1,10 @@
-;// Raphaël 2.1.0 - JavaScript Vector Library
+/*
+combined files : 
+
+gallery/kcharts/1.2/raphael/index
+
+*/
+// Raphaël 2.1.0 - JavaScript Vector Library
 KISSY.add('gallery/kcharts/1.2/raphael/index',function(S){
 (function (glob) {
     var version = "0.3.4",
@@ -5802,3 +5808,4 @@ window.Raphael.vml && function (R) {
 }(window.Raphael);
 return window.Raphael;
 });
+

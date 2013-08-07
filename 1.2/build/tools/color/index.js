@@ -1,4 +1,10 @@
-;KISSY.add('gallery/kcharts/1.2/tools/color/index',function(S){
+/*
+combined files : 
+
+gallery/kcharts/1.2/tools/color/index
+
+*/
+KISSY.add('gallery/kcharts/1.2/tools/color/index',function(S){
 
 	function Color(cfg){
 		this.init(cfg);
@@ -104,7 +110,5 @@
 		}
 	};
   Color.prototype.constructor = Color;
-  S.namespace('KCharts.Tools');
-  S.KCharts.Tools.Color = Color;
 	return Color;
 });

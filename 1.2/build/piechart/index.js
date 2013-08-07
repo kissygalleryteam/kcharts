@@ -1,636 +1,13 @@
-;// -*- coding: utf-8; -*-
-KISSY.add('gallery/kcharts/1.2/piechart/animation',function(S,Anim){
-  var Easing = Anim.Easing
-    , requestAnimFrame = window.requestAnimationFrame       ||
-                         window.webkitRequestAnimationFrame ||
-                         window.mozRequestAnimationFrame    ||
-                         window.oRequestAnimationFrame      ||
-                         window.msRequestAnimationFrame     ||
-                         function (callback) {
-                           return setTimeout(callback, 16);
-                         }
-    , cancelAnimationFrame = window.cancelAnimationFrame       ||
-                             window.webkitCancelAnimationFrame ||
-                             window.mozCancelAnimationFrame    ||
-                             window.oCancelAnimationFrame      ||
-                             window.msCancelAnimationFrame     ||
-                             clearTimeout
-    , dft
-  dft = {
-    duration:1000,
-    easing:'easeNone'
-  }
-  function Animate(fromProps,toProps,opts){
-    opts || (opts = {});
-    opts = S.merge(dft,opts);
+/*
+combined files : 
 
-    var begin = +new Date
-      , end = begin + opts.duration
-      , now = begin
-      , diff = opts.duration
-      , fx = Easing[opts.easing]
-      , frame = opts.frame || S.noop
-      , props = {}
-      , ended = false // 动画是否已经结束
-      , run
-      , _duration = opts.duration
-      , timer
+gallery/kcharts/1.2/piechart/util
+gallery/kcharts/1.2/piechart/sector
+gallery/kcharts/1.2/piechart/label
+gallery/kcharts/1.2/piechart/index
 
-    // 用于resume的数据
-    // |---a----|_b__|--c--|
-    var a = 0
-      , b = 0
-      , stopTime
-      , resumeable = false;
-
-    // do some clean
-    for(var x in fromProps){
-      if(!toProps[x] && toProps[x] != 0){
-        delete fromProps[x]
-      }else{
-        props[x] = null;
-      }
-    }
-
-    run = function(){
-      var s,t;
-      t = a/diff
-      s = fx(t)
-      if(S.isArray(fromProps)){
-        for(var i=0,len=fromProps.length;i<len;i++){
-          props[i] = fromProps[i] + (toProps[i] - fromProps[i])*s;
-        }
-      }else{
-        for(var x in fromProps){
-          props[x] = fromProps[x] + (toProps[x] - fromProps[x])*s;
-        }
-      }
-      if(a<_duration){
-        frame.call(api,props,t);
-        timer = requestAnimFrame(run);
-      }else{
-        frame.call(api,toProps,1);
-        ended = true;
-        if(opts.endframe){
-          opts.endframe.call(api,toProps,1);
-        }
-      }
-      now = +new Date;
-      a = now - begin - b;
-    }
-    function saveFrame(){
-      if(!ended){
-        stopTime = +new Date;
-        resumeable = true;
-      }
-    }
-    function restoreFrame(){
-      var _now = +new Date;
-      b = b + _now  - stopTime;
-      resumeable = false;
-    }
-    var api =  {
-      stop:function(){
-        cancelAnimationFrame(timer);
-      },
-      resume:function(){
-        if(resumeable){
-          restoreFrame();
-          run();
-        }
-      },
-      pause:function(){
-        if(!resumeable){
-          saveFrame();
-          cancelAnimationFrame(timer);
-        }
-      },
-      isRunning:function(){
-        return !ended;
-      }
-    }
-    run();
-    return api;
-  }
-  Animate.AnimateObject = function (props,cfg){
-    var AnimMap = []
-      , AnimMapIndex = 0
-
-    var from = {}
-      , to = {}
-      , len = props.length
-    S.each(props,function(p,index){
-      var f = p.from
-        , t = p.to
-        , key
-      for(var x in f){
-        key = AnimMapIndex++
-        AnimMap[key] = [p,x,index]
-        from[key] = f[x]
-        to[key] = t[x]
-      }
-    });
-    var anim = Animate(from,to,{
-      easing:cfg.easing,
-      duration:cfg.duration,
-      frame:function(props,t){
-        for(var x in props){
-          var map = AnimMap
-            , p = map[x][0]
-            , attrname = map[x][1]
-            , index = map[x][2]
-            , from = p.from
-          from[attrname] = props[x];
-          p.frame && p.frame(attrname,props[x],props,index,len);
-        }
-      },
-      endframe:function(props,t){
-        for(var x in props){
-          var map = AnimMap
-            , p = map[x][0]
-            , attrname = map[x][1]
-            , index = map[x][2]
-          p.endframe && p.endframe(attrname,props[x],index,props);
-        }
-        cfg.endframe && cfg.endframe();
-      }
-    })
-    return anim;
-  }
-  return Animate;
-},{
-  requires:['anim']
-});// -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
-  var D = S.DOM
-
-  // helpers
-  function distance(a,b){
-    var x1,x2,y1,y2;
-    x1 = a[0],y1=a[1],x2=b[0],y2=b[1];
-    return Math.sqrt(Math.pow((x1-x2),2)+Math.pow((y1-y2),2));
-  }
-
-  function closest(list,i,least_n){
-    function rec(l,min,min_el,min_el_left){
-      if(least_n >= l.length){
-        return {min:min_el,left:min_el_left};
-      }else if(min > distance(i,l[0])){
-        var left = l.slice(1);
-        return rec(left,distance(i,l[0]),l[0],left);
-      }else{
-        return rec(l.slice(1),min,min_el,min_el_left);
-      }
-    }
-    return rec(list,Infinity,list[0],[])
-  }
-  function find(l1,l2){
-    function iter(l,s,acm){
-      if(l.length == 0){
-        return acm;
-      }else{
-        var ret = closest(s,l[0],l.length-1);
-        acm.push(ret.min);
-        return iter(l.slice(1),ret.left,acm);
-      }
-    }
-    return iter(l1,l2,[]);
-  }
-  // end
-
-  var $detector
-  function blockSizeOf(html){
-    $detector || ($detector = S.Node("<div/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
-    $detector.html(html);
-    return {
-      width:D.width($detector),
-      height:D.height($detector)
-    }
-  }
-
-  function Label(cfg){
-    this.set(cfg)
-    this.init();
-  }
-  S.extend(Label,S.Base,{
-    init:function(){
-      var $label = this.get('label')
-        , x = this.get('x')
-        , y = this.get('y')
-        , size = this.get('size')
-        , pie = this.get('pie')
-        , sector = this.get("sector")
-        , container = pie.get('container')
-
-      $label.css({"position":"absolute","left":x+'px',"top":y+'px',width:size.width+'px',"height":size.height+'px'}).appendTo(container);
-      this.set('el',$label)
-    },
-    destroy:function(){
-      this.get("el").remove();
-      this.get("$path").remove();
-    }
-  })
-  /**
-   * 分布策略：
-   * 自然分布
-   * 若空间不足，拓展空间
-   * */
-
-  function Labels(pie,$sectors,bool_left){
-    var paper = pie.get('paper')
-      , container = pie.get('container')
-      , count = $sectors.length
-      , paperHeight //画布高度
-      , pieHeight //饼图高度
-      , unitHeight //单条label的高度
-      , minLalebelHeight //排布label需要的最小高度
-      , fromY // 画label的上边界
-      , toY // 下边界
-      , xys = []
-      , xysr = []
-      , xysr2 = []
-      , cx = pie.get('cx')
-      , cy = pie.get('cy')
-      , rs = pie.get('rs')
-      , paddingDonutSize1 = pie.get("padding") || 20 // label 和 pie 之间的距离
-      , paddingDonutSize2 = paddingDonutSize1+10
-      , R
-      , R1
-      , R2
-      , cos = Math.cos
-      , sin = Math.sin
-      , asin = Math.asin
-      , pi = Math.PI
-      , rad = Math.PI/180
-      , $firstSector
-
-    this.labels = []
-    $firstSector = $sectors[0]
-
-    if(!$firstSector)return;
-
-    unitHeight = blockSizeOf($firstSector.get("label")).height
-    R = Math.max.apply(Math,rs)
-    R1 = R + paddingDonutSize1
-    R2 = R + paddingDonutSize2
-
-    fromY = cy - R2;
-    toY = cy + R2;
-    for(fromY+=unitHeight;fromY<toY-unitHeight;fromY+=unitHeight){
-      // x=a+rcosθ y=b+rsinθ
-      // (y-b)/r = sinθ
-      var y = fromY;
-      var t = Math.asin((y-cy)/R2);
-      var x = cx+R2*Math.cos(t);
-      x = bool_left ? (2*cx - x):x;
-      xys.push([x,y]);
-
-      // paper.circle(x,y,4);
-      // paper.circle(2*cx - x,y,4);
-    }
-    // 若不足以放下所有的label，剔除比例较小的
-
-    if($sectors.length>xys.length){
-      $sectors = $sectors.sort(function(a,b){
-                   var d1 = Math.abs(a.get("start") - a.get("end"))
-                     , d2 = Math.abs(b.get("start") - b.get("end"))
-                   return d1>d2 ? -1 : (d1<d2) ? 1 : 0;
-                 });
-      $sectors = $sectors.slice(0,xys.length);
-    }
-
-    $sectors = $sectors.sort(function(a,b){
-                 var ay = a.get("middley")
-                   , by = b.get("middley")
-                 // return [a.a, a.b] > [b.a, b.b] ? 1:-1;
-                 // return  [ay,ay] < [by,by];
-                 return ay<by ? 1 : ay>by ? -1 : 0;
-               });
-
-    var unitdeg = Math.PI/180;
-    S.each($sectors,function($sector){
-      var x = y = $sector.get("middlex")
-        , y = $sector.get("middley")
-        , theta = $sector.get("middleangle")*rad
-      // paper.circle(x12,y12,3);
-
-      var x12,y12;
-      x12 = cx+R1*Math.cos(-theta);
-      y12 = cy+R1*Math.sin(-theta);
-      xysr2.push([x12,y12]);
-
-      xysr.push([x,y]);
-      // paper.circle(x,y,2);
-    });
-
-    xysr = xysr.reverse();
-    xysr2 = xysr2.reverse();
-
-    $sectors = $sectors.reverse();
-
-    var bestxys = find(xysr,xys);
-
-    for(var i=0,l=bestxys.length;i<l;i++){
-      var pxy = xysr[i];
-      var pxy2 = bestxys[i];
-      var x1,x2,y1,y2;
-      x1 = pxy[0];
-      y1 = pxy[1];
-      x2 = pxy2[0];
-      y2 = pxy2[1];
-
-      var x12,y12;
-      x12 = xysr2[i][0],y12 = xysr2[i][1];
-
-      var x23,y23 = y2;
-      x23 = bool_left ? x2 - 10 : x2 + 10;
-      var path = paper.path(["M",x1,y1,"Q",x12,y12,x23,y23].join(","));
-
-      var $sector = $sectors[i]
-        , sizefn = pie.get("sizefn")
-        , label = $sector.get('label')
-        , size = blockSizeOf(label)
-        , x3 ,y3
-        , that = this
-        , pathcolor = $sector.get("$path").attr("fill")
-        , autoLabelPathColor = pie.get('autoLabelPathColor')
-
-      path && path.toBack && path.toBack();
-      (autoLabelPathColor != "undefined") && path.attr("stroke",pathcolor)
-
-      if(sizefn && S.isFunction(sizefn)){
-        size = sizefn(size,$sector,pie);
-      }
-
-      if(bool_left){
-        x3 = x23 - size.width
-        y3 = y23 - size.height/2
-      }else{
-        x3 = x23;
-        y3 = y23 - size.height/2;
-      }
-
-      var $label = S.Node("<div class='kcharts-label'>"+label+"</div>")
-
-      var labelInstance  = new Label({label:$label,sector:$sector,$path:path,x:x3,y:y3,size:size,pie:pie});
-      var $el = labelInstance.get('el');
-
-      var fn = function($el,$sector,labelInstance){
-        $el.on('click',function(e){
-          that.fire('click',{
-            el:e.currentTarget,
-            label:labelInstance,
-            sector:$sector
-          })
-        });
-      }
-      fn($el,$sector,labelInstance);
-
-      that.labels.push(labelInstance);
-    }
-  }
-  S.extend(Labels,S.Base,{
-    destroy:function(){
-      S.each(this.labels,function(label){
-        label.destroy();
-      });
-    }
-  })
-  Labels.getSizeOf = blockSizeOf
-  return Labels;
-});// -*- coding: utf-8-unix; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/legend",function(S){
-  function Legend(paper,lengend_arr,cfg){
-    this.bindEvent();
-  }
-
-  S.extend(Legend,S.Base,{
-    init:function(){
-      
-    },
-    bindEvent:function(){},
-    alignBottom:function(){},
-    alignTop:function(){},
-    alignLeft:function(){},
-    alignRight:function(){}
-  });
-
-});
-
-;// -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
-  // 顺时针的sector
-  function sector(cx, cy, r, startAngle, endAngle) {
-    // 避免画不成一个○
-    if(Math.abs(startAngle-endAngle)>=360){
-      endAngle += .01;
-    }
-    if(startAngle == endAngle){
-      endAngle = endAngle-.1;
-    }
-    // startAngle 肯定是 大于 endAngle
-    var rad = Math.PI / 180,
-        angel= (startAngle + endAngle)/ 2,
-        middlex = cx + r * Math.cos(-angel * rad),
-        scx = cx + r * Math.cos(-angel * rad)*.5,
-        x1 = cx + r * Math.cos(-startAngle * rad),
-        x2 = cx + r * Math.cos(-endAngle * rad),
-        middley = cy + r * Math.sin(-angel * rad),
-        scy = cy + r * Math.sin(-angel * rad)*.5,
-        y1 = cy + r * Math.sin(-startAngle * rad),
-        y2 = cy + r * Math.sin(-endAngle * rad),
-        ret,
-        largeArcFlag = +(Math.abs(startAngle - endAngle) > 180),
-        sweepFlag = 1
-    ret = [
-      "M", cx, cy,
-      "L", x1, y1,
-      // "A", r, r, 0, +(Math.abs(endAngle - startAngle) > 180), 1, x2, y2,
-      // (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+
-      "A", r, r, 0, largeArcFlag, sweepFlag, x2, y2,
-      "z"
-    ]
-    // ret.middle = {from:from,to:to,angel:angel,x:x,y:y};
-    ret.middleangle = angel;
-    ret.middlex = middlex; //扇形平分线x
-    ret.middley = middley; //扇形平分线y
-    ret.cx = scx;          //中点x
-    ret.cy = scy;          //中点y
-    ret.A = [x1,y1];       //顺时针的第一个点
-    ret.B = [x2,y2];       //顺时针的第二个点
-    return ret;
-  }
-  function donut(cx, cy, r1, r2, startAngle, endAngle){
-    // 避免画不成一个○
-    if(Math.abs(startAngle-endAngle)>=360){
-      endAngle += .01;
-    }
-    // 避免sector画不出来
-    if(startAngle == endAngle){
-      endAngle = endAngle-.1;
-    }
-    var rad = Math.PI / 180,
-        angel= (startAngle + endAngle)/ 2,
-        middlex = cx + r2 * Math.cos(-angel * rad),
-        scx = cx + .5*(r1+r2) * Math.cos(-angel * rad)*.5,
-        x = cx + r1 * Math.cos(-angel * rad),
-        x1 = cx + r1 * Math.cos(-startAngle * rad),
-        x2 = cx + r1 * Math.cos(-endAngle * rad),
-        _x1 = cx + r2 * Math.cos(-startAngle * rad),
-        _x2 = cx + r2 * Math.cos(-endAngle * rad),
-
-        middley = cy + r2 * Math.sin(-angel * rad),
-        scy = cy + .5*(r1+r2) * Math.sin(-angel * rad)*.5,
-        y = cy + r1 * Math.sin(-angel * rad),
-        y1 = cy + r1 * Math.sin(-startAngle * rad),
-        y2 = cy + r1 * Math.sin(-endAngle * rad),
-        _y1 = cy + r2 * Math.sin(-startAngle * rad),
-        _y2 = cy + r2 * Math.sin(-endAngle * rad),
-
-        ret = [
-          "M", _x1, _y1,
-          "L", x1, y1,
-          "A", r1, r1, 0, +(Math.abs(endAngle - startAngle) > 180), 1, x2, y2,
-          "L", _x2,_y2,
-          "A",r2,r2, 0, +(Math.abs(endAngle - startAngle) > 180), 0, _x1, _y1
-        ];
-
-    ret.middleangle = angel;
-    ret.middlex = middlex;
-    ret.middley = middley;
-
-    ret.cx = scx;
-    ret.cy = scy;
-    ret.A = [x1,y1];
-    ret.B = [_x1,_y1]
-    ret.C = [x2,y2]
-    ret.D = [_x2,_y2]
-    return ret;
-  }
-
-  function Sector(paper,cx,cy,r,start,end,pathcfg,framedata){
-    if(!(this instanceof Sector)){
-      return new Sector(paper,cx,cy,r,start,end,pathcfg);
-    }
-    this.set({cx:cx,cy:cy,r:r,start:start,end:end,pathcfg:pathcfg,paper:paper,framedata:framedata})
-    this.draw();
-    this.bindEvent();
-    return this;
-  }
-
-  S.extend(Sector,S.Base,{
-    bindEvent:function(){
-      this.on('afterCxChange',function(){
-        this.draw();
-      })
-      this.on('afterCyChange',function(){
-        this.draw();
-      })
-      this.on('afterStartChange',function(){
-        this.draw();
-      })
-      this.on('afterEndChange',function(){
-        this.draw();
-      })
-      this.on('afterRChange',function(){
-        this.draw();
-      })
-      var $path = this.get('$path')
-        , that = this
-
-      $path.click(function(e){
-        that.fire('click');
-      })
-      $path.mouseout(function(){
-        that.fire('mouseout')
-      });
-      $path.mouseover(function(){
-        that.fire('mouseover')
-      });
-    },
-    unbindEvent:function(){
-      this.detach();
-      var $path = this.get('$path')
-      $path.unclick();
-      $path.unmouseover();
-      $path.unmouseout();
-    },
-    _syncAttrFromPath:function(path){
-      this.set({
-        middleangle:path.middleangle,
-        sectorcx:path.cx,
-        sectorcy:path.cy,
-        middlex:path.middlex,
-        middley:path.middley,
-        centerpoint:path.cc,
-        A:path.A,B:path.B
-      });
-    },
-    draw:function(){
-      var r = this.get('r')
-        , paper = this.get('paper')
-        , pathcfg = this.get('pathcfg')
-        , framedata = this.get('framedata')
-        , sectorcfg = (framedata && framedata.sectorcfg) || {}
-        , $path = paper.path();
-
-      pathcfg = S.merge({
-        stroke:"#fff"
-      },pathcfg)
-      if(sectorcfg){
-        pathcfg = S.merge(pathcfg,{
-          stroke:sectorcfg.stroke,
-          "stroke-width":sectorcfg.strokeWidth
-        })
-      }
-      $path.attr(pathcfg);
-      this.set('$path',$path)
-
-      if(S.isArray(r) && r.length == 2){
-        this._drawDonut();
-      }else{
-        this._drawSector();
-      }
-    },
-    _drawSector:function(){
-      var cx = this.get('cx') , cy = this.get('cy')
-        , r = this.get('r')
-        , start = this.get('start')
-        , end = this.get('end')
-        , $path
-      var path = sector(cx,cy,r,start,end)
-        , pathstring = path.join(',')
-        , paper = this.get('paper')
-
-      $path = this.get('$path')
-      $path.attr("path",pathstring);
-      this._syncAttrFromPath(path);
-      this.draw = this._drawSector;
-      return this;
-    },
-    _drawDonut:function(){
-      var cx = this.get('cx') , cy = this.get('cy')
-        , r = this.get('r')
-        , start = this.get('start')
-        , end = this.get('end')
-        , $path
-      var path = donut(cx,cy,r[0],r[1],start,end)
-        , pathstring = path.join(',')
-        , paper = this.get('paper')
-
-      $path = this.get('$path')
-      $path.attr("path",pathstring);
-      this._syncAttrFromPath(path);
-      this.draw = this._drawDonut;
-      return this;
-    },
-    destroy:function(){
-      this.unbindEvent();
-      this.get('$path').remove();
-    }
-  })
-  return Sector;
-});;// -*- coding: utf-8; -*-
+*/
+// -*- coding: utf-8; -*-
 /**
  * sector数据处理
  * */
@@ -851,7 +228,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
   /**
    * 每帧的操作
    * */
-  function onframe(attrname,value,props,index,len){
+  function onframe(attrname,value,props,index,len,opts){
     var start = this.el.get("start")
       , end
       , prev = this.prev
@@ -1213,7 +590,461 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
 },{
   requires:["gallery/kcharts/1.2/piechart/sector","gallery/kcharts/1.1/tools/color/index","gallery/kcharts/1.1/raphael/index"]
 });
-;// -*- coding: utf-8; -*-
+
+// -*- coding: utf-8; -*-
+KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
+  // 顺时针的sector
+  function sector(cx, cy, r, startAngle, endAngle) {
+    // 避免画不成一个○
+    if(Math.abs(startAngle-endAngle)>=360){
+      endAngle += .01;
+    }
+    if(startAngle == endAngle){
+      endAngle = endAngle-.1;
+    }
+    // startAngle 肯定是 大于 endAngle
+    var rad = Math.PI / 180,
+        angel= (startAngle + endAngle)/ 2,
+        middlex = cx + r * Math.cos(-angel * rad),
+        scx = cx + r * Math.cos(-angel * rad)*.5,
+        x1 = cx + r * Math.cos(-startAngle * rad),
+        x2 = cx + r * Math.cos(-endAngle * rad),
+        middley = cy + r * Math.sin(-angel * rad),
+        scy = cy + r * Math.sin(-angel * rad)*.5,
+        y1 = cy + r * Math.sin(-startAngle * rad),
+        y2 = cy + r * Math.sin(-endAngle * rad),
+        ret,
+        largeArcFlag = +(Math.abs(startAngle - endAngle) > 180),
+        sweepFlag = 1
+    ret = [
+      "M", cx, cy,
+      "L", x1, y1,
+      // "A", r, r, 0, +(Math.abs(endAngle - startAngle) > 180), 1, x2, y2,
+      // (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+
+      "A", r, r, 0, largeArcFlag, sweepFlag, x2, y2,
+      "z"
+    ]
+    // ret.middle = {from:from,to:to,angel:angel,x:x,y:y};
+    ret.middleangle = angel;
+    ret.middlex = middlex; //扇形平分线x
+    ret.middley = middley; //扇形平分线y
+    ret.cx = scx;          //中点x
+    ret.cy = scy;          //中点y
+    ret.A = [x1,y1];       //顺时针的第一个点
+    ret.B = [x2,y2];       //顺时针的第二个点
+    return ret;
+  }
+  function donut(cx, cy, r1, r2, startAngle, endAngle){
+    // 避免画不成一个○
+    if(Math.abs(startAngle-endAngle)>=360){
+      endAngle += .01;
+    }
+    // 避免sector画不出来
+    if(startAngle == endAngle){
+      endAngle = endAngle-.1;
+    }
+    var rad = Math.PI / 180,
+        angel= (startAngle + endAngle)/ 2,
+        middlex = cx + r2 * Math.cos(-angel * rad),
+        scx = cx + .5*(r1+r2) * Math.cos(-angel * rad)*.5,
+        x = cx + r1 * Math.cos(-angel * rad),
+        x1 = cx + r1 * Math.cos(-startAngle * rad),
+        x2 = cx + r1 * Math.cos(-endAngle * rad),
+        _x1 = cx + r2 * Math.cos(-startAngle * rad),
+        _x2 = cx + r2 * Math.cos(-endAngle * rad),
+
+        middley = cy + r2 * Math.sin(-angel * rad),
+        scy = cy + .5*(r1+r2) * Math.sin(-angel * rad)*.5,
+        y = cy + r1 * Math.sin(-angel * rad),
+        y1 = cy + r1 * Math.sin(-startAngle * rad),
+        y2 = cy + r1 * Math.sin(-endAngle * rad),
+        _y1 = cy + r2 * Math.sin(-startAngle * rad),
+        _y2 = cy + r2 * Math.sin(-endAngle * rad),
+
+        ret = [
+          "M", _x1, _y1,
+          "L", x1, y1,
+          "A", r1, r1, 0, +(Math.abs(endAngle - startAngle) > 180), 1, x2, y2,
+          "L", _x2,_y2,
+          "A",r2,r2, 0, +(Math.abs(endAngle - startAngle) > 180), 0, _x1, _y1
+        ];
+
+    ret.middleangle = angel;
+    ret.middlex = middlex;
+    ret.middley = middley;
+
+    ret.cx = scx;
+    ret.cy = scy;
+    ret.A = [x1,y1];
+    ret.B = [_x1,_y1]
+    ret.C = [x2,y2]
+    ret.D = [_x2,_y2]
+    return ret;
+  }
+
+  function Sector(paper,cx,cy,r,start,end,pathcfg,framedata){
+    if(!(this instanceof Sector)){
+      return new Sector(paper,cx,cy,r,start,end,pathcfg);
+    }
+    this.set({cx:cx,cy:cy,r:r,start:start,end:end,pathcfg:pathcfg,paper:paper,framedata:framedata})
+    this.draw();
+    this.bindEvent();
+    return this;
+  }
+
+  S.extend(Sector,S.Base,{
+    bindEvent:function(){
+      this.on('afterCxChange',function(){
+        this.draw();
+      })
+      this.on('afterCyChange',function(){
+        this.draw();
+      })
+      this.on('afterStartChange',function(){
+        this.draw();
+      })
+      this.on('afterEndChange',function(){
+        this.draw();
+      })
+      this.on('afterRChange',function(){
+        this.draw();
+      })
+      var $path = this.get('$path')
+        , that = this
+
+      $path.click(function(e){
+        that.fire('click');
+      })
+      $path.mouseout(function(){
+        that.fire('mouseout')
+      });
+      $path.mouseover(function(){
+        that.fire('mouseover')
+      });
+    },
+    unbindEvent:function(){
+      this.detach();
+      var $path = this.get('$path')
+      $path.unclick();
+      $path.unmouseover();
+      $path.unmouseout();
+    },
+    _syncAttrFromPath:function(path){
+      this.set({
+        middleangle:path.middleangle,
+        sectorcx:path.cx,
+        sectorcy:path.cy,
+        middlex:path.middlex,
+        middley:path.middley,
+        centerpoint:path.cc,
+        A:path.A,B:path.B
+      });
+    },
+    draw:function(){
+      var r = this.get('r')
+        , paper = this.get('paper')
+        , pathcfg = this.get('pathcfg')
+        , framedata = this.get('framedata')
+        , sectorcfg = (framedata && framedata.sectorcfg) || {}
+        , $path = paper.path();
+
+      pathcfg = S.merge({
+        stroke:"#fff"
+      },pathcfg)
+      if(sectorcfg){
+        pathcfg = S.merge(pathcfg,{
+          stroke:sectorcfg.stroke,
+          "stroke-width":sectorcfg.strokeWidth
+        })
+      }
+      $path.attr(pathcfg);
+      this.set('$path',$path)
+
+      if(S.isArray(r) && r.length == 2){
+        this._drawDonut();
+      }else{
+        this._drawSector();
+      }
+    },
+    _drawSector:function(){
+      var cx = this.get('cx') , cy = this.get('cy')
+        , r = this.get('r')
+        , start = this.get('start')
+        , end = this.get('end')
+        , $path
+      var path = sector(cx,cy,r,start,end)
+        , pathstring = path.join(',')
+        , paper = this.get('paper')
+
+      $path = this.get('$path')
+      $path.attr("path",pathstring);
+      this._syncAttrFromPath(path);
+      this.draw = this._drawSector;
+      return this;
+    },
+    _drawDonut:function(){
+      var cx = this.get('cx') , cy = this.get('cy')
+        , r = this.get('r')
+        , start = this.get('start')
+        , end = this.get('end')
+        , $path
+      var path = donut(cx,cy,r[0],r[1],start,end)
+        , pathstring = path.join(',')
+        , paper = this.get('paper')
+
+      $path = this.get('$path')
+      $path.attr("path",pathstring);
+      this._syncAttrFromPath(path);
+      this.draw = this._drawDonut;
+      return this;
+    },
+    destroy:function(){
+      this.unbindEvent();
+      this.get('$path').remove();
+    }
+  })
+  return Sector;
+});
+// -*- coding: utf-8; -*-
+KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
+  var D = S.DOM
+
+  // helpers
+  function distance(a,b){
+    var x1,x2,y1,y2;
+    x1 = a[0],y1=a[1],x2=b[0],y2=b[1];
+    return Math.sqrt(Math.pow((x1-x2),2)+Math.pow((y1-y2),2));
+  }
+
+  function closest(list,i,least_n){
+    function rec(l,min,min_el,min_el_left){
+      if(least_n >= l.length){
+        return {min:min_el,left:min_el_left};
+      }else if(min > distance(i,l[0])){
+        var left = l.slice(1);
+        return rec(left,distance(i,l[0]),l[0],left);
+      }else{
+        return rec(l.slice(1),min,min_el,min_el_left);
+      }
+    }
+    return rec(list,Infinity,list[0],[])
+  }
+  function find(l1,l2){
+    function iter(l,s,acm){
+      if(l.length == 0){
+        return acm;
+      }else{
+        var ret = closest(s,l[0],l.length-1);
+        acm.push(ret.min);
+        return iter(l.slice(1),ret.left,acm);
+      }
+    }
+    return iter(l1,l2,[]);
+  }
+  // end
+
+  var $detector
+  function blockSizeOf(html){
+    $detector || ($detector = S.Node("<div/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
+    $detector.html(html);
+    return {
+      width:D.width($detector),
+      height:D.height($detector)
+    }
+  }
+
+  function Label(cfg){
+    this.set(cfg)
+    this.init();
+  }
+  S.extend(Label,S.Base,{
+    init:function(){
+      var $label = this.get('label')
+        , x = this.get('x')
+        , y = this.get('y')
+        , size = this.get('size')
+        , pie = this.get('pie')
+        , sector = this.get("sector")
+        , container = pie.get('container')
+
+      $label.css({"position":"absolute","left":x+'px',"top":y+'px',width:size.width+'px',"height":size.height+'px'}).appendTo(container);
+      this.set('el',$label)
+    },
+    destroy:function(){
+      this.get("el").remove();
+      this.get("$path").remove();
+    }
+  })
+  /**
+   * 分布策略：
+   * 自然分布
+   * 若空间不足，拓展空间
+   * */
+
+  function Labels(pie,$sectors,bool_left){
+    var paper = pie.get('paper')
+      , container = pie.get('container')
+      , count = $sectors.length
+      , paperHeight //画布高度
+      , pieHeight //饼图高度
+      , unitHeight //单条label的高度
+      , minLalebelHeight //排布label需要的最小高度
+      , fromY // 画label的上边界
+      , toY // 下边界
+      , xys = []
+      , xysr = []
+      , xysr2 = []
+      , cx = pie.get('cx')
+      , cy = pie.get('cy')
+      , rs = pie.get('rs')
+      , paddingDonutSize1 = pie.get("padding") || 20 // label 和 pie 之间的距离
+      , paddingDonutSize2 = paddingDonutSize1+10
+      , R
+      , R1
+      , R2
+      , cos = Math.cos
+      , sin = Math.sin
+      , asin = Math.asin
+      , pi = Math.PI
+      , rad = Math.PI/180
+      , $firstSector
+
+    this.labels = []
+    $firstSector = $sectors[0]
+
+    if(!$firstSector)return;
+
+    unitHeight = blockSizeOf($firstSector.get("label")).height
+    R = Math.max.apply(Math,rs)
+    R1 = R + paddingDonutSize1
+    R2 = R + paddingDonutSize2
+
+    fromY = cy - R2;
+    toY = cy + R2;
+    for(fromY+=unitHeight;fromY<toY-unitHeight;fromY+=unitHeight){
+      // x=a+rcosθ y=b+rsinθ
+      // (y-b)/r = sinθ
+      var y = fromY;
+      var t = Math.asin((y-cy)/R2);
+      var x = cx+R2*Math.cos(t);
+      x = bool_left ? (2*cx - x):x;
+      xys.push([x,y]);
+
+      // paper.circle(x,y,4);
+      // paper.circle(2*cx - x,y,4);
+    }
+    // 若不足以放下所有的label，剔除比例较小的
+
+    if($sectors.length>xys.length){
+      $sectors = $sectors.sort(function(a,b){
+                   var d1 = Math.abs(a.get("start") - a.get("end"))
+                     , d2 = Math.abs(b.get("start") - b.get("end"))
+                   return d1>d2 ? -1 : (d1<d2) ? 1 : 0;
+                 });
+      $sectors = $sectors.slice(0,xys.length);
+    }
+
+    $sectors = $sectors.sort(function(a,b){
+                 var ay = a.get("middley")
+                   , by = b.get("middley")
+                 // return [a.a, a.b] > [b.a, b.b] ? 1:-1;
+                 // return  [ay,ay] < [by,by];
+                 return ay<by ? 1 : ay>by ? -1 : 0;
+               });
+
+    var unitdeg = Math.PI/180;
+    S.each($sectors,function($sector){
+      var x = y = $sector.get("middlex")
+        , y = $sector.get("middley")
+        , theta = $sector.get("middleangle")*rad
+      // paper.circle(x12,y12,3);
+
+      var x12,y12;
+      x12 = cx+R1*Math.cos(-theta);
+      y12 = cy+R1*Math.sin(-theta);
+      xysr2.push([x12,y12]);
+
+      xysr.push([x,y]);
+      // paper.circle(x,y,2);
+    });
+
+    xysr = xysr.reverse();
+    xysr2 = xysr2.reverse();
+
+    $sectors = $sectors.reverse();
+
+    var bestxys = find(xysr,xys);
+
+    for(var i=0,l=bestxys.length;i<l;i++){
+      var pxy = xysr[i];
+      var pxy2 = bestxys[i];
+      var x1,x2,y1,y2;
+      x1 = pxy[0];
+      y1 = pxy[1];
+      x2 = pxy2[0];
+      y2 = pxy2[1];
+
+      var x12,y12;
+      x12 = xysr2[i][0],y12 = xysr2[i][1];
+
+      var x23,y23 = y2;
+      x23 = bool_left ? x2 - 10 : x2 + 10;
+      var path = paper.path(["M",x1,y1,"Q",x12,y12,x23,y23].join(","));
+
+      var $sector = $sectors[i]
+        , sizefn = pie.get("sizefn")
+        , label = $sector.get('label')
+        , size = blockSizeOf(label)
+        , x3 ,y3
+        , that = this
+        , pathcolor = $sector.get("$path").attr("fill")
+        , autoLabelPathColor = pie.get('autoLabelPathColor')
+
+      path && path.toBack && path.toBack();
+      (autoLabelPathColor != "undefined") && path.attr("stroke",pathcolor)
+
+      if(sizefn && S.isFunction(sizefn)){
+        size = sizefn(size,$sector,pie);
+      }
+
+      if(bool_left){
+        x3 = x23 - size.width
+        y3 = y23 - size.height/2
+      }else{
+        x3 = x23;
+        y3 = y23 - size.height/2;
+      }
+
+      var $label = S.Node("<div class='kcharts-label'>"+label+"</div>")
+
+      var labelInstance  = new Label({label:$label,sector:$sector,$path:path,x:x3,y:y3,size:size,pie:pie});
+      var $el = labelInstance.get('el');
+
+      var fn = function($el,$sector,labelInstance){
+        $el.on('click',function(e){
+          that.fire('click',{
+            el:e.currentTarget,
+            label:labelInstance,
+            sector:$sector
+          })
+        });
+      }
+      fn($el,$sector,labelInstance);
+
+      that.labels.push(labelInstance);
+    }
+  }
+  S.extend(Labels,S.Base,{
+    destroy:function(){
+      S.each(this.labels,function(label){
+        label.destroy();
+      });
+    }
+  })
+  Labels.getSizeOf = blockSizeOf
+  return Labels;
+})
+// -*- coding: utf-8; -*-
 KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,Labels,Raphael,Color){
   var D = S.DOM
     , E = S.Event
@@ -1306,6 +1137,8 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
     this.adjustCfg();
     // adjustData
     this.adjustData();
+    // 有标题则显示标题
+    this.drawTitle();
     if(cfg.autoRender != false){
       var that = this;
       //延迟渲染
@@ -1331,21 +1164,96 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       E.on(this.get("container"),"mouseleave",function(){
         this.fire("mouseleave");
       },this)
+      this.on("afterRender",this.onafterrender,this);
     },
     _setupcfg:setupcfg,
+    onafterrender:function(){
+      //只执行一次
+      if(this.legendrendered)return;
+      this.legendrendered = true;
+      var that = this,
+          paper,
+          container,
+          bbox
+      var config = this.get("legend")
+
+      if(config){
+        paper = this.get("paper")
+        container = this.get("container")
+
+        //bboxing
+        var rs = this.get("rs")
+          , rl = rs[rs.length-1]
+          , rpadding = this.get("rpadding") || 0
+          , padding = this.get("padding") || 0
+          , cx = this.get("cx")
+          , cy = this.get("cy")
+
+        var width = (rl+rpadding+padding)*2
+          , left = cx - width/2
+          , top = cy - width/2
+
+        bbox = {
+          width:width,
+          height:width,
+          left:left,
+          top:top
+        }
+
+        function buildparts(){
+          var $sectors = that.get("$sectors")
+            , ret
+          ret = S.map($sectors,function($sector){
+                  var el = $sector.get("$path")
+                    , fill = el.attr("fill")
+                    , framedata = $sector.get("framedata")
+                    , text = framedata.label
+                  return {color:fill,text:text,$path:el}
+                });
+          return ret;
+        }
+
+        S.use("gallery/kcharts/1.2/legend/index",function(S,Legend){
+          var parts = buildparts();
+          var dft = {
+            //legend需要的原始信息
+            paper:paper,
+            container:container,
+            bbox:bbox,//图表主体的信息
+            iconAttrHook:function(index){//每次绘制icon的时调用，返回icon的属性信息
+              return {
+                fill:parts[index].color
+              }
+            },
+            spanAttrHook:function(index){//每次绘制“文本描述”的时候调用，返回span的样式
+              var color = Raphael.getRGB(parts[index].color);
+              return {
+                color:color.hex
+              }
+            },
+            config:parts
+          }
+          var legend = new Legend(S.merge(dft,config));
+          that.set("legend",legend);
+          that.fire("afterLegendRender");
+        });
+      }
+    },
     //调整动画的配置
     adjustCfg:function(){
       var anim = this.get('anim')
         , that = this
         , _end = S.isFunction(anim.endframe) && anim.endframe
         , lablecfg = that.get("label")
-        anim.endframe = function(){
-          if(lablecfg != false){
-            that.drawLabel(lablecfg);
-          }
-          _end && _end.call(that);
-          that.fire('afterRender');
+      //若无动画配置则duration设置为0
+      anim || (anim = {duration:0});
+      anim.endframe = function(){
+        if(lablecfg != false){
+          that.drawLabel(lablecfg);
         }
+        _end && _end.call(that);
+        that.fire('afterRender');
+      }
     },
     /**
      * 过滤函数
@@ -1388,6 +1296,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
                    return !frame.hide;
                  })
       Util.adjustFrameData(groups,this);
+      var $labels = this.get("$labels")
+      S.each($labels,function(i){
+        i && i.destroy();
+      });
       this.animate(framedata);
     },
     /**
@@ -1402,7 +1314,15 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , rpadding = this.get("rpadding")
         , cx = this.get("cx")
         , cy = this.get("cy")
-        , cx1 = w/2 ,cy1 = h/2
+        , cx1 , cy1
+
+      cx1= w/2 ,cy1 = h/2;
+
+      //考虑title带来的影响
+      var titlebbox = this.get("titlebbox")
+      if(titlebbox){
+        cy1+=titlebbox.height;
+      }
 
       var attrs = {"width":w,"height":h};
       this.set(attrs);
@@ -1418,6 +1338,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         d = min - rpadding;
       }else{
         d = min;
+      }
+
+      if(titlebbox){
+        d -= titlebbox.height;
       }
 
       //如果要画面包圈
@@ -1450,6 +1374,42 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       that.fire("beginRender");
       this.animateInstance = Animate.AnimateObject(framedata,anim);
     },
+    drawTitle:function(){
+      var titleconfig = this.get("title")
+        , title
+        , offset
+        , align
+
+      if(title){
+        title = titleconfig.content
+        offset = titleconfig.offset || [0,10]
+        align = titleconfig.align || "center"
+
+        var size = Labels.getSizeOf(title)
+          , container = this.get("container")
+          , w = D.width(container)
+          , h = D.height(container)
+          , left, top
+        if(align == "left"){
+          left = 0;
+        }else if(align == "right"){
+          left = w - size.width;
+        }else{//center
+          left = (w - size.width)/2 + offset[0]
+        }
+        top = offset[1];
+        var $title = S.Node("<div>"+title+"</div>");
+        $title.css({"top":top+"px","left":left+"px","position":"absolute"});
+        this.set("title",$title);
+        this.set("titlebbox",{
+          left:left,
+          top:top,
+          width:size.width,
+          height:size.height
+        });
+        $title.appendTo(container);
+      }
+    },
     /**
      * 绘制外层label
      * */
@@ -1465,19 +1425,22 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
           , groupLength = $sector.get("groupLength")
           , groupIndex = $sector.get("groupIndex")
           , isright = Util.isRightAngel(ma)
-
-        if(S.indexOf(groupLength-1,groupIndex) > -1){
-          if(isright){
-            rightSectors.push($sector);
+          , framedata = $sector.get("framedata")
+        //如果隐藏了，那么也不展示对应的label
+        if(!framedata.hide){
+          if(S.indexOf(groupLength-1,groupIndex) > -1){
+            if(isright){
+              rightSectors.push($sector);
+            }else{
+              $sector.set("isleft",true);
+              leftSectors.push($sector);
+            }
           }else{
-            $sector.set("isleft",true);
-            leftSectors.push($sector);
-          }
-        }else{
-          if(isright){
-            $sector.set("isright",true);
-          }else{
-            $sector.set("isleft",true);
+            if(isright){
+              $sector.set("isright",true);
+            }else{
+              $sector.set("isleft",true);
+            }
           }
         }
       });
@@ -1493,7 +1456,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
      * 绘制内部label，需配置
      * */
     drawSetLabel:function(){
-
     },
     onLabelClick:function(e){
       this.fire('labelclick',{
@@ -1522,11 +1484,12 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
       this.set("$labels",null);
       this.get("paper").remove();
     }
-  })
+  });
 
   Pie.getSizeOf =  Labels.getSizeOf
 
   return Pie;
 },{
-  requires:["gallery/kcharts/1.2/piechart/util","gallery/kcharts/1.2/piechart/sector","gallery/kcharts/1.2/piechart/animation","gallery/kcharts/1.2/piechart/label","gallery/kcharts/1.1/raphael/index","gallery/kcharts/1.1/tools/color/index"]
+  requires:["./util","./sector","gallery/kcharts/1.2/animate/index","./label","gallery/kcharts/1.1/raphael/index","gallery/kcharts/1.1/tools/color/index"]
 });
+

@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, HtmlPaper, Legend, Tip, Theme, MapData) {
+KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, HtmlPaper, Tip, Theme, MapData) {
     var $ = S.all,
         Event = S.Event;
 
@@ -449,11 +449,10 @@ KISSY.add("gallery/kcharts/1.1/mapchart/index", function (S, Raphael, Color, Htm
 
     return MapChart;
 }, {requires:[
-    '../raphael/index',
-    '../tools/color/index',
-    '../tools/htmlpaper/index',
-    '../legend/index',
-    '../tip/index',
+    'gallery/kcharts/1.2/raphael/index',
+    'gallery/kcharts/1.2/tools/color/index',
+    'gallery/kcharts/1.2/tools/htmlpaper/index',
+    'gallery/kcharts/1.2/tip/index',
     './theme',
     './mapdata']
    });

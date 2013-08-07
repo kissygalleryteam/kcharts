@@ -1,5 +1,11 @@
+/*
+combined files : 
+
+gallery/kcharts/1.2/animate/index
+
+*/
 // -*- coding: utf-8; -*-
-KISSY.add('gallery/kcharts/1.2/piechart/animation',function(S,Anim){
+KISSY.add('gallery/kcharts/1.2/animate/index',function(S,Anim){
   var Easing = Anim.Easing
     , requestAnimFrame = window.requestAnimationFrame       ||
                          window.webkitRequestAnimationFrame ||
@@ -141,7 +147,7 @@ KISSY.add('gallery/kcharts/1.2/piechart/animation',function(S,Anim){
             , index = map[x][2]
             , from = p.from
           from[attrname] = props[x];
-          p.frame && p.frame(attrname,props[x],props,index,len,p);
+          p.frame && p.frame(attrname,props[x],props,index,len);
         }
       },
       endframe:function(props,t){

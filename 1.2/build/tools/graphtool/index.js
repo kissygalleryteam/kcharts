@@ -1,4 +1,10 @@
-;//简单图形绘制的工具
+/*
+combined files : 
+
+gallery/kcharts/1.2/tools/graphtool/index
+
+*/
+//简单图形绘制的工具
 ;KISSY.add("gallery/kcharts/1.2/tools/graphtool/index",function(S,Raphael){
 
 	var sqrt = Math.sqrt;
@@ -44,4 +50,4 @@
 	});
 
 	return graphTool;
-},{requires:['gallery/kcharts/1.1/raphael/index']});
+},{requires:['gallery/kcharts/1.2/raphael/index']});

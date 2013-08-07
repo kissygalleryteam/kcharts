@@ -1,4 +1,10 @@
-;/**
+/*
+combined files : 
+
+gallery/kcharts/1.2/tools/htmlpaper/index
+
+*/
+/**
 	基于html 画图形
 **/
 KISSY.add('gallery/kcharts/1.2/tools/htmlpaper/index',function(S){
