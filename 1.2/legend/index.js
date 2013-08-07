@@ -224,7 +224,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var text_total_width = 0
         , cache = []
       S.each(config,function(item,key){
-        var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
+        var text = item.text || "data"+key;
+        var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
         var text_size = sizeof($text);
         text_total_width+=text_size.width;
         cache.push({el:$text,width:text_size.width,height:text_size.height,zIndex:10,cursor:"pointer"});
@@ -290,7 +291,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         }
         $icon.attr(oo);
 
-        var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
+        var text = item.text || "data"+key;
+        var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
         var text_size = sizeof($text)
           , left , top
 
@@ -391,7 +393,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         , interval = globalConfig.interval
 
       $icon.remove();
-      var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
+      var text = item.text || "data";
+      var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
       var text_size = sizeof($text)
       var max_height = Math.max(text_size.height,ibbox.height)
       total_height += max_height*len + interval*(len-1)
