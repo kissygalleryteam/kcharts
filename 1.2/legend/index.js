@@ -175,7 +175,9 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
 				ret = GraphTool.triangle(paper,cx,cy+1,size);
 				break;
 				case "rhomb":
-        size || (size = [8,8]);
+        if(!S.isArray(size)){
+          size = [size,size];
+        }
 				ret = GraphTool.rhomb(paper,cx,cy,size[0],size[1]);
 				break;
 				case "square":
@@ -281,7 +283,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         var cx = x
           , cy = y
         cx += DIFF;
-        var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
+
+        var $icon = that.icon(cx,cy,item.iconsize || alignconfig.iconsize,item.icontype || alignconfig.icontype)
           , ibbox = $icon.getBBox()
         var attr = {};
         S.mix(attr,item,true,["DEFAULT","HOVER"]);
@@ -457,7 +460,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           cy = y+offset[1];
         }
         cy+=DIFF;
-        var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
+        var $icon = that.icon(cx,cy,item.iconsize || alignconfig.iconsize,item.icontype || alignconfig.icontype)
           , ibbox = $icon.getBBox()
           , cache_item = cache[key];
         var attr = {};
@@ -471,7 +474,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
 
         var $text = cache_item['el']
           , left
-          , top
+          , top;
         if(!reverse){
           left = x + offset[0] - text_max_width + alignconfig.iconright
           top = y - (ibbox.height/2 + (cache_item.height - ibbox.height)/2 ) + offset[1];
