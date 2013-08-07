@@ -38,7 +38,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
 
   var $detector
   function blockSizeOf(html){
-    $detector || ($detector = S.Node("<div/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
+    $detector || ($detector = S.Node("<span/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
     $detector.html(html);
     return {
       width:D.width($detector),
@@ -208,7 +208,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
         y3 = y23 - size.height/2;
       }
 
-      var $label = S.Node("<div class='kcharts-label'>"+label+"</div>")
+      var $label = S.Node("<span class='kcharts-label'>"+label+"</span>")
 
       var labelInstance  = new Label({label:$label,sector:$sector,$path:path,x:x3,y:y3,size:size,pie:pie});
       var $el = labelInstance.get('el');
