@@ -187,11 +187,17 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
       var $sector = $sectors[i]
         , sizefn = pie.get("sizefn")
         , label = $sector.get('label')
-        , size = blockSizeOf(label)
+        , labelfn = pie.get('labelfn')
+        , size
         , x3 ,y3
         , that = this
         , pathcolor = $sector.get("$path").attr("fill")
         , autoLabelPathColor = pie.get('autoLabelPathColor')
+
+      if(labelfn && S.isFunction(labelfn)){
+        label = labelfn(label,$sector,pie);
+      }
+      size = blockSizeOf(label)
 
       path && path.toBack && path.toBack();
       (autoLabelPathColor != "undefined") && path.attr("stroke",pathcolor)

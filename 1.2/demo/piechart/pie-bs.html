@@ -7,8 +7,8 @@
 		<title>chart test</title>
 <style type="text/css" media="screen">
 	.pi-con{
-			border:1px solid #999;width:800px;height:800px;margin:10px 0 0 10px;
-			float:left;
+			border:1px solid #999;width:500px;height:500px;margin:10px 0 0 10px;
+			float:left;margin-left:100px;
 	}
 	.clear-both{
 			clear:both;
@@ -123,12 +123,11 @@ KISSY.use('gallery/kcharts/1.2/piechart/index,gallery/kcharts/1.1/tip/index', fu
         var cfg = {
             data: data,
             renderTo: "#J_Pie1",
-            cx: 400,
-            cy: 400,
-            rs: [150, 200],
+            rs: [100, 160],
             labelfn: function (txt, sector, pie) {
                 var framedata = sector.get("framedata"),
                     percent = (framedata.percent * 100).toFixed(2) + "%"
+                    console.log(percent);
                 return txt + ":<span class='kcharts-donut-percent'>" + percent + "</span>";
             },
             sizefn: function (size, sector, pie) {
@@ -138,7 +137,7 @@ KISSY.use('gallery/kcharts/1.2/piechart/index,gallery/kcharts/1.1/tip/index', fu
                 }
             },
             interval: 5,
-            padding: 50, //label和pie之间的距离
+            padding: 20, //label和pie之间的距离
             anim: {
                 easing: 'swing',
                 duration: 800
@@ -167,7 +166,7 @@ KISSY.use('gallery/kcharts/1.2/piechart/index,gallery/kcharts/1.1/tip/index', fu
                 middleangle = sector.get('middleangle') //角平分线
                 ,
                 angel = middleangle * Math.PI / 180,
-                unit = 30 //点击后，向外偏移的距离
+                unit = 10 //点击后，向外偏移的距离
                 ,
                 x = unit * Math.cos(angel),
                 y = -unit * Math.sin(angel)
