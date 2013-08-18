@@ -115,6 +115,14 @@ KISSY.add("gallery/kcharts/1.2/icons/index", function(S){
       }
     })(_Icons[x]);
   };
+  Icons.BASIC = BASIC_SIZE;
   return Icons;
 });
+
+
+
+
+
+
+
 

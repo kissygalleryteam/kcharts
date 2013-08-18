@@ -225,14 +225,16 @@ KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
       var con = this.get("container")
         , bbox = this.getBBox()
         , legend = this.get("legend") || {}
-        , globalConfig
-      globalConfig = merge({
+
+      var globalConfig = merge({
         interval:20,//legend之间的间隔
         iconright:5,//icon后面的空白
         showicon:true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
-      },legend.globalConfig);
+      },legend.globalConfig)
 
-     var $legend = new Legend({
+      delete legend.globalConfig;
+
+      var $legend = new Legend(merge({
         container:con,
         paper:this.get("paper"),
         bbox:bbox,
@@ -240,7 +242,8 @@ KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
         offset:legend.offset || [0,20],
         globalConfig:globalConfig,
         config:lineprops
-      });
+      },legend));
+
       $legend.on("click",function(e){
         if(this.isRunning()){
           return;

@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
     var widgets = [
-        'animate', 'barchart', 'basechart', 'datetime', 'legend', 'linechart', 'mapchart', 'piechart', 'radar', 'raphael', 'scatterchart', 'thermometer', 'tip', 'tools/color', 'tools/graphtool', 'tools/htmlpaper', 'tools/touch'
+        'animate', 'barchart', 'basechart', 'datetime', 'legend', 'linechart', 'mapchart', 'piechart', 'radar', 'raphael', 'scatterchart', 'thermometer', 'tip',"radar","icons", 'tools/color', 'tools/graphtool', 'tools/htmlpaper', 'tools/touch'
     ];
     //kmc的文件队列
     var kmcFiles = (function() {
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         }
         return tmp;
     })();
-    
+
     var uglifyFiles = (function(){
         var tmp = {};
         for (var i = 0; i < widgets.length; i++) {

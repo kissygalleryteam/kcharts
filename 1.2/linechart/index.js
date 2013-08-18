@@ -810,13 +810,14 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				                  item.HOVER = color.HOVER;
                           var type = stocks[i].type;
 				                  item.icontype = type;
-                          if(type == "circle"){
-                            item.iconsize = 4;
-                          }else if(type == "square"){
-                            item.iconsize = 10;
-                          }else if(type == "triangle"){
-                            item.iconsize = 5;
-                          }
+                                item.iconsize = [1,1];
+                          // if(type == "circle"){
+                          //   item.iconsize = 4;
+                          // }else if(type == "square"){
+                          //   item.iconsize = 10;
+                          // }else if(type == "triangle"){
+                          //   item.iconsize = 5;
+                          // }
 				                  return item;
 			                  });
 
