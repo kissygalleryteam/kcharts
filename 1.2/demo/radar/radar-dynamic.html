@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
-	<title>chart test</title>
+	<title>动态变化的radar</title>
 	<style type="text/css" media="screen">
 	 .radar-con{border:1px solid #ccc;width:300px;height:300px;}
 	</style>
@@ -29,6 +29,10 @@
          renderTo:"#J_Radar",
          width:300, // 画布尺寸
          height:300,
+         cx:150,
+         cy:150,
+         r:80,
+		 max:10,
 		 labels:["Offense", "Defense", "Technique", "Strategy", "Physicality", "Mentality"],
 		 scoreGroups:[
 		   {title: "Real Madrid C.F.", scores: [ 8, 9, 7, 9, 7, 6]},
@@ -36,6 +40,12 @@
 		 ],
          options:{}
 	   });
+
+       setTimeout(function(){
+         var scoreGroups = radar.get("scoreGroups");
+         scoreGroups[0].scores = [ 8, 6, 6, 7, 5, 6];
+         radar.render();
+       },2000);
 	 })
 	</script>
   </body>
