@@ -828,6 +828,7 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 
 			self.legend = new Legend({
 				container: container,
+                papper:self.paper,
 				bbox: {
 					width: innerContainer.width,
 					height: innerContainer.height,
