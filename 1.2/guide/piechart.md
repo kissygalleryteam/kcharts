@@ -26,7 +26,7 @@
   color:"#78a5da",
   sectorcfg:{
     "stroke":"yellow", // 扇形边框颜色
-	"storke-width":2   // 扇形边框宽度
+	"stroke-width":2   // 扇形边框宽度
   },
   label:"Trident",
   data:3
@@ -52,7 +52,6 @@ label生成函数
       labelfn:function(txt,sector,pie){
         var framedata = sector.get("framedata")
           , percent = (framedata.percent*100).toFixed(2)+"%"
-
         return txt+":<span class='kcharts-donut-percent'>"+percent+"</span>";
       }
 ```

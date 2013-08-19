@@ -36,7 +36,7 @@ KISSY.use("gallery/kcharts/1.2/piechart/index", function (S, Pie) {
 				offset: [45, 0],
 				globalConfig: {
 					icontype: "circle",
-          iconsize:5,
+                    iconsize:[1,1],
 					interval: 20, //legend之间的间隔
 					iconright: 4, //icon后面的空白
 					showicon: true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
@@ -49,7 +49,7 @@ KISSY.use("gallery/kcharts/1.2/piechart/index", function (S, Pie) {
           // }
           if(index>2){
             config.icontype = "triangle";
-            config.iconsize = 6;
+            config.iconsize = [2,2];
             config.iconright = 0;
           }
           return config;
