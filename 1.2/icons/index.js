@@ -91,7 +91,8 @@ KISSY.add("gallery/kcharts/1.2/icons/index", function(S){
   },
           Icons = {};
   for(var x in _Icons){
-    (function(shape){
+    (function(x){
+      var shape = _Icons[x];
       Icons[x] = function(cx,cy,opt){
         var ret = shape.call(_Icons,cx,cy,opt);
         if(opt.size){
@@ -113,7 +114,7 @@ KISSY.add("gallery/kcharts/1.2/icons/index", function(S){
         _item.attr(S.merge({"stroke-width":0},opt.attrs));
         return ret;
       }
-    })(_Icons[x]);
+    })(x);
   };
   Icons.BASIC = BASIC_SIZE;
   return Icons;

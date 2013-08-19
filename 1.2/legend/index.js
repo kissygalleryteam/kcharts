@@ -32,7 +32,6 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
     var els = this.el
       , $icon = els.icon
       , $text = els.des
-    //console.log(attrname,value,props,index,len);
     if(attrname === "cy"){
       $icon.transform("t0,"+value);
     }else if(attrname === "top"){
@@ -57,7 +56,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
         style = {
           icon:{
             "stroke":"#ccc",
-            "fill":"#eee"
+            "fill":"#ccc"
           },
           text:{
             "color":"#ccc"
@@ -78,7 +77,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
     var o = legend.get("enablestyle"),
         style = {
           icon:{
-            "stroke":"#333",
+            "stroke":item.DEFAULT,
             "fill":item.DEFAULT
           },
           text:{
@@ -181,6 +180,12 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
           size:_size
         });
 		break;
+		case "linetriangle":
+		ret = Icons.linetriangle(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
         case "rhomb":
 		case "diamon":
 		ret = Icons.diamond(cx,cy,{
@@ -188,14 +193,33 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
           size:_size
         });
 		break;
+        case "linerhomb":
+        case "linediamond":
+		ret = Icons.linediamond(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+        break;
 		case "square":
 		ret = Icons.square(cx,cy,{
           paper:paper,
           size:_size
         });
 		break;
+		case "linesquare":
+		ret = Icons.linesquare(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+		case "linecircle":
+		ret = Icons.linecircle(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
 		default:
-		ret = Icons.square(cx,cy,{
+		ret = Icons.circle(cx,cy,{
           paper:paper,
           size:_size
         });
@@ -304,6 +328,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
         if(attrhook){
           oo = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
         }
+        oo.stroke = oo.fill;
         $icon.attr(oo);
 
         var text = item.text || "data"+key;
@@ -488,7 +513,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
         if(attrhook){
           oo = S.merge(oo,attrhook.call(that,key));
         }
-
+        oo.stroke = oo.fill;
         $icon.attr(oo);
 
         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>')//cache_item['el']

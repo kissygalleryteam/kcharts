@@ -809,7 +809,7 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				                  item.DEFAULT = color.DEFAULT;
 				                  item.HOVER = color.HOVER;
                           var type = stocks[i].type;
-				                  item.icontype = type;
+				                  item.icontype = "line"+type;
                                 item.iconsize = [1,1];
                           // if(type == "circle"){
                           //   item.iconsize = 4;
