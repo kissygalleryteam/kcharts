@@ -231,20 +231,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
     end = start - value
     this.el.set("start",start);
     this.el.set("end",end);
-
-    // if(index == len-1){
-    //   next = this.next
-    //   var eend = next.el.get("end")
-    //     , sstart = next.el.get("start")
-    //     , diff = end - sstart
-    //   debugger;
-    //   // if(diff>0){
-    //   // console.log(end%360);
-    //   // console.log((eend+diff)%360);
-    //     next.el.set("end",eend+diff)
-    //     next.el.set("start",end);
-    //   // }
-    // }
   }
   /**
    * 计算group中各个分部的百分比
@@ -308,7 +294,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
         if(donut && l==1){
           r = [rs[0],rs[1]]
         }
-
         f.el = new Sector(paper,cx,cy,r,initdeg,initdeg-1,pathcfg,f);
 
         $path = f.el.get("$path")

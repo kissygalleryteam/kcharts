@@ -53,7 +53,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
     var rad = Math.PI / 180,
         angel= (startAngle + endAngle)/ 2,
         middlex = cx + r2 * Math.cos(-angel * rad),
-        scx = cx + .5*(r1+r2) * Math.cos(-angel * rad)*.5,
+        scx = cx + (r1 + .5*(r2-r1)) * Math.cos(-angel * rad),
         x = cx + r1 * Math.cos(-angel * rad),
         x1 = cx + r1 * Math.cos(-startAngle * rad),
         x2 = cx + r1 * Math.cos(-endAngle * rad),
@@ -61,7 +61,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
         _x2 = cx + r2 * Math.cos(-endAngle * rad),
 
         middley = cy + r2 * Math.sin(-angel * rad),
-        scy = cy + .5*(r1+r2) * Math.sin(-angel * rad)*.5,
+        scy = cy + (r1 + .5*(r2-r1)) * Math.sin(-angel * rad),
         y = cy + r1 * Math.sin(-angel * rad),
         y1 = cy + r1 * Math.sin(-startAngle * rad),
         y2 = cy + r1 * Math.sin(-endAngle * rad),
@@ -195,6 +195,9 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
         , start = this.get('start')
         , end = this.get('end')
         , $path
+
+      r = r.sort(function(a,b){return a<b ? -1: a==b? 0 : 1;});
+
       var path = donut(cx,cy,r[0],r[1],start,end)
         , pathstring = path.join(',')
         , paper = this.get('paper')

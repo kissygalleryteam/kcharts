@@ -48,12 +48,14 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
 
     //如果要画面包圈
     if(cfg.donut){
-      cfg.donutSize || (cfg.donutSize = 30);
-      if(cfg.donutSize>cfg.rs[0]){
-        //设为半径的一半
-        cfg.donutSize = cfg.rs[0]/2;
+      if(cfg.rs.length != 2){
+        cfg.donutSize || (cfg.donutSize = 30);
+        if(cfg.donutSize>cfg.rs[0]){
+          //设为半径的一半
+          cfg.donutSize = cfg.rs[0]/2;
+        }
+        cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
       }
-      cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
     }
   }
 
@@ -218,7 +220,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         var data = this.get('data')
           , ret
         ret = Util.filterdata(data,fn)
-        // console.log(JSON.stringify(ret));
         this.set("data",ret);
       }
     },
@@ -333,8 +334,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , title
         , offset
         , align
-
-      if(title){
+      if(titleconfig){
         title = titleconfig.content
         offset = titleconfig.offset || [0,10]
         align = titleconfig.align || "center"
