@@ -308,7 +308,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
         if(donut && l==1){
           r = [rs[0],rs[1]]
         }
-
         f.el = new Sector(paper,cx,cy,r,initdeg,initdeg-1,pathcfg,f);
 
         $path = f.el.get("$path")
