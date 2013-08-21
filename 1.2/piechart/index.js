@@ -334,8 +334,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , title
         , offset
         , align
-
-      if(title){
+      if(titleconfig){
         title = titleconfig.content
         offset = titleconfig.offset || [0,10]
         align = titleconfig.align || "center"
