@@ -220,7 +220,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         var data = this.get('data')
           , ret
         ret = Util.filterdata(data,fn)
-        // console.log(JSON.stringify(ret));
         this.set("data",ret);
       }
     },
