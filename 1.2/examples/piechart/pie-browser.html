@@ -39,10 +39,10 @@
 				}]
 			});
 		</script>
-	<script type="text/javascript" src="../../piechart/src/animation.js"></script>
-	<script type="text/javascript" src="../../piechart/src/util.js"></script>
-	<script type="text/javascript" src="../../piechart/src/sector.js"></script>
-	<script type="text/javascript" src="../../piechart/src/label.js"></script>
+	<script type="text/javascript" src="../../animate/index.js"></script>
+	<script type="text/javascript" src="../../piechart/util.js"></script>
+	<script type="text/javascript" src="../../piechart/sector.js"></script>
+	<script type="text/javascript" src="../../piechart/label.js"></script>
 	<script type="text/javascript" src="../../piechart/index.js"></script>
 	<script type="text/javascript">
 	 KISSY.use('gallery/kcharts/1.2/piechart/index,gallery/kcharts/1.1/tip/index',function(S,Pie,Tip){
@@ -139,7 +139,7 @@
 				 labelfn:function(txt,sector,pie){
 					 var framedata = sector.get("framedata")
 						 , percent = (framedata.percent*100).toFixed(2)+"%"
-
+	 console.log(txt);
 					 return txt+":<span class='kcharts-donut-percent'>"+percent+"</span>";
 				 },
 				 sizefn:function(size,sector,pie){
