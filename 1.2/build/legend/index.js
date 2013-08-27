@@ -5,7 +5,11 @@ gallery/kcharts/1.2/legend/index
 
 */
 // -*- coding: utf-8-unix; -*-
-KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation){
+KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
+  var merge = S.merge;
+
+  var unit = Icons.BASIC[1];
+
   var win = window
     , Raphael = win.Raphael
 
@@ -24,17 +28,16 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
   }
 
   var dft = {
-      offset:[0,0],
-      globalConfig:{
-        interval:5
-      }
+    offset:[0,0],
+    globalConfig:{
+      interval:5
+    }
   }
   //动画帧处理器:由下往上
   function onframeB2T(attrname,value,props,index,len){
     var els = this.el
       , $icon = els.icon
       , $text = els.des
-    //console.log(attrname,value,props,index,len);
     if(attrname === "cy"){
       $icon.transform("t0,"+value);
     }else if(attrname === "top"){
@@ -59,7 +62,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         style = {
           icon:{
             "stroke":"#ccc",
-            "fill":"#eee"
+            "fill":"#ccc"
           },
           text:{
             "color":"#ccc"
@@ -80,7 +83,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
     var o = legend.get("enablestyle"),
         style = {
           icon:{
-            "stroke":"#333",
+            "stroke":item.DEFAULT,
             "fill":item.DEFAULT
           },
           text:{
@@ -174,42 +177,76 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
     //返回一个icon
     icon:function(cx,cy,size,type){
       var paper = this.get("paper")
-        , ret;
+        , ret
+        , _size = size;
       switch(type){
-				case "triangle":
-        size || (size = 5);
-				ret = GraphTool.triangle(paper,cx,cy+1,size);
-				break;
-				case "rhomb":
-        size || (size = [8,8]);
-				ret = GraphTool.rhomb(paper,cx,cy,size[0],size[1]);
-				break;
-				case "square":
-        size || (size = 8);
-				//菱形旋转45度
-				ret = GraphTool.rhomb(paper,cx,cy,size,size,45);
-				break;
-				default:
-        size || (size = 5);
-				ret = paper.circle(cx,cy,size);
-				break;
-			}
+		case "triangle":
+		ret = Icons.triangle(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+		case "linetriangle":
+		ret = Icons.linetriangle(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+        case "rhomb":
+		case "diamon":
+		ret = Icons.diamond(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+        case "linerhomb":
+        case "linediamond":
+		ret = Icons.linediamond(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+        break;
+		case "square":
+		ret = Icons.square(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+		case "linesquare":
+		ret = Icons.linesquare(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+		case "linecircle":
+		ret = Icons.linecircle(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+		default:
+		ret = Icons.circle(cx,cy,{
+          paper:paper,
+          size:_size
+        });
+		break;
+	  }
       return ret;
     },
     align:function(align_mode){//vertical or horizonal
       var algrithms = {
-          "tl":"alignTopLeft",
-          "tc":"alignTopCenter",
-          "tr":"alignTopRight",
-          "rt":"alignRightTop",
-          "rm":"alignRightMiddle",
-          "rb":"alignRightBottom",
-          "bl":"alignBottomLeft",
-          "bc":"alignBottomCenter",
-          "br":"alignBottomRight",
-          "lt":"alignLeftTop",
-          "lm":"alignLeftMiddle",
-          "lb":"alignLeftBottom"
+        "tl":"alignTopLeft",
+        "tc":"alignTopCenter",
+        "tr":"alignTopRight",
+        "rt":"alignRightTop",
+        "rm":"alignRightMiddle",
+        "rb":"alignRightBottom",
+        "bl":"alignBottomLeft",
+        "bc":"alignBottomCenter",
+        "br":"alignBottomRight",
+        "lt":"alignLeftTop",
+        "lm":"alignLeftMiddle",
+        "lb":"alignLeftBottom"
       };
       var align_algrithm = algrithms[align_mode] || "alignRight";
       this[align_algrithm]();
@@ -223,14 +260,16 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         , config = this.get("config")
         , globalConfig = this.get("globalConfig")
         , that = this
-        , iconsize = globalConfig.iconsize || 6
+        , $iconsize = globalConfig.iconsize || [1,1]
+        , iconsize = $iconsize*unit || 6
         , icontype = globalConfig.icontype
 
       //文案宽度
       var text_total_width = 0
         , cache = []
       S.each(config,function(item,key){
-        var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
+        var text = item.text || "data"+key;
+        var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
         var text_size = sizeof($text);
         text_total_width+=text_size.width;
         cache.push({el:$text,width:text_size.width,height:text_size.height,zIndex:10,cursor:"pointer"});
@@ -239,7 +278,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var total_width = text_total_width
         , cache_icon = []
 
-      var $icon = that.icon(-9999,9999,iconsize,icontype)
+      var $icon = that.icon(-9999,9999,$iconsize,icontype)
         , ibbox = $icon.getBBox()
         , iconright = globalConfig.iconright || 0
         , interval = globalConfig.interval||0
@@ -274,9 +313,9 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var DIFF = anim ? D.width($container) : 0;
 
       var alignconfig = {
-          icontype:icontype,
-          iconsize:iconsize,
-          iconright:iconright
+        icontype:icontype,
+        iconsize:iconsize,
+        iconright:iconright
       };
 
       S.each(config,function(item,key){
@@ -286,7 +325,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         var cx = x
           , cy = y
         cx += DIFF;
-        var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
+
+        var $icon = that.icon(cx,cy,$iconsize,item.icontype || alignconfig.icontype)
           , ibbox = $icon.getBBox()
         var attr = {};
         S.mix(attr,item,true,["DEFAULT","HOVER"]);
@@ -294,11 +334,15 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         if(attrhook){
           oo = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
         }
+        oo.stroke = oo.fill;
         $icon.attr(oo);
 
-        var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
+        var text = item.text || "data"+key;
+        var $text = D.create('<span class="kcharts-legend-item"></span>');
+        D.html($text,text);
         var text_size = sizeof($text)
           , left , top
+        $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
 
         left = x+alignconfig.iconsize+alignconfig.iconright
         top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 );
@@ -384,20 +428,23 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         , config = this.get("config")
         , globalConfig = this.get("globalConfig")
         , that = this
-        , iconsize = globalConfig.iconsize || 6
+        , $iconsize = globalConfig.iconsize || [1,1]
+        , iconsize = $iconsize*unit || 6
         , icontype = globalConfig.icontype
 
       var total_height = 0
       var item = config[0]
 
-      var $icon = that.icon(-9999,-9999,iconsize,icontype)
+      var $icon = that.icon(-9999,-9999,$iconsize,icontype)
         , ibbox = $icon.getBBox()
         , len = config.length
         , iconright = globalConfig.iconright || 0
         , interval = globalConfig.interval
 
       $icon.remove();
-      var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
+
+      var text = item.text || "data";
+      var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
       var text_size = sizeof($text)
       var max_height = Math.max(text_size.height,ibbox.height)
       total_height += max_height*len + interval*(len-1)
@@ -410,12 +457,16 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       S.each(config,function(item,key){
         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
         var text_size = sizeof($text)
+        var text = item.text || "data"+key;
+
         if(text_max_width < text_size.width){
           text_max_width = text_size.width;
         }
         cache.push({el:$text,width:text_size.width,height:text_size.height});
       });
+
       text_max_width += iconright;
+
       if(!reverse){
         x0 = bbox.left + offset[0]
         y0 = bbox.top + offset[1]
@@ -442,9 +493,8 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
       var DIFF = anim ? D.height($container) : 0;
 
       var alignconfig = {
-          icontype:icontype,
-          iconsize:iconsize,
-          iconright:iconright
+        icontype:icontype,
+        iconright:iconright
       };
 
       S.each(config,function(item,key){
@@ -460,7 +510,7 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
           cy = y+offset[1];
         }
         cy+=DIFF;
-        var $icon = that.icon(cx,cy,alignconfig.iconsize,alignconfig.icontype)
+        var $icon = that.icon(cx,cy,$iconsize ,item.icontype || alignconfig.icontype)
           , ibbox = $icon.getBBox()
           , cache_item = cache[key];
         var attr = {};
@@ -469,17 +519,17 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
         if(attrhook){
           oo = S.merge(oo,attrhook.call(that,key));
         }
-
+        oo.stroke = oo.fill;
         $icon.attr(oo);
 
-        var $text = cache_item['el']
+        var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>')//cache_item['el']
           , left
-          , top
+          , top;
         if(!reverse){
           left = x + offset[0] - text_max_width + alignconfig.iconright
           top = y - (ibbox.height/2 + (cache_item.height - ibbox.height)/2 ) + offset[1];
         }else{
-          left = x+alignconfig.iconsize+ibbox.width+offset[0];
+          left = x+iconsize+ibbox.width+offset[0];
           top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 ) + offset[1];
         }
         top+=DIFF;
@@ -539,6 +589,12 @@ KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,GraphTool,Animation)
   });
   return Legend;
 },{
-  requires:["dom","event","gallery/kcharts/1.2/tools/graphtool/index","gallery/kcharts/1.2/animate/index"]
+  requires:[
+    "dom","event",
+    "gallery/kcharts/1.2/icons/index",
+    // "gallery/kcharts/1.2/tools/graphtool/index",
+    "gallery/kcharts/1.2/animate/index",
+    "gallery/kcharts/1.2/raphael/index"
+  ]
 });
 

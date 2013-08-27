@@ -34,9 +34,8 @@ gallery/kcharts/1.2/tools/graphtool/index
 				[x,y - 0 + h/2].join(","),
 				[x - w/2,y].join(","),
 				"Z"
-			].join(" "),
+			].join(","),
 			el;
-
 		if(paper && paper.path){
 			el = paper.path(path).attr({cx:x,cy:y});	//伪造中心点
 			el.rotate(deg,x,y);
