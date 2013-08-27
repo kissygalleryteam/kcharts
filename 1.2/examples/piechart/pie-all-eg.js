@@ -90,7 +90,7 @@ KISSY.use("gallery/kcharts/1.2/piechart/index,promise,gallery/kcharts/1.1/tip/in
 	  renderTo:"#J_Pie2",
 	  cx:150,cy:150,
       donut:true,
-	  rs:[80,100],
+	  rs:[50,80],
 	  interval:5,
 	  anim:{
 		easing:'swing',

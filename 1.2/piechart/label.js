@@ -147,11 +147,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
 
     var unitdeg = Math.PI/180;
     S.each($sectors,function($sector){
-      var x = y = $sector.get("middlex")
+      var x = $sector.get("middlex")
         , y = $sector.get("middley")
         , theta = $sector.get("middleangle")*rad
       // paper.circle(x12,y12,3);
-
       var x12,y12;
       x12 = cx+R1*Math.cos(-theta);
       y12 = cy+R1*Math.sin(-theta);
