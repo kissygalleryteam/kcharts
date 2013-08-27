@@ -6,7 +6,7 @@ module.exports = function(grunt) {
           packages: [
             {
               name: 'gallery',
-              path: '/home/tom/Dropbox/gits/gallery',
+              path: '../../',
               charset: 'utf-8'
             }
           ]
