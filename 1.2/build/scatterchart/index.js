@@ -717,6 +717,7 @@ KISSY.add("gallery/kcharts/1.2/scatterchart/index",function(S,Base,Template,Base
 
       self.legend = new Legend({
         container:container,
+        paper:self.paper,
         bbox:{
           width:innerContainer.width,
           height:innerContainer.height,
