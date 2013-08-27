@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
   var widgets = [
-    // 'animate',
-    // 'barchart',
+    'animate',
+    'barchart',
     'basechart',
     'datetime',
     'legend',
@@ -32,7 +32,6 @@ module.exports = function(grunt) {
                     return tmp;
                   })();
 
-
   // TEST
   //除了第一个能打包成功，后面的都不行
   kmcFiles = [{
@@ -59,7 +58,7 @@ module.exports = function(grunt) {
         options: {
           packages: [{
             name: 'gallery',
-            path: '/home/tom/Dropbox/gits/kcharts2/1.2/',
+            path: '1.2/',
             charset: 'utf-8'
           }]
         },
