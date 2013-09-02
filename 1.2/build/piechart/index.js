@@ -240,20 +240,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
     end = start - value
     this.el.set("start",start);
     this.el.set("end",end);
-
-    // if(index == len-1){
-    //   next = this.next
-    //   var eend = next.el.get("end")
-    //     , sstart = next.el.get("start")
-    //     , diff = end - sstart
-    //   debugger;
-    //   // if(diff>0){
-    //   // console.log(end%360);
-    //   // console.log((eend+diff)%360);
-    //     next.el.set("end",eend+diff)
-    //     next.el.set("start",end);
-    //   // }
-    // }
   }
   /**
    * 计算group中各个分部的百分比
@@ -317,7 +303,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
         if(donut && l==1){
           r = [rs[0],rs[1]]
         }
-
         f.el = new Sector(paper,cx,cy,r,initdeg,initdeg-1,pathcfg,f);
 
         $path = f.el.get("$path")
@@ -646,7 +631,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
     var rad = Math.PI / 180,
         angel= (startAngle + endAngle)/ 2,
         middlex = cx + r2 * Math.cos(-angel * rad),
-        scx = cx + .5*(r1+r2) * Math.cos(-angel * rad)*.5,
+        scx = cx + (r1 + .5*(r2-r1)) * Math.cos(-angel * rad),
         x = cx + r1 * Math.cos(-angel * rad),
         x1 = cx + r1 * Math.cos(-startAngle * rad),
         x2 = cx + r1 * Math.cos(-endAngle * rad),
@@ -654,7 +639,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
         _x2 = cx + r2 * Math.cos(-endAngle * rad),
 
         middley = cy + r2 * Math.sin(-angel * rad),
-        scy = cy + .5*(r1+r2) * Math.sin(-angel * rad)*.5,
+        scy = cy + (r1 + .5*(r2-r1)) * Math.sin(-angel * rad),
         y = cy + r1 * Math.sin(-angel * rad),
         y1 = cy + r1 * Math.sin(-startAngle * rad),
         y2 = cy + r1 * Math.sin(-endAngle * rad),
@@ -788,6 +773,9 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
         , start = this.get('start')
         , end = this.get('end')
         , $path
+
+      r = r.sort(function(a,b){return a<b ? -1: a==b? 0 : 1;});
+
       var path = donut(cx,cy,r[0],r[1],start,end)
         , pathstring = path.join(',')
         , paper = this.get('paper')
@@ -845,7 +833,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
 
   var $detector
   function blockSizeOf(html){
-    $detector || ($detector = S.Node("<div/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
+    $detector || ($detector = S.Node("<span/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
     $detector.html(html);
     return {
       width:D.width($detector),
@@ -954,11 +942,10 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
 
     var unitdeg = Math.PI/180;
     S.each($sectors,function($sector){
-      var x = y = $sector.get("middlex")
+      var x = $sector.get("middlex")
         , y = $sector.get("middley")
         , theta = $sector.get("middleangle")*rad
       // paper.circle(x12,y12,3);
-
       var x12,y12;
       x12 = cx+R1*Math.cos(-theta);
       y12 = cy+R1*Math.sin(-theta);
@@ -994,11 +981,17 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
       var $sector = $sectors[i]
         , sizefn = pie.get("sizefn")
         , label = $sector.get('label')
-        , size = blockSizeOf(label)
+        , labelfn = pie.get('labelfn')
+        , size
         , x3 ,y3
         , that = this
         , pathcolor = $sector.get("$path").attr("fill")
         , autoLabelPathColor = pie.get('autoLabelPathColor')
+
+      if(labelfn && S.isFunction(labelfn)){
+        label = labelfn(label,$sector,pie);
+      }
+      size = blockSizeOf(label)
 
       path && path.toBack && path.toBack();
       (autoLabelPathColor != "undefined") && path.attr("stroke",pathcolor)
@@ -1015,7 +1008,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
         y3 = y23 - size.height/2;
       }
 
-      var $label = S.Node("<div class='kcharts-label'>"+label+"</div>")
+      var $label = S.Node("<span class='kcharts-label'>"+label+"</span>")
 
       var labelInstance  = new Label({label:$label,sector:$sector,$path:path,x:x3,y:y3,size:size,pie:pie});
       var $el = labelInstance.get('el');
@@ -1094,12 +1087,14 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
 
     //如果要画面包圈
     if(cfg.donut){
-      cfg.donutSize || (cfg.donutSize = 30);
-      if(cfg.donutSize>cfg.rs[0]){
-        //设为半径的一半
-        cfg.donutSize = cfg.rs[0]/2;
+      if(cfg.rs.length != 2){
+        cfg.donutSize || (cfg.donutSize = 30);
+        if(cfg.donutSize>cfg.rs[0]){
+          //设为半径的一半
+          cfg.donutSize = cfg.rs[0]/2;
+        }
+        cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
       }
-      cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
     }
   }
 
@@ -1264,7 +1259,6 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         var data = this.get('data')
           , ret
         ret = Util.filterdata(data,fn)
-        // console.log(JSON.stringify(ret));
         this.set("data",ret);
       }
     },
@@ -1379,8 +1373,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,La
         , title
         , offset
         , align
-
-      if(title){
+      if(titleconfig){
         title = titleconfig.content
         offset = titleconfig.offset || [0,10]
         align = titleconfig.align || "center"

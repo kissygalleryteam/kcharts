@@ -1045,20 +1045,33 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
 
+      var stocks = self._stocks;
+
 			var innerContainer = self._innerContainer;
 			var colors = self.color._colors, //legend icon 的颜色表，循环
 				len = colors.length,
 				cfg = self._cfg,
 				series = self._cfg.series
 			var __legendCfg = S.map(series, function(serie, i) {
-				i = i % len;
-				var item = {},
-					color = colors[i]
-					item.text = serie.text;
-				item.DEFAULT = color.DEFAULT;
-				item.HOVER = color.HOVER;
-				return item;
-			});
+				                  i = i % len;
+				                  var item = {},
+					                    color = colors[i]
+					                item.text = serie.text;
+				                  item.DEFAULT = color.DEFAULT;
+				                  item.HOVER = color.HOVER;
+                          var type = stocks[i].type;
+				                  item.icontype = "line"+type;
+                                item.iconsize = [1,1];
+                          // if(type == "circle"){
+                          //   item.iconsize = 4;
+                          // }else if(type == "square"){
+                          //   item.iconsize = 10;
+                          // }else if(type == "triangle"){
+                          //   item.iconsize = 5;
+                          // }
+				                  return item;
+			                  });
+
 			var globalConfig = S.merge({
 				interval: 20, //legend之间的间隔
 				iconright: 5, //icon后面的空白
@@ -1067,6 +1080,7 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 
 			self.legend = new Legend({
 				container: container,
+                papper:self.paper,
 				bbox: {
 					width: innerContainer.width,
 					height: innerContainer.height,
