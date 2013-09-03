@@ -18,7 +18,7 @@
 <script src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
 <script type="text/javascript">
 var S = KISSY;
- S.Config.combine = true;
+S.Config.combine = true;
 
 var cfg = {
       renderTo:"#demo1",
@@ -43,16 +43,7 @@ var cfg = {
         }
       },
       yLabels:{
-        isShow:false,
-        css:{
-          "marginLeft":"-4px",
-          "font-family":"Microsoft Yahei",
-          "font-size":"10px",
-          "color":"#fff"
-        },
-        template:function(txt){
-          return parseFloat(txt).toFixed(2);
-        }
+        isShow:false
       },
       colors:[{DEFAULT:'#3f72bf',HOVER:'#3f72bf'}],
       xGrids:{
@@ -145,7 +136,7 @@ var cfg = {
                 css:{
                   padding:"5px",
                   border:"3px solid #666",
-                  opacity:0.7,
+                  opacity:0.8,
                   background:"#000",
                   "color":"#fff"
                 },
@@ -173,6 +164,15 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
             "stroke-width":0,
             opacity:0.3
         });
+      //这里做一个重绘
+      linechart.hideLine(0);
+      linechart.showLine(0);
+
+    var paper = linechart.getRaphaelPaper();
+    for(var i in linechart._points[0]){
+      var p = linechart._points[0][i];
+      paper.text(p.x,p.y - 16,p.dataInfo.y).attr({stroke:"#fff","stroke-width":0,fill:"#fff"})
+    }
 });
 </script>
 </body>

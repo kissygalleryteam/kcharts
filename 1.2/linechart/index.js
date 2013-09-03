@@ -1237,6 +1237,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 		},
 		//处理网格和标注
 		animateGridsAndLabels: function() {
+			//若隐藏则不做处理
+			if(!this._cfg.yLabels.isShow) return;
 			var self = this,
 				maxLen = Math.max(self._pointsY.length, self._gridsY.length),
 				coordNum = self.coordNum,
