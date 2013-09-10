@@ -3,6 +3,8 @@ TODO 坐标运算  画布大小计算
 */
 KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 	var $ = S.all;
+	var isNagitive = false;
+	var isPositive = false;
 	var BaseChart = function(){};
 	S.extend(BaseChart,Base,{
 		init:function(cfg){
@@ -173,16 +175,18 @@ KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 			if(axis.text && S.isArray(axis.text)){
 				return axis.text;
 			}else{
-				var cmax = axis.max - 0,
-					cmin = axis.min - 0,
+				var cmax = isNaN(axis.max - 0) ? 0 : axis.max - 0,
+					cmin = isNaN(axis.min - 0) ? 0 : axis.min - 0,
 					num =  axis.num || 5,
 					_max = Math.max.apply(null,allDatas),
-					_min = Math.min.apply(null,allDatas),
+					_min = Math.min.apply(null,allDatas);
+					isNagitive = _max <= 0 ? 1 : 0;
+					isPositive = _min >= 0 ? 1 : 0;
 					//纵轴上下各有10%的延展
-					offset = (_max - _min) * 0.1 || min * 1 || 10,
+					var offset = (_max - _min) * 0.1 ;
 					//修复最大值最小值的问题  bug
-					max = (cmax || cmax == 0) ? (cmax >= _max ? cmax: _max + offset) : _max + offset,
-					min = (cmin || cmin == 0) ? (cmin <= _min ? cmin : _min - offset) : _min - offset;
+					var max = (cmax || cmax == 0) ? (cmax >= _max ? cmax: _max + offset) : _max + offset;
+					var min = (cmin || cmin == 0) ? (cmin <= _min ? cmin : _min - offset) : _min - offset;
 				return self.getScales(max,min,num);
 			}
 		},
@@ -462,7 +466,6 @@ KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 			@return {Array}
 		*/
 		getScales:function(cormax,cormin,cornum){
-			S.log(arguments)
 			var self = this,
 				corstep,
 				tmpstep,
@@ -533,6 +536,17 @@ KISSY.add('gallery/kcharts/1.2/basechart/index',function(S,Base){
 			for(var i = min; i <= max; i+=step){
 				ary.push(parseFloat(i).toFixed(fixlen));
 			}
+			// 过滤数据 如果全部为正 则删除负值 若全部为负 则删除正数
+			if(isNagitive){
+				for(i in ary){
+					ary[i] > 0 && ary.splice(i,1)
+				}
+			}else if(isPositive){
+				for(i in ary){
+					ary[i] < 0 && ary.splice(i,1)
+				}
+			}
+			
 			return ary;
 		},
 		/**
