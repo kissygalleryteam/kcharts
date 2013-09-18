@@ -24,7 +24,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 	S.extend(LineChart, BaseChart, {
 		init: function() {
 			var self = this,
-				points;
+				points,
+				w;
 
 			BaseChart.prototype.init.call(self, self._cfg);
 			self.chartType = "linechart";
@@ -915,6 +916,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 					S.log("finish");
 
 					self.afterRender();
+
+					self.fix2Resize();
 				});
 			} else {
 				self.drawLines();
@@ -926,6 +929,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				_cfg.legend.isShow && self.renderLegend();
 
 				self.afterRender();
+
+				self.fix2Resize();
 			}
 			S.log(self);
 		},
@@ -1291,6 +1296,18 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 			}
 			//保存当前选中直线
 			self.curLineIndex = lineIndex;
+		},
+		fix2Resize: function() {
+			var self = this,
+				$ctnNode = self._$ctnNode;
+			self._cfg.anim = "";
+			var rerender = S.buffer(function() {
+				self.init();
+			}, 200);
+			!self.__isFix2Resize && self.on("resize", function() {
+				self.__isFix2Resize = 1;
+				rerender();
+			})
 		},
 		areaChange: function(index) {
 			var self = this;

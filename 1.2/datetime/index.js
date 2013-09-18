@@ -828,6 +828,8 @@ KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,
 
 				self.afterRender();
 
+				self.fix2Resize();
+
 				S.log(self);
 		},
 		bindEvt:function(){
@@ -1118,6 +1120,18 @@ KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,
 			}
 			self.drawGridsY();
 			self.drawLabelsY();
+		},
+		fix2Resize: function() {
+			var self = this,
+				$ctnNode = self._$ctnNode;
+			self._cfg.anim = "";
+			var rerender = S.buffer(function() {
+				self.init();
+			}, 200);
+			!self.__isFix2Resize && self.on("resize", function() {
+				self.__isFix2Resize = 1;
+				rerender();
+			})
 		},
 		/**
 			TODO 线条切换
