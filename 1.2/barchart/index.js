@@ -18,17 +18,19 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		color;
 
 	var BarChart = function(cfg) {
-		this.init(cfg);
+		var self = this;
+		self._cfg = cfg;
+		self.init();
 	};
 
 	S.extend(BarChart, BaseChart, {
-		init: function(cfg) {
+		init: function() {
 
 			var self = this;
 
 			self.chartType = "barchart";
 			
-			BaseChart.prototype.init.call(self, cfg);
+			BaseChart.prototype.init.call(self, self._cfg);
 
 			if (!self._$ctnNode[0]) return;
 
@@ -170,43 +172,33 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		//主标题
 		drawTitle: function() {
 			var self = this,
-				paper = self.paper,
+				paper = self.htmlPaper,
 				cls = themeCls + "-title",
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
 				//高度占 60%
 				h = ctn.y * 0.6;
 
-			if (!self._title && _cfg.title.isShow && _cfg.title.content != "") {
-
+			if (_cfg.title.isShow && _cfg.title.content != "") {
 				self._title = paper.rect(0, 0, self._$ctnNode.width(), h).addClass(cls).css(S.mix({
 					"line-height": h + "px"
-				}, _cfg.title.css));
-
-			}
-
-			if (self._title && _cfg.title.content != "") {
-
-				self._title.html(_cfg.title.content);
-
+				}, _cfg.title.css)).html(_cfg.title.content);
 			}
 		},
 		//副标题
 		drawSubTitle: function() {
 			var self = this,
-				paper = self.paper,
+				paper = self.htmlPaper,
 				cls = themeCls + "-subtitle",
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
 				//高度占 40%
 				h = ctn.y * 0.4;
-			if (!self._subTitle && _cfg.subTitle.isShow && _cfg.subTitle.content != "") {
+
+			if (_cfg.subTitle.isShow && _cfg.subTitle.content != "") {
 				self._subTitle = paper.rect(0, ctn.y * 0.6, self._$ctnNode.width(), h).addClass(cls).css(S.mix({
 					"line-height": h + "px"
-				}, _cfg.subTitle.css));
-			}
-			if (self._subTitle && _cfg.subTitle.content != "") {
-				self._subTitle.html(_cfg.subTitle.content);
+				}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
 			}
 		},
 		//画柱
@@ -740,8 +732,10 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			_cfg.legend.isShow && self.renderLegend();
 			//画柱
 			self.drawBars(function() {
-				S.log("finished");
+
 				self.afterRender();
+
+				self.fix2Resize();
 			});
 
 			self.bindEvt();
@@ -828,7 +822,6 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			tip.fire("setcontent", {
 				data: tipData
 			})
-			// S.log(posx)
 			tip.fire("move", {
 				x: posx,
 				y: posy,
@@ -936,6 +929,18 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			self.bindEvt();
 
 			S.log(self);
+		},
+		fix2Resize: function() {
+			var self = this,
+				$ctnNode = self._$ctnNode;
+			self._cfg.anim = "";
+			var rerender = S.buffer(function() {
+				self.init();
+			}, 200);
+			!self.__isFix2Resize && self.on("resize", function() {
+				self.__isFix2Resize = 1;
+				rerender();
+			})
 		},
 		hideBar: function(barIndex) {
 			var self = this,

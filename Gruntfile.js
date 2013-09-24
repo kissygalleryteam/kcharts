@@ -19,7 +19,8 @@ module.exports = function(grunt) {
     "tools/color",
     "tools/graphtool",
     "tools/htmlpaper",
-    "tools/touch"
+    "tools/touch",
+    "gallery/trianglechart"
   ];
   //kmc的文件队列
   var kmcFiles = (function() {

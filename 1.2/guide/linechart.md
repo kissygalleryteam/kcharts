@@ -5,8 +5,6 @@ Demo
 ---
 [默认线图](../demo/linechart/demo1.html) <br/>
 [皮肤定制线图](../demo/linechart/demo2.html) <br/>
-[大数据量线图](../demo/linechart/demo3.html) <br/>
-
 
 ---
 代码示例
@@ -158,9 +156,8 @@ Config（详细配置）
 
 ### series
    
-   {array} 数据 （有两种格式）
-
-   格式一：<span style='color:#f60'>推荐</span>
+   {array} 数据
+   
    ```
    series:[{
                 text: 'Tokyo',
@@ -179,22 +176,6 @@ Config（详细配置）
             ]
 
    ```
-
-   格式二：<span style='color:#f60'>必须配合defineKey使用</span>
-```
-   series:[{
-      data:[{y:100,week:'星期一'},{y:4000,week:'星期二'},{y:120,week:'星期三'},{y:234,week:'星期四'},{y:234,week:'星期五'},{y:234,week:'星期六'},{y:234,week:'星期日'}]
-  }],
-  defineKey:{
-    x:"week",
-     y:"y"
-  }
-```
-
-
-### defineKey
-
-   {object} 针对数据 data 对应的key定义
 
 ### tip  
 

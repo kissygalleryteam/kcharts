@@ -275,7 +275,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 	S.extend(LineChart, BaseChart, {
 		init: function() {
 			var self = this,
-				points;
+				points,
+				w;
 
 			BaseChart.prototype.init.call(self, self._cfg);
 			self.chartType = "linechart";
@@ -1045,7 +1046,7 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
 
-      var stocks = self._stocks;
+			var stocks = self._stocks;
 
 			var innerContainer = self._innerContainer;
 			var colors = self.color._colors, //legend icon 的颜色表，循环
@@ -1053,24 +1054,24 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				cfg = self._cfg,
 				series = self._cfg.series
 			var __legendCfg = S.map(series, function(serie, i) {
-				                  i = i % len;
-				                  var item = {},
-					                    color = colors[i]
-					                item.text = serie.text;
-				                  item.DEFAULT = color.DEFAULT;
-				                  item.HOVER = color.HOVER;
-                          var type = stocks[i].type;
-				                  item.icontype = "line"+type;
-                                item.iconsize = [1,1];
-                          // if(type == "circle"){
-                          //   item.iconsize = 4;
-                          // }else if(type == "square"){
-                          //   item.iconsize = 10;
-                          // }else if(type == "triangle"){
-                          //   item.iconsize = 5;
-                          // }
-				                  return item;
-			                  });
+				i = i % len;
+				var item = {},
+					color = colors[i]
+					item.text = serie.text;
+				item.DEFAULT = color.DEFAULT;
+				item.HOVER = color.HOVER;
+				var type = stocks[i].type;
+				item.icontype = "line" + type;
+				item.iconsize = [1, 1];
+				// if(type == "circle"){
+				//   item.iconsize = 4;
+				// }else if(type == "square"){
+				//   item.iconsize = 10;
+				// }else if(type == "triangle"){
+				//   item.iconsize = 5;
+				// }
+				return item;
+			});
 
 			var globalConfig = S.merge({
 				interval: 20, //legend之间的间隔
@@ -1080,7 +1081,7 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 
 			self.legend = new Legend({
 				container: container,
-                papper:self.paper,
+				papper: self.paper,
 				bbox: {
 					width: innerContainer.width,
 					height: innerContainer.height,
@@ -1166,6 +1167,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 					S.log("finish");
 
 					self.afterRender();
+
+					self.fix2Resize();
 				});
 			} else {
 				self.drawLines();
@@ -1177,6 +1180,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				_cfg.legend.isShow && self.renderLegend();
 
 				self.afterRender();
+
+				self.fix2Resize();
 			}
 			S.log(self);
 		},
@@ -1489,7 +1494,7 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 		//处理网格和标注
 		animateGridsAndLabels: function() {
 			//若隐藏则不做处理
-			if(!this._cfg.yLabels.isShow) return;
+			if (!this._cfg.yLabels.isShow) return;
 			var self = this,
 				maxLen = Math.max(self._pointsY.length, self._gridsY.length),
 				coordNum = self.coordNum,
@@ -1542,6 +1547,18 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 			}
 			//保存当前选中直线
 			self.curLineIndex = lineIndex;
+		},
+		fix2Resize: function() {
+			var self = this,
+				$ctnNode = self._$ctnNode;
+			self._cfg.anim = "";
+			var rerender = S.buffer(function() {
+				self.init();
+			}, 200);
+			!self.__isFix2Resize && self.on("resize", function() {
+				self.__isFix2Resize = 1;
+				rerender();
+			})
 		},
 		areaChange: function(index) {
 			var self = this;

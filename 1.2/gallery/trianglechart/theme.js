@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
+KISSY.add("gallery/kcharts/1.2/gallery/trianglechart/theme",function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
@@ -24,20 +24,6 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 		        },
 		        isShow:true
 		    },
-			points:{
-				attr:{
-					stroke:"#fff",
-					"r":4,
-					"stroke-width":1.5,
-					"fill":COLOR_TPL
-				},
-				hoverAttr:{
-					stroke:"#fff",
-					"r":5,
-					"fill":COLOR_TPL,
-					"stroke-width":0
-				}
-			},
 			xGrids:{
 				css:{
 					color:"#eee"
@@ -68,11 +54,6 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 				css:{
 					"color":"#666",
 					"font-size": "12px"
-				}
-			},
-			pointLine:{
-				css:{
-					color:"#ccc"
 				}
 			},
 			tip:{
@@ -101,22 +82,6 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 		        },
 		        isShow:true
 		    },
-			points:{
-				attr:{
-				  type:"circle",
-	              stroke:"{COLOR}",
-	              fill:"#fff",
-	              "r":4,
-	              "stroke-width":2
-	            },
-	            hoverAttr:{
-	              type:"circle",
-	              stroke:"{COLOR}",
-	              fill:"#fff",
-	              "r":5,
-	              "stroke-width":2
-	            }
-			},
 			xGrids:{
 				css:{
 					color:"#eee"
@@ -147,11 +112,6 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 				css:{
 					"color":"#666",
 					"font-size": "12px"
-				}
-			},
-			pointLine:{
-				css:{
-					color:"#ccc"
 				}
 			},
 			tip:{
@@ -180,22 +140,6 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 		        },
 		        isShow:true
 		    },
-			points:{
-				attr:{
-					type:"circle",
-					stroke:"#fff",
-					"r":4,
-					"stroke-width":1.5,
-					"fill":COLOR_TPL
-				},
-				hoverAttr:{
-					type:"circle",
-					stroke:"#fff",
-					"r":5,
-					"fill":COLOR_TPL,
-					"stroke-width":0
-				}
-			},
 			xGrids:{
 				css:{
 					color:"#eee"
@@ -228,17 +172,14 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 					"font-size": "12px"
 				}
 			},
-			pointLine:{
-				css:{
-					color:"#ccc"
-				}
-			},
 			tip:{
 				css:{
-					border:"1px solid {COLOR}"
+					"border":"1px solid {COLOR}"
 				}
 			}
 		}
 	};
+
 	return themeCfg;
+
 });

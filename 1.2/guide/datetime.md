@@ -1,17 +1,14 @@
-# BarChart
+# LineChart
+
 ---
 Demo
 ---
-[basic column](../demo/barchart/demo1.html) 纵向柱形图<br/>
-[stack column](../demo/barchart/demo2.html) 纵向堆叠柱形图<br/>
-[stack bar](../demo/barchart/demo3.html) 横向堆叠柱形图<br/>
-[multi column](../demo/barchart/demo4.html) 纵向多柱形图<br/>
-
+[大数据量线图](../demo/datetime/demo1.html) <br/>
 ---
 代码示例
 ---
 ```
-//配置kissy包路径
+//配置kissy包路径 
 KISSY.config({
   packages:[
       {
@@ -20,9 +17,11 @@ KISSY.config({
       }
     ]
 });
-//载入barchart
-KISSY.use('gallery/kcharts/1.2/barchart/index',function(S,BarChart){
-  var barChart = new BarChart({
+//若为kissy 1.3版本 请忽略以上包配置
+
+//载入linechart
+KISSY.use('gallery/kcharts/1.2/datetime/index',function(S,DateTime){
+  var datetime = new DateTime({
         renderTo:"#demo1",
         xAxis: {
             text:['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
@@ -35,14 +34,14 @@ KISSY.use('gallery/kcharts/1.2/barchart/index',function(S,BarChart){
         tip:{
           template:"总支出：<span>{{y}}</span> 元<br/>"
         }
-    });
+      });
 });
 ```
 
 ---
 Config（详细配置）
 ---
-### renderTo 
+### renderTo  
 
 { id|HTMLElement } 容器 <span style='color:#f60'>注:容器必须要有width和height的绝对值</span>
 
@@ -59,6 +58,10 @@ Config（详细配置）
   - `width` { number } 宽度
   - `height` { number } 高度 
 
+### lineType 
+
+{ string } 线图类型 默认 "straight"  如：弧线 "arc"
+
 ### themeCls 
 
 { string } 主题className 默认："ks-chart-default"
@@ -66,36 +69,33 @@ Config（详细配置）
 ### colors 
 
 { array } 手动配置线的颜色 （可选） 如 [{"DEFAULT":"#fff","HOVER":"#ccc"},{"DEFAULT":"#fff","HOVER":"#ccc"}]
-    - `DEFAULT` { string } 默认颜色
-    - `HOVER` { string } hover颜色
-
-### stackable  
-{boolean} 是否堆叠展示  <em class="high-light">new!</em>
- 
-### zoomType  
-{string} 横向/纵向柱形图  （可选） 默认 "x" 或 "y" <em class="high-light">new!</em> 
+  
+  - `DEFAULT` { string } 默认颜色
+  - `HOVER` { string } hover颜色
 
 ### title
 
 {object} 主标题
 
-
-   - `isShow` { boolean } 是否渲染显示
-   - `css` { object } css样式
-   - `content` { string } 内容 可以是html或者text文本
+- `isShow` { boolean } 是否渲染显示
+- `css` { object } css样式
+- `content` { string } 内容 可以是html或者text文本
 
 ### subTitle
 
 {object} 副标题 同 title
 
-### bars
-  
-柱形属性配置 
+### points
 
-   - `isShow` { boolean } 是否渲染显示
-   - `css` { object } css样式
-   - `barsRatio` { float } 一组柱形的占宽 0 ~ 1之间的数  <em class="high-light">new!</em>
-   - `barRatio` { float } 单根柱形的占宽 0 ~ 1之间的数   <em class="high-light">new!</em>
+{object} 点的配置
+
+   - `attr` { object } 默认样式
+      >- `stroke` { string } 笔触颜色  如:"#ccc"
+      >- `r` { number } 圆点半径
+      >- `fill` { string } 填充色
+      >- `stroke-width` { number } 笔触宽度
+      >- `type` { string } 点的类型 默认是 “circle” 圆形，其余有 "auto","triangle","rhomb","square" 供选择
+   - `hoverAttr` { object } hover样式 同attr
 
 ### xAxis 
 
@@ -154,8 +154,8 @@ Config（详细配置）
 
 ### series
    
-   {array} 数据 （有两种格式）
-
+   {array} 数据
+   
    ```
    series:[{
                 text: 'Tokyo',
@@ -234,17 +234,24 @@ Method（方法）
       @param nagitive 可选，是否是反向的(默认值：false)
     */
 
-    var   barchart = new BarChart(cfg); 
-    var   y =  barchart.data2GrapicData(400); //将返回一个纵轴坐标值
-    barchart.getPaper().text(0,y,"400");//往图上写html文本
+    var   datetime = new DateTime(cfg); 
+    var   y =  datetime.data2GrapicData(400); //将返回一个纵轴坐标值
+    datetime.getPaper().text(0,y,"400");//往图上写html文本
 
 ```
 
 
+### showLine(lineIndex)
+
+展示直线
+
+### hideLine(lineIndex)
+
+隐藏直线
+
 ### clear()
 
 清除画布上的所有内容
-
 
 ---
 Event（事件）
@@ -258,6 +265,6 @@ Event（事件）
 
 离开画布 (可以用来触发隐藏tip等动作)
 
-### barChange
+### stockChange
 
-柱之间的切换 (可以用来触发tip的移动和数据渲染)
+点之间的切换 (可以用来触发tip的移动和数据渲染)
