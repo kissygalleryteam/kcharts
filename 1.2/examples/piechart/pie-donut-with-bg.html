@@ -55,7 +55,16 @@
          };
          var pie = new Pie(cfg);
          pie.on("beforeRender",custombg);
-         
+         pie.on('mouseover',enter);
+         function enter(e){
+           console.log(e);
+           var $sector = e.sector;
+           console.log($sector.get('groupIndex'));
+           console.log($sector.get('donutIndex'));
+           var framedata = $sector.get('framedata');
+           console.log(framedata);
+           console.log(framedata.label);
+         }
          //自定义背景
          function custombg(){
            var paper = pie.get("paper"),
