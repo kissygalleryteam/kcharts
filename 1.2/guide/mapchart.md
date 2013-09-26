@@ -1,5 +1,13 @@
 #MapChart
 ---
+Demo
+---
+[有tip](../demo/mapchart/demo1.html) <br/>
+[最简配置](../demo/mapchart/demo2.html) <br/>
+[配色](../demo/mapchart/demo3.html) <br/>
+[模拟hover](../demo/mapchart/demo4.html) <br/>
+[省县市](../demo/mapchart/demo5.html) <br/>
+---
 代码示例
 ---
     KISSY.config({
