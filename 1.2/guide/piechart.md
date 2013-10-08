@@ -37,7 +37,7 @@
 动画配置
 
  - `easing` {string} 扇形展开动画效果。同kissy的动画配置
- - `duration` {number} 动画时长
+ - `duration` {number} 动画时长，单位秒
 
 ### interval
 多级面包圈图之间的间隔，只对面包圈图有效。当data数据嵌套情况会自动生成面包圈图。示例：demo/piechart/pie-nest.html
