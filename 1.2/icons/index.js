@@ -6,10 +6,9 @@ KISSY.add("gallery/kcharts/1.2/icons/index", function(S){
   var M = "M",L="L",Z = "Z";
 
   var _Utils = {
-    //三角形
     trianglePath:function(cx,cy,I){
       var m = Math.sqrt(3)/3*I;
-      var n = 1/6*I;//向下平移
+      var n = 1/6*I;
 
       var A = [cx,cy-2/3*I+n],
           B = [cx-m,cy+1/3*I+n],
@@ -119,11 +118,3 @@ KISSY.add("gallery/kcharts/1.2/icons/index", function(S){
   Icons.BASIC = BASIC_SIZE;
   return Icons;
 });
-
-
-
-
-
-
-
-
