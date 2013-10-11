@@ -2,7 +2,7 @@
 ---
 Demo
 ---
-[basic column](../demo/funnel/index.html) 漏斗图<br/>
+[basic column](../../demo/funnel/index.html) 漏斗图<br/>
 
 
 ---
