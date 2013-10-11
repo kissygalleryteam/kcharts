@@ -1,4 +1,4 @@
-# BarChart
+# Funnel
 ---
 Demo
 ---
