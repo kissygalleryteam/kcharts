@@ -454,3 +454,4 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
         requires:['node','base','template','gallery/kcharts/1.2/raphael/','gallery/kcharts/1.1/tip/index']
     }
 )
+
