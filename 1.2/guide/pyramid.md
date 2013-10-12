@@ -2,7 +2,7 @@
 ---
 Demo
 ---
-[basic column](../../demo/funnel/index.html) 漏斗图<br/>
+[金字塔](../demo/pyramid/demo1.html) 金字塔<br/>
 
 
 ---
