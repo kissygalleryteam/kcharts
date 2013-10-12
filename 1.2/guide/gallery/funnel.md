@@ -19,7 +19,7 @@ KISSY.config({
     ]
 });
 //载入Funnel
-KISSY.use('gallery/kcharts/1.2/Funnel/index',function(S,Funnel){
+KISSY.use('gallery/kcharts/1.2/gallery/funnel/index',function(S,Funnel){
   var funnel = new Funnel({
         '#container',
             {
