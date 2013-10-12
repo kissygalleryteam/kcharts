@@ -2,7 +2,7 @@
 ---
 Demo
 ---
-[金字塔](../demo/pyramid/demo1.html) 金字塔<br/>
+[pyramid](../demo/pyramid/demo1.html) 金字塔<br/>
 
 
 ---
