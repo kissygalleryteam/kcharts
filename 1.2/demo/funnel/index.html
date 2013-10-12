@@ -25,18 +25,7 @@
     间距宽度：<input  min="0" max="10" style="width:400px;vertical-align:middle" step="0" type="range" class="J_funnel_step">
 </div>
 <script type="text/javascript">
- KISSY.config({
-      packages:[
-        {
-          name:"funnel",
-           path:"http://fed.ued.taobao.net/u/zhuangchengyuan/",
-         
-          tag:"20130909",
-          charset:"utf-8"
-        }
-      ]
-  });
-  KISSY.use('funnel/funnel/index', function(S,Funnel) {
+  KISSY.use('gallery/kcharts/1.2/gallery/funnel/', function(S,Funnel) {
       var $=S.all;
       var g=  new Funnel(
             '#container',
