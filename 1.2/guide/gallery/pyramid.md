@@ -56,10 +56,15 @@ Config（详细配置）
 ###  
 
 { id }      容器
+
 { width }   三角形宽度
+
 {data}      数据源
+
 {isRed}     高亮显示部分，true：上面高亮，false:下面高亮
+
 {color1}    上半个的颜色，有默认值
+
 {color2}    下半个的颜色，有默认值
 
 
