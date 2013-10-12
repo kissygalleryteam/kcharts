@@ -1,4 +1,4 @@
-KISSY.add("funnel/funnel/index",function(S,Node,Base,Template,Raphael,Tip){
+KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Template,Raphael,Tip){
 	
 	var $=Node.all;
 	var cfg=  {
