@@ -57,5 +57,6 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 ###gallery
 
 - [funnel 梯形图](funnel.html)
+- [trianglechart 三角形图](trianglechart.html)
 
 
