@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-gallery/kcharts/1.2/gallery/funnel/index
+funnel/funnel/index
 
 */
-KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Template,Raphael,Tip){
+KISSY.add("funnel/funnel/index",function(S,Node,Base,Template,Raphael,Tip){
 	
 	var $=Node.all;
 	var cfg=  {
@@ -41,8 +41,9 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 	function Funnel(content,config){
 		if(!config) return;
 		this.content=content;
-		
+		this.offset={};
 		this.config=S.mix(cfg,config);
+		this.initConfig()
 		this.paper = new Raphael(this.content.replace("#",""));
 		this.init();
 		
@@ -51,9 +52,16 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 	}
 	
 	S.augment(Funnel,Base,{
+		initConfig:function(){
+			this.set('neckWidth',this.config.plotOptions.series.neckWidth);
+			this.set('neckHeight',this.config.plotOptions.series.neckHeight);
+			this.set('neckStep',this.config.plotOptions.series.neckStep);
+		},
 		setConfig:function(){
-			var percent=parseInt(this.config.plotOptions.series.neckWidth)/100,
-				Npercent=parseInt(this.config.plotOptions.series.neckHeight)/100,
+			
+			var percent=parseInt(this.get("neckWidth"))/100,
+				Npercent=parseInt(this.get("neckHeight"))/100,
+				step=parseInt(this.get("neckStep")),
 				w=$(this.content).width()-this.config.chart.marginRight,
 				t=0,
 				h=$(this.content).height();
@@ -64,9 +72,10 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 			
 			this.set("width",w);
 			this.set("height",h-t-50);
+			this.set("step",step);
 			this.set("top",t);
 			this.set("bottom",(w-w*percent)/2);
-			this.set("neckHeight",Npercent*(h-t-50));
+			this.set("neckHeightt",Npercent*(h-t-50));
 			
 		},
 		_title:function(){
@@ -127,39 +136,56 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 				t=this.get("top"),
 				b=this.get("bottom"),
 				h=this.get("height"),
-				Nh=this.get("neckHeight")+t,
+				Nh=this.get("neckHeightt")+t,
 				n=t,
-				q=t;
+				q=t,
+				c=this.config.series[0].data,
 				zuC=this.config.plotOptions.background,
-				num=self._nowNum(arry);
+				num=this._nowNum(arry);
 				if(arry[0]==0 && arry.length==1){
 					self.destroy();
 					return ;
 				}
-				
+
 				S.each(arry,function(e,i){
-					
+					var obj={}
 					q+=e;
 					
 					var x1=self._countPage(n),
 						x2=self._countPage(e);
-					if(i<num){
-						self.paper.path('M'+x1+','+n+'L'+(w-x1)+','+n+'L'+(w-x1-x2)+','+q+'L'+(x1+x2)+','+q+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":1})
-					}
-					else if(i==num){
-						if(Nh==h){
-							self.paper.path('M'+b+','+n+'L'+(w-b)+','+n+'L'+(w-b)+','+q+'L'+b+','+q+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":1})
-						}
-						else{
-							self.paper.path('M'+x1+','+n+'L'+(w-x1)+','+n+'L'+(w-b)+','+Nh+'L'+(w-b)+','+q+'L'+b+','+q+'L'+b+','+Nh+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":1})
-						}
+					if(Nh==h){
+						self.paper.path('M'+x1+','+n+'L'+(w-x1)+','+n+'L'+(w-x1-x2)+','+q+'L'+(x1+x2)+','+q+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":self.get("step")})
+
 					}
 					else{
-						x1=b,
-						x2=self._countPage(0);
-						self.paper.path('M'+x1+','+n+'L'+(w-x1)+','+n+'L'+(w-x1-x2)+','+q+'L'+(x1+x2)+','+q+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":1})
+
+						if(i<num){
+							self.paper.path('M'+x1+','+n+'L'+(w-x1)+','+n+'L'+(w-x1-x2)+','+q+'L'+(x1+x2)+','+q+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":self.get("step")})
+						}
+						else if(i==num){
+							self.paper.path('M'+x1+','+n+'L'+(w-x1)+','+n+'L'+(w-b)+','+Nh+'L'+(w-b)+','+q+'L'+b+','+q+'L'+b+','+Nh+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":self.get("step")})
+						}
+						else{
+							x1=b,
+							x2=self._countPage(0);
+							self.paper.path('M'+x1+','+n+'L'+(w-x1)+','+n+'L'+(w-x1-x2)+','+q+'L'+(x1+x2)+','+q+'Z').attr({"stroke":"#fff","fill":zuC[i],"stroke-width":self.get("step")})
+						}
 					}
-					
+
+					self.offset[c[i][0]]=[];
+
+					self.offset[c[i][0]][0]={x:x1,y:n};
+					self.offset[c[i][0]][1]={x:w-x1,y:n};
+					self.offset[c[i][0]][2]={x:w-x1-x2,y:q};
+					self.offset[c[i][0]][3]={x:x1+x2,y:q};
+					if(i==num){
+						self.offset[c[i][0]][2]={x:w-b,y:Nh};
+						self.offset[c[i][0]][3]={x:w-b,y:q};
+						self.offset[c[i][0]][4]={x:b,y:q};
+						self.offset[c[i][0]][5]={x:b,y:Nh};
+
+					}
+
 					n+=e
 				
 				})
@@ -172,19 +198,20 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 				w=this.get("width"),
 				b=this.get("bottom"),
 				t=this.get("top"),
-				Nh=this.get("neckHeight"),
+				Nh=this.get("neckHeightt"),
 				h=this.get("height"),
 				n=t,
 				q=t,
 				num=this._nowNum(arry);
+
 				S.each(arry,function(e,i){
 					if(e!=0){
 						var t1=q+e/2+n-t,
 							l=w-self._countPage(t1);
-						if(num<i || t1>Nh || (Nh+t)==h){
-
-							l=w-b;
-						}
+							if( t1>Nh){
+								l=w-b;
+							}
+						
 						self.paper.path('M'+l+','+t1+'L'+(l+50)+','+t1).attr({"stroke":"#000","fill":"#000","stroke-width":0.5})
 						q+=e
 					}
@@ -199,7 +226,7 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 				b=this.get("bottom"),
 				h=this.get("height"),
 				t=this.get("top"),
-				Nh=this.get("neckHeight"),
+				Nh=this.get("neckHeightt"),
 				n=t,
 				q=t,
 				num=this._nowNum(arry),
@@ -215,9 +242,9 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 						}
 						var t1=q+e/2+n-t,
 							l=w-self._countPage(t1);
-						if(num<i || t1>Nh || (Nh+t)==h){
-							l=w-b;
-						}
+						if( t1>Nh){
+								l=w-b;
+							}
 						var text='<strong style="font-weight:bold">'+s.data[i][0]+'</strong><span style="font-size:11px">('+self._slice(s.data[i][1])+')</span>';
 							html=$('<div></div>').html(text).attr("data-num",i).addClass("ks-funnel-line").css({
 								  fontSize:'11px',
@@ -249,7 +276,7 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 				n=t,
 				q=t,
 				t1=0,
-				Nh=this.get("neckHeight")+t;
+				Nh=this.get("neckHeightt")+t;
 
 			S.each(arry,function(e,i){
 				q+=e;
@@ -262,7 +289,7 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 			return t1;
 		},
 		_countPage:function(y){
-			var b=this.get("bottom"),Nh=this.get("neckHeight");
+			var b=this.get("bottom"),Nh=this.get("neckHeightt");
 			var x=y*b/Nh;
 			return x
 		},
@@ -287,10 +314,12 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 				textAlign:'center'
 			}).appendTo($(this.content))
 		},
-		destroy:function(){
+		destroy:function(fn){
 			$(this.content).all("svg").empty();
 			$(".ks-funnel-line") && $(".ks-funnel-line").remove();
-
+			if(fn){
+				fn()	
+			}
 			
 		},
 		
@@ -374,12 +403,22 @@ KISSY.add("gallery/kcharts/1.2/gallery/funnel/index",function(S,Node,Base,Templa
 				
 
 			})
-			
 
+			this.on('afterNeckHeightChange', function(ev){
+				self.get("neckHeight");
+				self._rednderVal()
+		    });
+			this.on('afterNeckWidthChange', function(ev){
+				self.get("neckWidth");
+				self._rednderVal()
+		    });
+			this.on('afterNeckStepChange', function(ev){
+				self.get("neckStep");
+				self._rednderVal()
+		    });
 
 
 		},
-		//重置config
 		_rednderVal:function(){
 			var self=this;
 			self.setConfig()
