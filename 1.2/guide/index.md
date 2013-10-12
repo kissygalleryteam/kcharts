@@ -43,10 +43,19 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 });
 ```
 ##组件文档
-- [linechart](linechart.html)
-- [barchart](barchart.html)
-- [piechart](piechart.html)
-- [scatterchart](scatterchart.html)
+
+###core
+
+- [linechart 折线图](linechart.html)
+- [barchart 柱状图](barchart.html)
+- [piechart 饼图](piechart.html)
+- [scatterchart 散点图](scatterchart.html)
 - [ratiochart](ratiochart.html)
 - [sumdetailchart](sumdetailchart.html)
 - [tip](tip.html)
+
+###gallery
+
+- [funnel 梯形图](funnel.html)
+
+
