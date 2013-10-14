@@ -47,6 +47,7 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 ###core
 
 - [linechart 折线图](linechart.html)
+- [datetime 线图(大数据量)](datetime.html)
 - [barchart 柱状图](barchart.html)
 - [piechart 饼图](piechart.html)
 - [scatterchart 散点图](scatterchart.html)
