@@ -51,6 +51,7 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 - [barchart 柱状图](barchart.html)
 - [piechart 饼图](piechart.html)
 - [scatterchart 散点图](scatterchart.html)
+- [dashboard 油表](dashboard.html)
 - [ratiochart](ratiochart.html)
 - [sumdetailchart](sumdetailchart.html)
 - [tip](tip.html)
