@@ -11,6 +11,7 @@ Demo
 [带标注线线图](../demo/linechart/demo5.html) <br/>
 [空数据线图](../demo/linechart/demo6.html) <br/>
 [网格线跟随鼠标移动](../demo/linechart/demo7.html) <br/>
+[tip自定义数据关联](../demo/linechart/demo8.html) <br/>
 
 ---
 代码示例
