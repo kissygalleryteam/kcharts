@@ -3,9 +3,12 @@
 ---
 Demo
 ---
+
 [默认线图](../demo/linechart/demo1.html) <br/>
 [皮肤定制线图](../demo/linechart/demo2.html) <br/>
 [带标注线图](../demo/linechart/demo3.html) <br/>
+
+
 ---
 代码示例
 ---
