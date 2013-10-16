@@ -7,6 +7,7 @@ Demo
 [stack bar](../demo/barchart/demo3.html) 横向堆叠柱形图<br/>
 [multi column](../demo/barchart/demo4.html) 纵向多柱形图<br/>
 [label width units](../demo/barchart/demo5.html) 有单位和标注的柱形图<br/>
+
 ---
 代码示例
 ---
