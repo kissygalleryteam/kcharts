@@ -6,8 +6,11 @@ Demo
 
 [默认线图](../demo/linechart/demo1.html) <br/>
 [皮肤定制线图](../demo/linechart/demo2.html) <br/>
-[带标注线图](../demo/linechart/demo3.html) <br/>
+[带文字标注线图](../demo/linechart/demo3.html) <br/>
 [带单位线图](../demo/linechart/demo4.html) <br/>
+[带标注线线图](../demo/linechart/demo5.html) <br/>
+[空数据线图](../demo/linechart/demo6.html) <br/>
+[网格线跟随鼠标移动](../demo/linechart/demo7.html) <br/>
 
 ---
 代码示例
