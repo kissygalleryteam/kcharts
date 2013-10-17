@@ -12329,7 +12329,7 @@ KISSY.add("gallery/kcharts/1.2/mapchart/index", function (S, Raphael, Theme, Map
                     y = points ? points.y : 0;
 
                 self.isInPaper = true;
-                self.fire('over', {data: [index, mapscale[index].text]});
+                self.fire('over', {data: [index, mapscale[index].text, x, y]});
                 if (!path.def) {
                     path.def = {};
                     var attr = path.attr();
