@@ -1,3 +1,14 @@
+# PieChart
+
+## Demo
+[自适应容器尺寸](../demo/piechart/pie-auto-resize.html) 
+[自适应容器尺寸面包圈](../demo/piechart/pie-auto-resize-donut.html) 
+[浏览器市场占有率](../demo/piechart/pie-bs.html) 
+[简单饼图](../demo/piechart/pie-simple.html)
+[饼图中间自定义文本或图片](../demo/piechart/pie-center-text.html)
+[无边框的饼图](../demo/piechart/pie-without-border.html)
+
+
 ### rs
 半径，对于面包圈图的半径为数组
 
