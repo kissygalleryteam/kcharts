@@ -1010,7 +1010,10 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			});
 
 			if (!tpl) return;
-
+			S.mix(tipData, {
+					groupindex: barGroup,
+					barindex: barIndex
+			});
 			tip.fire("setcontent", {
 				data: tipData
 			})
