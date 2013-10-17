@@ -89,17 +89,10 @@
      //旋转逻辑
      barChart.on("afterRender",function(){
        var paper = new Raphael(barChart._$ctnNode.attr("id"));
-       var ie = !!UA.ie;
        var texts = barChart._cfg.xAxis.text;
        for(var i in barChart._pointsX){
          var pt = barChart._pointsX[i];
-         var txt;
-         if(ie){
-           txt = paper.text(pt.x,pt.y,texts[i]);
-         }else{
-           txt = paper.text(pt.x,pt.y,texts[i]);
-         }
-
+         var txt = paper.text(pt.x,pt.y,texts[i]);
          txt.attr({
            "text-anchor":"end",
            "font-size":"12px",
