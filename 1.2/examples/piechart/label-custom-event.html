@@ -62,8 +62,13 @@
              duration:800
            }
          }
+
          var pie = new Pie(cfg);
          var E = S.Event;
+         pie.on("mouseover",function(e){
+           // 测试 事件
+           alert(e.sector);
+         });
 
          pie.on("afterRender",customLabelEvent);
          function customLabelEvent(){
@@ -76,8 +81,15 @@
                S.each(label,function(i){
                  if(i.get){
                    var el = i.get("el");
-                   E.on(el,"mouseenter",onLabelMouseenter);
-                   E.on(el,"mouseleave",onLabelMouseleave);
+                   var sector = i.get("sector");
+                   E.on(el,"mouseenter",function(e){
+                     sector.fire("mouseover");
+                     onLabelMouseenter(e);
+                   });
+                   E.on(el,"mouseleave",function(e){
+                     sector.fire("mouseout");
+                     onLabelMouseleave(e);
+                   });
                  }
                });
              });
@@ -89,7 +101,7 @@
          function onLabelMouseenter(e){
            //dosth
          }
-         function onLabelMouseenter(e){
+         function onLabelMouseleave(e){
            //do sth
          }
        }
