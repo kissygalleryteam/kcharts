@@ -3766,6 +3766,8 @@ window.Raphael.svg && function (R) {
             oval: "M2.5,0A2.5,2.5,0,0,1,2.5,5 2.5,2.5,0,0,1,2.5,0z"
         },
         markerCounter = {};
+    var UNIQUE_ID = 0;//用于产生唯一的arrowid
+
     R.toString = function () {
         return  "Your browser supports SVG.\nYou are running Rapha\xebl " + this.version;
     };
@@ -3940,7 +3942,7 @@ window.Raphael.svg && function (R) {
             }
             if (type != "none") {
                 var pathId = "raphael-marker-" + type,
-                    markerId = "raphael-marker-" + se + type + w + h;
+                    markerId = "raphael-marker-" + se + type + w + h + '-'+(UNIQUE_ID++);
                 if (!R._g.doc.getElementById(pathId)) {
                     p.defs.appendChild($($("path"), {
                         "stroke-linecap": "round",
