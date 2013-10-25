@@ -700,45 +700,22 @@ KISSY.add('gallery/kcharts/1.2/basechart/index', function(S, Base) {
 			var num = Math.round((arg + "").replace(/\s+|px/g, ''));
 			return Math.round((arg + "").replace(/\s+|px/g, ''));
 		},
-		getOffset: function(e) {
-			var target = e.currentTarget, // 当前触发的目标对象
-				eventCoord,
-				pageCoord,
-				offsetCoord;
-
-			var __getPageCoord = function(element) {
-				var coord = {
-					X: 0,
-					Y: 0
-				};
-				// 计算从当前触发元素到根节点为止，
-				// 各级 offsetParent 元素的 offsetLeft 或 offsetTop 值之和
-				while (element) {
-					coord.X += element.offsetLeft;
-					coord.Y += element.offsetTop;
-					element = element.offsetParent;
-				}
-				return coord;
-			}
-			//非firefox
-			if (e.offsetX) return {
-				offsetX: e.offsetX,
-				offsetY: e.offsetY
-			};
-			// 计算当前触发元素到文档的距离
-			pageCoord = __getPageCoord(target);
-			// 计算光标到文档的距离
-			eventCoord = {
-				X: window.pageXOffset + e.clientX,
-				Y: window.pageYOffset + e.clientY
-			};
-			// 相减获取光标到第一个定位的父元素的坐标
-			offsetCoord = {
-				offsetX: eventCoord.X - pageCoord.X,
-				offsetY: eventCoord.Y - pageCoord.Y
-			};
-			return offsetCoord;
-		},
+      getOffset: function(e) {
+        // see http://stackoverflow.com/questions/11334452/event-offsetx-in-firefox
+		var target = e.currentTarget // 当前触发的目标对象
+		if (e.offsetX) {
+          return {
+			offsetX: e.offsetX,
+			offsetY: e.offsetY
+          }
+		}else{
+          var offset = S.DOM.offset(target);
+          return {
+			offsetX: (e.offsetX || e.clientX - offset.left),
+			offsetY: (e.offsetY || e.clientY - offset.top)
+          }
+        }
+	  },
 		onResize:function(e){
 			var self = this,
 				$ctnNode = self._$ctnNode;
