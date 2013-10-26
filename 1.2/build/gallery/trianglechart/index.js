@@ -424,7 +424,7 @@ KISSY.add('gallery/kcharts/1.2/gallery/trianglechart/index', function(S, Templat
 
 			}
 		},
-		
+
 		//x轴
 		drawAxisX: function() {
 			var self = this,
@@ -674,7 +674,7 @@ KISSY.add('gallery/kcharts/1.2/gallery/trianglechart/index', function(S, Templat
 
 			self.legend = new Legend({
 				container: container,
-				papper: self.paper,
+				paper: self.paper,
 				bbox: {
 					width: innerContainer.width,
 					height: innerContainer.height,
