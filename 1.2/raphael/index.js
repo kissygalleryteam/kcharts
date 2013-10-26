@@ -7030,7 +7030,8 @@ KISSY.add('gallery/kcharts/1.2/raphael/index',function(S){
             R._g.doc.body.appendChild(cnvs);
             isFloating = 1;
         } else {
-            cnvs.style.cssText = css + "position:relative";
+            // moified by kcharts team
+            cnvs.style.cssText = css + "position:absolute";
             if (container.firstChild) {
                 container.insertBefore(cnvs, container.firstChild);
             } else {
