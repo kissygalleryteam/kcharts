@@ -10,5 +10,4 @@ kcharts 首页:  http://kcharts.taobao.net
 ### 旺旺交流群
 - 818302516
 
-### changelog
-- 2013.07.15 饼图支持自适应容器
+

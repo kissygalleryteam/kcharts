@@ -24,8 +24,7 @@
 // ├────────────────────────────────────────────────────────────┤ \\
 // │ Author Dmitry Baranovskiy (http://dmitry.baranovskiy.com/) │ \\
 // └────────────────────────────────────────────────────────────┘ \\
-KISSY.add('gallery/kcharts/1.2/raphael/index',function(S){
-  (function (glob) {
+(function (glob) {
     var version = "0.4.2",
         has = "hasOwnProperty",
         separator = /[\.\/]/,
@@ -8141,5 +8140,6 @@ KISSY.add('gallery/kcharts/1.2/raphael/index',function(S){
     oldRaphael.was ? (g.win.Raphael = R) : (Raphael = R);
     return R;
    }));
+KISSY.add('gallery/kcharts/1.2/raphael/index',function(S){
   return window.Raphael;
 });
