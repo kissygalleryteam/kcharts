@@ -1,3 +1,3 @@
-/*! kcharts - v1.2 - 2013-10-26 1:11:19 PM
+/*! kcharts - v1.2 - 2013-10-27 8:51:14 PM
 * Copyright (c) 2013 数据可视化小组; Licensed  */
 KISSY.add("gallery/kcharts/1.2/tools/touch/index",function(t){function l(t,l){if(!(t.touches.length>1)){var e=t.changedTouches,r=e[0],i=document.createEvent("MouseEvent");i.initMouseEvent(l,!0,!0,window,1,r.screenX,r.screenY,r.clientX,r.clientY,!1,!1,!1,!1,0,null),t.target.dispatchEvent(i)}}function e(t){var e=n(t);s||e||(s=!0,l(t,"mouseover"),l(t,"mousemove"),l(t,"mousedown"))}function r(t){s&&(l(t,"mousemove"),a=!0)}function i(t){s&&(l(t,"mouseup"),a&&l(t,"mouseout"),a=!1,s=!1)}function n(t){return"INPUT"==t.target.tagName.toUpperCase()?!0:!1}if(!t.UA.ie){var s,a=!1;document.addEventListener("touchstart",e,!0),document.addEventListener("touchmove",r,!0),document.addEventListener("touchend",i,!0)}});
