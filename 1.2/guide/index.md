@@ -51,14 +51,21 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 - [barchart 柱状图](barchart.html)
 - [piechart 饼图](piechart.html)
 - [scatterchart 散点图](scatterchart.html)
+- [mapchart 地图](mapchart.html)
 - [dashboard 油表](dashboard.html)
 - [ratiochart](ratiochart.html)
 - [sumdetailchart](sumdetailchart.html)
-- [tip](tip.html)
+- [radar 雷达图](radar.html)
 
 ###gallery
 
 - [funnel 漏斗图](funnel.html)
 - [trianglechart 三角形图](trianglechart.html)
 - [pyramid 金字塔](pyramid.html)
+
+###widget
+
+- [htmlpaper html画布](htmlpaper.html)
+- [legend 图例](legend.html)
+- [tip 移动标注](tip.html)
 
