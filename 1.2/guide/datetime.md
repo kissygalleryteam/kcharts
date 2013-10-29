@@ -218,7 +218,11 @@ Method（方法）
 
 渲染图表
 
-### getPaper()
+### getRaphaelPaper()
+
+获取矢量画布 详见：[Raphael文档](http://raphaeljs.com/reference.html)
+
+### getHtmlPaper()
 
 获取html画布 详见：[HtmlPaper文档](./htmlpaper.html)
 

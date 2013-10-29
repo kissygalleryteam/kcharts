@@ -195,7 +195,7 @@ KISSY.add("gallery/kcharts/1.2/barchart/theme",function(S){
  * @author huxiaoqi567@gmail.com
  * @changelog 支持两级柱图 柱形图默认刻度最小值0
  */
-KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
+KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
 
 	var $ = S.all,
 		Evt = S.Event,
@@ -884,6 +884,8 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 				themeCls = _cfg.themeCls;
 
 			clear && self._$ctnNode.html("");
+
+			self.raphaelPaper = Raphael(self._$ctnNode[0], _cfg.width, _cfg.height);
 			//渲染html画布 只放图形
 			self.paper = new HtmlPaper(self._$ctnNode, {
 				clsName: canvasCls,
@@ -1177,21 +1179,38 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			S.log(self);
 		},
 		afterRender: function() {
-
 			var self = this;
 			self.fire("afterRender", self);
-
 		},
+		/*  
+			TODO get htmlpaper
+			@deprecated As Of KCharts 1.2 replaced by 
+			getHtmlPaper
+			@see #getHtmlPaper
+		*/
 		getPaper: function() {
 			return this.paper;
 		},
-		//清空画布上的内容
+		/*
+			TODO get htmlpaper
+			@return {object} HtmlPaper
+		*/
+		getHtmlPaper:function(){
+			return this.paper;
+		},
+		/*
+			TODO get raphael paper
+			@return {object} Raphael
+		*/
+		getRaphaelPaper:function(){
+			return this.raphaelPaper;
+		},
+		/*
+			TODO clear all nodes
+		*/
 		clear: function() {
-
-			return this.paper.clear();
-
+			this._$ctnNode.html("");
 		}
-
 	});
 
 	return BarChart;
@@ -1200,11 +1219,12 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 	requires: [
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.2/basechart/index',
-		'gallery/kcharts/1.2//tools/color/index',
-		'gallery/kcharts/1.2//tools/htmlpaper/index',
-		'gallery/kcharts/1.2//legend/index',
+		'gallery/kcharts/1.2/raphael/index',
+		'gallery/kcharts/1.2/tools/color/index',
+		'gallery/kcharts/1.2/tools/htmlpaper/index',
+		'gallery/kcharts/1.2/legend/index',
 		'./theme',
-		'gallery/kcharts/1.2//tools/touch/index',
-		'gallery/kcharts/1.2//tip/index'
+		'gallery/kcharts/1.2/tools/touch/index',
+		'gallery/kcharts/1.2/tip/index'
 	]
 });
