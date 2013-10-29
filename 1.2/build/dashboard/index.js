@@ -8608,7 +8608,9 @@ KISSY.add("gallery/kcharts/1.2/raphael/index",function(S){
   }));
 
 
-  })(window)
+  })(window);
+
+  return window.Raphael;
 
 })
 // -*- coding: utf-8; -*-
