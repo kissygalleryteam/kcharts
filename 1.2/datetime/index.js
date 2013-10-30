@@ -284,8 +284,10 @@ KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,
 		},
 		//画块状区域
 		drawArea:function(lineIndex,callback){
-			var self = this,
-				points = self._points[lineIndex];
+			var self = this;
+			//不显示
+			if(!self._cfg.areas.isShow) return;
+			var	points = self._points[lineIndex];
 
 			if(points && points.length){
 			var	path = self.getAreaPath(points),
