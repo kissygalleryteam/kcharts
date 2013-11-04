@@ -902,10 +902,17 @@ KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,
 		},
 		//点的移动
 		stockHandler:function(curLineIndex,curStockIndex){
-			var self = this;
+			var self = this,point,stock;
 			for(var i in self._stocks){
-				self._stocks[i]['stock'] &&
-				 self._stocks[i]['stock'].show().attr({cx:self._points[i][curStockIndex]['x'],cy:self._points[i][curStockIndex]['y']})
+				stock = self._stocks[i]['stock'];
+				point = self._points[i][curStockIndex];
+				if(stock){
+					if(point['y'] === undefined || isNaN(point['y'])){
+						stock.hide();
+					}else{
+						 stock.show().attr({cx:point['x'],cy:point['y']})
+					}
+				}
 			}
 			self.stockChange(curLineIndex,curStockIndex);
 		},
