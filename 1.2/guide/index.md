@@ -3,19 +3,7 @@
 ---
 
 ```
-//包配置  
-KISSY.config({
-  packages:[
-      {
-        name:"gallery",
-        path:"http://a.tbcdn.cn/s/kissy/",
-        charset:"utf-8"
-      }
-    ]
-});
-/*若为KISSY 1.3 则忽略以上包配置*/
 
-//调用linechart
 KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
   var linechart = new LineChart({
       renderTo:"#demo1",
@@ -41,7 +29,19 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
       }
   });
 });
+
 ```
+
+##首页(内网)
+
+- [KCharts](http://kcharts.taobao.net)
+
+
+##Demo
+
+- [demo中心](http://kcharts.taobao.net/demo.php)
+
+
 ##组件文档
 
 ###core
