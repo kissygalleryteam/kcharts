@@ -1,7 +1,0 @@
-{
-  "tasks":{
-    "combo":[
-      {"src":["index.js"],"dest":"../build/raphael/index-min.js","min_file":true,"combo_file":"../build/raphael/index.js"}
-		]
-  }
-}

@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.2/icons/index", function(S){
+;KISSY.add("gallery/kcharts/1.2/icons/index", function(S){
   var merge = S.merge
     , isArray = S.isArray
 

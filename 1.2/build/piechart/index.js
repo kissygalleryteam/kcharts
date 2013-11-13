@@ -11,7 +11,7 @@ gallery/kcharts/1.2/piechart/index
 /**
  * sector数据处理
  * */
-KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
+;KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
   var isArray = S.isArray
   function flat(a){
     var ret = []
@@ -577,7 +577,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
 });
 
 // -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
+;KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○
@@ -794,7 +794,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
   return Sector;
 });
 // -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
+;KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
   var D = S.DOM
 
   // helpers
@@ -1038,7 +1038,7 @@ KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
   return Labels;
 })
 // -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,Labels,Raphael,Color){
+;KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,Labels,Raphael,Color){
   var D = S.DOM
     , E = S.Event
 

@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.2/datetime/theme",function(S){
+;KISSY.add("gallery/kcharts/1.2/datetime/theme",function(S){
 
 	var COLOR_TPL = "{COLOR}";
 

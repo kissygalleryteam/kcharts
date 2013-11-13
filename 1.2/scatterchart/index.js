@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.1  scatterchart
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add("gallery/kcharts/1.2/scatterchart/index", function(S, Base, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
+;KISSY.add("gallery/kcharts/1.2/scatterchart/index", function(S, Base, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
 
 	var $ = S.all,
 		Evt = S.Event,
@@ -788,12 +788,32 @@ KISSY.add("gallery/kcharts/1.2/scatterchart/index", function(S, Base, Template, 
 			var self = this;
 			self.fire("afterRender", self);
 		},
+		/*  
+			TODO get htmlpaper
+			@deprecated As Of KCharts 1.2 replaced by 
+			getHtmlPaper
+			@see #getHtmlPaper
+		*/
 		getPaper: function() {
 			return this.htmlPaper;
 		},
+		/*
+			TODO get htmlpaper
+			@return {object} HtmlPaper
+		*/
+		getHtmlPaper: function() {
+			return this.htmlPaper;
+		},
+		/*
+			TODO get raphael paper
+			@return {object} Raphael
+		*/
+		getRaphaelPaper: function() {
+			return this.paper;
+		},
 		//清空画布上的内容
 		clear: function() {
-			this.paper.clear();
+			this._$ctnNode.html("");
 		}
 	});
 	return ScatterChart;

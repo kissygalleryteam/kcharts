@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,Labels,Raphael,Color){
+;KISSY.add("gallery/kcharts/1.2/piechart/index",function(S,Util,Sector,Animate,Labels,Raphael,Color){
   var D = S.DOM
     , E = S.Event
 

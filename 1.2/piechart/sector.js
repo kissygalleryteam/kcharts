@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
+;KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○

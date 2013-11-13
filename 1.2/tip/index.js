@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.2  tip
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) {
+;KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Node,Anim,Template,undefined) {
 
     var $ = S.all,
         Event = S.Event;
@@ -336,4 +336,5 @@ KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Template,undefined) 
     S.KCharts.Tip = Tip;
     return Tip;
 
-}, {requires:['base','gallery/template/1.0/index', './assets/tip.css']});
+}, {requires:['base','node','anim','gallery/template/1.0/index', './assets/tip.css']});
+

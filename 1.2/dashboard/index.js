@@ -3,7 +3,7 @@
  * 仪表盘
  * @author cookieu@gmail.com
  */
-KISSY.add('gallery/kcharts/1.2/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks){
+;KISSY.add('gallery/kcharts/1.2/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks){
   var D = S.DOM
     , E = S.Event
     , R = Raphael

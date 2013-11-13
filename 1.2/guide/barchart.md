@@ -220,7 +220,11 @@ Method（方法）
 
 渲染图表
 
-### getPaper()
+### getRaphaelPaper()
+
+获取矢量画布 详见：[Raphael文档](http://raphaeljs.com/reference.html)
+
+### getHtmlPaper()
 
 获取html画布 详见：[HtmlPaper文档](./htmlpaper.html)
 
@@ -263,3 +267,10 @@ Event（事件）
 ### barChange
 
 柱之间的切换 (可以用来触发tip的移动和数据渲染)
+
+### barClick
+
+柱的点击事件 
+
+
+

@@ -3,7 +3,7 @@
  * 矢量画刻度
  * @author cookieu@gmail.com
  * */
-KISSY.add('gallery/kcharts/1.2/dashboard/dashboard-ticks',function(S){
+;KISSY.add('gallery/kcharts/1.2/dashboard/dashboard-ticks',function(S){
   function Ticks(){
     Ticks.superclass.constructor.apply(this,arguments)
     this.init()

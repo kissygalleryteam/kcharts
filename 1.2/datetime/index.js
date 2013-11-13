@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.2  datetime
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
+;KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
 	var $ = S.all,
 		Evt = S.Event,
 		clsPrefix = "ks-chart-",
@@ -284,8 +284,10 @@ KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,
 		},
 		//画块状区域
 		drawArea:function(lineIndex,callback){
-			var self = this,
-				points = self._points[lineIndex];
+			var self = this;
+			//不显示
+			if(!self._cfg.areas.isShow) return;
+			var	points = self._points[lineIndex];
 
 			if(points && points.length){
 			var	path = self.getAreaPath(points),
@@ -900,10 +902,17 @@ KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,
 		},
 		//点的移动
 		stockHandler:function(curLineIndex,curStockIndex){
-			var self = this;
+			var self = this,point,stock;
 			for(var i in self._stocks){
-				self._stocks[i]['stock'] &&
-				 self._stocks[i]['stock'].show().attr({cx:self._points[i][curStockIndex]['x'],cy:self._points[i][curStockIndex]['y']})
+				stock = self._stocks[i]['stock'];
+				point = self._points[i][curStockIndex];
+				if(stock){
+					if(point['y'] === undefined || isNaN(point['y'])){
+						stock.hide();
+					}else{
+						 stock.show().attr({cx:point['x'],cy:point['y']})
+					}
+				}
 			}
 			self.stockChange(curLineIndex,curStockIndex);
 		},
@@ -1192,14 +1201,32 @@ KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,
 			var self = this;
 			self.fire("afterRender",self);
 		},
+		/*  
+			TODO get htmlpaper
+			@deprecated As Of KCharts 1.2 replaced by 
+			getHtmlPaper
+			@see #getHtmlPaper
+		*/
 		getPaper:function(){
 			return this.htmlPaper;
 		},
-		//获取raphael
+		/*
+			TODO get htmlpaper
+			@return {object} HtmlPaper
+		*/
+		getHtmlPaper:function(){
+			return this.htmlPaper;
+		},
+		/*
+			TODO get raphael paper
+			@return {object} Raphael
+		*/
 		getRaphaelPaper:function(){
 			return this.paper;
 		},
-		//清空画布上的内容
+		/*
+			TODO clear all nodes
+		*/
 		clear:function(){
 			this._$ctnNode.html("");
 		}
