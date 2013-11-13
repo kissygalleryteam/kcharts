@@ -32,9 +32,9 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 
 ```
 
-##首页(内网)
-
-- [KCharts](http://kcharts.taobao.net)
+##KCharts首页
+- [KCharts 外网](http://charts.kissyui.com)
+- [KCharts 内网](http://kcharts.taobao.net)
 
 
 ##Demo
