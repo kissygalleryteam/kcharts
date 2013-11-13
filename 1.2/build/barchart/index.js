@@ -193,7 +193,9 @@ KISSY.add("gallery/kcharts/1.2/barchart/theme",function(S){
 /**
  * @fileOverview KChart 1.2  barchart
  * @author huxiaoqi567@gmail.com
- * @changelog 支持两级柱图 柱形图默认刻度最小值0
+ * @changelog 
+ * 支持两级柱图 柱形图默认刻度最小值0
+ * 新增barClick事件
  */
 KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
 
@@ -954,6 +956,17 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 
 			});
 
+			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "click");
+
+			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "click", function(e) {
+				var $evtBar = $(e.currentTarget),
+					barIndex = $evtBar.attr("barIndex"),
+					barGroup = $evtBar.attr("barGroup");
+
+				self.barClick(barGroup, barIndex);
+
+			});
+
 			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave");
 
 			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave", function(e) {
@@ -990,6 +1003,17 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 				}, self._points[barGroup][barIndex]);
 
 			self.fire("barChange", e);
+		},
+		barClick: function(barGroup, barIndex) {
+			var self = this,
+				currentBars = self._bars[barGroup],
+				e = S.mix({
+					target: currentBars['bars'][barIndex],
+					currentTarget: currentBars['bars'][barIndex],
+					barGroup: Math.round(barGroup),
+					barIndex: Math.round(barIndex)
+				}, self._points[barGroup][barIndex]);
+			self.fire("barClick", e);
 		},
 		tipHandler: function(barGroup, barIndex) {
 			var self = this,

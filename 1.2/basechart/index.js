@@ -1,7 +1,7 @@
 /*
 TODO 坐标运算  画布大小计算
 */
-KISSY.add('gallery/kcharts/1.2/basechart/index', function(S, Base) {
+KISSY.add('gallery/kcharts/1.2/basechart/index', function(S, Base,Node) {
 	var $ = S.all;
 	var isNagitive = false;
 	var isPositive = false;
@@ -738,5 +738,5 @@ KISSY.add('gallery/kcharts/1.2/basechart/index', function(S, Base) {
 
 	return BaseChart;
 }, {
-	requires: ['base']
+	requires: ['base','node']
 });

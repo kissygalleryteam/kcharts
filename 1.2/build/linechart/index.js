@@ -252,6 +252,8 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 /**
  * @fileOverview KChart 1.2  linechart
  * @author huxiaoqi567@gmail.com
+ * change log
+ * 2013-11-13  新增stockClick事件
  */
 KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
 	var $ = S.all,
@@ -1220,14 +1222,37 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 				//mousemove代理
 				self.delegateMouseMove(e);
 			});
+
+			Evt.detach(evtEls.paper.$paper, "click");
+			// 绑定mousemove事件
+			Evt.on(evtEls.paper.$paper, "click", function(e) {
+				//fix firefox offset bug
+				e = self.getOffset(e);
+				//mousemove代理
+				self.delegateClick(e);
+			});
+		},
+		//mouseclick代理
+		delegateClick:function(e){
+			var self = this,
+				ctn = self.getInnerContainer();
+
+			for (var i in self._evtEls._rects) {
+				for (var j in self._evtEls._rects[i]) {
+					var rect = self._evtEls._rects[i][j];
+					if (self.isInSide(e.offsetX + ctn.x, e.offsetY + ctn.y, rect['x'], rect['y'], rect['width'], rect['height'])) {
+						self.stockClick(i,j);
+						return;
+					}
+				}
+			}
 		},
 		//mousemove代理
 		delegateMouseMove: function(e) {
 			var self = this,
 				ctn = self.getInnerContainer(),
-				curStockIndex = self.curStockIndex,
-				currentPoints,
-				currentStocks;
+				curStockIndex = self.curStockIndex;
+
 			for (var i in self._evtEls._areas) {
 				var area = self._evtEls._areas[i];
 				if (self.isInSide(e.offsetX + ctn.x, e.offsetY + ctn.y, area['x'], area['y'], area['width'], area['height'])) {
@@ -1570,11 +1595,23 @@ KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Rap
 			var self = this;
 			self.fire("paperLeave", self);
 		},
+		stockClick:function(lineIndex, stockIndex){
+			var self = this,
+				currentStocks = self._stocks[lineIndex],
+				tgt = currentStocks['stocks'] && currentStocks['stocks'][stockIndex];
+			var e = S.mix({
+				target: tgt,
+				currentTarget: tgt,
+				lineIndex: Math.round(lineIndex),
+				stockIndex: Math.round(stockIndex)
+			}, currentStocks['points'][stockIndex]);
+			self.fire("stockClick", e);
+		},
 		stockChange: function(lineIndex, stockIndex) {
 			var self = this,
 				currentStocks = self._stocks[lineIndex],
 				tgt = currentStocks['stocks'] && currentStocks['stocks'][stockIndex];
-			e = S.mix({
+			var e = S.mix({
 				target: tgt,
 				currentTarget: tgt,
 				lineIndex: Math.round(lineIndex),
