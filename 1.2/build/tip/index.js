@@ -8,7 +8,7 @@ gallery/kcharts/1.2/tip/index
  * @fileOverview KChart 1.2  tip
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Node,Anim,Template,undefined) {
+;KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Node,Anim,Template,undefined) {
 
     var $ = S.all,
         Event = S.Event;

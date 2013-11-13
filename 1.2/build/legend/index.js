@@ -5,7 +5,7 @@ gallery/kcharts/1.2/legend/index
 
 */
 // -*- coding: utf-8-unix; -*-
-KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
+;KISSY.add("gallery/kcharts/1.2/legend/index",function(S,D,E,Icons,Animation){
   var merge = S.merge;
 
   var unit = Icons.BASIC[1];

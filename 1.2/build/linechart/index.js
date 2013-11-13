@@ -5,7 +5,7 @@ gallery/kcharts/1.2/linechart/theme
 gallery/kcharts/1.2/linechart/index
 
 */
-KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
+;KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
@@ -255,7 +255,7 @@ KISSY.add("gallery/kcharts/1.2/linechart/theme",function(S){
  * change log
  * 2013-11-13  新增stockClick事件
  */
-KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
+;KISSY.add("gallery/kcharts/1.2/linechart/index", function(S, Base, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
 	var $ = S.all,
 		Evt = S.Event,
 		clsPrefix = "ks-chart-",

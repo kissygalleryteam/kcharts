@@ -281,3 +281,8 @@ Event（事件）
 ### stockChange
 
 点之间的切换 (可以用来触发tip的移动和数据渲染)
+
+### stockClick
+
+点的点击事件 (可以获取当前直线和当前点的index)
+

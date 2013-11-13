@@ -2,7 +2,7 @@
 /**
  * sector数据处理
  * */
-KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
+;KISSY.add("gallery/kcharts/1.2/piechart/util",function(S,Sector,Color,Raphael){
   var isArray = S.isArray
   function flat(a){
     var ret = []

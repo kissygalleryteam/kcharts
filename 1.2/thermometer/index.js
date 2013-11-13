@@ -1,6 +1,6 @@
 // -*- coding: utf-8; -*-
 // steel from http://svenbieder.com/thermometer-gauge/
-KISSY.add("gallery/kcharts/1.2/thermometer/index",function(S,Raphael){
+;KISSY.add("gallery/kcharts/1.2/thermometer/index",function(S,Raphael){
   function Thermometer(cfg){
     this.set(cfg);
     var container = S.get(cfg.renderTo);

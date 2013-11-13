@@ -3,7 +3,7 @@
  * 指针
  * @author cookieu@gmail.com
  * */
-KISSY.add('gallery/kcharts/1.2/dashboard/pointer',function(S){
+;KISSY.add('gallery/kcharts/1.2/dashboard/pointer',function(S){
   function Pointer(){
     Pointer.superclass.constructor.apply(this,arguments)
   }

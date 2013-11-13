@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
+;KISSY.add("gallery/kcharts/1.2/piechart/label",function(S){
   var D = S.DOM
 
   // helpers

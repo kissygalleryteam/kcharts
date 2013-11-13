@@ -8,7 +8,7 @@ gallery/kcharts/1.2/dashboard/dashboard-ticks
 gallery/kcharts/1.2/dashboard/index
 
 */
-KISSY.add("gallery/kcharts/1.2/raphael/index",function(S){
+;KISSY.add("gallery/kcharts/1.2/raphael/index",function(S){
 
   (function(win){
       // ┌────────────────────────────────────────────────────────────────────┐ \\
@@ -8618,7 +8618,7 @@ KISSY.add("gallery/kcharts/1.2/raphael/index",function(S){
  * 指针
  * @author cookieu@gmail.com
  * */
-KISSY.add('gallery/kcharts/1.2/dashboard/pointer',function(S){
+;KISSY.add('gallery/kcharts/1.2/dashboard/pointer',function(S){
   function Pointer(){
     Pointer.superclass.constructor.apply(this,arguments)
   }
@@ -8753,7 +8753,7 @@ KISSY.add('gallery/kcharts/1.2/dashboard/pointer',function(S){
  * 指针
  * @author cookieu@gmail.com
  * */
-KISSY.add('gallery/kcharts/1.2/dashboard/pointer-pic',function(S,Pointer){
+;KISSY.add('gallery/kcharts/1.2/dashboard/pointer-pic',function(S,Pointer){
   function PicturePointer(){
     PicturePointer.superclass.constructor.apply(this,arguments)
     var pointer = this.get('pointer')
@@ -8792,7 +8792,7 @@ KISSY.add('gallery/kcharts/1.2/dashboard/pointer-pic',function(S,Pointer){
  * 矢量画刻度
  * @author cookieu@gmail.com
  * */
-KISSY.add('gallery/kcharts/1.2/dashboard/dashboard-ticks',function(S){
+;KISSY.add('gallery/kcharts/1.2/dashboard/dashboard-ticks',function(S){
   function Ticks(){
     Ticks.superclass.constructor.apply(this,arguments)
     this.init()
@@ -8886,7 +8886,7 @@ KISSY.add('gallery/kcharts/1.2/dashboard/dashboard-ticks',function(S){
  * 仪表盘
  * @author cookieu@gmail.com
  */
-KISSY.add('gallery/kcharts/1.2/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks){
+;KISSY.add('gallery/kcharts/1.2/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks){
   var D = S.DOM
     , E = S.Event
     , R = Raphael

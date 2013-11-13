@@ -2,7 +2,7 @@
   touch 事件的
   note:change touch event to mouse event
 */
-KISSY.add('gallery/kcharts/1.2/tools/touch/index',function(S){
+;KISSY.add('gallery/kcharts/1.2/tools/touch/index',function(S){
   if(S.UA.ie) return;
   var touchHandled,touchmove=false;
 

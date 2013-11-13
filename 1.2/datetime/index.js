@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.2  datetime
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
+;KISSY.add("gallery/kcharts/1.2/datetime/index",function(S,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
 	var $ = S.all,
 		Evt = S.Event,
 		clsPrefix = "ks-chart-",

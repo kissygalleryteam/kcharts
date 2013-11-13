@@ -5,7 +5,7 @@ gallery/kcharts/1.2/radar/index
 
 */
 // -*- coding: utf-8; -*-
-KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
+;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
   var pi = Math.PI
     , unit = pi/180
 

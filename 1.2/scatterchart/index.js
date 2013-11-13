@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.1  scatterchart
  * @author huxiaoqi567@gmail.com
  */
-KISSY.add("gallery/kcharts/1.2/scatterchart/index", function(S, Base, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
+;KISSY.add("gallery/kcharts/1.2/scatterchart/index", function(S, Base, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
 
 	var $ = S.all,
 		Evt = S.Event,

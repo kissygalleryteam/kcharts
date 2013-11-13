@@ -1,7 +1,7 @@
 /**
 	基于html 画图形
 **/
-KISSY.add('gallery/kcharts/1.2/tools/htmlpaper/index',function(S){
+;KISSY.add('gallery/kcharts/1.2/tools/htmlpaper/index',function(S){
 
 	var $ = S.all,
 		win = window;

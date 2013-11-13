@@ -5,7 +5,7 @@ gallery/kcharts/1.2/barchart/theme
 gallery/kcharts/1.2/barchart/index
 
 */
-KISSY.add("gallery/kcharts/1.2/barchart/theme",function(S){
+;KISSY.add("gallery/kcharts/1.2/barchart/theme",function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
@@ -197,7 +197,7 @@ KISSY.add("gallery/kcharts/1.2/barchart/theme",function(S){
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
-KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
+;KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
 
 	var $ = S.all,
 		Evt = S.Event,

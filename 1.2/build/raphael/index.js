@@ -4,7 +4,7 @@ combined files :
 gallery/kcharts/1.2/raphael/index
 
 */
-KISSY.add("gallery/kcharts/1.2/raphael/index",function(S){
+;KISSY.add("gallery/kcharts/1.2/raphael/index",function(S){
 
   (function(win){
       // ┌────────────────────────────────────────────────────────────────────┐ \\

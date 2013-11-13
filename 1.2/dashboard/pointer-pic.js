@@ -3,7 +3,7 @@
  * 指针
  * @author cookieu@gmail.com
  * */
-KISSY.add('gallery/kcharts/1.2/dashboard/pointer-pic',function(S,Pointer){
+;KISSY.add('gallery/kcharts/1.2/dashboard/pointer-pic',function(S,Pointer){
   function PicturePointer(){
     PicturePointer.superclass.constructor.apply(this,arguments)
     var pointer = this.get('pointer')
