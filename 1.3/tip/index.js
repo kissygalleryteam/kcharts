@@ -341,7 +341,7 @@
     'base',
     'node',
     'anim',
-    'gallery/template/1.0/index'
-    // './assets/tip.css'
+    'gallery/template/1.0/index',
+    './assets/tip.css'
   ]});
 
