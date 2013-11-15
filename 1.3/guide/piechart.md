@@ -79,6 +79,20 @@ label生成函数
 ### label
 是否显示label。默认显示
 
+### tip 
+集成的tip配置，同其它图表，示例：
+
+```
+{
+  isShow:true,
+  template:"donutIndex:{{donutIndex}},groupIndex-{{index}},label-{{label}},所占比例-{{percent}}",
+  css:{
+    "font-size":'14px'
+  }
+}
+```
+templte可以为函数，参数为 `donutIndex,groupIndex,label,percent`
+
 ### autoLabelPathColor label曲线路径是否自动为为扇形的颜色
 
 `true` or `false`
