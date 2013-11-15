@@ -434,13 +434,12 @@
       , gradienton = pie.get("gradient")
 
     for(var i=0,l=set.length;i<l;i++){
-      var rset = paper.set()
-        , iniColor = set[i][0].color
+      var iniColor = set[i][0].color
         , llen = set[i].length
         , setcolor = new degrade(iniColor,llen)
       for(var j=0,ll=set[i].length;j<ll;j++){
-        var setij = set[i][j]
-          , setij$el = setij.el
+        var setij = set[i][j]   //
+          , setij$el = setij.el // 对应的sector
           , framedata = setij$el.get("framedata")
           , $path = setij$el.get('$path')
           , ss
@@ -462,6 +461,9 @@
             }
           }
         }
+
+        // 用于tip
+        setij$el.set("fill",c);
 
         $path.attr("fill",c);
         //渐变色

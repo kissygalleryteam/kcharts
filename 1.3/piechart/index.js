@@ -3,6 +3,8 @@
   var D = S.DOM
     , E = S.Event
 
+   var COLOR_TPL = "{COLOR}";
+
   function render(){
     this.destroy();
     var paper = Raphael(this.get("container"),this.get("width"),this.get("height"));
@@ -77,8 +79,7 @@
       , isStatic = D.css(container,'position') == "static" ? true : false
 
     this.set({"paper":paper,width:width,height:height,container:container})
-
-    //若没有cx|cy|r，则算一个默认的出来
+    // 若没有cx|cy|r，则算一个默认的出来
     this._setupcfg(cfg);
 
     if(!S.isArray(cfg.rs)){
@@ -97,10 +98,16 @@
     this.drawTitle();
     if(cfg.autoRender != false){
       var that = this;
-      //延迟渲染
+      // 延迟渲染
       setTimeout(function(){
         that.render();
       },0);
+    }
+
+    // 渲染tip
+    var tipconfig = this.get("tip");
+    if(tipconfig && tipconfig != false){
+      this.renderTip();
     }
   }
   S.extend(Pie,S.Base,{
@@ -137,24 +144,26 @@
         paper = this.get("paper")
         container = this.get("container")
 
-        //bboxing
-        var rs = this.get("rs")
-          , rl = rs[rs.length-1]
-          , rpadding = this.get("rpadding") || 0
-          , padding = this.get("padding") || 0
-          , cx = this.get("cx")
-          , cy = this.get("cy")
+        // 写成独立方法
+        // var rs = this.get("rs")
+        //   , rl = rs[rs.length-1]
+        //   , rpadding = this.get("rpadding") || 0
+        //   , padding = this.get("padding") || 0
+        //   , cx = this.get("cx")
+        //   , cy = this.get("cy")
 
-        var width = (rl+rpadding+padding)*2
-          , left = cx - width/2
-          , top = cy - width/2
+        // var width = (rl+rpadding+padding)*2
+        //   , left = cx - width/2
+        //   , top = cy - width/2
 
-        bbox = {
-          width:width,
-          height:width,
-          left:left,
-          top:top
-        }
+        // bbox = {
+        //   width:width,
+        //   height:width,
+        //   left:left,
+        //   top:top
+        // }
+
+        bbox = this.getbbox();
 
         function buildparts(){
           var $sectors = that.get("$sectors")
@@ -235,8 +244,9 @@
       this.fire("beforeRender");
       var framedata = this.get('framedata')
       this.animate(framedata)
+
       // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘
-      var bufferedDraw = S.buffer(render,this.get("repaintRate"),this)
+      var bufferedDraw = S.buffer(render,this.get("repaintRate"),this);
       this.render = bufferedDraw;
       this.bindEvent();
     },
@@ -410,6 +420,101 @@
      * 绘制内部label，需配置
      * */
     drawSetLabel:function(){
+    },
+    getbbox:function(){
+      var bbox ;
+      var rs = this.get("rs")
+        , rl = rs[rs.length-1]
+        , rpadding = this.get("rpadding") || 0
+        , padding = this.get("padding") || 0
+        , cx = this.get("cx")
+        , cy = this.get("cy");
+
+      var width = (rl+rpadding+padding)*2
+        , left = cx - width/2
+        , top = cy - width/2;
+
+      bbox = {
+        width  : width,
+        height : width,
+        left   : left,
+        top    : top
+      };
+      return bbox;
+    },
+    /**
+     * afterRender事件后渲染
+     * */
+    renderTip:function(tipconfig){
+      // 渲染过后就不再重复渲染
+      if(this.tip)
+        return
+
+      tipconfig || (tipconfig = this.get("tip"));
+      if(!tipconfig)
+        return;
+
+      // {
+	  //   x: ctn.tl.x,
+	  //   y: ctn.tl.y,
+	  //   width: ctn.width,
+	  //   height: ctn.height
+	  // }
+
+	  var self = this;
+      var container = self.get("container");
+
+      S.use("gallery/kcharts/1.3/tip/index",function(S,Tip){
+        var bbox = self.getbbox();
+        // 修正bbox字段
+        bbox.x = bbox.left;
+        bbox.y = bbox.top;
+
+        var themeCls = tipconfig.themeCls || "ks-chart-default";
+
+		var boundryCfg = tipconfig.boundryDetect ? bbox : {},
+		    tipCfg     = S.mix(tipconfig, {
+			  rootNode: container,
+			  clsName: themeCls,
+			  boundry: boundryCfg
+		    }, undefined, undefined, true);
+
+	    var tip  = new Tip(tipCfg);
+        self.tip = tip;
+        self.on("mouseover",function(e){
+          // 移动tip
+          var sector     = e.sector;
+          var x          = sector.get("middlex"),
+              y          = sector.get("middley"),
+              data       = sector.get("framedata"), // 即配置的数据
+              label      = data.label,
+              groupIndex = sector.get("groupIndex"),
+              donutIndex = sector.get("donutIndex"),
+              percent    = data.percent
+
+          var color = sector.get("color");
+
+          var size   = Labels.getSizeOf(label); // label的尺寸
+
+          percent = (percent*100).toFixed(2)+"%";
+          if(S.isFunction(tipconfig.template)){
+            tip.setContent(tipconfig.template.apply(tip,[donutIndex,groupIndex,label,percent]));
+          }else{
+            tip.renderTemplate(tipconfig.template,{"donutIndex":donutIndex,index:groupIndex,label:label,"percent":percent});
+          }
+          tip.fire('move',{x:x,y:y,style:self.processAttr(tipconfig.css, color)});
+        },self);
+
+      });
+	},
+    processAttr:function(attrs,color){
+	  var newAttrs = S.clone(attrs);
+	  for (var i in newAttrs) {
+		if (newAttrs[i] && typeof newAttrs[i] == "string") {
+		  newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
+		}
+	  }
+	  return newAttrs;
     },
     onLabelClick:function(e){
       this.fire('labelclick',{
