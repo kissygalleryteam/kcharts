@@ -252,15 +252,15 @@
           , $text = e.text
           , $icon = e.icon
           , el = e.el
-		if (el.hide != 1) {
-		  this.hideLine(i);
-		  el.hide = 1;
-		  el.disable();
-		} else {
-		  this.showLine(i);
-		  el.hide = 0;
-		  el.enable();
-		}
+        if (el.hide != 1) {
+          this.hideLine(i);
+          el.hide = 1;
+          el.disable();
+        } else {
+          this.showLine(i);
+          el.hide = 0;
+          el.enable();
+        }
       },this);
 
       this.set("legend",$legend);
@@ -296,6 +296,7 @@
     },
     drawLabels:function(edge_points,opts){
       var points = edge_points
+      var that = this;
 
       var paper = this.get("paper")
         , config = this.get("config")
@@ -316,6 +317,11 @@
         var label = labels[i];
         if (label.length > opts['text']['max-chars']) label = label.replace(" ", "\n");
         var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor }));
+	    (function(text,i){
+           text.click(function(){
+             that.fire('labelclick',{index:i});
+           });
+        })(text,i);
       }
     },
     //中心发散的刻度尺
@@ -329,10 +335,13 @@
         , x2,y2
       // Draws measures of the chart
       var measures=[], rulers=[];
+
+      /*
       for (var i = 0; i < points.length; i++) {
         x = points[i].x, y = points[i].y;
         measures.push( paper.path("M " + cx + " " + cy + " L " + x + " " + y).attr("stroke", "#777") );
         var r_len = 0.025;
+
         for (var j = 1; j < 5; j++) {
           x1 = lined_on( cx, points[i].x, j * 0.20 - r_len);
           y1 = lined_on( cy, points[i].y, j * 0.20 - r_len);
@@ -340,7 +349,76 @@
           y2 = lined_on( cy, points[i].y, j * 0.20 + r_len);
           var cl = paper.path("M " + x1 + " " + y1 + " L " + x2 + " " + y2).attr({"stroke":"#777"});
           cl.rotate(90);
+
+          var _r = "r"+(i*60)+","+cx+','+cy;
+          // console.log(_r);
+
+          paper.text(x1,y1,j)
+          .translate(5,0)
+          .rotate(i*60)
+          // .transform(_r);
+
           rulers.push(cl);
+        }
+      }
+    */
+      //通用的
+      var defaultCfg = {
+          ticklength:5//标尺宽度
+          ,aside:1 //标尺方向
+      };
+
+      var deg2rad = Math.PI/180;
+      var pointlen = points.length;
+      var degunit = 360/pointlen;
+
+      var filterfn = false;
+          if(config.labelfn){
+            if(S.isFunction(config.labelfn)){
+              filterfn = config.labelfn;
+            }
+          }
+
+      for(var i=0;i<pointlen;i++){
+        x = points[i].x, y = points[i].y;
+        measures.push( paper.path("M " + cx + " " + cy + " L " + x + " " + y).attr("stroke", "#777") );
+        // var pts = axis([cx,cy],[points[i].x,points[i].y],4);
+        // 0  180 - 0
+        // 1  180 - 60
+        // 2  180 - 120
+        // 3  180 - 180
+        // 4
+        // 5
+        var deg = 180 - i*degunit;
+        // var unit = [4*Math.sin(deg*deg2rad),-4*Math.cos(deg*deg2rad)];
+        var ix = Math.cos(deg*deg2rad);
+        var iy = Math.sin(deg*deg2rad);
+
+        for (var j = 1; j < 5; j++) {
+          var x0 = lined_on( cx, points[i].x, j * 0.20);
+          var y0 = lined_on( cy, points[i].y, j * 0.20);
+
+          x1 = x0+ix*3; y1=y0-iy*3;
+          x2 = x0-ix*3; y2=y0+iy*3;
+          var x3,y3;
+          x3 = x0-ix*5; y3=y0+iy*5;
+
+          // paper.circle(x0,y0,2).attr({"fill":'red'});
+          // paper.circle(x1,y1,2);
+          // paper.circle(x2,y2,2).attr({"fill":'green'});
+
+          paper.path(["M",x2,y2,"L",x1,y1,"Z"]);
+          var rotate_deg = i*degunit;
+          if(rotate_deg>=270){
+            rotate_deg +=90;
+          }else if(rotate_deg>=90){
+            rotate_deg +=180;
+          }
+          if(filterfn){
+            if(filterfn(i)){
+               paper.text(x3,y3,j).rotate(rotate_deg);
+            }
+          }
         }
       }
     },
@@ -355,7 +433,7 @@
       }
       //  移除对下面这种配置方式的支持
       /*
-	  scoreGroups:[
+      scoreGroups:[
         { title: "Real Madrid C.F.",
           offense: 8,
           defense: 9,
