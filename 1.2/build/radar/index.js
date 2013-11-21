@@ -1,5 +1,5 @@
 /*
-combined files : 
+combined files :
 
 gallery/kcharts/1.2/radar/index
 
@@ -328,10 +328,10 @@ gallery/kcharts/1.2/radar/index
              that.fire('labelclick',{index:i,x:point.x,y:point.y});
            })
            .mouseover(function(){
-             that.fire('mouseover',{index:i,x:point.x,y:point.y});
+             that.fire('labelmouseover',{index:i,x:point.x,y:point.y});
            })
            .mouseout(function(){
-             that.fire('mouseout',{index:i,x:point.x,y:point.y});
+             that.fire('labelmouseout',{index:i,x:point.x,y:point.y});
            })
         })(text,i,points[i]);
       }
