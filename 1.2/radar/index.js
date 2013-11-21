@@ -316,7 +316,7 @@
 
         var label = labels[i];
         if (label.length > opts['text']['max-chars']) label = label.replace(" ", "\n");
-        var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor }));
+        var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor ,"cursor":"pointer"}));
 	    (function(text,i,point){
            text.click(function(){
              that.fire('labelclick',{index:i,x:point.x,y:point.y});
