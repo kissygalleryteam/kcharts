@@ -72,6 +72,8 @@
        });
        // 事件支持
        radar.on('labelclick',function(e){window.console && console.log(e.index);});
+       radar.on('mouseover',function(e){window.console && console.log(e.index,e.x,e.y);});
+       radar.on('mouseout',function(e){window.console && console.log(e.index,e.x,e.y);});
      })
     </script>
   </body>
