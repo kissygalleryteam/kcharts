@@ -948,8 +948,8 @@
 						}
 					}
 				})();
+          this.unbindEvt();
 			self.curLineIndex = self.getFirstVisibleLineIndex();
-			Evt.detach(evtEls.paper.$paper, "mouseleave");
 			// 绑定画布mouseleave事件
 			Evt.on(evtEls.paper.$paper, "mouseleave", function(e) {
 				self._lines[0]['line'].attr(self._lines[0]['attr']);
@@ -963,7 +963,6 @@
 				self.curStockIndex = undefined;
 				self.paperLeave();
 			});
-			Evt.detach(evtEls.paper.$paper, "mousemove");
 			// 绑定mousemove事件
 			Evt.on(evtEls.paper.$paper, "mousemove", function(e) {
 				//fix firefox offset bug
@@ -972,7 +971,6 @@
 				self.delegateMouseMove(e);
 			});
 
-			Evt.detach(evtEls.paper.$paper, "click");
 			// 绑定mousemove事件
 			Evt.on(evtEls.paper.$paper, "click", function(e) {
 				//fix firefox offset bug
@@ -981,6 +979,14 @@
 				self.delegateClick(e);
 			});
 		},
+      unbindEvt:function(){
+		var evtEls = self._evtEls;
+        if(evtEls && evtEls.paper){
+		  Evt.detach(evtEls.paper.$paper, "mousemove");
+		  Evt.detach(evtEls.paper.$paper, "mouseleave");
+		  Evt.detach(evtEls.paper.$paper, "click");
+        }
+      },
 		//mouseclick代理
 		delegateClick:function(e){
 			var self = this,
@@ -1376,9 +1382,9 @@
 			var self = this;
 			self.fire("afterRender", self);
 		},
-		/*  
+		/*
 			TODO get htmlpaper
-			@deprecated As Of KCharts 1.2 replaced by 
+			@deprecated As Of KCharts 1.2 replaced by
 			getHtmlPaper
 			@see #getHtmlPaper
 		*/
@@ -1404,7 +1410,12 @@
 		*/
 		clear: function() {
 			this._$ctnNode.html("");
-		}
+		},
+      destroy:function(){
+          // 销毁实例
+          this.unbindEvt();
+          this.clear();
+      }
 	});
 	return LineChart;
 }, {
