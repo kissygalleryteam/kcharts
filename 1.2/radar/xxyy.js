@@ -1,4 +1,4 @@
-KISSY.add("gallery/kcharts/1.2/radar/xxyy",function(){
+;KISSY.add("gallery/kcharts/1.2/radar/xxyy",function(S){
   function XXYY() {
     this.epsilon = 1.0;
     while ((1 + (this.epsilon / 2)) !== 1) {
