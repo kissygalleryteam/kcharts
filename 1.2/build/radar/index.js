@@ -5,7 +5,7 @@ gallery/kcharts/1.2/radar/index
 
 */
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend,XY){
+;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
   var pi = Math.PI
     , unit = pi/180
 
@@ -548,8 +548,8 @@ gallery/kcharts/1.2/radar/index
   requires:[
     "gallery/kcharts/1.2/raphael/index",
     "dom","event",
-    'gallery/kcharts/1.2/legend/index',
-    'gallery/kcharts/1.2/radar/xxyy'
+    'gallery/kcharts/1.2/legend/index'
+    // 'gallery/kcharts/1.2/radar/xxyy'
   ]
 });
 /**

@@ -14,7 +14,6 @@ module.exports = function(grunt) {
     'scatterchart',
     'thermometer',
     'tip',
-    "radar",
     "icons",
     "tools/color",
     "tools/graphtool",
