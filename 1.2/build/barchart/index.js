@@ -193,7 +193,7 @@ gallery/kcharts/1.2/barchart/index
 /**
  * @fileOverview KChart 1.2  barchart
  * @author huxiaoqi567@gmail.com
- * @changelog 
+ * @changelog
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
@@ -223,7 +223,7 @@ gallery/kcharts/1.2/barchart/index
 			var self = this;
 
 			self.chartType = "barchart";
-			
+
 			BaseChart.prototype.init.call(self, self._cfg);
 
 			if (!self._$ctnNode[0]) return;
@@ -943,8 +943,8 @@ gallery/kcharts/1.2/barchart/index
 		bindEvt: function() {
 			var self = this,
 				_cfg = self._cfg;
-
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter");
+            // 先解绑事件
+            this.unbindEvt();
 
 			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter", function(e) {
 				var $evtBar = $(e.currentTarget),
@@ -956,8 +956,6 @@ gallery/kcharts/1.2/barchart/index
 
 			});
 
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "click");
-
 			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "click", function(e) {
 				var $evtBar = $(e.currentTarget),
 					barIndex = $evtBar.attr("barIndex"),
@@ -966,8 +964,6 @@ gallery/kcharts/1.2/barchart/index
 				self.barClick(barGroup, barIndex);
 
 			});
-
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave");
 
 			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave", function(e) {
 
@@ -980,14 +976,18 @@ gallery/kcharts/1.2/barchart/index
 				});
 			});
 
-			Evt.detach(self._evtEls.paper.$paper, "mouseleave");
-
 			Evt.on(self._evtEls.paper.$paper, "mouseleave", function(e) {
 				self.tip && self.tip.hide();
 				self.paperLeave();
 			})
 
 		},
+        unbindEvt:function(){
+		  Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter");
+          Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "click");
+		  Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave");
+          Evt.detach(self._evtEls.paper.$paper, "mouseleave");
+        },
 		paperLeave: function() {
 			var self = this;
 			self.fire("paperLeave", self);
@@ -1206,9 +1206,9 @@ gallery/kcharts/1.2/barchart/index
 			var self = this;
 			self.fire("afterRender", self);
 		},
-		/*  
+		/*
 			TODO get htmlpaper
-			@deprecated As Of KCharts 1.2 replaced by 
+			@deprecated As Of KCharts 1.2 replaced by
 			getHtmlPaper
 			@see #getHtmlPaper
 		*/
@@ -1234,7 +1234,12 @@ gallery/kcharts/1.2/barchart/index
 		*/
 		clear: function() {
 			this._$ctnNode.html("");
-		}
+		},
+        destroy:function(){
+          // 销毁实例
+          this.unbindEvt();
+          this.clear();
+        }
 	});
 
 	return BarChart;
