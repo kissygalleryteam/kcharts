@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
+;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend,XY){
   var pi = Math.PI
     , unit = pi/180
 
@@ -317,11 +317,17 @@
         var label = labels[i];
         if (label.length > opts['text']['max-chars']) label = label.replace(" ", "\n");
         var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor }));
-	    (function(text,i){
+	    (function(text,i,point){
            text.click(function(){
-             that.fire('labelclick',{index:i});
-           });
-        })(text,i);
+             that.fire('labelclick',{index:i,x:point.x,y:point.y});
+           })
+           .mouseover(function(){
+             that.fire('mouseover',{index:i,x:point.x,y:point.y});
+           })
+           .mouseout(function(){
+             that.fire('mouseout',{index:i,x:point.x,y:point.y});
+           })
+        })(text,i,points[i]);
       }
     },
     //中心发散的刻度尺
@@ -362,11 +368,6 @@
         }
       }
     */
-      //通用的
-      var defaultCfg = {
-          ticklength:5//标尺宽度
-          ,aside:1 //标尺方向
-      };
 
       var deg2rad = Math.PI/180;
       var pointlen = points.length;
@@ -394,19 +395,20 @@
         var ix = Math.cos(deg*deg2rad);
         var iy = Math.sin(deg*deg2rad);
 
-        for (var j = 1; j < 5; j++) {
-          var x0 = lined_on( cx, points[i].x, j * 0.20);
-          var y0 = lined_on( cy, points[i].y, j * 0.20);
+        var rullern = (config.ruller && config.ruller.n) || 5;
+        var ratio = 1/rullern;
+
+        for (var j = 1; j < rullern; j++) {
+          var x0 = lined_on( cx, points[i].x, j * ratio);
+          var y0 = lined_on( cy, points[i].y, j * ratio);
 
           x1 = x0+ix*3; y1=y0-iy*3;
           x2 = x0-ix*3; y2=y0+iy*3;
           var x3,y3;
           x3 = x0-ix*5; y3=y0+iy*5;
-
           // paper.circle(x0,y0,2).attr({"fill":'red'});
           // paper.circle(x1,y1,2);
           // paper.circle(x2,y2,2).attr({"fill":'green'});
-
           paper.path(["M",x2,y2,"L",x1,y1,"Z"]);
           var rotate_deg = i*degunit;
           if(rotate_deg>=270){
@@ -416,7 +418,11 @@
           }
           if(filterfn){
             if(filterfn(i)){
-               paper.text(x3,y3,j).rotate(rotate_deg);
+              var text;
+              if(config.ruller && config.ruller.template){
+                text = config.ruller.template(i,j);
+              }
+              paper.text(x3,y3,text).attr({"text-anchor":"start"}).rotate(rotate_deg);
             }
           }
         }
@@ -536,7 +542,8 @@
   requires:[
     "gallery/kcharts/1.2/raphael/index",
     "dom","event",
-    'gallery/kcharts/1.2/legend/index'
+    'gallery/kcharts/1.2/legend/index',
+    'gallery/kcharts/1.2/radar/xxyy'
   ]
 });
 /**
