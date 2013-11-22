@@ -42,7 +42,8 @@
          },
          ruller:{ // 标尺个数
            n:6,
-           template:function(pointindex,rullerindex){
+           template:function(pointindex,rullerindex,computed_value){
+             return computed_value;
              return rullerindex*100;
            }
          },
@@ -53,7 +54,7 @@
          scoreGroups:[
            {
              title: "Real Madrid C.F.", 
-             scores: [ 8, 9, 7, 9, 7, 6],
+             scores: [ 750, 900, 700, 455, 200, 535],
              draw_options: {
                lines: {'stroke-width':'4','stroke':'#0070bb','stroke-opacity':0.7,'fill':'#f7d2a8','fill-opacity':0.6},
                points: {'fill':'#f05a23','stroke-width':'1.5','stroke':'#333', 'size': 6}
@@ -61,7 +62,7 @@
            },
            {
              title: "FC Barcelona", 
-             scores: [ 10, 7, 10, 7, 6, 8],
+             scores: [ 400, 700, 600, 555, 300, 435],
              draw_options: {
                lines: {'stroke-width':'2', 'stroke':'#39b549','stroke-dasharray':'- '},
                points: {'fill':'#39b549','stroke-width':'0',size:5}
