@@ -10,7 +10,8 @@
 
   // Gets a position on a radar line.
   function lined_on( origin, base, bias){
-    return origin + (base - origin) * bias;
+    var ret = origin + (base - origin) * bias;
+    return Math.round(ret*100)/100;
   };
   // Gets SVG path string for a group of scores.
   function path_string( center, points, scores){
@@ -37,7 +38,7 @@
       to-=step;
     }
     ret = ret.reverse();
-    return {rullers:ret,rullern:rullern};
+    return {rullers:ret,rullern:rullern,max:r[1]};
   }
   function polygon(points){
     var s;
@@ -138,6 +139,15 @@
         cfg.max = max;
       }
 
+
+      var rullern = (cfg.ruller && cfg.ruller.n) || 5;
+      var result = rullernums(cfg.min,cfg.max,rullern);
+      var rullers = result.rullers;
+      rullern = result.rullern;
+
+      this.rullerresult = result;
+      this.rullern = rullern;
+
       //没有r，自动设定一个
       if(cfg.r == undefined){
         var minr = Math.min.apply(Math,[w,h]);
@@ -201,8 +211,8 @@
       for (var j=0; j<scores.length; j++) {
         x = lined_on( cx, points[j].x, scores[j]);
         y = lined_on( cy, points[j].y, scores[j]);
-
-        circle = paper.circle(x,y,opts['points']['size']).attr(opts['points']);
+        var size = opts['points']['size'];
+        circle = paper.circle(x,y,size).attr(opts['points']);
         circleset.push(circle);
       };
       circles.push(circleset);
@@ -408,11 +418,9 @@
             }
           }
 
-      var rullern = (config.ruller && config.ruller.n) || 5;
-      var result = rullernums(config.min,config.max,rullern);
+      var result = this.rullerresult;
       var rullers = result.rullers;
-
-      rullern = result.rullern;
+      var rullern = this.rullern;
 
       var ratio = 1/rullern;
 
@@ -435,14 +443,15 @@
           var x0 = lined_on( cx, points[i].x, j * ratio);
           var y0 = lined_on( cy, points[i].y, j * ratio);
 
-          x1 = x0+ix*3; y1=y0-iy*3;
-          x2 = x0-ix*3; y2=y0+iy*3;
+          var scale = 3;
+          x1 = x0+ix*scale; y1=y0-iy*scale;
+          x2 = x0-ix*scale; y2=y0+iy*scale;
           var x3,y3;
           x3 = x0-ix*5; y3=y0+iy*5;
           // paper.circle(x0,y0,2).attr({"fill":'red'});
           // paper.circle(x1,y1,2);
           // paper.circle(x2,y2,2).attr({"fill":'green'});
-          paper.path(["M",x2,y2,"L",x1,y1,"Z"]);
+          paper.path(["M",x2,y2,"L",x1,y1,"Z"]).attr({"stroke":"#666"});
           var rotate_deg = i*degunit;
           if(rotate_deg>=270){
             rotate_deg +=90;
@@ -467,8 +476,9 @@
         , max_score = config.max - config.min
         , labels = config.labels
       if(group.scores) {
-        for (var j=0; j<group.scores.length; j++)
+        for (var j=0; j<group.scores.length; j++){
           scores.push(group.scores[j] / max_score);
+        }
       }
       //  移除对下面这种配置方式的支持
       /*
