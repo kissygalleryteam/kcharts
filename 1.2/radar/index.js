@@ -33,12 +33,21 @@
     var to = r[1];
     var step = r[2];
     var rullern = (to - from)/step;
+    var maxto;
+
+    // 修正
+    if(to < max){
+      rullern+=1;
+      to += step;
+    }
+    maxto= to;
+
     for(var i=1;i<=rullern;i++){
       ret.push(to);
       to-=step;
     }
     ret = ret.reverse();
-    return {rullers:ret,rullern:rullern,max:r[1]};
+    return {rullers:ret,rullern:rullern,max:maxto};
   }
   function polygon(points){
     var s;
@@ -139,7 +148,6 @@
         cfg.max = max;
       }
 
-
       var rullern = (cfg.ruller && cfg.ruller.n) || 5;
       var result = rullernums(cfg.min,cfg.max,rullern);
       var rullers = result.rullers;
@@ -147,6 +155,9 @@
 
       this.rullerresult = result;
       this.rullern = rullern;
+
+      // 更新max
+      cfg.max = result.max;
 
       //没有r，自动设定一个
       if(cfg.r == undefined){
