@@ -771,6 +771,7 @@ gallery/kcharts/1.2/linechart/index
 		},
 		//x轴上 平行于y轴的网格线
 		drawGridsX: function() {
+			if(!this._cfg.xGrids.isShow) return;
 			var self = this,
 				points = self._points[0],
 				gridPointsX = function() {
@@ -817,6 +818,7 @@ gallery/kcharts/1.2/linechart/index
 		},
 		//y轴上 平行于x轴的网格线
 		drawGridsY: function() {
+			if(!this._cfg.yGrids.isShow) return;
 			var self = this,
 				x = self._innerContainer.tl.x,
 				points = self._pointsY;
@@ -943,6 +945,7 @@ gallery/kcharts/1.2/linechart/index
 		},
 		//参照线
 		drawPointLine: function() {
+			if(!this._cfg.comparable) return;
 			var self = this,
 				paper = self.htmlPaper,
 				cls = self._cfg.themeCls + "-pointline",
@@ -1142,11 +1145,11 @@ gallery/kcharts/1.2/linechart/index
 			//画背景块状区域
 			_cfg.areas.isShow && self.drawAreas();
 			//画x轴上的平行线
-			_cfg.xGrids.isShow && self.drawGridsX();
+			self.drawGridsX();
 
-			_cfg.yGrids.isShow && self.drawGridsY();
+			self.drawGridsY();
 
-			self._cfg.comparable && self.drawPointLine();
+			self.drawPointLine();
 			//画横轴
 			_cfg.xAxis.isShow && self.drawAxisX();
 
