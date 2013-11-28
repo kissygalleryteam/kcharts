@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
+;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,XY,D,E,Legend){
   var pi = Math.PI
     , unit = pi/180
 
@@ -10,7 +10,8 @@
 
   // Gets a position on a radar line.
   function lined_on( origin, base, bias){
-    return origin + (base - origin) * bias;
+    var ret = origin + (base - origin) * bias;
+    return Math.round(ret*100)/100;
   };
   // Gets SVG path string for a group of scores.
   function path_string( center, points, scores){
@@ -22,6 +23,32 @@
     }
     return "M " + vertex.join("L ") + "z";
   };
+
+  var xy;
+  function rullernums(min,max,n){
+    xy || (xy = new XY());
+    var r = xy.extended(min,max,n);
+    var ret = [];
+    var from = r[0]
+    var to = r[1];
+    var step = r[2];
+    var rullern = (to - from)/step;
+    var maxto;
+
+    // 修正
+    if(to < max){
+      rullern+=1;
+      to += step;
+    }
+    maxto= to;
+
+    for(var i=1;i<=rullern;i++){
+      ret.push(to);
+      to-=step;
+    }
+    ret = ret.reverse();
+    return {rullers:ret,rullern:rullern,max:maxto};
+  }
   function polygon(points){
     var s;
     for(var i=0,l=points.length;i<l;i++){
@@ -102,20 +129,42 @@
       }
       //没有设置max，自动寻找
       var groups = this.get("scoreGroups");
+      var nums = [] ;
       if(groups[0] && groups[0].scores){
-        var nums = [] ;
         each(groups,function(item){
           nums = nums.concat(item.scores);
         });
-        var max = Math.max.apply(Math,nums);
+      }
+      // 用于自动计算刻度
+      var max = Math.max.apply(Math,nums);
+      var min = Math.min.apply(Math,nums);
+      // if(!cfg.min || cfg.min > min){
+      //   cfg.min = min;
+      // }
+
+      cfg.min = 0;
+
+      if(!cfg.max || cfg.max < max){
         cfg.max = max;
       }
+
+      var rullern = (cfg.ruller && cfg.ruller.n) || 5;
+      var result = rullernums(cfg.min,cfg.max,rullern);
+      var rullers = result.rullers;
+      rullern = result.rullern;
+
+      this.rullerresult = result;
+      this.rullern = rullern;
+
+      // 更新max
+      cfg.max = result.max;
+
       //没有r，自动设定一个
       if(cfg.r == undefined){
-        var min = Math.min.apply(Math,[w,h]);
-        cfg.r = min/2 - 30;//预留给label的
+        var minr = Math.min.apply(Math,[w,h]);
+        cfg.r = minr/2 - 30;//预留给label的
         if(cfg.r < 0){
-          cfg.r = min/2;
+          cfg.r = minr/2;
         }
       }
     },
@@ -173,8 +222,8 @@
       for (var j=0; j<scores.length; j++) {
         x = lined_on( cx, points[j].x, scores[j]);
         y = lined_on( cy, points[j].y, scores[j]);
-
-        circle = paper.circle(x,y,opts['points']['size']).attr(opts['points']);
+        var size = opts['points']['size'];
+        circle = paper.circle(x,y,size).attr(opts['points']);
         circleset.push(circle);
       };
       circles.push(circleset);
@@ -252,15 +301,15 @@
           , $text = e.text
           , $icon = e.icon
           , el = e.el
-		if (el.hide != 1) {
-		  this.hideLine(i);
-		  el.hide = 1;
-		  el.disable();
-		} else {
-		  this.showLine(i);
-		  el.hide = 0;
-		  el.enable();
-		}
+        if (el.hide != 1) {
+          this.hideLine(i);
+          el.hide = 1;
+          el.disable();
+        } else {
+          this.showLine(i);
+          el.hide = 0;
+          el.enable();
+        }
       },this);
 
       this.set("legend",$legend);
@@ -296,6 +345,7 @@
     },
     drawLabels:function(edge_points,opts){
       var points = edge_points
+      var that = this;
 
       var paper = this.get("paper")
         , config = this.get("config")
@@ -315,7 +365,18 @@
 
         var label = labels[i];
         if (label.length > opts['text']['max-chars']) label = label.replace(" ", "\n");
-        var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor }));
+        var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor ,"cursor":"pointer"}));
+	    (function(text,i,point){
+           text.click(function(){
+             that.fire('labelclick',{index:i,x:point.x,y:point.y});
+           })
+           .mouseover(function(){
+             that.fire('labelmouseover',{index:i,x:point.x,y:point.y});
+           })
+           .mouseout(function(){
+             that.fire('labelmouseout',{index:i,x:point.x,y:point.y});
+           })
+        })(text,i,points[i]);
       }
     },
     //中心发散的刻度尺
@@ -329,10 +390,13 @@
         , x2,y2
       // Draws measures of the chart
       var measures=[], rulers=[];
+
+      /*
       for (var i = 0; i < points.length; i++) {
         x = points[i].x, y = points[i].y;
         measures.push( paper.path("M " + cx + " " + cy + " L " + x + " " + y).attr("stroke", "#777") );
         var r_len = 0.025;
+
         for (var j = 1; j < 5; j++) {
           x1 = lined_on( cx, points[i].x, j * 0.20 - r_len);
           y1 = lined_on( cy, points[i].y, j * 0.20 - r_len);
@@ -340,22 +404,96 @@
           y2 = lined_on( cy, points[i].y, j * 0.20 + r_len);
           var cl = paper.path("M " + x1 + " " + y1 + " L " + x2 + " " + y2).attr({"stroke":"#777"});
           cl.rotate(90);
+
+          var _r = "r"+(i*60)+","+cx+','+cy;
+          // console.log(_r);
+
+          paper.text(x1,y1,j)
+          .translate(5,0)
+          .rotate(i*60)
+          // .transform(_r);
+
           rulers.push(cl);
+        }
+      }
+    */
+
+      var deg2rad = Math.PI/180;
+      var pointlen = points.length;
+      var degunit = 360/pointlen;
+
+      var filterfn = false;
+          if(config.labelfn){
+            if(S.isFunction(config.labelfn)){
+              filterfn = config.labelfn;
+            }
+          }
+
+      var result = this.rullerresult;
+      var rullers = result.rullers;
+      var rullern = this.rullern;
+
+      var ratio = 1/rullern;
+
+      for(var i=0;i<pointlen;i++){
+        x = points[i].x, y = points[i].y;
+        measures.push( paper.path("M " + cx + " " + cy + " L " + x + " " + y).attr("stroke", "#777") );
+        // var pts = axis([cx,cy],[points[i].x,points[i].y],4);
+        // 0  180 - 0
+        // 1  180 - 60
+        // 2  180 - 120
+        // 3  180 - 180
+        // 4
+        // 5
+        var deg = 180 - i*degunit;
+        // var unit = [4*Math.sin(deg*deg2rad),-4*Math.cos(deg*deg2rad)];
+        var ix = Math.cos(deg*deg2rad);
+        var iy = Math.sin(deg*deg2rad);
+
+        for (var j = 1; j < rullern; j++) {
+          var x0 = lined_on( cx, points[i].x, j * ratio);
+          var y0 = lined_on( cy, points[i].y, j * ratio);
+
+          var scale = 3;
+          x1 = x0+ix*scale; y1=y0-iy*scale;
+          x2 = x0-ix*scale; y2=y0+iy*scale;
+          var x3,y3;
+          x3 = x0-ix*5; y3=y0+iy*5;
+          // paper.circle(x0,y0,2).attr({"fill":'red'});
+          // paper.circle(x1,y1,2);
+          // paper.circle(x2,y2,2).attr({"fill":'green'});
+          paper.path(["M",x2,y2,"L",x1,y1,"Z"]).attr({"stroke":"#666"});
+          var rotate_deg = i*degunit;
+          if(rotate_deg>=270){
+            rotate_deg +=90;
+          }else if(rotate_deg>=90){
+            rotate_deg +=180;
+          }
+          if(filterfn){
+            if(filterfn(i)){
+              var text;
+              if(config.ruller && config.ruller.template){
+                text = config.ruller.template(i,j,rullers[j-1]);
+              }
+              paper.text(x3,y3,text).attr({"text-anchor":"start"}).rotate(rotate_deg);
+            }
+          }
         }
       }
     },
     getScoreFromGroup:function(group){
       var scores = []
         , config = this.get("config")
-        , max_score = config.max
+        , max_score = config.max - config.min
         , labels = config.labels
       if(group.scores) {
-        for (var j=0; j<group.scores.length; j++)
+        for (var j=0; j<group.scores.length; j++){
           scores.push(group.scores[j] / max_score);
+        }
       }
       //  移除对下面这种配置方式的支持
       /*
-	  scoreGroups:[
+      scoreGroups:[
         { title: "Real Madrid C.F.",
           offense: 8,
           defense: 9,
@@ -457,6 +595,7 @@
 },{
   requires:[
     "gallery/kcharts/1.2/raphael/index",
+    './xxyy',
     "dom","event",
     'gallery/kcharts/1.2/legend/index'
   ]

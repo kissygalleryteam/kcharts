@@ -116,6 +116,11 @@
        };
        var chart;
        newlinechart();
+
+       setInterval(function(){
+         chart.destroy();
+         newlinechart();
+       },3000);
      });
     </script>
   </body>

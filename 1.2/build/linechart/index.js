@@ -771,6 +771,7 @@ gallery/kcharts/1.2/linechart/index
 		},
 		//x轴上 平行于y轴的网格线
 		drawGridsX: function() {
+			if(!this._cfg.xGrids.isShow) return;
 			var self = this,
 				points = self._points[0],
 				gridPointsX = function() {
@@ -817,6 +818,7 @@ gallery/kcharts/1.2/linechart/index
 		},
 		//y轴上 平行于x轴的网格线
 		drawGridsY: function() {
+			if(!this._cfg.yGrids.isShow) return;
 			var self = this,
 				x = self._innerContainer.tl.x,
 				points = self._pointsY;
@@ -943,6 +945,7 @@ gallery/kcharts/1.2/linechart/index
 		},
 		//参照线
 		drawPointLine: function() {
+			if(!this._cfg.comparable) return;
 			var self = this,
 				paper = self.htmlPaper,
 				cls = self._cfg.themeCls + "-pointline",
@@ -1142,11 +1145,11 @@ gallery/kcharts/1.2/linechart/index
 			//画背景块状区域
 			_cfg.areas.isShow && self.drawAreas();
 			//画x轴上的平行线
-			_cfg.xGrids.isShow && self.drawGridsX();
+			self.drawGridsX();
 
-			_cfg.yGrids.isShow && self.drawGridsY();
+			self.drawGridsY();
 
-			self._cfg.comparable && self.drawPointLine();
+			self.drawPointLine();
 			//画横轴
 			_cfg.xAxis.isShow && self.drawAxisX();
 
@@ -1199,8 +1202,8 @@ gallery/kcharts/1.2/linechart/index
 						}
 					}
 				})();
+          this.unbindEvt();
 			self.curLineIndex = self.getFirstVisibleLineIndex();
-			Evt.detach(evtEls.paper.$paper, "mouseleave");
 			// 绑定画布mouseleave事件
 			Evt.on(evtEls.paper.$paper, "mouseleave", function(e) {
 				self._lines[0]['line'].attr(self._lines[0]['attr']);
@@ -1214,7 +1217,6 @@ gallery/kcharts/1.2/linechart/index
 				self.curStockIndex = undefined;
 				self.paperLeave();
 			});
-			Evt.detach(evtEls.paper.$paper, "mousemove");
 			// 绑定mousemove事件
 			Evt.on(evtEls.paper.$paper, "mousemove", function(e) {
 				//fix firefox offset bug
@@ -1223,7 +1225,6 @@ gallery/kcharts/1.2/linechart/index
 				self.delegateMouseMove(e);
 			});
 
-			Evt.detach(evtEls.paper.$paper, "click");
 			// 绑定mousemove事件
 			Evt.on(evtEls.paper.$paper, "click", function(e) {
 				//fix firefox offset bug
@@ -1232,6 +1233,14 @@ gallery/kcharts/1.2/linechart/index
 				self.delegateClick(e);
 			});
 		},
+      unbindEvt:function(){
+		var evtEls = self._evtEls;
+        if(evtEls && evtEls.paper){
+		  Evt.detach(evtEls.paper.$paper, "mousemove");
+		  Evt.detach(evtEls.paper.$paper, "mouseleave");
+		  Evt.detach(evtEls.paper.$paper, "click");
+        }
+      },
 		//mouseclick代理
 		delegateClick:function(e){
 			var self = this,
@@ -1627,9 +1636,9 @@ gallery/kcharts/1.2/linechart/index
 			var self = this;
 			self.fire("afterRender", self);
 		},
-		/*  
+		/*
 			TODO get htmlpaper
-			@deprecated As Of KCharts 1.2 replaced by 
+			@deprecated As Of KCharts 1.2 replaced by
 			getHtmlPaper
 			@see #getHtmlPaper
 		*/
@@ -1655,7 +1664,12 @@ gallery/kcharts/1.2/linechart/index
 		*/
 		clear: function() {
 			this._$ctnNode.html("");
-		}
+		},
+      destroy:function(){
+          // 销毁实例
+          this.unbindEvt();
+          this.clear();
+      }
 	});
 	return LineChart;
 }, {

@@ -193,11 +193,12 @@ gallery/kcharts/1.2/barchart/index
 /**
  * @fileOverview KChart 1.2  barchart
  * @author huxiaoqi567@gmail.com
- * @changelog 
+ * @changelog
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
-;KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
+;
+KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart, Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
 
 	var $ = S.all,
 		Evt = S.Event,
@@ -223,7 +224,7 @@ gallery/kcharts/1.2/barchart/index
 			var self = this;
 
 			self.chartType = "barchart";
-			
+
 			BaseChart.prototype.init.call(self, self._cfg);
 
 			if (!self._$ctnNode[0]) return;
@@ -274,7 +275,7 @@ gallery/kcharts/1.2/barchart/index
 						color: "#eee",
 						zIndex: 10
 					},
-					min:0
+					min: 0
 				},
 				//纵轴
 				yAxis: {
@@ -283,7 +284,7 @@ gallery/kcharts/1.2/barchart/index
 						zIndex: 10
 					},
 					num: 5,
-					min:0
+					min: 0
 				},
 				//x轴上纵向网格
 				xGrids: {
@@ -560,6 +561,7 @@ gallery/kcharts/1.2/barchart/index
 			var self = this,
 				points = self._points[0],
 				gridPointsX;
+			if (!self._cfg.xGrids.isShow) return;
 
 			self._gridsX = [];
 
@@ -617,6 +619,8 @@ gallery/kcharts/1.2/barchart/index
 			var self = this,
 				x = self._innerContainer.tl.x,
 				isY = self._cfg.zoomType == "x" ? false : true;
+
+			if (!self._cfg.yGrids.isShow) return;
 
 			self._gridsY = [];
 
@@ -853,7 +857,7 @@ gallery/kcharts/1.2/barchart/index
 					top: innerContainer.y
 				},
 				align: cfg.legend.align || "bc",
-				offset: cfg.legend.offset || (/t/g.test(cfg.legend.align) ? [0, 0] : [0,20]),
+				offset: cfg.legend.offset || (/t/g.test(cfg.legend.align) ? [0, 0] : [0, 20]),
 				globalConfig: globalConfig,
 				config: __legendCfg
 			});
@@ -913,9 +917,9 @@ gallery/kcharts/1.2/barchart/index
 			//渲染tip
 			_cfg.tip.isShow && self.renderTip();
 			//画x轴上的平行线
-			_cfg.xGrids.isShow && self.drawGridsX();
+			self.drawGridsX();
 
-			_cfg.yGrids.isShow && self.drawGridsY();
+			self.drawGridsY();
 			//画横轴
 			_cfg.xAxis.isShow && self.drawAxisX();
 
@@ -943,8 +947,8 @@ gallery/kcharts/1.2/barchart/index
 		bindEvt: function() {
 			var self = this,
 				_cfg = self._cfg;
-
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter");
+			// 先解绑事件
+			self.unbindEvt();
 
 			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter", function(e) {
 				var $evtBar = $(e.currentTarget),
@@ -956,8 +960,6 @@ gallery/kcharts/1.2/barchart/index
 
 			});
 
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "click");
-
 			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "click", function(e) {
 				var $evtBar = $(e.currentTarget),
 					barIndex = $evtBar.attr("barIndex"),
@@ -966,8 +968,6 @@ gallery/kcharts/1.2/barchart/index
 				self.barClick(barGroup, barIndex);
 
 			});
-
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave");
 
 			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave", function(e) {
 
@@ -980,13 +980,18 @@ gallery/kcharts/1.2/barchart/index
 				});
 			});
 
-			Evt.detach(self._evtEls.paper.$paper, "mouseleave");
-
 			Evt.on(self._evtEls.paper.$paper, "mouseleave", function(e) {
 				self.tip && self.tip.hide();
 				self.paperLeave();
 			})
 
+		},
+		unbindEvt: function() {
+			var self = this;
+			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter");
+			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "click");
+			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave");
+			self._evtEls.paper && Evt.detach(self._evtEls.paper.$paper, "mouseleave");
 		},
 		paperLeave: function() {
 			var self = this;
@@ -1037,8 +1042,8 @@ gallery/kcharts/1.2/barchart/index
 
 			if (!tpl) return;
 			S.mix(tipData, {
-					groupindex: barGroup,
-					barindex: barIndex
+				groupindex: barGroup,
+				barindex: barIndex
 			});
 			tip.fire("setcontent", {
 				data: tipData
@@ -1206,9 +1211,9 @@ gallery/kcharts/1.2/barchart/index
 			var self = this;
 			self.fire("afterRender", self);
 		},
-		/*  
+		/*
 			TODO get htmlpaper
-			@deprecated As Of KCharts 1.2 replaced by 
+			@deprecated As Of KCharts 1.2 replaced by
 			getHtmlPaper
 			@see #getHtmlPaper
 		*/
@@ -1219,14 +1224,14 @@ gallery/kcharts/1.2/barchart/index
 			TODO get htmlpaper
 			@return {object} HtmlPaper
 		*/
-		getHtmlPaper:function(){
+		getHtmlPaper: function() {
 			return this.paper;
 		},
 		/*
 			TODO get raphael paper
 			@return {object} Raphael
 		*/
-		getRaphaelPaper:function(){
+		getRaphaelPaper: function() {
 			return this.raphaelPaper;
 		},
 		/*
@@ -1234,6 +1239,11 @@ gallery/kcharts/1.2/barchart/index
 		*/
 		clear: function() {
 			this._$ctnNode.html("");
+		},
+		destroy: function() {
+			// 销毁实例
+			this.unbindEvt();
+			this.clear();
 		}
 	});
 

@@ -1,11 +1,153 @@
 /*
 combined files : 
 
+gallery/kcharts/1.2/radar/xxyy
 gallery/kcharts/1.2/radar/index
 
 */
+;KISSY.add("gallery/kcharts/1.2/radar/xxyy",function(S){
+  function XXYY() {
+    this.epsilon = 1.0;
+    while ((1 + (this.epsilon / 2)) !== 1) {
+      this.epsilon /= 2;
+    }
+    return this;
+  };
+  XXYY.prototype.ONE_OVER_LOG_10 = 1 / Math.log(10);
+  /*
+   *
+   */
+  XXYY.prototype.extended = function(dmin, dmax, m, onlyLoose, Q, w) {
+    var bestLmax, bestLmin, bestLstep, bestScore, c, cm, delta, dm, eps, g, j, k, l, length, lmax, lmin, max, maxStart, min, minStart, q, qi, s, score, sm, start, step, thisScore, z, _i, _j, _ref, _ref1;
+    if (onlyLoose == null) {
+      onlyLoose = false;
+    }
+    if (Q == null) {
+      Q = [1, 5, 2, 2.5, 4, 3];
+    }
+    if (w == null) {
+      w = {
+        simplicity: 0.2,
+        coverage: 0.25,
+        density: 0.5,
+        legibility: 0.05
+      };
+    }
+    score = function(simplicity, coverage, density, legibility) {
+      return w.simplicity * simplicity + w.coverage * coverage + w.density * density + w.legibility * legibility;
+    };
+    bestLmin = 0.0;
+    bestLmax = 0.0;
+    bestLstep = 0.0;
+    bestScore = -2.0;
+    eps = this.epsilon;
+    _ref = (dmin > dmax ? [dmax, dmin] : [dmin, dmax]), min = _ref[0], max = _ref[1];
+    if (dmax - dmin < eps) {
+      return [min, max, m, -2];
+    } else {
+      length = Q.length;
+      j = -1.0;
+      while (j < Number.POSITIVE_INFINITY) {
+        for (qi = _i = 0, _ref1 = length - 1; 0 <= _ref1 ? _i <= _ref1 : _i >= _ref1; qi = 0 <= _ref1 ? ++_i : --_i) {
+          q = Q[qi];
+          sm = this.simplicityMax(qi, length, j);
+          if (score(sm, 1, 1, 1) < bestScore) {
+            j = Number.POSITIVE_INFINITY;
+          } else {
+            k = 2.0;
+            while (k < Number.POSITIVE_INFINITY) {
+              dm = this.densityMax(k, m);
+              if (score(sm, 1, dm, 1) < bestScore) {
+                k = Number.POSITIVE_INFINITY;
+              } else {
+                delta = (max - min) / (k + 1) / j / q;
+                z = Math.ceil(Math.log(delta) * this.ONE_OVER_LOG_10);
+                while (z < Number.POSITIVE_INFINITY) {
+                  step = j * q * Math.pow(10, z);
+                  cm = this.coverageMax(min, max, step * (k - 1));
+                  if (score(sm, cm, dm, 1) < bestScore) {
+                    z = Number.POSITIVE_INFINITY;
+                  } else {
+                    minStart = Math.floor(max / step) * j - (k - 1) * j;
+                    maxStart = Math.ceil(min / step) * j;
+                    if (minStart > maxStart) {
+
+                    } else {
+                      for (start = _j = minStart; minStart <= maxStart ? _j <= maxStart : _j >= maxStart; start = minStart <= maxStart ? ++_j : --_j) {
+                        lmin = start * (step / j);
+                        lmax = lmin + step * (k - 1);
+                        if (!onlyLoose || (lmin <= min && lmax >= max)) {
+                          s = this.simplicity(qi, length, j, lmin, lmax, step);
+                          c = this.coverage(min, max, lmin, lmax);
+                          g = this.density(k, m, min, max, lmin, lmax);
+                          l = this.legibility(lmin, lmax, step);
+                          thisScore = score(s, c, g, l);
+                          if (thisScore > bestScore) {
+                            bestScore = thisScore;
+                            bestLmin = lmin;
+                            bestLmax = lmax;
+                            bestLstep = step;
+                          }
+                        }
+                      }
+                    }
+                    z += 1;
+                  }
+                }
+              }
+              k += 1;
+            }
+          }
+        }
+        j += 1;
+      }
+      return [bestLmin, bestLmax, bestLstep, bestScore];
+    }
+  };
+  XXYY.prototype.simplicity = function(i, n, j, lmin, lmax, lstep) {
+    var v;
+    v = ((lmin % lstep) < this.epsilon || (lstep - (lmin % lstep)) < this.epsilon) && lmin <= 0 && lmax >= 0 ? 1 : 0;
+    return 1 - (i / (n - 1)) - j + v;
+  };
+  XXYY.prototype.simplicityMax = function(i, n, j) {
+    return 1 - i / (n - 1) - j + 1;
+  };
+  XXYY.prototype.coverage = function(dmin, dmax, lmin, lmax) {
+    var range;
+    range = dmax - dmin;
+    return 1 - 0.5 * (Math.pow(dmax - lmax, 2) + Math.pow(dmin - lmin, 2)) / (Math.pow(0.1 * range, 2));
+  };
+  XXYY.prototype.coverageMax = function(dmin, dmax, span) {
+    var half, range;
+    range = dmax - dmin;
+    if (span > range) {
+      half = (span - range) / 2;
+      return 1 - 0.5 * (Math.pow(half, 2) + Math.pow(half, 2)) / (Math.pow(0.1 * range, 2));
+    } else {
+      return 1;
+    }
+  };
+  XXYY.prototype.density = function(k, m, dmin, dmax, lmin, lmax) {
+    var r, rt;
+    r = (k - 1) / (lmax - lmin);
+    rt = (m - 1) / (Math.max(lmax, dmax) - Math.min(dmin, lmin));
+    return 2 - Math.max(r / rt, rt / r);
+  };
+  XXYY.prototype.densityMax = function(k, m) {
+    if (k >= m) {
+      return 2 - (k - 1) / (m - 1);
+    } else {
+      return 1;
+    }
+  };
+  XXYY.prototype.legibility = function(lmin, lmax, lstep) {
+    return 1.0;
+  };
+  return XXYY;
+});
+
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,D,E,Legend){
+;KISSY.add("gallery/kcharts/1.2/radar/index",function(S,Raphael,XY,D,E,Legend){
   var pi = Math.PI
     , unit = pi/180
 
@@ -16,7 +158,8 @@ gallery/kcharts/1.2/radar/index
 
   // Gets a position on a radar line.
   function lined_on( origin, base, bias){
-    return origin + (base - origin) * bias;
+    var ret = origin + (base - origin) * bias;
+    return Math.round(ret*100)/100;
   };
   // Gets SVG path string for a group of scores.
   function path_string( center, points, scores){
@@ -28,6 +171,32 @@ gallery/kcharts/1.2/radar/index
     }
     return "M " + vertex.join("L ") + "z";
   };
+
+  var xy;
+  function rullernums(min,max,n){
+    xy || (xy = new XY());
+    var r = xy.extended(min,max,n);
+    var ret = [];
+    var from = r[0]
+    var to = r[1];
+    var step = r[2];
+    var rullern = (to - from)/step;
+    var maxto;
+
+    // 修正
+    if(to < max){
+      rullern+=1;
+      to += step;
+    }
+    maxto= to;
+
+    for(var i=1;i<=rullern;i++){
+      ret.push(to);
+      to-=step;
+    }
+    ret = ret.reverse();
+    return {rullers:ret,rullern:rullern,max:maxto};
+  }
   function polygon(points){
     var s;
     for(var i=0,l=points.length;i<l;i++){
@@ -108,20 +277,42 @@ gallery/kcharts/1.2/radar/index
       }
       //没有设置max，自动寻找
       var groups = this.get("scoreGroups");
+      var nums = [] ;
       if(groups[0] && groups[0].scores){
-        var nums = [] ;
         each(groups,function(item){
           nums = nums.concat(item.scores);
         });
-        var max = Math.max.apply(Math,nums);
+      }
+      // 用于自动计算刻度
+      var max = Math.max.apply(Math,nums);
+      var min = Math.min.apply(Math,nums);
+      // if(!cfg.min || cfg.min > min){
+      //   cfg.min = min;
+      // }
+
+      cfg.min = 0;
+
+      if(!cfg.max || cfg.max < max){
         cfg.max = max;
       }
+
+      var rullern = (cfg.ruller && cfg.ruller.n) || 5;
+      var result = rullernums(cfg.min,cfg.max,rullern);
+      var rullers = result.rullers;
+      rullern = result.rullern;
+
+      this.rullerresult = result;
+      this.rullern = rullern;
+
+      // 更新max
+      cfg.max = result.max;
+
       //没有r，自动设定一个
       if(cfg.r == undefined){
-        var min = Math.min.apply(Math,[w,h]);
-        cfg.r = min/2 - 30;//预留给label的
+        var minr = Math.min.apply(Math,[w,h]);
+        cfg.r = minr/2 - 30;//预留给label的
         if(cfg.r < 0){
-          cfg.r = min/2;
+          cfg.r = minr/2;
         }
       }
     },
@@ -179,8 +370,8 @@ gallery/kcharts/1.2/radar/index
       for (var j=0; j<scores.length; j++) {
         x = lined_on( cx, points[j].x, scores[j]);
         y = lined_on( cy, points[j].y, scores[j]);
-
-        circle = paper.circle(x,y,opts['points']['size']).attr(opts['points']);
+        var size = opts['points']['size'];
+        circle = paper.circle(x,y,size).attr(opts['points']);
         circleset.push(circle);
       };
       circles.push(circleset);
@@ -258,15 +449,15 @@ gallery/kcharts/1.2/radar/index
           , $text = e.text
           , $icon = e.icon
           , el = e.el
-		if (el.hide != 1) {
-		  this.hideLine(i);
-		  el.hide = 1;
-		  el.disable();
-		} else {
-		  this.showLine(i);
-		  el.hide = 0;
-		  el.enable();
-		}
+        if (el.hide != 1) {
+          this.hideLine(i);
+          el.hide = 1;
+          el.disable();
+        } else {
+          this.showLine(i);
+          el.hide = 0;
+          el.enable();
+        }
       },this);
 
       this.set("legend",$legend);
@@ -302,6 +493,7 @@ gallery/kcharts/1.2/radar/index
     },
     drawLabels:function(edge_points,opts){
       var points = edge_points
+      var that = this;
 
       var paper = this.get("paper")
         , config = this.get("config")
@@ -321,7 +513,18 @@ gallery/kcharts/1.2/radar/index
 
         var label = labels[i];
         if (label.length > opts['text']['max-chars']) label = label.replace(" ", "\n");
-        var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor }));
+        var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor ,"cursor":"pointer"}));
+	    (function(text,i,point){
+           text.click(function(){
+             that.fire('labelclick',{index:i,x:point.x,y:point.y});
+           })
+           .mouseover(function(){
+             that.fire('labelmouseover',{index:i,x:point.x,y:point.y});
+           })
+           .mouseout(function(){
+             that.fire('labelmouseout',{index:i,x:point.x,y:point.y});
+           })
+        })(text,i,points[i]);
       }
     },
     //中心发散的刻度尺
@@ -335,10 +538,13 @@ gallery/kcharts/1.2/radar/index
         , x2,y2
       // Draws measures of the chart
       var measures=[], rulers=[];
+
+      /*
       for (var i = 0; i < points.length; i++) {
         x = points[i].x, y = points[i].y;
         measures.push( paper.path("M " + cx + " " + cy + " L " + x + " " + y).attr("stroke", "#777") );
         var r_len = 0.025;
+
         for (var j = 1; j < 5; j++) {
           x1 = lined_on( cx, points[i].x, j * 0.20 - r_len);
           y1 = lined_on( cy, points[i].y, j * 0.20 - r_len);
@@ -346,22 +552,96 @@ gallery/kcharts/1.2/radar/index
           y2 = lined_on( cy, points[i].y, j * 0.20 + r_len);
           var cl = paper.path("M " + x1 + " " + y1 + " L " + x2 + " " + y2).attr({"stroke":"#777"});
           cl.rotate(90);
+
+          var _r = "r"+(i*60)+","+cx+','+cy;
+          // console.log(_r);
+
+          paper.text(x1,y1,j)
+          .translate(5,0)
+          .rotate(i*60)
+          // .transform(_r);
+
           rulers.push(cl);
+        }
+      }
+    */
+
+      var deg2rad = Math.PI/180;
+      var pointlen = points.length;
+      var degunit = 360/pointlen;
+
+      var filterfn = false;
+          if(config.labelfn){
+            if(S.isFunction(config.labelfn)){
+              filterfn = config.labelfn;
+            }
+          }
+
+      var result = this.rullerresult;
+      var rullers = result.rullers;
+      var rullern = this.rullern;
+
+      var ratio = 1/rullern;
+
+      for(var i=0;i<pointlen;i++){
+        x = points[i].x, y = points[i].y;
+        measures.push( paper.path("M " + cx + " " + cy + " L " + x + " " + y).attr("stroke", "#777") );
+        // var pts = axis([cx,cy],[points[i].x,points[i].y],4);
+        // 0  180 - 0
+        // 1  180 - 60
+        // 2  180 - 120
+        // 3  180 - 180
+        // 4
+        // 5
+        var deg = 180 - i*degunit;
+        // var unit = [4*Math.sin(deg*deg2rad),-4*Math.cos(deg*deg2rad)];
+        var ix = Math.cos(deg*deg2rad);
+        var iy = Math.sin(deg*deg2rad);
+
+        for (var j = 1; j < rullern; j++) {
+          var x0 = lined_on( cx, points[i].x, j * ratio);
+          var y0 = lined_on( cy, points[i].y, j * ratio);
+
+          var scale = 3;
+          x1 = x0+ix*scale; y1=y0-iy*scale;
+          x2 = x0-ix*scale; y2=y0+iy*scale;
+          var x3,y3;
+          x3 = x0-ix*5; y3=y0+iy*5;
+          // paper.circle(x0,y0,2).attr({"fill":'red'});
+          // paper.circle(x1,y1,2);
+          // paper.circle(x2,y2,2).attr({"fill":'green'});
+          paper.path(["M",x2,y2,"L",x1,y1,"Z"]).attr({"stroke":"#666"});
+          var rotate_deg = i*degunit;
+          if(rotate_deg>=270){
+            rotate_deg +=90;
+          }else if(rotate_deg>=90){
+            rotate_deg +=180;
+          }
+          if(filterfn){
+            if(filterfn(i)){
+              var text;
+              if(config.ruller && config.ruller.template){
+                text = config.ruller.template(i,j,rullers[j-1]);
+              }
+              paper.text(x3,y3,text).attr({"text-anchor":"start"}).rotate(rotate_deg);
+            }
+          }
         }
       }
     },
     getScoreFromGroup:function(group){
       var scores = []
         , config = this.get("config")
-        , max_score = config.max
+        , max_score = config.max - config.min
         , labels = config.labels
       if(group.scores) {
-        for (var j=0; j<group.scores.length; j++)
+        for (var j=0; j<group.scores.length; j++){
           scores.push(group.scores[j] / max_score);
+        }
       }
       //  移除对下面这种配置方式的支持
       /*
-	  scoreGroups:[
+      scoreGroups:[
         { title: "Real Madrid C.F.",
           offense: 8,
           defense: 9,
@@ -463,6 +743,7 @@ gallery/kcharts/1.2/radar/index
 },{
   requires:[
     "gallery/kcharts/1.2/raphael/index",
+    './xxyy',
     "dom","event",
     'gallery/kcharts/1.2/legend/index'
   ]
