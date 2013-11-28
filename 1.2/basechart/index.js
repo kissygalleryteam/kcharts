@@ -716,8 +716,8 @@ TODO 坐标运算  画布大小计算
 			}else{
 				var offset = S.DOM.offset(target);
 				return {
-					offsetX: (e.offsetX || e.pageY - offset.left),
-					offsetY: (e.offsetY || e.pageX - offset.top)
+					offsetX: (e.offsetX || e.pageX - offset.left),
+					offsetY: (e.offsetY || e.pageY - offset.top)
 				}
 		}
 		},
