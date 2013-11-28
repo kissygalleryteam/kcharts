@@ -706,22 +706,27 @@ TODO 坐标运算  画布大小计算
 			var num = Math.round((arg + "").replace(/\s+|px/g, ''));
 			return Math.round((arg + "").replace(/\s+|px/g, ''));
 		},
-      getOffset: function(e) {
-        // see http://stackoverflow.com/questions/11334452/event-offsetx-in-firefox
-		var target = e.currentTarget // 当前触发的目标对象
-		if (e.offsetX) {
-          return {
-			offsetX: e.offsetX,
-			offsetY: e.offsetY
-          }
-		}else{
-          var offset = S.DOM.offset(target);
-          return {
-			offsetX: (e.offsetX || e.clientX - offset.left),
-			offsetY: (e.offsetY || e.clientY - offset.top)
-          }
-        }
-	  },
+		getOffset: function(e) {
+			// see http://stackoverflow.com/questions/11334452/event-offsetx-in-firefox
+			// note
+			// offsetX : IE only
+			// pageX   : 鼠标在页面上的位置,从页面左上角开始,即是以页面为参考点,不随滑动条移动而变化
+			// clientX : 鼠标在页面上可视区域的位置,从浏览器可视区域左上角开始,即是以浏览器的可视窗口为参考点,随滑动条移动 而变化.
+			//
+			var target = e.currentTarget // 当前触发的目标对象
+			if (e.offsetX) {
+				return{
+					offsetX: e.offsetX,
+					offsetY: e.offsetY
+				}
+			}else{
+				var offset = S.DOM.offset(target);
+				return {
+					offsetX: (e.offsetX || e.pageX - offset.left),
+					offsetY: (e.offsetY || e.pageY - offset.top)
+				}
+		}
+		},
 		onResize:function(e){
 			var self = this,
 				$ctnNode = self._$ctnNode;
