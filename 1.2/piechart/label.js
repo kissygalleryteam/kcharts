@@ -50,11 +50,10 @@
        var $label    = this.get('label')
          , x         = this.get('x')
          , y         = this.get('y')
-         , size//      = this.get('size')
+         , size      = this.get('size')
          , pie       = this.get('pie')
          , sector    = this.get("sector")
          , container = pie.get('container')
-
        $label.css({"position":"absolute","left":x+'px',"top":y+'px',width:size.width+'px',"height":size.height+'px'}).appendTo(container);
        this.set('el',$label)
      },
@@ -74,6 +73,7 @@
      }
      S.extend(Label,Base,props);
    }
+
    /**
     * 分布策略：
     * 自然分布
@@ -255,15 +255,16 @@
    };
 
    if(Base.extend){ // 1.4
-     Labels = Base.extend(props);
+     Labels = Base.extend(props2);
    }else{           // 1.3
      Labels = function(cfg){
        this.set(cfg);
        this.userConfig = cfg;
        this.initializer();
      }
-     S.extend(Labels,Base,props);
+     S.extend(Labels,Base,props2);
    }
+
    Labels.getSizeOf = blockSizeOf
    return Labels;
  },{
