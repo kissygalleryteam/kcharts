@@ -902,7 +902,12 @@ gallery/kcharts/1.2/piechart/index
 
     if(!$firstSector)return;
 
+    // bugfix:如果没有配置label，那么，"label"字段为空，获取到的unitHeight就为0
+    // 下面的for循环的步长为0,导致死循环
     unitHeight = blockSizeOf($firstSector.get("label")).height
+    // fix it：如果unitHeight为0,则返回
+    if(!unitHeight)
+      return;
     R = Math.max.apply(Math,rs)
     R1 = R + paddingDonutSize1
     R2 = R + paddingDonutSize2
