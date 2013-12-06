@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S){
+;KISSY.add("gallery/kcharts/1.2/piechart/sector",function(S,Base){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○
@@ -89,129 +89,137 @@
     return ret;
   }
 
-  function Sector(paper,cx,cy,r,start,end,pathcfg,framedata){
-    if(!(this instanceof Sector)){
-      return new Sector(paper,cx,cy,r,start,end,pathcfg);
-    }
-    this.set({cx:cx,cy:cy,r:r,start:start,end:end,pathcfg:pathcfg,paper:paper,framedata:framedata})
-    this.draw();
-    this.bindEvent();
-    return this;
-  }
+   var props = {
+     initializer:function(){
+       this.draw();
+       this.bindEvent();
+       return this;
+     },
+     bindEvent:function(){
+       this.on('afterCxChange',function(){
+         this.draw();
+       })
+       this.on('afterCyChange',function(){
+         this.draw();
+       })
+       this.on('afterStartChange',function(){
+         this.draw();
+       })
+       this.on('afterEndChange',function(){
+         this.draw();
+       })
+       this.on('afterRChange',function(){
+         this.draw();
+       })
+       var $path = this.get('$path')
+         , that = this
 
-  S.extend(Sector,S.Base,{
-    bindEvent:function(){
-      this.on('afterCxChange',function(){
-        this.draw();
-      })
-      this.on('afterCyChange',function(){
-        this.draw();
-      })
-      this.on('afterStartChange',function(){
-        this.draw();
-      })
-      this.on('afterEndChange',function(){
-        this.draw();
-      })
-      this.on('afterRChange',function(){
-        this.draw();
-      })
-      var $path = this.get('$path')
-        , that = this
+       $path.click(function(e){
+         that.fire('click');
+       })
+       $path.mouseout(function(){
+         that.fire('mouseout')
+       });
+       $path.mouseover(function(){
+         that.fire('mouseover')
+       });
+     },
+     unbindEvent:function(){
+       this.detach();
+       var $path = this.get('$path')
+       $path.unclick();
+       $path.unmouseover();
+       $path.unmouseout();
+     },
+     _syncAttrFromPath:function(path){
+       this.set({
+         middleangle:path.middleangle,
+         sectorcx:path.cx,
+         sectorcy:path.cy,
+         middlex:path.middlex,
+         middley:path.middley,
+         centerpoint:path.cc,
+         A:path.A,B:path.B
+       });
+     },
+     draw:function(){
+       var r = this.get('r')
+         , paper = this.get('paper')
+         , pathcfg = this.get('pathcfg')
+         , framedata = this.get('framedata')
+         , sectorcfg = (framedata && framedata.sectorcfg) || {}
+         , $path = paper.path();
 
-      $path.click(function(e){
-        that.fire('click');
-      })
-      $path.mouseout(function(){
-        that.fire('mouseout')
-      });
-      $path.mouseover(function(){
-        that.fire('mouseover')
-      });
-    },
-    unbindEvent:function(){
-      this.detach();
-      var $path = this.get('$path')
-      $path.unclick();
-      $path.unmouseover();
-      $path.unmouseout();
-    },
-    _syncAttrFromPath:function(path){
-      this.set({
-        middleangle:path.middleangle,
-        sectorcx:path.cx,
-        sectorcy:path.cy,
-        middlex:path.middlex,
-        middley:path.middley,
-        centerpoint:path.cc,
-        A:path.A,B:path.B
-      });
-    },
-    draw:function(){
-      var r = this.get('r')
-        , paper = this.get('paper')
-        , pathcfg = this.get('pathcfg')
-        , framedata = this.get('framedata')
-        , sectorcfg = (framedata && framedata.sectorcfg) || {}
-        , $path = paper.path();
+       pathcfg = S.merge({
+         stroke:"#fff"
+       },pathcfg)
+       if(sectorcfg){
+         pathcfg = S.merge(pathcfg,{
+           stroke:sectorcfg.stroke,
+           "stroke-width":sectorcfg.strokeWidth
+         })
+       }
+       $path.attr(pathcfg);
+       this.set('$path',$path)
 
-      pathcfg = S.merge({
-        stroke:"#fff"
-      },pathcfg)
-      if(sectorcfg){
-        pathcfg = S.merge(pathcfg,{
-          stroke:sectorcfg.stroke,
-          "stroke-width":sectorcfg.strokeWidth
-        })
-      }
-      $path.attr(pathcfg);
-      this.set('$path',$path)
+       if(S.isArray(r) && r.length == 2){
+         this._drawDonut();
+       }else{
+         this._drawSector();
+       }
+     },
+     _drawSector:function(){
+       var cx = this.get('cx') , cy = this.get('cy')
+         , r = this.get('r')
+         , start = this.get('start')
+         , end = this.get('end')
+         , $path
+       var path = sector(cx,cy,r,start,end)
+         , pathstring = path.join(',')
+         , paper = this.get('paper')
 
-      if(S.isArray(r) && r.length == 2){
-        this._drawDonut();
-      }else{
-        this._drawSector();
-      }
-    },
-    _drawSector:function(){
-      var cx = this.get('cx') , cy = this.get('cy')
-        , r = this.get('r')
-        , start = this.get('start')
-        , end = this.get('end')
-        , $path
-      var path = sector(cx,cy,r,start,end)
-        , pathstring = path.join(',')
-        , paper = this.get('paper')
+       $path = this.get('$path')
+       $path.attr("path",pathstring);
+       this._syncAttrFromPath(path);
+       this.draw = this._drawSector;
+       return this;
+     },
+     _drawDonut:function(){
+       var cx = this.get('cx') , cy = this.get('cy')
+         , r = this.get('r')
+         , start = this.get('start')
+         , end = this.get('end')
+         , $path
 
-      $path = this.get('$path')
-      $path.attr("path",pathstring);
-      this._syncAttrFromPath(path);
-      this.draw = this._drawSector;
-      return this;
-    },
-    _drawDonut:function(){
-      var cx = this.get('cx') , cy = this.get('cy')
-        , r = this.get('r')
-        , start = this.get('start')
-        , end = this.get('end')
-        , $path
+       r = r.sort(function(a,b){return a<b ? -1: a==b? 0 : 1;});
 
-      r = r.sort(function(a,b){return a<b ? -1: a==b? 0 : 1;});
+       var path = donut(cx,cy,r[0],r[1],start,end)
+         , pathstring = path.join(',')
+         , paper = this.get('paper')
 
-      var path = donut(cx,cy,r[0],r[1],start,end)
-        , pathstring = path.join(',')
-        , paper = this.get('paper')
-
-      $path = this.get('$path')
-      $path.attr("path",pathstring);
-      this._syncAttrFromPath(path);
-      this.draw = this._drawDonut;
-      return this;
-    },
-    destroy:function(){
-      this.unbindEvent();
-      this.get('$path').remove();
-    }
-  })
+       $path = this.get('$path')
+       $path.attr("path",pathstring);
+       this._syncAttrFromPath(path);
+       this.draw = this._drawDonut;
+       return this;
+     },
+     destroy:function(){
+       this.unbindEvent();
+       this.get('$path').remove();
+     }
+   }
+   var Sector;
+   if(Base.extend){
+     Sector = Base.extend(props)
+   }else{
+     Sector = function(cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Sector,Base,props);
+   }
   return Sector;
+},{
+  requires:["base"]
 });
