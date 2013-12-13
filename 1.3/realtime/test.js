@@ -1,5 +1,10 @@
-
   var Util = {};
+
+  var log = function(msg){
+    if(this.console)
+      console.log(msg)
+  }
+
   // ==================== begin chooseUnit ====================
   /* descrption : 在画与时间相关的线图的时候，x轴的时间跨度确定，单位如何确定？ 是 day 、hour 还是 miniute ？
    * 这个函数提供一个选择方式
@@ -38,24 +43,26 @@
     for(var i=0;i<units.length;i++){
       var base = diff/units[i];
       // TODO 选取策略！！！
+      if(base < 1)
+        break;
       arr2.push(
           base-n
         );
     }
-    var max2 = Math.max.apply(Math,arr2);
-    var index = arr2.indexOf(max2);
-
+    var max2 = Math.min.apply(Math,arr2);
+    var index;
+    if(max2){
+      index = arr2.indexOf(max2);
+    }else{
+      index = 0;
+    }
     var UNITS = ["minute","hour","day","week","month"];
     return UNITS[index];
   }
-
   Util.chooseUnit = chooseUnit;
 
-  console.log(
-    chooseUnit([new Date("2013-12-03"),new Date("2013-12-08")],6)
-  )
+  // chooseUnit([new Date("2013-12-03"),new Date("2013-12-08")],6)
   // // => "day" 12-03 到 12-08 相差5天，期望分的段数为6，所以返回day
-
   // chooseUnit([new Date("2013-12-03 12:05"),new Date("2013-12-03 18:00")],5)
   // // => "hour" 相差大约6个小时，与5比较接近，返回hour
   // chooseUnit([new Date("2013-12-03 12:00"),new Date("2013-12-03 12:05")],6)
@@ -65,11 +72,6 @@
   // // => "minute" 同上
   // chooseUnit([new Date("2013-12-03"),new Date("2014-08-08")],6)
   // // => "month" 相差12个月, 比较接近6个月
-
-  var timeseq = [+new Date("2013-12-03 12:00") , +new Date("2013-12-03 12:05") , +new Date("2013-12-03 12:08") , +new Date("2013-12-03 12:10") , +new Date("2013-12-03 12:30") , +new Date("2013-12-03 12:35")];
-  console.log(
-    chooseUnit(timeseq,10)
-  )
 
   function unit2digts(key){
     var m = {
@@ -85,7 +87,7 @@
   Util.unit2digts = unit2digts;
   // ==================== end chooseUnit ====================
 
-  // ============================== begin axis ==============================
+  // ==================== begin axis ====================
   var epsilon = 2.220446049250313e-16;
   var ONE_OVER_LOG_10 = 1 / Math.log(10);
 
@@ -259,4 +261,55 @@
   // console.log(
   //   axis(.9,9.8,10)
   // )
-  // ============================== end axis ==============================
+
+  // ==================== end axis ====================
+
+  // ==================== begin getlabel ====================
+
+  // 1. 获取适合的 **unit**，比如 day hour miniute second
+  // 2. 根据unit获取对应毫秒数 **UNIT**
+  // 3. 所有数据缩小 unit/UNIT，得到新的一组数据 **arr**
+  // 4. 求出arr最小值、最大值 **min** 、**max**
+  // 5. 根据 min max 求出以unit为单位的范围序列 **arr2**
+  // 6. 将 **arr2** 的所有元素转为时间格式
+  // @param arr{Array} 单位为ms的时间序列
+  // @param n{Number} 期望分成的份数
+  //
+  var getlabel = function(arr,n){
+    // 1.
+    var unit = chooseUnit(arr,n);
+    if(!unit){
+      log('ERR OCCURED!');
+    }
+
+    // 2.
+    var UNIT = unit2digts(unit);
+
+    // 3.
+    var arr2 = arr.map(function(a){
+            return a/UNIT;
+          });
+    // 4.
+    var min,max;
+    min = Math.min.apply(Math,arr2);
+    max = Math.max.apply(Math,arr2);
+    // 5.
+    var labelnums = axis(min,max,n)
+
+    // 6.
+    labelnums = labelnums.map(function(i){
+                  return new Date(i*UNIT);
+                });
+    return labelnums;
+  }
+
+  Util.getlabel = getlabel;
+
+  // var timeseq = [+new Date("2013-12-03 12:00") , +new Date("2013-12-03 12:05") , +new Date("2013-12-03 12:08") , +new Date("2013-12-03 12:10") , +new Date("2013-12-03 12:30") , +new Date("2013-12-03 12:35")
+  //               ];
+  // var ret = getlabel(timeseq,6);
+  // console.log(
+  //   ret
+  // )
+
+  // ==================== end getlabel ====================

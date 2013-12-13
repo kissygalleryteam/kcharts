@@ -1,4 +1,6 @@
 KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
+
+  // ==================== util ====================
   var Util = {};
 
   var log = function(msg){
@@ -36,26 +38,28 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
 
     var diff = max - min;
 
-    // console.log(diff);
-
     var units = [MINIT2SECOND,HOUR2SECOND,DAY2SECOND,WEEK2SECOND,MONTH2SECOND];
 
     var arr2 = [];
     for(var i=0;i<units.length;i++){
       var base = diff/units[i];
-      arr2.push(Math.round(
-        Math.abs(
-          base - n
-        )));
+      // TODO 选取策略！！！
+      if(base < 1)
+        break;
+      arr2.push(
+          base-n
+        );
     }
-
-    var min2 = Math.min.apply(Math,arr2);
-    var index = arr2.indexOf(min2);
-
+    var max2 = Math.min.apply(Math,arr2);
+    var index;
+    if(max2){
+      index = arr2.indexOf(max2);
+    }else{
+      index = 0;
+    }
     var UNITS = ["minute","hour","day","week","month"];
     return UNITS[index];
   }
-
   Util.chooseUnit = chooseUnit;
 
   // chooseUnit([new Date("2013-12-03"),new Date("2013-12-08")],6)
@@ -75,7 +79,7 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
       "minute": 60000,
       "hour": 3600000,
       "day":3600*24000,
-      "weeek":3600*24*7000,
+      "week":3600*24*7000,
       "month":3600*24*7*30000
     }
     return m[key];
@@ -93,14 +97,17 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
     v = ((lmin % lstep) < epsilon || (lstep - (lmin % lstep)) < epsilon) && lmin <= 0 && lmax >= 0 ? 1 : 0;
     return 1 - (i / (n - 1)) - j + v;
   };
+
   var simplicityMax = function(i, n, j) {
     return 1 - i / (n - 1) - j + 1;
   };
+
   var coverage = function(dmin, dmax, lmin, lmax) {
     var range;
     range = dmax - dmin;
     return 1 - 0.5 * (Math.pow(dmax - lmax, 2) + Math.pow(dmin - lmin, 2)) / (Math.pow(0.1 * range, 2));
   };
+
   var coverageMax = function(dmin, dmax, span) {
     var half, range;
     range = dmax - dmin;
@@ -126,6 +133,7 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
       return 1;
     }
   };
+
   var legibility = function(lmin, lmax, lstep) {
     return 1.0;
   };
@@ -229,6 +237,7 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
   //   getProperUnit(1.1, 9.8, 10)
   // )
   // // -> [ 1, 10, 1, 0.7917426344299116 ]
+  Util.getProperUnit = getProperUnit;
 
   var axis = function(min,max,n){
     var result = getProperUnit(min,max,n);
@@ -254,6 +263,7 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
     ret.push(tmp);
     return ret;
   }
+  Util.axis = axis;
 
   // console.log(
   //   axis(.9,9.8,10)
@@ -268,6 +278,7 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
   // 3. 所有数据缩小 unit/UNIT，得到新的一组数据 **arr**
   // 4. 求出arr最小值、最大值 **min** 、**max**
   // 5. 根据 min max 求出以unit为单位的范围序列 **arr2**
+  // 6. 将 **arr2** 的所有元素转为时间格式
   // @param arr{Array} 单位为ms的时间序列
   // @param n{Number} 期望分成的份数
   //
@@ -277,30 +288,71 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
     if(!unit){
       log('ERR OCCURED!');
     }
+
     // 2.
     var UNIT = unit2digts(unit);
 
     // 3.
-    arr = arr.map(function(a){
+    var arr2 = arr.map(function(a){
             return a/UNIT;
           });
     // 4.
     var min,max;
-    min = Math.min.apply(Math,arr);
-    max = Math.max.apply(Math,arr);
-
+    min = Math.min.apply(Math,arr2);
+    max = Math.max.apply(Math,arr2);
     // 5.
     var labelnums = axis(min,max,n)
-    return labelnums;
+
+    var mindate = Math.min.apply(Math,labelnums) * UNIT;
+    var maxdate = Math.max.apply(Math,labelnums) * UNIT;
+
+    // 6.
+    labelnums = labelnums.map(function(i){
+                  return +(new Date(i*UNIT));
+                });
+    return {
+      dates:labelnums,
+      unit:UNIT,
+      min:mindate,
+      max:maxdate
+    };
   }
 
-  // var timeseq = [+new Date("2013-12-03 12:00") , +new Date("2013-12-03 12:05") // , +new Date("2013-12-03 12:08") , +new Date("2013-12-03 12:10") , +new Date("2013-12-03 12:30") , +new Date("2013-12-03 12:35")
-  //               ];
+  Util.getlabel = getlabel;
 
+  // var timeseq = [+new Date("2013-12-03 12:00") , +new Date("2013-12-03 12:05") , +new Date("2013-12-03 12:08") , +new Date("2013-12-03 12:10") , +new Date("2013-12-03 12:30") , +new Date("2013-12-03 12:35")
+  //               ];
+  // var ret = getlabel(timeseq,6);
   // console.log(
-  //   getlabel(timeseq,6)
+  //   ret
   // )
 
   // ==================== end getlabel ====================
+  // 格式化日期，from web
+  function formatDate(date,dateformat){
+    var o = {
+      "M+" : date.getMonth()+1,                 //month
+      "d+" : date.getDate(),                    //day
+      "h+" : date.getHours(),                   //hour
+      "m+" : date.getMinutes(),                 //minute
+      "s+" : date.getSeconds(),                 //second
+      "q+" : Math.floor((date.getMonth()+3)/3), //quarter
+      "S" : date.getMilliseconds()              //millisecond
+    }
 
+    if(/(y+)/.test(dateformat)) dateformat=dateformat.replace(RegExp.$1,
+                                                              (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+
+    for(var k in o)if(new RegExp("("+ k +")").test(dateformat))
+      dateformat = dateformat.replace(RegExp.$1,
+                                      RegExp.$1.length == 1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length)
+                                     );
+    return dateformat;
+  }
+  // console.log(new Date().format("yyyy-MM-dd"));
+  // console.log(new Date("january 12 2008 11:12:30").format("yyyy-MM-dd h:mm:ss"));
+
+  Util.formatDate = formatDate;
+  // ==================== end util ====================
+  return Util;
 });
