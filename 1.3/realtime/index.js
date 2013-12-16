@@ -55,6 +55,25 @@
 
    }
 
+   /**
+    * 曲线
+    * @param points{Array} 点集
+    * */
+   function polyline(points){
+     var s;
+     for(var i=0,l=points.length;i<l;i++){
+       var point = points[i]
+         , x = point.x
+         , y = point.y
+       if(i){
+         s.push("L",x,y);
+       }else{
+         s = ["M",x,y]
+       }
+     }
+     return s.join(',');
+   }
+
    // end utils
 
    var props = {
@@ -71,8 +90,8 @@
        // 水平和竖直方向上的填充
        var paddingx,paddingy;
 
-       paddingx = S.isNumber(this.get("paddingx")) || 15;
-       paddingy = S.isNumber(this.get("paddingy")) || 15;
+       paddingx = S.isNumber(this.get("paddingx")) ? this.get("paddingx") : 15;
+       paddingy = S.isNumber(this.get("paddingy")) ? this.get("paddingx") : 15;
 
        // 出去paddingleft paddingtop x2 后的画布大小
        var w2 , h2;
@@ -100,6 +119,7 @@
        var date_unit = daterange.unit;
 
        // 将数值转换为paper上的点
+       var points = [];
        for(var i=0;i<series.length;i++){
          var serie = series[i];
          var data = serie.data;
@@ -110,11 +130,17 @@
 
              x = (point[0] - date_min) / (date_max - date_min) * w2+ paddingx;
              y = (point[1] - val_min) / (val_max - val_min) * h2 + paddingy;
-
-             paper.circle(x,y,2)
+             paper.circle(x,y,2);
+             points.push({x:x,y:y});
            }
          }
        }
+       // 将点串联起来
+       var pathstring = polyline(points);
+       paper.path(pathstring);
+
+       var xstartend = []; // x轴路径
+       var ystartend = [];
 
        // 画xaxis
        for(var k=0;k<daterangelen;k++){
@@ -122,6 +148,13 @@
          x = k / (daterangelen-1) * w2 + paddingx;
          y = h - paddingy;
          paper.circle(x,y,1);
+
+         if(k === 0){
+           xstartend.push({x:x,y:y});
+         }else if(k === daterangelen-1){
+           xstartend.push({x:x,y:y});
+         }
+
          var text = Util.formatDate(
            new Date(daterange.range[k]),
            "yyyy-mm-dd"
@@ -137,6 +170,13 @@
          var x,y;
          x = paddingx;
          y = h - paddingy - l/(valuerangelen -1) * h2;
+
+         if(l === 0){
+           ystartend.push({x:x,y:y});
+         }else if(l === valuerangelen - 1){
+           ystartend.push({x:x,y:y});
+         }
+
          // 不重复画第一个点
          if(l){
            paper.circle(x,y,1);
@@ -146,6 +186,10 @@
            });
          }
        }
+
+       // 画x轴y轴
+       paper.path(polyline(xstartend));
+       paper.path(polyline(ystartend));
 
      },
      _axis:function(){
@@ -172,5 +216,5 @@
 
    return RealTime;
  },{
-   requires:["gallery/kcharts/1.1/raphael/index","base","./util","dom","event"]
+   requires:["gallery/kcharts/1.2/raphael/index","base","./util","dom","event"]
  });
