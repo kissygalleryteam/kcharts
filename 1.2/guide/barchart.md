@@ -212,6 +212,21 @@ Config（详细配置）
   - `align`  {string} 水平对齐方式 可选："left" 左对齐 "center" 居中 "right" 右对齐
   - `verticalAlign` {string} 垂直对齐方式 可选："top" 顶部对齐 "middle" 垂直居中 "bottom" 底部对齐
 
+### colorhook
+   {function} 颜色钩子函数，返回一个包含`DEFAULT`和`HOVER`的颜色对象，函数的参数如下：
+   
+```
+colorhook:function(groupIndex,barIndex,originalColorObject){
+  // groupIndex,   barIndex, originalColorObject
+  // 柱状图组编号，柱状编号，默认颜色对象
+  return {
+    "DEFAULT": 'blue', // 这里可以根据groupIndex，或者barIndex重新计算一个合法的颜色值
+    'HOVER': 'yellow'
+  }
+}
+```
+   [使用示例](https://github.com/kissygalleryteam/kcharts/blob/master/1.2/demo/barchart/demo7.html#L76-L85)
+
 ---
 Method（方法）
 ---

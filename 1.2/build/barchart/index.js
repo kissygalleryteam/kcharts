@@ -403,8 +403,12 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 				paper = self.paper,
 				cls = canvasCls + "-bars",
 				ctn = self._innerContainer,
-				color = self.color.getColor(groupIndex)['DEFAULT'],
-				_css = self.processAttr(_cfg.bars.css, color),
+				colorall = self.color.getColor(groupIndex),
+				color = colorall['DEFAULT'],
+				// 颜色配置钩子
+				customcolor = (_cfg.colorhook && _cfg.colorhook(groupIndex,barIndex,colorall)),
+				colornew = (customcolor && customcolor["DEFAULT"]) || color,
+				_css = self.processAttr(_cfg.bars.css, colornew),
 				isY = _cfg.zoomType == "x" ? false : true,
 				barPos = self._barsPos[groupIndex][barIndex],
 				x = (barPos.x - 0).toFixed(2),
@@ -531,8 +535,21 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			for (var i in self._barsPos) {
 				var bars = [],
 					posInfos = [];
-
+				// 只计算一次getColor
+				var colorObject = color.getColor(i);
 				for (var j in self._barsPos[i]) {
+					var tmpcolor;
+					var realColorObj;
+					// 如果有colorhook自定义颜色
+					if(_cfg.colorhook){
+						tmpcolor = _cfg.colorhook(i,j,colorObject);
+						if(tmpcolor)
+							realColorObj = tmpcolor;
+						else
+							realColorObj = colorObject;
+					}else{
+						realColorObj = colorObject;
+					}
 					var barPos = self._barsPos[i][j];
 					posInfos[j] = barPos;
 					bars[j] = self.drawBar(i, j, function() {
@@ -543,14 +560,14 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 					}).attr({
 						"barGroup": i,
 						"barIndex": j,
-						"defaultColor": color.getColor(i).DEFAULT,
-						"hoverColor": color.getColor(i).HOVER
+						"defaultColor": realColorObj.DEFAULT,
+						"hoverColor": realColorObj.HOVER
 					});
 				}
 				var barObj = {
 					bars: bars,
 					posInfos: posInfos,
-					color: color.getColor(i)
+					color: colorObject
 				};
 				self._bars[i] = barObj;
 			}
@@ -1127,17 +1144,27 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 
 			var posInfos = [],
 				bars = [];
-
+			var colorObject = color.getColor(barIndex);
 			for (var j in self._barsPos[barIndex]) {
-
+				var tmpcolor;
+				var realColorObj;
+				if(self._cfg.colorhook){
+					tmpcolor = self._cfg.colorhook(barIndex,j,colorObject);
+					if(tmpcolor)
+						realColorObj = tmpcolor;
+					else
+						realColorObj = colorObject;
+				}else{
+					realColorObj = colorObject;
+				}
 				var barPos = self._barsPos[barIndex][j];
 
 				posInfos[j] = barPos;
 				bars[j] = self.drawBar(barIndex, j).attr({
 					"barGroup": barIndex,
 					"barIndex": j,
-					"defaultColor": color.getColor(barIndex).DEFAULT,
-					"hoverColor": color.getColor(barIndex).HOVER
+					"defaultColor": realColorObj.DEFAULT,
+					"hoverColor": realColorObj.HOVER
 				});
 
 			}
@@ -1145,7 +1172,7 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			self._bars[barIndex] = {
 				bars: bars,
 				posInfos: posInfos,
-				color: color.getColor(i)
+				color: colorObject
 			};
 
 			self.clearEvtLayout();
