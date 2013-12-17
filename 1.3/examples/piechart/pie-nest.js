@@ -1,4 +1,4 @@
-KISSY.use("gallery/kcharts/1.3/piechart/index,gallery/kcharts/1.1/tip/index",function(S,Pie,Tip){
+KISSY.use("gallery/kcharts/1.3/piechart/index,gallery/kcharts/1.3/tip/index",function(S,Pie,Tip){
 	function pie1(){
 		var tip
 		function getTip(){

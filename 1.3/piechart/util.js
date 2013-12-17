@@ -294,7 +294,8 @@
         if(donut && l==1){
           r = [rs[0],rs[1]]
         }
-        f.el = new Sector(paper,cx,cy,r,initdeg,initdeg-1,pathcfg,f);
+
+        f.el = new Sector({paper:paper,cx:cx,cy:cy,r:r,start:initdeg,end:initdeg-1,pathcfg:pathcfg,framedata:f});
 
         $path = f.el.get("$path")
 

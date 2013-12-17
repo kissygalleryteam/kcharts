@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.3/piechart/sector",function(S){
+;KISSY.add("gallery/kcharts/1.3/piechart/sector",function(S,Base){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○
@@ -89,17 +89,12 @@
     return ret;
   }
 
-  function Sector(paper,cx,cy,r,start,end,pathcfg,framedata){
-    if(!(this instanceof Sector)){
-      return new Sector(paper,cx,cy,r,start,end,pathcfg);
-    }
-    this.set({cx:cx,cy:cy,r:r,start:start,end:end,pathcfg:pathcfg,paper:paper,framedata:framedata})
-    this.draw();
-    this.bindEvent();
-    return this;
-  }
-
-  S.extend(Sector,S.Base,{
+   var methods = {
+     initializer:function(){
+       this.draw();
+       this.bindEvent();
+       return this;
+     },
     bindEvent:function(){
       this.on('afterCxChange',function(){
         this.draw();
@@ -212,6 +207,20 @@
       this.unbindEvent();
       this.get('$path').remove();
     }
-  })
+  };
+
+   var Sector;
+   if(Base.extend){
+     Sector = Base.extend(methods)
+   }else{
+     Sector = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Sector,S.Base,methods)
+   }
   return Sector;
+},{
+  requires:["base"]
 });
