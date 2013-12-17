@@ -3,77 +3,60 @@
  * 仪表盘
  * @author cookieu@gmail.com
  */
-;KISSY.add('gallery/kcharts/1.3/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks){
-  var D = S.DOM
-    , E = S.Event
-    , R = Raphael
+;KISSY.add('gallery/kcharts/1.3/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks,Base,D,E){
+   window.console && window.console.log('asdfaf');
+  var R = Raphael;
+   var methods = {
+     initializer:function(){
+       var con = this.get('renderTo');
 
-  function DashBoard(){
-    DashBoard.superclass.constructor.apply(this,arguments)
-    var con = this.get('renderTo')
-    if(S.isString(con)){
-      con = S.get(con)
-    }
-    var w = this.get('width')
-      , h = this.get('height')
-    this.paper = R(con,w,h)
-    this.init()
-  }
+       if(S.isString(con)){
+         con = S.get(con)
+       }
 
-  DashBoard.ATTRS = {
-    width:{
-      value:400
-    },
-    height:{
-      value:400
-    },
-    cx:{
-      value:0
-    },
-    cy:{
-      value:0
-    }
-  }
+       var w = this.get('width')
+         , h = this.get('height')
 
-  S.extend(DashBoard,S.Base,{
-    init:function(){
-      var cx = this.get('cx') || this.get('width')/2
-        , cy = this.get('cy') || this.get('width')/2
-        , that = this
-      this.set('cx',cx)
-      this.set('cy',cy)
+       this.paper = R(con,w,h)
 
-      this.bindEvent()
+       var cx = this.get('cx') || this.get('width')/2
+         , cy = this.get('cy') || this.get('width')/2
+         , that = this
 
-      var tick
-        , pointer
-        , bg
+       this.set('cx',cx)
+       this.set('cy',cy)
 
-      tick = this.get('ticks')
-      pointer = this.get('pointer')
-      bg = this.get('background')
+       this.bindEvent()
 
-      if(S.isObject(bg)){
-        this.drawBg(bg)
-      }else if(S.isFunction(bg)){
-        bg.call(this)
-      }
+       var tick
+         , pointer
+         , bg
 
-      if(S.isObject(pointer)){
-        this.drawPointer(pointer)
-      }else if(S.isFunction(pointer)){
-        pointer.call(this)
-      }
+       tick = this.get('ticks')
+       pointer = this.get('pointer')
+       bg = this.get('background')
 
-      if(S.isObject(tick)){
-        this.drawTicks(tick)
-      }else if(S.isFunction(tick)){
-        this.ticks = tick.call(this)
-      }
-    },
-    bindEvent:function(){
-      var that = this
-    },
+       if(S.isObject(bg)){
+         this.drawBg(bg)
+       }else if(S.isFunction(bg)){
+         bg.call(this)
+       }
+
+       if(S.isObject(pointer)){
+         this.drawPointer(pointer)
+       }else if(S.isFunction(pointer)){
+         pointer.call(this)
+       }
+
+       if(S.isObject(tick)){
+         this.drawTicks(tick)
+       }else if(S.isFunction(tick)){
+         this.ticks = tick.call(this)
+       }
+     },
+     bindEvent:function(){
+       var that = this
+     },
     drawBg:function(cfg){
       if(cfg.src){
         this.drawPictureBg(cfg)
@@ -145,10 +128,31 @@
     pointTo:function(angle,effect){
       this.pointer && this.pointer.pointTo(angle,effect)
     }
-  })
+  }
+
+   var DashBoard;
+
+   if(Base.extend){
+     DashBoard = Base.extend(methods);
+   }else{
+     DashBoard = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(DashBoard,Base,methods)
+   }
   return DashBoard
 },{
-  requires:['../raphael/index','./pointer','./pointer-pic','./dashboard-ticks']
+  requires:[
+    '../raphael/index',
+    './pointer',
+    './pointer-pic',
+    './dashboard-ticks',
+    'base',
+    'dom',
+    'event'
+  ]
 })
 
 /**

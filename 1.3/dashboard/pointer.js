@@ -3,50 +3,60 @@
  * 指针
  * @author cookieu@gmail.com
  * */
-;KISSY.add('gallery/kcharts/1.3/dashboard/pointer',function(S){
-  function Pointer(){
-    Pointer.superclass.constructor.apply(this,arguments)
-  }
+;KISSY.add('gallery/kcharts/1.3/dashboard/pointer',function(S,Base){
+   var methods = {
+     pointTo:function(angle,effect){
+       var paper = this.get('paper')
+         , that = this
+         , dashboard = this.get('dashboard')
+         , pointer
+         , paperCx = dashboard.get('cx')
+         , paperCy = dashboard.get('cy')
+         , cfg = dashboard.get('pointer') || {}
+         , cx = cfg.cx || 0 // 指针头中心x y
+         , cy = cfg.cy || 0
+         , x = paperCx+cx      // 指针头实际开始位置x y
+         , y = paperCy+cy
+         , w = dashboard.get('width')
+         , h = dashboard.get('height')
+
+       // 指针主题
+       var themes = {
+         "a":function(cfg){
+           var transform = ['r',angle-90,x,y].join(',')
+             , pathString
+             , circlepath
+           if(!that.pointer){
+             that.pointer = pointer1(paper,x,y,cfg.r || 5,cfg.R || 80,cfg)
+           }
+           if(angle){
+             that.pointer.animate({transform:transform},effect.ms,effect.easing,effect.callback)
+           }
+         },
+         "b":function(){
+
+         }
+       }
+       var render = (cfg.theme && cfg.theme.name && themes[cfg.theme.name]) || themes['a']
+       render && render(cfg.theme)
+     }
+   };
+
+   //==================== extend ====================
+  var Pointer;
+   if(Base.extend){
+     Pointer = Base.extend(methods);
+   }else{
+     Pointer = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+     }
+     S.extend(Pointer,Base,methods)
+   }
+
+   //==================== extend end ====================
 
   var M = "M" , L = "L" , A = "A"
-  S.extend(Pointer,S.Base,{
-    pointTo:function(angle,effect){
-      var paper = this.get('paper')
-        , that = this
-        , dashboard = this.get('dashboard')
-        , pointer
-        , paperCx = dashboard.get('cx')
-        , paperCy = dashboard.get('cy')
-        , cfg = dashboard.get('pointer') || {}
-        , cx = cfg.cx || 0 // 指针头中心x y
-        , cy = cfg.cy || 0
-        , x = paperCx+cx      // 指针头实际开始位置x y
-        , y = paperCy+cy
-        , w = dashboard.get('width')
-        , h = dashboard.get('height')
-
-      // 指针主题
-      var themes = {
-        "a":function(cfg){
-          var transform = ['r',angle-90,x,y].join(',')
-            , pathString
-            , circlepath
-          if(!that.pointer){
-            that.pointer = pointer1(paper,x,y,cfg.r || 5,cfg.R || 80,cfg)
-          }
-          if(angle){
-            that.pointer.animate({transform:transform},effect.ms,effect.easing,effect.callback)
-          }
-        },
-        "b":function(){
-
-        }
-      }
-      var render = (cfg.theme && cfg.theme.name && themes[cfg.theme.name]) || themes['a']
-      render && render(cfg.theme)
-    }
-  })
-
   // 圆头指针
   /**
    * @param paper
@@ -131,4 +141,6 @@
   }
 
   return Pointer
+},{
+   requires:["base"]
 })
