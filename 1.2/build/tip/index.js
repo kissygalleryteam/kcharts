@@ -8,82 +8,71 @@ gallery/kcharts/1.2/tip/index
  * @fileOverview KChart 1.2  tip
  * @author huxiaoqi567@gmail.com
  */
-;KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Base,Node,Anim,Template,undefined) {
-
-    var $ = S.all,
-        Event = S.Event;
-    function Tip(cfg) {
-
-        if(!cfg) return;
-
+;KISSY.add('gallery/kcharts/1.2/tip/index', function (S,Node,Base,Anim,Template,undefined) {
+    var $ = S.all;
+    var methods = {
+      initializer:function(){
+        this.init();
+      },
+      init:function () {
+        var cfg = this.userConfig;
         var self = this,
-                defaultCfg = {
-                clsName:"ks-chart-default",
-                autoRender:true,
-                isVisable:false,
-                boundry:{        //tip的移动区域
-                    x:0,
-                    y:0,
-                    width:0,
-                    height:0
-                },
-                rootNode:$("body"),
-                tpl:"",
-                corner:{
-                    isShow:false,
-                    tpl:"corner",
-                    css:{
-                        position:"absolute",
-                        marginLeft:0,
-                        marginTop:0
-                    }
-                },
-                anim:{
-                    easing:"easeOut",
-                    duration:0.25
-                },
-                offset:{
-                    x:0,
-                    y:0
-                },
-                alignX:"left", //left center right
-                alignY:"top"    //top middle bottom
+            defaultCfg = {
+              clsName:"ks-chart-default",
+              autoRender:true,
+              isVisable:false,
+              boundry:{        //tip的移动区域
+                x:0,
+                y:0,
+                width:0,
+                height:0
+              },
+              rootNode:$("body"),
+              tpl:"",
+              corner:{
+                isShow:false,
+                tpl:"corner",
+                css:{
+                  position:"absolute",
+                  marginLeft:0,
+                  marginTop:0
+                }
+              },
+              anim:{
+                easing:"easeOut",
+                duration:0.25
+              },
+              offset:{
+                x:0,
+                y:0
+              },
+              alignX:"left", //left center right
+              alignY:"top"    //top middle bottom
             };
 
         self._events = {
-            MOVE:"move",
-            SETCONT:"setcontent",
-            HIDE:"hide"
+          MOVE:"move",
+          SETCONT:"setcontent",
+          HIDE:"hide"
         }
 
+        // 这里用mix不合适，S.mix会改变defaultCfg
         self._cfg = S.mix(defaultCfg, cfg, undefined, undefined, true);
 
         self._cfg.rootNode = $(self._cfg.rootNode);
 
-        self.init();
-    }
+        var  _cfg = self._cfg;
 
-    S.augment(Tip, Base, {
-        init:function () {
-            var self = this,
-                _cfg = self._cfg;
+        self._data = {};
 
-            self._data = {};
+        self._tpl = _cfg.tpl;
+        self.bindEvent();
 
-            self._tpl = _cfg.tpl;
-
-            self.$tip;
-
-            self.bindEvent();
-
-            if (_cfg.autoRender) {
-
-                self.render();
-
-            }
-
-        },
-        bindEvent:function () {
+        if (_cfg.autoRender) {
+          self.render();
+        }
+      },
+      bindEvent:function () {
             var self = this,
                 tpl = self._cfg.template,
                 _events = self._events;
@@ -161,7 +150,7 @@ gallery/kcharts/1.2/tip/index
 
         },
         animateTo:function (x, y, callback) {
-            var self = this,    
+            var self = this,
                   _cfg = self._cfg,
                 anim = _cfg.anim,
                 now = new Date().getTime();
@@ -291,7 +280,7 @@ gallery/kcharts/1.2/tip/index
                 if(marginTop < by){
                     marginTop = y -(-Math.abs(offset.y));
                 }else if(marginTop > by + h - height){
-                    marginTop = y - height - Math.abs(offset.y); 
+                    marginTop = y - height - Math.abs(offset.y);
                 }
 
                 if(marginLeft < bx){
@@ -317,7 +306,7 @@ gallery/kcharts/1.2/tip/index
                 display = _cfg.isVisable ? "inline-block" : "none",
                 rootNodeOffset = _cfg.rootNode.offset();
 
-            if (!_cfg.rootNode.offset()) return;
+            if (!_cfg.rootNode.offset()) return false;
 
             self.$tip = !self._isExist() && $('<span class="' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
                 .css({"display":display})
@@ -332,16 +321,21 @@ gallery/kcharts/1.2/tip/index
                           });
 
             self.renderTemplate(_tpl, _data);
-
             return self.$tip;
         }
-    });
-    if (!S.KCharts || !S.KCharts.Tip){
-      S.namespace('KISSY.KCharts');
+    };
+
+   var Tip;
+   if(Base.extend){
+     Tip = Base.extend(methods);
+   }else{
+     Tip = function (cfg) {
+       if(!cfg) return;
+       this.userConfig = cfg;
+       this.init();
+     }
+     S.extend(Tip, Base, methods);
     }
-    S.KCharts.Tip = Tip;
     return Tip;
-
-}, {requires:['base','node','anim','gallery/template/1.0/index', './assets/tip.css']});
-
+}, {requires:['node','base','anim','gallery/template/1.0/index', './assets/tip.css']});
 
