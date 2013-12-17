@@ -59,7 +59,7 @@
 
   /**
    * @param cfg {Object}
-   * cfg.rpadding 留来画label的距离
+   * cfg.rpadding {Number} 留来画label的距离
    * cfg.repaintRate {Number} 重绘频率
    * cfg.donut {Bool} 是否为面包圈图
    * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
@@ -458,8 +458,8 @@
     "./sector",
     "gallery/kcharts/1.2/animate/index",
     "./label",
-    "gallery/kcharts/1.1/raphael/index",
-    "gallery/kcharts/1.1/tools/color/index",
+    "gallery/kcharts/1.2/raphael/index",
+    "gallery/kcharts/1.2/tools/color/index",
     "base",
     "event",
     "dom"
