@@ -1,11 +1,10 @@
 /**
- * @fileOverview KChart 1.1  scatterchart
+ * @fileOverview KChart 1.3  scatterchart
  * @author huxiaoqi567@gmail.com
  */
-;KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
+;KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
 
 	var $ = S.all,
-		Evt = S.Event,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
@@ -14,16 +13,14 @@
 		COLOR_TPL = "{COLOR}",
 		color;
 
-	var ScatterChart = function(cfg) {
-		var self = this;
-		self._cfg = cfg;
-		self._cfg.zoomType = "xy";
-		self.init();
-	};
+	var methods = {
+		initializer: function() {
+		  var self = this;
 
-	S.extend(ScatterChart, BaseChart, {
-		init: function() {
-			var self = this;
+          var cfg = this.userConfig;
+
+          self._cfg = cfg;
+		  self._cfg.zoomType = "xy";
 
 			BaseChart.prototype.init.call(self, self._cfg);
 
@@ -815,11 +812,26 @@
 		clear: function() {
 			this._$ctnNode.html("");
 		}
-	});
+	}
+	var ScatterChart;
+
+	if(Base.extend){
+      ScatterChart = BaseChart.extend(methods);
+	}else{
+      ScatterChart = function (cfg){
+		var self = this;
+        this.userConfig = cfg;
+        this.initializer();
+      }
+      S.extend(ScatterChart,BaseChart,methods);
+    }
 	return ScatterChart;
 }, {
 	requires: [
 		'base',
+        'node',
+        'dom',
+        'event',
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.3/basechart/index',
 		'gallery/kcharts/1.3/raphael/index',

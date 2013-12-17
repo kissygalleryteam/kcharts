@@ -588,7 +588,6 @@
     }
     S.extend(Legend,Base,methods);
   }
-  S.extend(Legend,S.Base,methods);
   return Legend;
 },{
   requires:[

@@ -16,12 +16,11 @@
 <div class="wrapper">
 	<div id="demo1"></div>
 </div>
-<script src="http://a.tbcdn.cn/??s/kissy/1.3.0/kissy-min.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed.js"></script>
 <script>
-(function(S){
+KISSY.use('node,dom,event',function(S){
     var $ = S.all,Evt = S.Event;
 	S.Config.combine = true;
-
 var series = [{
                 text: 'Female',
                 data: [[161.2, 51.6,1],[176.5, 71.8,2],[170.0, 59.0,3], [159.1, 47.6,3], [166.0, 69.8,3], [176.2, 66.8,3], [160.2, 75.2,3]]
@@ -85,7 +84,7 @@ var series = [{
             }
         });
 	});
-})(KISSY);
+});
 </script>
 </body>
 </html>
