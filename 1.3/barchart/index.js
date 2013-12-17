@@ -5,10 +5,9 @@
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
-;KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
+;KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip, Evt) {
 
 	var $ = S.all,
-		Evt = S.Event,
 		win = window,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -19,14 +18,13 @@
 		COLOR_TPL = "{COLOR}",
 		color;
 
-	var BarChart = function(cfg) {
-		var self = this;
-		self._cfg = cfg;
-		self.init();
-	};
-
-	S.extend(BarChart, BaseChart, {
+    var methods = {
+        initializer: function(){
+            this.init();
+		},
 		init: function() {
+            // 兼容kissy < 1.4版本的
+            this._cfg || (this._cfg = this.userConfig);
 
 			var self = this;
 
@@ -1043,12 +1041,26 @@
 		clear: function() {
 			this._$ctnNode.html("");
 		}
-	});
+	};
+
+	var BarChart;
+    if(Base.extend){
+      BarChart = BaseChart.extend(methods);
+	}else{
+      BarChart = function(cfg) {
+          var self = this;
+          self._cfg = cfg;
+          self.init();
+      };
+      S.extend(BarChart, BaseChart, methods);
+	}
 
 	return BarChart;
 
 }, {
 	requires: [
+        'node',
+        'base',
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.3/basechart/index',
 		'gallery/kcharts/1.3/raphael/index',
@@ -1057,6 +1069,7 @@
 		'gallery/kcharts/1.3/legend/index',
 		'./theme',
 		'gallery/kcharts/1.3/tools/touch/index',
-		'gallery/kcharts/1.3/tip/index'
+		'gallery/kcharts/1.3/tip/index',
+        'event'
 	]
 });

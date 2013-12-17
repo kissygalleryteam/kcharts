@@ -1,13 +1,13 @@
 /*
 TODO 坐标运算  画布大小计算
 */
-;KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base,Node) {
+;KISSY.add('gallery/kcharts/1.3/basechart/index', function(S,Base,Node) {
 	var $ = S.all;
 	var isNagitive = false;
 	var isPositive = false;
-	var BaseChart = function() {};
-	S.extend(BaseChart, Base, {
+    var methods = {
 		init: function(cfg) {
+            cfg || (cfg = this.userConfig);
 			var self = this,
 				_cfg, series;
 			if (cfg && cfg.renderTo) {
@@ -716,7 +716,7 @@ TODO 坐标运算  画布大小计算
           }
         }
 	  },
-		onResize:function(e){
+	  onResize:function(e){
 			var self = this,
 				$ctnNode = self._$ctnNode;
 
@@ -732,10 +732,16 @@ TODO 坐标运算  画布大小计算
 					self.fire("resize");
 				}
 			});
-		}
+	  }
+	};
+	var BaseChart;
 
-	});
-
+    if(Base.extend){
+      BaseChart = Base.extend(methods);
+	}else{
+	  BaseChart = function() {};
+	  S.extend(BaseChart, Base, methods);
+    }
 	return BaseChart;
 }, {
 	requires: ['base','node']
