@@ -2,9 +2,8 @@
  * @fileOverview KChart 1.2  datetime
  * @author huxiaoqi567@gmail.com
  */
-;KISSY.add("gallery/kcharts/1.3/datetime/index",function(S,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
+;KISSY.add("gallery/kcharts/1.3/datetime/index",function(S,D,Evt,Node,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
 	var $ = S.all,
-		Evt = S.Event,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
@@ -14,15 +13,14 @@
 		//点的类型集合
 		POINTS_TYPE = ["circle","triangle","rhomb","square"],
 		color;
-
-	var DateTime = function(cfg){
-		var self = this;
-			self._cfg = cfg;
-			self.init();
-	};
-
-	S.extend(DateTime,BaseChart,{
+    var methods = {
+        initializer: function(){
+            this.init();
+		},
 		init:function(){
+            // 兼容kissy < 1.4版本的
+            this._cfg || (this._cfg = this.userConfig);
+
 			var self = this,points;
 
 			BaseChart.prototype.init.call(self,self._cfg);
@@ -1230,9 +1228,24 @@
 		clear:function(){
 			this._$ctnNode.html("");
 		}
-	});
+	};
+
+	var DateTime;
+    if(Base.extend){
+      DateTime = BaseChart.extend(methods);
+	}else{
+      DateTime = function(cfg) {
+		var self = this;
+			self._cfg = cfg;
+			self.init();
+      };
+      S.extend(DateTime, BaseChart, methods);
+	}
 	return DateTime;
 },{requires:[
+    'dom',
+    'event',
+    'node',
 	'base',
 	'gallery/template/1.0/index',
 	'gallery/kcharts/1.3/raphael/index',
