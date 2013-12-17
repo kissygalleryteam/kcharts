@@ -1,4 +1,4 @@
-;KISSY.add("gallery/kcharts/1.3/legend/index",function(S,Base,D,E,Icons,Animation){
+;KISSY.add("gallery/kcharts/1.3/legend/index",function(S,Base,Node,D,E,Icons,Animation){
   var merge = S.merge;
 
   var unit = Icons.BASIC[1];
@@ -592,6 +592,7 @@
 },{
   requires:[
     "base",
+    "node",
     "dom","event",
     "gallery/kcharts/1.3/icons/index",
     "gallery/kcharts/1.3/animate/index",
