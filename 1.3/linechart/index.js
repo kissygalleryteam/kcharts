@@ -4,9 +4,8 @@
  * change log
  * 2013-11-13  新增stockClick事件
  */
-;KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
+;KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
 	var $ = S.all,
-		Evt = S.Event,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
@@ -17,17 +16,16 @@
 		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"],
 		color;
 
-	var LineChart = function(cfg) {
-		var self = this;
-		self._cfg = cfg;
-		self.init();
-	};
-
-	S.extend(LineChart, BaseChart, {
+    var methods = {
+        initializer:function(){
+          this.init();
+		},
 		init: function() {
 			var self = this,
 				points,
 				w;
+            // KISSY > 1.4 逻辑
+            self._cfg || (self._cfg = self.userConfig);
 
 			BaseChart.prototype.init.call(self, self._cfg);
 			self.chartType = "linechart";
@@ -1405,11 +1403,25 @@
 		clear: function() {
 			this._$ctnNode.html("");
 		}
-	});
+	};
+
+	var LineChart ;
+    if(Base.extend){
+      LineChart = BaseChart.extend(methods);
+	}else{
+	  LineChart = function(cfg) {
+		var self = this;
+		self._cfg = cfg;
+		self.init();
+	  };
+	  S.extend(LineChart, BaseChart, methods);
+	}
 	return LineChart;
 }, {
 	requires: [
 		'base',
+        'node',
+        'dom','event',
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.3/raphael/index',
 		'gallery/kcharts/1.3/basechart/index',
