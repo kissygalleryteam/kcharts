@@ -6,3 +6,7 @@
 - 2013.10.25 升级raphael版本至2.1.2
 - 2013.07.15 饼图支持自适应容器
 - 2013.12.03 饼图bugfix by 玄道
+- 2013.12.18 对kissy1.4的支持
+  1. extend的使用方法变了需要做 [兼容性处理](https://gist.github.com/WeweTom/7822062)
+  2. 只提供了seed.js，默认是没有DOM，Event模块的，使用需要显示的requires这些模块。
+     $.all依赖Node模块，需要显示的requires
