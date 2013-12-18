@@ -1,3 +1,6 @@
+# Overview
+内部使用的工具类，linechart 、barchart 提供 `getHtmlPaper` 方法可以获得此类的实例
+
 # HtmlPaper
 
 ---

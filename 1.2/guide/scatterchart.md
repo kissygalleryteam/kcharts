@@ -2,8 +2,8 @@
 ---
 Demo
 ---
-[scatter](../demo/scatterchart/demo1.html) 散点图<br/>
-[bubble](../demo/scatterchart/demo2.html) 气泡图<br/>
+- [scatter](../demo/scatterchart/demo1.html) 散点图
+- [bubble](../demo/scatterchart/demo2.html) 气泡图
 
 ---
 代码示例

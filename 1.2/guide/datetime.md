@@ -3,7 +3,7 @@
 ---
 Demo
 ---
-[大数据量线图](../demo/datetime/demo1.html) <br/>
+- [大数据量线图](../demo/datetime/demo1.html)
 ---
 代码示例
 ---

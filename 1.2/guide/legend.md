@@ -1,16 +1,15 @@
-### 简介
-新的图表可以考虑集成Legend
+### Overview
+- Legend是通用的图表标注，供内部使用
+- 新的图表请集成Legend
 
 ### 使用示例
 
 使用legend需要了解的概念
-- `bbox` 要定位的对象的盒子对象
-- `container` legend定位相对的容器，容器的css必须为非静态定
-位，必须是`relative` 、`absolute` 
+- `bbox` 定位legend图标的盒子对象
+- `container` legend定位相对的容器，容器的css必须为非静态定位，即`relative` 、`absolute` 
 - `paper` Raphael画布实例
 
-下面是一个完整的实例， `J_Box` 相当于图表主区域，`J_Con` 相
-当于图表容器
+下面是一个完整的实例， `J_Box` 相当于图表主区域，`J_Con` 相当于图表容器
 
 ```
 <!doctype html>
@@ -30,7 +29,7 @@
      .clear-both{
        clear:both;
      }
-    </style>        
+    </style>
   </head>
   <body>
     <div id="J_Con" class="con">

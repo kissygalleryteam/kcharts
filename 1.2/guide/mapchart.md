@@ -1,12 +1,12 @@
-#MapChart
 ---
 Demo
 ---
-[有tip](../demo/mapchart/demo1.html) <br/>
-[最简配置](../demo/mapchart/demo2.html) <br/>
-[配色](../demo/mapchart/demo3.html) <br/>
-[模拟hover](../demo/mapchart/demo4.html) <br/>
-[省县市](../demo/mapchart/demo5.html) <br/>
+- [有tip](../demo/mapchart/demo1.html) 
+- [最简配置](../demo/mapchart/demo2.html) 
+- [配色](../demo/mapchart/demo3.html) 
+- [模拟hover](../demo/mapchart/demo4.html) 
+- [省县市](../demo/mapchart/demo5.html) 
+
 ---
 代码示例
 ---
@@ -162,6 +162,6 @@ Event（事件）
 *友情提示:请在render之前绑定事件*
 
 ---
-如果有问题请联系兰七
+如果有问题请旺旺联系：兰七
 
 *稍候会支持全国省市县地图定位，敬请期待*
