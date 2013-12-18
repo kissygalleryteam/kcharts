@@ -1,11 +1,22 @@
-# properties
+# Overview
+两种油表:
+1. 适量绘制刻度
+2. 纯图片实现：表盘是一张图片，指针也是一张图片，推荐这种使用方式，需要视觉提供哦那个合适的图片尺寸。参见下面的 [demo1](http://charts.kissyui.com/demos/1.2/demo/dashboard/dashboard-theme-red.html) 、[demo2](http://charts.kissyui.com/demos/1.2/demo/dashboard/dashboard.html)
+
+# Demo
+- [demo1](http://charts.kissyui.com/demos/1.2/demo/dashboard/dashboard-theme-red.html)
+- [demo2](http://charts.kissyui.com/demos/1.2/demo/dashboard/dashboard.html)
+
+# 配置项
 
 ## renderTo
 绘制到的dom容器
 
 ## width
+仪表盘宽度
 
 ## height
+仪表盘高度
 
 ## ticks
 刻度配置，仅对矢量的码表适用。示例配置：

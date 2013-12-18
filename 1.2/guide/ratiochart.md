@@ -158,24 +158,24 @@ Config（详细配置）
 { array } 数据部分
 ```
    {
-      title: {   //标题数据
-        text: '男女通吃',  //文字
-        html: '', //也可以自定义html
+      title: {            //标题数据
+        text: '男女通吃', //文字
+        html: '',         //也可以自定义html
         styles: {
-                //针对该条标题自定义样式
+                          //针对该条标题自定义样式
         }
       },
       graph: {
-        per: 20,  //比例
-        styles: {  //针对该条自定义样式
-          backgroundColor: '#f44'   
+        per: 20,          //比例
+        styles: {         //针对该条自定义样式
+          backgroundColor: '#f44'
         }
       },
       intro: {
-        text: '20%',   //注视文字
-        html: '',   //也可以自定义html
+        text: '20%',      //注视文字
+        html: '',         //也可以自定义html
         styles: {
-                //针对该条注视自定义样式 
+                          //针对该条注视自定义样式 
         }
       }
   } 

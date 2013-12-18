@@ -1,9 +1,12 @@
+# Overview
+三角形图，展现形式同barchart
+
 # trianglechart
 
 ---
 Demo
 ---
-[三角形图](../demo/trianglechart/demo1.html) <br/>
+- [三角形图](../demo/trianglechart/demo1.html)
 
 ---
 代码示例

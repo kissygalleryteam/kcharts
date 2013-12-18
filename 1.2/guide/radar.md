@@ -1,4 +1,10 @@
-# properties
+# Overview
+雷达图实现
+
+# Demo
+- [demo1](http://charts.kissyui.com/demos/1.2/demo/radarchart/radar-rich.html)
+
+# 配置项
 
 ## renderTo
   渲染到的dom元素，比如#J_Radar
@@ -58,11 +64,7 @@
 ## options
   绘制选项
 
-
 # method
 
 ## render
   绘制雷达图
-
-
-

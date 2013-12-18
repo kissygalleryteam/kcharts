@@ -1,6 +1,7 @@
 ---
 快速上手——以linechart为例
 ---
+[linechart demo](http://jsbin.com/IbEcOkoX)
 
 ```
 
@@ -36,11 +37,9 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 - [KCharts 外网](http://charts.kissyui.com)
 - [KCharts 内网](http://kcharts.taobao.net)
 
-
 ##Demo
 
-- [demo中心](http://kcharts.taobao.net/demo.php)
-
+- [demo中心（内网）](http://kcharts.taobao.net/demo.php)
 
 ##组件文档
 
@@ -68,4 +67,3 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
 - [htmlpaper html画布](htmlpaper.html)
 - [legend 图例](legend.html)
 - [tip 移动标注](tip.html)
-
