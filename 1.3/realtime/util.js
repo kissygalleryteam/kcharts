@@ -451,15 +451,13 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
   //           E
   function verticalLine(a,b,opt){
     opt || (opt = {});
-    var scale = opt.scale || 3;  // 刻度尺寸
-    var ratio = opt.ratio || .5; // c点在ab之间所占的比例，默认在中间
+    var scale = typeof opt.scale !== 'number'?  3 : opt.scale;  // 刻度尺寸
+    var ratio = typeof opt.ratio !== 'number'? .5 : opt.ratio; // c点在ab之间所占的比例，默认在中间
 
     var unit = 1000000;
 
     // 1. 求出a,b与水平的夹角
     var deg = linedeg(a,b);
-
-    // console.log(roundToFixed(deg,unit));
 
     // 2. 根据夹角求出单位向量
     var ix = Math.cos(deg*deg2rad);
@@ -473,7 +471,6 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
     // 3. 求出ab之间比例为ratio的坐标
     var x0 = lineon( a[0], b[0], ratio);
     var y0 = lineon( a[1], b[1], ratio);
-
     // console.log([
     //   roundToFixed(x0,unit),
     //   roundToFixed(y0,unit)

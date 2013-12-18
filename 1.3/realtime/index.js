@@ -1,5 +1,5 @@
 ;KISSY.add("gallery/kcharts/1.3/realtime/index",function(S,Raphael,Base,Util,D,E){
-   // utils
+   //==================== utils start ====================
    /**
     * 返回数据的时间、数值范围
     * */
@@ -54,7 +54,6 @@
      }
 
    }
-
    /**
     * 曲线
     * @param points{Array} 点集
@@ -74,34 +73,89 @@
      return s.join(',');
    }
 
-   // end utils
+   /**
+    * 获取a到b分成opt.n份的坐标集合
+    *
+    * */
+   function getRullerPoints(a,b,opt){
+     var rate,ret = [];
+     for(var i=0,n=opt.n;i<n;i++){
+       rate = i/(n-1);
+       opt.ratio = rate;
+       ret.push(Util.verticalLine(a,b,opt));
+     }
+     return ret;
+   }
+   /**
+    * 画刻度
+    * */
+   function drawRullerPoints(collection,paper){
+     if(arguments.length<2)
+       return false;
+
+     var s = [];
+     var p;
+     // 翻转后，从下往上绘制刻度
+     // collection = collection.reverse();
+     for(var i=1,l=collection.length;i<l;i++){
+       p = collection[i];
+       s.push("M",
+              p.x1,
+              p.y1,
+              "L",
+              p.x2,
+              p.y2);
+     }
+     var ss = s.join(',');
+     return paper.path(ss);
+   }
+   //==================== utils end ====================
 
    var props = {
      inititialize:function(){
-       var paper = this.get("paper");
-
        var selector = this.get("renderTo");
-
        var container = D.get(selector);
+       this.set("container",container);
+       this.render();
+     },
+     /**
+      * 1. 容器、画布尺寸计算
+      * 2. 数据处理
+      * 2.1 算出series数据的范围
+      * 2.2 转换为paper上的点
+      * 3. 将paper上的点串联起来：a. 直接连接 b. 平滑过度连接
+      * 4. 画x y 轴上的label
+      * 4.1 x label a. 包含日期的格式化输出 b. 旋转的标注样式
+      * 4.2 y label
+      * 5. 化刻度尺
+      * 5.1 x 刻度尺
+      * 5.2 y 刻度尺
+      * 6. 画x轴y轴
+      * */
+     render:function(){
+       var container = this.get("container")
+         , paper = this.get('paper')
 
-       var w = D.width(container);
-       var h = D.height(container);
-
+       // 1.
+       var w = D.width(container), h = D.height(container); // 容器总宽高
+       var w2 , h2;                                         // 画布实际可用宽高
        // 水平和竖直方向上的填充
        var paddingx,paddingy;
-
        paddingx = S.isNumber(this.get("paddingx")) ? this.get("paddingx") : 15;
        paddingy = S.isNumber(this.get("paddingy")) ? this.get("paddingx") : 15;
-
        // 出去paddingleft paddingtop x2 后的画布大小
-       var w2 , h2;
-
        w2 = w - paddingx*2;
        h2 = h -  paddingy*2;
 
-       paper || (paper = Raphael(container,w,h));
+       // 若还未初始化画布，创建一个
+       if(!paper){
+         paper = Raphael(container,w,h);
+         this.set('paper',paper);
+       }
 
+       // 2. 数据处理
        var series = this.get("series");
+       // 2.1 算出series数据的范围
        var result = getRange(series);
 
        var daterange = result.daterange
@@ -115,10 +169,10 @@
          , date_max = daterange.max
          , val_max = valuerange.max
 
-       // 日期缩放转换
+       // 日期缩放比例
        var date_unit = daterange.unit;
 
-       // 将数值转换为paper上的点
+       // 2.2 转换为paper上的点
        var points = [];
        for(var i=0;i<series.length;i++){
          var serie = series[i];
@@ -135,20 +189,19 @@
            }
          }
        }
-       // 将点串联起来
+       // 3. 将点串联起来
        var pathstring = polyline(points);
        paper.path(pathstring);
 
+       // 4. 画x、y label
        var xstartend = []; // x轴路径
        var ystartend = [];
 
-       // 画xaxis
+       // 4.1 xaxis label
        for(var k=0;k<daterangelen;k++){
          var x,y;
          x = k / (daterangelen-1) * w2 + paddingx;
          y = h - paddingy;
-         paper.circle(x,y,1);
-
          if(k === 0){
            xstartend.push({x:x,y:y});
          }else if(k === daterangelen-1){
@@ -165,7 +218,7 @@
          })
        }
 
-       // 画yaxis
+       // 4.2 yaxis label
        for(var l=0;l<valuerangelen;l++){
          var x,y;
          x = paddingx;
@@ -179,7 +232,6 @@
 
          // 不重复画第一个点
          if(l){
-           paper.circle(x,y,1);
            paper.text(x,y,valuerange.range[l]).attr({
              "text-anchor":"end",
              "transform":"t-5,0"
@@ -187,18 +239,29 @@
          }
        }
 
-       // 画x轴y轴
+       // 5.
+       // 5.1 画y刻度尺
+       var x1 = paddingx, y1 = paddingy + h2 // 起始位置
+         , x2 = paddingx, y2 = paddingy      // 末位置
+         , n1 = valuerangelen                // 分成的份数
+       var rullerPointsY = getRullerPoints([x1,y1],[x2,y2],{n:n1,scale:5});
+       var $rullerY = drawRullerPoints(rullerPointsY,paper);
+
+       // 5.2 画x刻度尺
+       var x3 = paddingx, y3 = paddingy + h2      // 起始位置
+         , x4 = paddingx + w2, y4 = paddingy + h2 // 末位置
+         , n2 = daterangelen                      // 分成的份数
+       var rullerPointsX = getRullerPoints([x3,y3],[x4,y4],{n:n2,scale:5});
+       var $rullerX = drawRullerPoints(rullerPointsX,paper);
+
+       // 6. 画x轴y轴
        paper.path(polyline(xstartend));
        paper.path(polyline(ystartend));
-
      },
-     _axis:function(){
-
-     },
-     render:function(){
-
-     },
-     _renderSerie:function(){
+     /**
+      * update 方法和 render 不同的地方在于，update 只更新部分
+      * */
+     update:function(){
 
      }
    }
