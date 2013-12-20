@@ -361,6 +361,7 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
   function roundToFixed(num,m){
     return Math.round(num*m)/m;
   }
+  Util.roundToFixed = roundToFixed;
   // var ret;
   // ret = roundToFixed(0.006,100);
   // console.log(ret);
@@ -505,6 +506,72 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
   // ==================== test verticalLine end ====================
   // ==================== 刻度 end ====================
 
+
+
+  /**
+   * 合并两个series data
+   * */
+  function combineSeries(serie,series){
+    var serieName = serie.name;
+    var flag = true;
+    for(var i=0,l=series.length;i<l;i++){
+      if(series[i].name === serieName){
+        var data = series[i].data;
+        series[i].data = [].concat(data,serie.data);
+        flag = false;
+        break;
+      }
+    }
+    // 没有找到同名的serie，则添加一个
+    if(flag){
+      series.push(serie);
+    }
+  }
+  Util.combineSeries = combineSeries;
+  //==================== test combineSerie ====================
+  // case 1 . 插入的数据原来就有
+  // var ss = [
+  //   {
+  //     name : 'AAPL',
+  //     data : [
+  //       [1147651200000,67.79],
+  //       [1147737600000,64.98],
+  //       [1147824000000,65.26]
+  //     ]
+  //   }
+  // ];
+  // var s = {
+  //   name : 'AAPL',
+  //   data : [
+  //     [3,4],
+  //     [5,6]
+  //   ]
+  // }
+  // combineSeries(s,ss);
+  // console.log(ss[0]['data']);
+
+  // case 2. 插入的数据原来没有 AAPL插入到AAQL
+  // var ss = [
+  //   {
+  //     name : 'AAQL',
+  //     data : [
+  //       [1147651200000,67.79],
+  //       [1147737600000,64.98],
+  //       [1147824000000,65.26]
+  //     ]
+  //   }
+  // ];
+  // var s = {
+  //   name : 'AAPL',
+  //   data : [
+  //     [3,4],
+  //     [5,6]
+  //   ]
+  // }
+  // combineSeries(s,ss);
+  // console.log(ss);
+
+  //==================== test combineSerie end ====================
 
   // ==================== end util ====================
   return Util;
