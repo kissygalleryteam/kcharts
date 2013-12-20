@@ -1,4 +1,4 @@
-;KISSY.add("gallery/kcharts/1.3/realtime/index",function(S,Raphael,Base,Util,D,E){
+;KISSY.add("gallery/kcharts/1.3/realtime/index",function(S,Raphael,Base,Util,D,E,ColorLib){
    //==================== utils start ====================
    var each = S.each
      , map = S.map;
@@ -167,6 +167,13 @@
        var selector = this.get("renderTo");
        var container = D.get(selector);
        this.set("container",container);
+
+       var themeCls = "ks-chart-default";
+
+       this.colorManager = new ColorLib({
+         themeCls:themeCls
+       })
+
        this.render();
      },
      /**
@@ -277,8 +284,12 @@
 
        // 2.2 转换为paper上的点
        var points;
+       var colorIndex = 0;
        for(var i=0;i<series.length;i++){
          points = [];
+         // 点颜色
+         var color = this.colorManager.getColor(colorIndex);
+         colorIndex++;
 
          var serie = series[i];
          var data = serie.data;
@@ -289,7 +300,18 @@
 
              x = (point[0] - date_min) / (date_max - date_min) * w2+ paddingx;
              y = (point[1] - val_min) / (val_max - val_min) * h2 + paddingy;
-             var joinPoint = paper.circle(x,y,2);
+             var joinPoint = paper.circle(x,y,4);
+             var dftColor = {"stroke":color.DEFAULT,"stroke-width":2,"fill":"#fff"};
+             joinPoint.attr(dftColor);
+             // TODO 事件每必要绑定这么多
+             (function(joinPoint,color){
+               joinPoint.hover(
+                 function(e){
+                   joinPoint.attr({"stroke":color.HOVER});
+                 },function(e){
+                     joinPoint.attr({"stroke":color.DEFAULT});
+                   });
+             })(joinPoint,color);
              RjoinPoints.push(joinPoint);
              points.push({x:x,y:y});
            }
@@ -302,6 +324,19 @@
            pathstring = polyLine(points);
          }
          var line = paper.path(pathstring);
+         // 设置线条样式 TODO
+         // a. 使用默认颜色
+         // b. 看是否有hook，应用hook
+         line.attr({"stroke":color.DEFAULT,"stroke-width":2});
+         (function(line,color){
+           line.hover(
+             function(e){
+               line.attr({"stroke":color.HOVER,"stroke-width":3});
+             },function(e){
+                 line.attr({"stroke":color.DEFAULT,"stroke-width":2});
+               });
+         })(line,color);
+
          Rlines.push(line);
        }
 
@@ -399,5 +434,5 @@
    }
    return RealTime;
  },{
-   requires:["gallery/kcharts/1.3/raphael/index","base","./util","dom","event"]
+   requires:["gallery/kcharts/1.3/raphael/index","base","./util","dom","event","gallery/kcharts/1.3/tools/color/index"]
  });
