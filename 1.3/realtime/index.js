@@ -183,6 +183,7 @@
       * 2.1 算出series数据的范围
       * 2.2 转换为paper上的点
       * 2.3 将paper上的点串联起来：a. 直接连接 b. 平滑过度连接
+      * 2.4 保存series数据信息，用于绘制legend
       * 3. 画x y 轴上的label
       * 3.1 x label a. 包含日期的格式化输出 b. 旋转的标注样式
       * 3.2 y label
@@ -197,30 +198,30 @@
 
        // 0.
        // 0.1 移除点连线
-       var Rlines = this.get("Rlines");// 绘制的连线
+       var Rlines = this.get("$lines");// 绘制的连线
        if(Rlines){
          removeRaphaelElements(Rlines);
        }else{
          Rlines = [];
-         this.set("Rlines",Rlines);
+         this.set("$lines",Rlines);
        }
 
        // 0.2 移除Rxlabels
-       var Rxlabels = this.get("Rxlabels");
+       var Rxlabels = this.get("$xlabels");
        if(Rxlabels){
          removeRaphaelElements(Rxlabels);
        }else{
          Rxlabels = [];
-         this.set("Rxlabels",Rxlabels);
+         this.set("$xlabels",Rxlabels);
        }
 
        // 0.3 移除Rxlabels
-       var Rylabels = this.get("Rylabels");
+       var Rylabels = this.get("$ylabels");
        if(Rylabels){
          removeRaphaelElements(Rylabels);
        }else{
          Rylabels = [];
-         this.set("Rylabels",Rylabels);
+         this.set("$ylabels",Rylabels);
        }
        // 0.4 移除rullers
        if(this.get("RrullerX")){
@@ -237,12 +238,12 @@
          this.get("Ryaxis").remove();
        }
        // 0.6 移除曲线连接点
-       var RjoinPoints = this.get("RjoinPoints");
-       if(RjoinPoints){
-         removeRaphaelElements(RjoinPoints);
+       var RjointPoints = this.get("$jointPoints");
+       if(RjointPoints){
+         removeRaphaelElements(RjointPoints);
        }else{
-         RjoinPoints = [];
-         this.set("RjoinPoints",RjoinPoints);
+         RjointPoints = [];
+         this.set("$jointPoints",RjointPoints);
        }
 
        // 1.
@@ -250,11 +251,17 @@
        var w2 , h2;                                         // 画布实际可用宽高
        // 水平和竖直方向上的填充
        var paddingx,paddingy;
-       paddingx = S.isNumber(this.get("paddingx")) ? this.get("paddingx") : 15;
-       paddingy = S.isNumber(this.get("paddingy")) ? this.get("paddingx") : 15;
+       var padding = this.getPadding();
+       paddingx = padding.paddingx;
+       paddingy = padding.paddingy;
+
        // 出去paddingleft paddingtop x2 后的画布大小
        w2 = w - paddingx*2;
        h2 = h -  paddingy*2;
+
+       // 内部实际使用的宽度、高度
+       this.set("innerWidth",w2);
+       this.set("innerHeight",h2);
 
        // 若还未初始化画布，创建一个
        if(!paper){
@@ -285,14 +292,17 @@
        // 2.2 转换为paper上的点
        var points;
        var colorIndex = 0;
+
+       // 用于legend的显示隐藏
        for(var i=0;i<series.length;i++){
-         points = [];
-         // 点颜色
-         var color = this.colorManager.getColor(colorIndex);
+         var jointPoints = paper.set();                      // 连接点集合
+         points = [];                                        // 用于连线的坐标点集合
+         var color = this.colorManager.getColor(colorIndex); // 点颜色
          colorIndex++;
 
          var serie = series[i];
          var data = serie.data;
+
          if(data){
            for(var j=0;j<data.length;j++){
              var point = data[j];
@@ -300,19 +310,23 @@
 
              x = (point[0] - date_min) / (date_max - date_min) * w2+ paddingx;
              y = (point[1] - val_min) / (val_max - val_min) * h2 + paddingy;
-             var joinPoint = paper.circle(x,y,4);
+             var jointPoint = paper.circle(x,y,4); // 连接点
              var dftColor = {"stroke":color.DEFAULT,"stroke-width":2,"fill":"#fff"};
-             joinPoint.attr(dftColor);
+             jointPoint.attr(dftColor);
              // TODO 事件每必要绑定这么多
-             (function(joinPoint,color){
-               joinPoint.hover(
+             (function(jointPoint,color){
+               jointPoint.hover(
                  function(e){
-                   joinPoint.attr({"stroke":color.HOVER});
+                   jointPoint.attr({"stroke":color.HOVER});
                  },function(e){
-                     joinPoint.attr({"stroke":color.DEFAULT});
+                     jointPoint.attr({"stroke":color.DEFAULT});
                    });
-             })(joinPoint,color);
-             RjoinPoints.push(joinPoint);
+             })(jointPoint,color);
+             // 所有的连接点
+             RjointPoints.push(jointPoint);
+             // 单条线的连接点
+             jointPoints.push(jointPoint);
+             // 坐标信息
              points.push({x:x,y:y});
            }
          }
@@ -338,6 +352,11 @@
          })(line,color);
 
          Rlines.push(line);
+         // 2.4 保存series数据信息，用于绘制legend
+         serie.color = color;
+         serie.$path = line;
+
+         line.jointPoints = jointPoints;
        }
 
        // 3. 画x、y label
@@ -411,6 +430,8 @@
        this.set("Rxaxis",xaxis);
        this.set("Ryaxis",yaxis);
 
+       // 6. 若配置了legend,绘制legend
+       this.renderLegend();
      },
      /**
       * TODO 动态增加点后，使用上次计算结果的缓存
@@ -419,6 +440,116 @@
        var series = this.get("series")
        for(var i=0,l=newSeries.length;i<l;i++){
          Util.combineSeries(newSeries[i],series);
+       }
+     },
+     /**
+      * 图表主体区域盒子
+      * */
+     getBBox:function(){
+       var padding = this.getPadding()
+         , width = this.get("innerWidth")
+         , height = this.get("innerHeight")
+       return {
+         width:width,
+         height:height,
+         left:padding.paddingx,
+         top:padding.paddingy
+       }
+     },
+     getPadding:function(){
+       var paddingx = S.isNumber(this.get("paddingx")) ? this.get("paddingx") : 15;
+       var paddingy = S.isNumber(this.get("paddingy")) ? this.get("paddingx") : 15;
+       return {
+         paddingx:paddingx,
+         paddingy:paddingy
+       }
+     },
+     // 返回legend所需要的数据
+     buildLengendParts:function(){
+       var ret = [];
+       ret = S.map(this.get("series"),function(i){
+         return {DEFAULT:i.color.DEFAULT,HOVER:i.color.HOVER,text:i.name,$path:i.$path};
+       });
+       return ret;
+     },
+     /**
+      * 渲染图标
+      * */
+     renderLegend:function(){
+       var that = this;
+       var cfg = that.get("legend");
+
+       if( cfg && cfg.isShow != false){
+         var legend = this.get("$legend");
+         if(legend){
+           legend.destroy && legend.destroy();
+         }
+         S.use("gallery/kcharts/1.3/legend/index",function(S,Legend){
+           var paper = that.get("paper")
+             , $con = that.get("container")
+             , padding = that.getPadding()
+             , parts = that.buildLengendParts();
+           var legendCfg = {
+             paper:paper,
+             container:$con,
+             bbox:that.getBBox(),//图表主体的信息
+             iconAttrHook:function(index){//每次绘制icon的时调用，返回icon的属性信息
+               var f = parts[index].color;
+               return {
+                 fill:f
+               }
+             },
+             spanAttrHook:function(index){//每次绘制“文本描述”的时候调用，返回span的样式
+               var color = Raphael.getRGB(parts[index].DEFAULT);
+               return {
+                 color:color.hex
+               }
+             },
+             config:parts
+           };
+           var legend = new Legend(S.merge(legendCfg,cfg));
+           legend.on("click", function(e) {
+			 var i = e.index,
+				 $text = e.text,
+				 $icon = e.icon,
+				 el = e.el;
+			 if (el.hide != 1) {
+			   this.hideLine(i);
+			   el.hide = 1;
+			   el.disable();
+			 } else {
+			   this.showLine(i);
+			   el.hide = 0;
+			   el.enable();
+			 }
+		   },that);
+         });
+       }
+     },
+     /**
+      * 隐藏线以及其连接点
+      * */
+     hideLine:function(i){
+       if(S.isNumber(i)){
+         var lines = this.get("$lines");
+         var line = lines[i];
+         line && line.hide();
+         // $jointPoints is paper.set
+         var $jointPoints = line.jointPoints;
+         $jointPoints && $jointPoints.hide();
+       }
+     },
+     /**
+      * 显示线以及其连接点
+      * */
+     showLine:function(i){
+       if(S.isNumber(i)){
+         var lines = this.get("$lines");
+         var line = lines[i];
+         line && line.show();
+         // $jointPoints is paper.set
+         var $jointPoints = line.jointPoints;
+         $jointPoints && $jointPoints.show();
        }
      }
    }

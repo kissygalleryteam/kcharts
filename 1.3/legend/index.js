@@ -222,7 +222,8 @@
 	   }
        return ret;
      },
-     align:function(align_mode){//vertical or horizonal
+     //vertical or horizonal
+     align:function(align_mode){
        var algrithms = {
          "tl":"alignTopLeft",
          "tc":"alignTopCenter",
@@ -566,28 +567,33 @@
          that.onframeend();
        }
      },
-    alignLeftTop:function(){
-      this.alignLeft("t");
-    },
-    alignLeftMiddle:function(){
-      this.alignLeft("m");
-    },
-    alignLeftBottom:function(){
-      this.alignLeft("b");
-    }
-  };
+     alignLeftTop:function(){
+       this.alignLeft("t");
+     },
+     alignLeftMiddle:function(){
+       this.alignLeft("m");
+     },
+     alignLeftBottom:function(){
+       this.alignLeft("b");
+     },
+     /**
+      * 销毁legend实例
+      **/
+     destroy:function(){
+     }
+   };
 
 
-  if(Base.extend){
-    Legend = Base.extend(methods);
-  }else{
-    Legend = function (opts){
-      opts = S.merge(dft,opts);
-      this.set(opts);
-      this.initializer();
-    }
-    S.extend(Legend,Base,methods);
-  }
+   if(Base.extend){
+     Legend = Base.extend(methods);
+   }else{
+     Legend = function (opts){
+       opts = S.merge(dft,opts);
+       this.set(opts);
+       this.initializer();
+     }
+     S.extend(Legend,Base,methods);
+   }
   return Legend;
 },{
   requires:[
