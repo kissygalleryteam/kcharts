@@ -6,7 +6,7 @@
  * 新增barClick事件
  */
 ;
-KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart, Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip) {
+KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart, Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip,D,E) {
 
 	var $ = S.all,
 		Evt = S.Event,
@@ -1094,6 +1094,8 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		'gallery/kcharts/1.2/legend/index',
 		'./theme',
 		'gallery/kcharts/1.2/tools/touch/index',
-		'gallery/kcharts/1.2/tip/index'
+		'gallery/kcharts/1.2/tip/index',
+        'dom',
+        'event'
 	]
 });

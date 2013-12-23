@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+    <title>chart test</title>
+    <style type="text/css" media="screen">
+     .con{
+       border:1px solid #999;width:700px;height:350px;margin:10px 0 0 10px;
+     }
+     .clear-both{
+       clear:both;
+     }
+     .buttons{
+       padding:20px;
+     }
+    </style>
+  </head>
+  <body>
+    <div id="J_Realtime" class="con">
+    </div>
+    <p class="buttons">
+      <button id="J_Update">
+        更新line
+      </button>
+    </p>
+    <script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+    <script type="text/javascript" src="../../realtime/util.js"></script>
+    <script type="text/javascript" src="../../realtime/index.js"></script>
+    <script type="text/javascript">
+     KISSY.use("gallery/kcharts/1.3/realtime/index,dom,event",function(S,RealTime,D,E){
+       S.jsonp("data.php",{callback:"callback"},function(data){
+         var stock = new RealTime({
+           renderTo:"#J_Realtime",
+           title:{
+             text:"AAPL Stock Price"
+           },
+           lineType:'arc',
+           paddingx:80,
+           paddingy:100,
+           yAxis:{
+             num:10
+           },
+           legend:{
+             
+           },
+           series:[
+             {
+			   name : 'AAQL',
+			   data : [
+                 [1147996800000,64.51],
+                 [1148256000000,63.38],
+                 [1148342400000,63.15],
+                 [1148428800000,40],
+                 [1148515200000,50]
+               ]
+		     },{
+			   name : 'AAPL',
+			   data : data
+		     }
+           ]
+         });
+
+         E.on("#J_Update",'click',function(){
+           var slice = [
+             {
+			   name : 'AAQL',
+			   data : [
+                 [1148601600000,70],
+                 [1148947200000,23],
+                 [1149033600000,44]
+               ]
+		     }
+           ];
+           stock.addData(slice);
+           stock.render();
+         });
+
+       });
+     })
+    </script>
+  </body>
+</html>
