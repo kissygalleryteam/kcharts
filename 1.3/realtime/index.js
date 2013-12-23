@@ -28,7 +28,7 @@
      var date_labels = Util.getlabel(dates,opt.n);
 
      var date_min = date_labels.min
-       , date_max = date_labels.max
+       , date_max = date_labels.max;
 
      var daterange = {
          unit:date_labels.unit,
@@ -59,7 +59,7 @@
    }
 
    /**
-    * 移除数组总的arr元素
+    * 移除数组中的arr元素
     * */
    function removeRaphaelElements(arr){
      while(arr.length){
@@ -159,6 +159,78 @@
      }
      var ss = s.join(',');
      return paper.path(ss);
+   }
+   /**
+    * 将数据转为画布上的点
+    * @param data {Array} [x0,y0]
+    * @param opt {Object} 转换所需的参数
+    *   - opt.px  paddingx
+    *   - opt.py  padingy
+    *   - opt.xmin x方向的最小值
+    *   - opt.xmax x方向的最大值
+    *   - opt.ymin
+    *   - opt.ymax
+    *   - opt.width 内部作图区域的宽度
+    *   - opt.height 内部作图区域的高度
+    * @reurn point {Array} [x,y]
+    * */
+   function data2point(data,opt){
+     var xmin = opt.xmin
+       , xmax = opt.xmax
+       , ymin = opt.ymin
+       , ymax = opt.ymax
+       , px = opt.px
+       , py = opt.py
+       , x0 = data[0]
+       , y0 = data[1]
+       , w = opt.width
+       , h = opt.height;
+     var x,y;
+     x = (x0- xmin) / (xmax - xmin) * w+ px;
+     y = (y0- ymin) / (ymax - ymin) * h+ py;
+     return [x,y];
+   }
+   /**
+    * 批量将数据转换为paper上的点
+    * @param series {Array} 数据组
+    * @param opt {Object} 选项参见data2points
+    * */
+   function data2points(series,opt){
+     var ret = [];
+     for(var i=0;i<series.length;i++){
+       var points = [];
+       ret.push(points);
+       var serie = series[i];
+       var data = serie.data;
+       if(data){
+         for(var j=0;j<data.length;j++){
+           var point = data[j];
+           var x,y;
+           var xy = data2point(point,opt);
+           x = xy[0];
+           y = xy[1];
+           // 坐标信息
+           points.push({x:x,y:y});
+         }
+       }
+     }
+     return ret;
+   }
+
+   /**
+    * 绘制一系列的点
+    * @param points
+    * @param opt
+    * @return result {Object}
+    *  {line,points,color} {路径,连接点,serie颜色}
+    * */
+   function drawSerie(points,opt){
+
+   }
+   /**
+    * 销毁一条线及其连接点，解绑事件等
+    * */
+   function destroySerie(serie,op){
    }
    //==================== utils end ====================
 
@@ -271,7 +343,7 @@
 
        // 2. 数据处理
        var series = this.get("series");
-       var yAxis = this.get("yAxis");
+       var yAxis = this.get("yAxis") || {};
        // 2.1 算出series数据的范围
        var result = getRange(series,{n:yAxis.num});
 
@@ -293,6 +365,36 @@
        var points;
        var colorIndex = 0;
 
+       //==================== TODO begin ====================
+       // 通用化：将数据转换为paper上的点坐标（x,y），既可以处理24h、72h这样特殊的时间段，也可以处理真实的时间序列，比如股票图
+       // [ [{x,y},{x,y}] , [...] , ...]
+       var seriesPoints = data2points(series,{
+         xmin:date_min,
+         xmax:date_max,
+         ymin:val_min,
+         ymax:val_max,
+         px:paddingx,
+         py:paddingy,
+         width:w2,
+         height:h2
+       });
+
+       var that = this;
+       var $series = S.map(seriesPoints,function(serie,index){
+                       var color = that.colorManager.getColor(index);
+                       var pointConfig = that.get("point"); // 绘制点的配置项，可以是fn
+                       var lineType = that.get("lineType"); // 连线选项
+
+                       //return {line,points,color} {路径,连接点,serie颜色}
+                       return drawSerie(serie,{
+                         paper:paper,
+                         color:color,
+                         lineType:lineType,
+                         pointConfig:pointConfig
+                       });
+                     });
+       //==================== TODO end ====================
+
        // 用于legend的显示隐藏
        for(var i=0;i<series.length;i++){
          var jointPoints = paper.set();                      // 连接点集合
@@ -308,28 +410,45 @@
              var point = data[j];
              var x,y;
 
-             x = (point[0] - date_min) / (date_max - date_min) * w2+ paddingx;
-             y = (point[1] - val_min) / (val_max - val_min) * h2 + paddingy;
-             var jointPoint = paper.circle(x,y,4); // 连接点
-             var dftColor = {"stroke":color.DEFAULT,"stroke-width":2,"fill":"#fff"};
-             jointPoint.attr(dftColor);
-             // TODO 事件每必要绑定这么多
-             (function(jointPoint,color){
-               jointPoint.hover(
-                 function(e){
-                   jointPoint.attr({"stroke":color.HOVER});
-                 },function(e){
-                     jointPoint.attr({"stroke":color.DEFAULT});
-                   });
-             })(jointPoint,color);
-             // 所有的连接点
-             RjointPoints.push(jointPoint);
-             // 单条线的连接点
-             jointPoints.push(jointPoint);
+             var xy = data2point(point,{
+               xmin:date_min,
+               xmax:date_max,
+               ymin:val_min,
+               ymax:val_max,
+               px:paddingx,
+               py:paddingy,
+               width:w2,
+               height:h2
+             });
+             x = xy[0];
+             y = xy[1];
+
+             // 大数据的时候，可以不显示连接点
+             var pointConfig = this.get("point");
+             if(!pointConfig || pointConfig.isShow !== false){
+               var jointPoint = paper.circle(x,y,4); // 连接点
+               var dftColor = {"stroke":color.DEFAULT,"stroke-width":2,"fill":"#fff"};
+               jointPoint.attr(dftColor);
+               // TODO 事件每必要绑定这么多
+               (function(jointPoint,color){
+                 jointPoint.hover(
+                   function(e){
+                     jointPoint.attr({"stroke":color.HOVER});
+                   },function(e){
+                       jointPoint.attr({"stroke":color.DEFAULT});
+                     });
+               })(jointPoint,color);
+               // 所有的连接点
+               RjointPoints.push(jointPoint);
+               // 单条线的连接点
+               jointPoints.push(jointPoint);
+             }
+
              // 坐标信息
              points.push({x:x,y:y});
            }
          }
+
          // 2.3 将点串联起来
          var pathstring;
          if(this.get("lineType") === 'arc'){
@@ -337,7 +456,9 @@
          }else{
            pathstring = polyLine(points);
          }
+
          var line = paper.path(pathstring);
+
          // 设置线条样式 TODO
          // a. 使用默认颜色
          // b. 看是否有hook，应用hook
@@ -373,10 +494,9 @@
          }else if(k === daterangelen-1){
            xstartend.push({x:x,y:y});
          }
-
          var text = Util.formatDate(
            new Date(daterange.range[k]),
-           "yyyy-mm-dd"
+           "yyyy-MM-dd"
          );
          var xlabel = paper.text(x,y,text).attr({
            "text-anchor":"end",
@@ -434,6 +554,13 @@
        this.renderLegend();
      },
      /**
+      * update和render的区别就是
+      * update不移除画布上的数据
+      * */
+     update:function(){
+
+     },
+     /**
       * TODO 动态增加点后，使用上次计算结果的缓存
       * */
      addData:function(newSeries){
@@ -465,11 +592,14 @@
        }
      },
      // 返回legend所需要的数据
-     buildLengendParts:function(){
+     buildLegendParts:function(){
        var ret = [];
+       var legendString = '';
        ret = S.map(this.get("series"),function(i){
-         return {DEFAULT:i.color.DEFAULT,HOVER:i.color.HOVER,text:i.name,$path:i.$path};
+               legendString+=i.name;
+               return {DEFAULT:i.color.DEFAULT,HOVER:i.color.HOVER,text:i.name,$path:i.$path};
        });
+       this.legendString = legendString;
        return ret;
      },
      /**
@@ -488,7 +618,19 @@
            var paper = that.get("paper")
              , $con = that.get("container")
              , padding = that.getPadding()
-             , parts = that.buildLengendParts();
+             , oldLegendString = that.legendString
+             , parts = that.buildLegendParts() // buildLegendParts后，重建_legendString
+             , newLegendString = that.legendString
+
+           // legendString未发生变化，不用再重新绘制
+           if(oldLegendString === newLegendString)
+             return;
+           var legend = this.get("legend");
+           // 如果之前已经创建过了，那么先销毁
+           if(legend){
+             legend.destroy && legend.destroy();
+           }
+
            var legendCfg = {
              paper:paper,
              container:$con,
@@ -507,7 +649,8 @@
              },
              config:parts
            };
-           var legend = new Legend(S.merge(legendCfg,cfg));
+
+           legend = new Legend(S.merge(legendCfg,cfg));
            legend.on("click", function(e) {
 			 var i = e.index,
 				 $text = e.text,
@@ -523,6 +666,7 @@
 			   el.enable();
 			 }
 		   },that);
+           that.set("legend",legend);
          });
        }
      },
