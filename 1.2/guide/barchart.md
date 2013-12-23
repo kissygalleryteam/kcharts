@@ -2,12 +2,12 @@
 ---
 Demo
 ---
-[basic column](../demo/barchart/demo1.html) 纵向柱形图<br/>
-[stack column](../demo/barchart/demo2.html) 纵向堆叠柱形图<br/>
-[stack bar](../demo/barchart/demo3.html) 横向堆叠柱形图<br/>
-[multi column](../demo/barchart/demo4.html) 纵向多柱形图<br/>
-[label width units](../demo/barchart/demo5.html) 有单位和标注的柱形图<br/>
-[bar with rotated labels](../demo/barchart/demo6.html) 有倾斜标注的柱形图<br/>
+- [basic column](../demo/barchart/demo1.html) 纵向柱形图
+- [stack column](../demo/barchart/demo2.html) 纵向堆叠柱形图
+- [stack bar](../demo/barchart/demo3.html) 横向堆叠柱形图
+- [multi column](../demo/barchart/demo4.html) 纵向多柱形图
+- [label width units](../demo/barchart/demo5.html) 有单位和标注的柱形图
+- [bar with rotated labels](../demo/barchart/demo6.html) 有倾斜标注的柱形图
 
 ---
 代码示例

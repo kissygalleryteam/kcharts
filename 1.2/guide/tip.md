@@ -1,3 +1,6 @@
+# Overview
+图表公用的tip实现，供内部使用，新图表如有tip需求，请使用此实现
+
 # Tip
 
 ---
@@ -17,7 +20,7 @@
 ```
 
 ---
-Config（详细配置）
+配置项
 ---
 ### rootNode
 { id|HTMLElement } 容器 默认为body

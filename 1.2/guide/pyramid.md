@@ -2,8 +2,7 @@
 ---
 Demo
 ---
-[pyramid](../demo/pyramid/demo1.html) 金字塔<br/>
-
+- [pyramid](../demo/pyramid/demo1.html) 金字塔
 
 ---
 代码示例
@@ -66,8 +65,3 @@ Config（详细配置）
 {color1}    上半个的颜色，有默认值
 
 {color2}    下半个的颜色，有默认值
-
-
-
-
-
