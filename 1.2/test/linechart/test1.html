@@ -35,6 +35,7 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
         }
       },
       yLabels:{
+        isShow:false,
         css:{
           "marginLeft":"-4px",
           "font-family":"Microsoft Yahei",
@@ -42,10 +43,17 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
         }
       },
       xLabels:{
+        isShow:false,
         css:{
           "font-family":"Microsoft Yahei",
            "font-size":"10px"
         }
+      },
+      yGrids:{
+        isShow:true
+      },
+      xGrids:{
+        isShow:true
       },
       title:{
               content:"Monthly Average Temperature"

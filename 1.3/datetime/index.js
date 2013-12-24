@@ -1,5 +1,5 @@
 /**
- * @fileOverview KChart 1.2  datetime
+ * @fileOverview KChart 1.3  datetime
  * @author huxiaoqi567@gmail.com
  */
 ;KISSY.add("gallery/kcharts/1.3/datetime/index",function(S,D,Evt,Node,Base,Template,Raphael,BaseChart,ColorLib,HtmlPaper,Legend,Theme,undefined,Tip,Anim,graphTool){
@@ -494,6 +494,7 @@
 		},
 		//x轴上 平行于y轴的网格线
 		drawGridsX:function(){
+			if(!this._cfg.xGrids.isShow) return;
 			var self = this,
 				points = self._points[0],
 				gridPointsX = function(){
@@ -536,6 +537,7 @@
 		},
 		//y轴上 平行于x轴的网格线
 		drawGridsY:function(){
+			if(!this._cfg.yGrids.isShow) return;
 			var self = this,
 				x = self._innerContainer.tl.x,
 				points = self._pointsY;
@@ -549,6 +551,7 @@
 		},
 		//x轴
 		drawAxisX:function(){
+			if(!this._cfg.xAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				bl = _innerContainer.bl,
@@ -562,6 +565,7 @@
 		},
 		//y轴
 		drawAxisY:function(){
+			if(!this._cfg.yAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				tl = _innerContainer.tl,
@@ -573,6 +577,7 @@
 			return self._axisY;
 		},
 		drawLabelsX:function(){
+			if(!this._cfg.xLabels.isShow) return;
 			var self = this,
 				text = self._cfg.xAxis.text;
 			//画x轴刻度线
@@ -581,6 +586,7 @@
 				}
 		},
 		drawLabelsY:function(){
+			if(!this._cfg.yLabels.isShow) return;
 			var self = this;
 			//画y轴刻度线
 			for(var i in self._pointsY){
@@ -641,6 +647,7 @@
 		},
 		//渲染tip
 		renderTip:function(){
+			if(!this._cfg.tip.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
@@ -721,6 +728,7 @@
 			}
 		},
 		renderLegend:function(){
+			if(!this._cfg.legend.isShow) return;
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
@@ -800,21 +808,21 @@
 
 				self.drawSubTitle();
 				//渲染tip
-				_cfg.tip.isShow && self.renderTip();
+				self.renderTip();
 				//画x轴上的平行线
-				_cfg.xGrids.isShow && self.drawGridsX();
+				self.drawGridsX();
 
-				_cfg.yGrids.isShow && self.drawGridsY();
+				self.drawGridsY();
 
 				self.drawPointLine();
 				//画横轴
-				_cfg.xAxis.isShow && self.drawAxisX();
+				self.drawAxisX();
 
-				_cfg.yAxis.isShow && self.drawAxisY();
+				self.drawAxisY();
 				//画横轴刻度
-				_cfg.xLabels.isShow && self.drawLabelsX();
+				self.drawLabelsX();
 
-				_cfg.yLabels.isShow && self.drawLabelsY();
+				self.drawLabelsY();
 
 				self.drawLines();
 
@@ -824,7 +832,7 @@
 
 				self.bindEvt();
 
-				_cfg.legend.isShow && self.renderLegend();
+				self.renderLegend();
 
 				self.afterRender();
 
@@ -1113,20 +1121,29 @@
 			self.bindEvt();
 		},
 		//处理网格和标注
-		animateGridsAndLabels:function(){
+		animateGridsAndLabels: function() {
 			var self = this,
-				maxLen = Math.max(self._pointsY.length,self._gridsY.length),
-				coordNum = self.coordNum,max,min,middle;
-				if(!coordNum) return;
-				max = Math.max.apply(null,coordNum),
-				min = Math.min.apply(null,coordNum),
-				middle = max/2 + min/2;
-			for(var i in self._labelY){
+				cfg = self._cfg,
+				zoomType = cfg.zoomType;
+			if (zoomType == "y") {
+				for (var i in self._labelX) {
+					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
+				}
+				for(var i in self._gridsX){
+					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
+				}
+				self.drawLabelsX();
+				self.drawGridsX();
+			} else if (zoomType == "x") {
+				for (var i in self._labelY) {
 					self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
+				}
+				for(var i in self._gridsY){
 					self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
+				}
+				self.drawGridsY();
+				self.drawLabelsY();
 			}
-			self.drawGridsY();
-			self.drawLabelsY();
 		},
 		fix2Resize: function() {
 			var self = this,
@@ -1198,15 +1215,6 @@
 		afterRender:function(){
 			var self = this;
 			self.fire("afterRender",self);
-		},
-		/*
-			TODO get htmlpaper
-			@deprecated As Of KCharts 1.2 replaced by
-			getHtmlPaper
-			@see #getHtmlPaper
-		*/
-		getPaper:function(){
-			return this.htmlPaper;
 		},
 		/*
 			TODO get htmlpaper

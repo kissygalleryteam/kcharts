@@ -1,11 +1,11 @@
 /*
-combined files :
+combined files : 
 
 gallery/kcharts/1.3/radar/index
 
 */
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.3/radar/index",function(S,Raphael,D,E,Legend){
+;KISSY.add("gallery/kcharts/1.3/radar/index",function(S,Base,Raphael,D,E,Legend){
   var pi = Math.PI
     , unit = pi/180
 
@@ -65,35 +65,39 @@ gallery/kcharts/1.3/radar/index
     });
   }
 
+   //==================== tools end ====================
 
   var anim = {
     easing:"linear",
     duration:800
   };
 
-  function Radar(cfg){
-    var container = S.get(cfg.renderTo);
-    cfg.anim = S.merge(anim,cfg.anim);
+   var methods = {
+	 initializer:function(cfg){
+       // 兼容1.3以下
+       cfg || (cfg = this.userConfig);
 
-    this.set("container",container);
-    this.set(cfg);
+       var container = S.get(cfg.renderTo);
+       cfg.anim = S.merge(anim,cfg.anim);
 
-    this._animationInstance = 0;
+       this.set("container",container);
+       this.set(cfg);
+
+       this._animationInstance = 0;
 
 
-    this.dochk(cfg);
-    var paper;
-    if(container){
-      paper = Raphael(container,cfg.width,cfg.height)
-    }else{
-      throw Error("容器不能为空");
-    }
-    this.set("paper",paper);
-    this.set("config",cfg);
-    this.render(cfg)
-  }
-  S.extend(Radar,S.Base,{
-    dochk:function(cfg){
+       this.dochk(cfg);
+       var paper;
+       if(container){
+         paper = Raphael(container,cfg.width,cfg.height)
+       }else{
+         throw Error("容器不能为空");
+       }
+       this.set("paper",paper);
+       this.set("config",cfg);
+       this.render(cfg)
+     },
+     dochk:function(cfg){
       //设置多边形的边
       var size = cfg.labels.length;
       var w = D.width(this.get("container"));
@@ -458,10 +462,23 @@ gallery/kcharts/1.3/radar/index
         this.drawLegend(legendprops);
       }
     }
-  });
+  }
+
+   var Radar;
+   if(Base.extend){
+     Radar = Base.extend(methods);
+   }else{
+     Radar = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Radar,Base,methods);
+  }
   return Radar;
 },{
   requires:[
+    "base",
     "gallery/kcharts/1.3/raphael/index",
     "dom","event",
     'gallery/kcharts/1.3/legend/index'

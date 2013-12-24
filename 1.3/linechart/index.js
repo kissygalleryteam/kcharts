@@ -1,10 +1,11 @@
 /**
- * @fileOverview KChart 1.2  linechart
+ * @fileOverview KChart 1.3  linechart
  * @author huxiaoqi567@gmail.com
  * change log
  * 2013-11-13  新增stockClick事件
  */
-;KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
+;
+KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -16,16 +17,16 @@
 		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"],
 		color;
 
-    var methods = {
-        initializer:function(){
-          this.init();
+	var methods = {
+		initializer: function() {
+			this.init();
 		},
 		init: function() {
 			var self = this,
 				points,
 				w;
-            // KISSY > 1.4 逻辑
-            self._cfg || (self._cfg = self.userConfig);
+			// KISSY > 1.4 逻辑
+			self._cfg || (self._cfg = self.userConfig);
 
 			BaseChart.prototype.init.call(self, self._cfg);
 			self.chartType = "linechart";
@@ -207,6 +208,7 @@
 		},
 		//主标题
 		drawTitle: function() {
+			if(!this._cfg.title.isShow) return;
 			var self = this,
 				paper = self.htmlPaper,
 				cls = themeCls + "-title",
@@ -215,14 +217,13 @@
 				//高度占 60%
 				h = ctn.y * 0.6;
 
-			if (_cfg.title.isShow && _cfg.title.content != "") {
 				self._title = paper.rect(0, 0, self._$ctnNode.width(), h).addClass(cls).css(S.mix({
 					"line-height": h + "px"
 				}, _cfg.title.css)).html(_cfg.title.content);
-			}
 		},
 		//副标题
 		drawSubTitle: function() {
+			if(!this._cfg.subTitle.isShow) return;
 			var self = this,
 				paper = self.htmlPaper,
 				cls = themeCls + "-subtitle",
@@ -231,11 +232,9 @@
 				//高度占 40%
 				h = ctn.y * 0.4;
 
-			if (_cfg.subTitle.isShow && _cfg.subTitle.content != "") {
 				self._subTitle = paper.rect(0, ctn.y * 0.6, self._$ctnNode.width(), h).addClass(cls).css(S.mix({
 					"line-height": h + "px"
 				}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
-			}
 		},
 		//获取有效的点数目
 		getRealPointsNum: function(points) {
@@ -518,6 +517,7 @@
 		},
 		//x轴上 平行于y轴的网格线
 		drawGridsX: function() {
+			if(!this._cfg.xGrids.isShow) return;
 			var self = this,
 				points = self._points[0],
 				gridPointsX = function() {
@@ -564,6 +564,7 @@
 		},
 		//y轴上 平行于x轴的网格线
 		drawGridsY: function() {
+			if(!this._cfg.yGrids.isShow) return;
 			var self = this,
 				x = self._innerContainer.tl.x,
 				points = self._pointsY;
@@ -580,6 +581,7 @@
 		},
 		//轴间的矩形区域
 		drawAreas: function() {
+			if(!this._cfg.areas.isShow) return;
 			var self = this,
 				ctn = self._innerContainer,
 				y = ctn.tl.y,
@@ -591,18 +593,14 @@
 				css = self._cfg.areas.css,
 				x;
 
-			// self.set("area-width",w);
-
 			for (var i = 0, len = points.length; i < len; i++) {
-
 				var area = paper.rect(points[i].x - w / 2, y, w, h).addClass(cls).css(css);
-
 				self._areas.push(area);
-
 			}
 		},
 		//x轴
 		drawAxisX: function() {
+			if(!this._cfg.xAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				bl = _innerContainer.bl,
@@ -616,6 +614,7 @@
 		},
 		//y轴
 		drawAxisY: function() {
+			if(!this._cfg.yAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				tl = _innerContainer.tl,
@@ -627,6 +626,7 @@
 			return self._axisY;
 		},
 		drawLabelsX: function() {
+			if(!this._cfg.xLabels.isShow) return;
 			var self = this,
 				text = self._cfg.xAxis.text;
 			//画x轴刻度线
@@ -635,6 +635,7 @@
 			}
 		},
 		drawLabelsY: function() {
+			if(!this._cfg.yLabels.isShow) return;
 			var self = this;
 			//画y轴刻度线
 			for (var i in self._pointsY) {
@@ -690,6 +691,7 @@
 		},
 		//参照线
 		drawPointLine: function() {
+			if(!this._cfg.comparable) return;
 			var self = this,
 				paper = self.htmlPaper,
 				cls = self._cfg.themeCls + "-pointline",
@@ -701,6 +703,7 @@
 		},
 		//渲染tip
 		renderTip: function() {
+			if(!this._cfg.tip.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
@@ -791,6 +794,7 @@
 			}
 		},
 		renderLegend: function() {
+			if(!this._cfg.legend.isShow) return;
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
@@ -885,23 +889,23 @@
 
 			self.drawSubTitle();
 			//渲染tip
-			_cfg.tip.isShow && self.renderTip();
+			self.renderTip();
 			//画背景块状区域
-			_cfg.areas.isShow && self.drawAreas();
+			self.drawAreas();
 			//画x轴上的平行线
-			_cfg.xGrids.isShow && self.drawGridsX();
+			self.drawGridsX();
 
-			_cfg.yGrids.isShow && self.drawGridsY();
+			self.drawGridsY();
 
-			self._cfg.comparable && self.drawPointLine();
+			self.drawPointLine();
 			//画横轴
-			_cfg.xAxis.isShow && self.drawAxisX();
+			self.drawAxisX();
 
-			_cfg.yAxis.isShow && self.drawAxisY();
+			self.drawAxisY();
 			//画横轴刻度
-			_cfg.xLabels.isShow && self.drawLabelsX();
+			self.drawLabelsX();
 
-			_cfg.yLabels.isShow && self.drawLabelsY();
+			self.drawLabelsY();
 
 			if (_cfg.anim) {
 				//画折线
@@ -911,7 +915,7 @@
 
 					self.bindEvt();
 
-					_cfg.legend.isShow && self.renderLegend();
+					self.renderLegend();
 
 					S.log("finish");
 
@@ -926,7 +930,7 @@
 
 				self.bindEvt();
 
-				_cfg.legend.isShow && self.renderLegend();
+				self.renderLegend();
 
 				self.afterRender();
 
@@ -980,7 +984,7 @@
 			});
 		},
 		//mouseclick代理
-		delegateClick:function(e){
+		delegateClick: function(e) {
 			var self = this,
 				ctn = self.getInnerContainer();
 
@@ -988,7 +992,7 @@
 				for (var j in self._evtEls._rects[i]) {
 					var rect = self._evtEls._rects[i][j];
 					if (self.isInSide(e.offsetX + ctn.x, e.offsetY + ctn.y, rect['x'], rect['y'], rect['width'], rect['height'])) {
-						self.stockClick(i,j);
+						self.stockClick(i, j);
 						return;
 					}
 				}
@@ -1265,22 +1269,28 @@
 		},
 		//处理网格和标注
 		animateGridsAndLabels: function() {
-			//若隐藏则不做处理
-			if (!this._cfg.yLabels.isShow) return;
 			var self = this,
-				maxLen = Math.max(self._pointsY.length, self._gridsY.length),
-				coordNum = self.coordNum,
-				max, min, middle;
-			if (!coordNum) return;
-			max = Math.max.apply(null, coordNum),
-			min = Math.min.apply(null, coordNum),
-			middle = max / 2 + min / 2;
-			for (var i in self._labelY) {
-				self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
-				self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
+				cfg = self._cfg,
+				zoomType = cfg.zoomType;
+			if (zoomType == "y") {
+				for (var i in self._labelX) {
+					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
+				}
+				for(var i in self._gridsX){
+					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
+				}
+				self.drawLabelsX();
+				self.drawGridsX();
+			} else if (zoomType == "x") {
+				for (var i in self._labelY) {
+					self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
+				}
+				for(var i in self._gridsY){
+					self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
+				}
+				self.drawGridsY();
+				self.drawLabelsY();
 			}
-			self.drawGridsY();
-			self.drawLabelsY();
 		},
 		/**
 			TODO 线条切换
@@ -1342,7 +1352,7 @@
 			var self = this;
 			self.fire("paperLeave", self);
 		},
-		stockClick:function(lineIndex, stockIndex){
+		stockClick: function(lineIndex, stockIndex) {
 			var self = this,
 				currentStocks = self._stocks[lineIndex],
 				tgt = currentStocks['stocks'] && currentStocks['stocks'][stockIndex];
@@ -1376,15 +1386,6 @@
 		},
 		/*
 			TODO get htmlpaper
-			@deprecated As Of KCharts 1.2 replaced by
-			getHtmlPaper
-			@see #getHtmlPaper
-		*/
-		getPaper: function() {
-			return this.htmlPaper;
-		},
-		/*
-			TODO get htmlpaper
 			@return {object} HtmlPaper
 		*/
 		getHtmlPaper: function() {
@@ -1405,23 +1406,23 @@
 		}
 	};
 
-	var LineChart ;
-    if(Base.extend){
-      LineChart = BaseChart.extend(methods);
-	}else{
-	  LineChart = function(cfg) {
-		var self = this;
-		self._cfg = cfg;
-		self.init();
-	  };
-	  S.extend(LineChart, BaseChart, methods);
+	var LineChart;
+	if (Base.extend) {
+		LineChart = BaseChart.extend(methods);
+	} else {
+		LineChart = function(cfg) {
+			var self = this;
+			self._cfg = cfg;
+			self.init();
+		};
+		S.extend(LineChart, BaseChart, methods);
 	}
 	return LineChart;
 }, {
 	requires: [
 		'base',
-        'node',
-        'dom','event',
+		'node',
+		'dom', 'event',
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.3/raphael/index',
 		'gallery/kcharts/1.3/basechart/index',

@@ -223,7 +223,6 @@
 
 			for (var i in self._points) {
 				var tmp = BaseChart.prototype.getArrayByKey.call(null, datas[i]['data'], 2);
-				S.log(tmp)
 				for (var j in self._points[i])
 					if (tmp.length > 0) {
 						self._points[i][j]['r'] = tmp[j] * r;
@@ -265,8 +264,9 @@
 		},
 		//x轴上 平行于y轴的网格线
 		drawGridsX: function() {
+			if(!this._cfg.xGrids.isShow) return;
 			var self = this,
-				points = self._centerPoints;
+				points = self._pointsX;
 
 			for (var i = 0, len = points.length; i < len; i++) {
 
@@ -299,6 +299,7 @@
 		},
 		//y轴上 平行于x轴的网格线
 		drawGridsY: function() {
+			if(!this._cfg.yGrids.isShow) return;
 			var self = this,
 				x = self._innerContainer.tl.x,
 				points = self._pointsY;
@@ -315,6 +316,7 @@
 		},
 		//x轴
 		drawAxisX: function() {
+			if(!this._cfg.xAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				bl = _innerContainer.bl,
@@ -328,6 +330,7 @@
 		},
 		//y轴
 		drawAxisY: function() {
+			if(!this._cfg.yAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				tl = _innerContainer.tl,
@@ -339,6 +342,7 @@
 			return self._axisY;
 		},
 		drawLabelsX: function() {
+			if(!this._cfg.xLabels.isShow) return;
 			var self = this;
 			//画x轴刻度线
 			for (var i in self._pointsX) {
@@ -346,6 +350,7 @@
 			}
 		},
 		drawLabelsY: function() {
+			if(!this._cfg.yLabels.isShow) return;
 			var self = this;
 			//画y轴刻度线
 			for (var i in self._pointsY) {
@@ -401,6 +406,7 @@
 		},
 		//渲染tip
 		renderTip: function() {
+			if(!this._cfg.tip.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
@@ -492,6 +498,7 @@
 			渲染legend
 		**/
 		renderLegend: function() {
+			if(!this._cfg.legend.isShow) return;
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
@@ -626,35 +633,22 @@
 		animateGridsAndLabels: function() {
 			var self = this,
 				zoomType = self._cfg.zoomType;
-			if (zoomType == "y") {
-				for (var i in self._labelX) {
-					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
-					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
-				}
-				self.drawGridsX();
-				self.drawLabelsX();
-			} else if (zoomType == "x") {
 				for (var i in self._labelY) {
 					self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
+				}
+				for(var i in self._gridsY){
 					self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
+				}
+				for (var i in self._labelX) {
+					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
+				}
+				for(var i in self._gridsX){
+					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
 				}
 				self.drawGridsY();
 				self.drawLabelsY();
-			} else if (zoomType == "xy") {
-				for (var i in self._labelY) {
-					self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
-					self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
-				}
-				self.drawGridsY();
-				self.drawLabelsY();
-
-				for (var i in self._labelX) {
-					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
-					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
-				}
 				self.drawGridsX();
 				self.drawLabelsX();
-			}
 		},
 		/**
 			渲染
@@ -684,25 +678,25 @@
 
 			self.drawSubTitle();
 			//渲染tip
-			_cfg.tip.isShow && self.renderTip();
+			self.renderTip();
 			//画x轴上的平行线
-			_cfg.xGrids.isShow && self.drawGridsX();
+			self.drawGridsX();
 
-			_cfg.yGrids.isShow && self.drawGridsY();
+			self.drawGridsY();
 			//画横轴
-			_cfg.xAxis.isShow && self.drawAxisX();
+			self.drawAxisX();
 
-			_cfg.yAxis.isShow && self.drawAxisY();
+			self.drawAxisY();
 			//画横轴刻度
-			_cfg.xLabels.isShow && self.drawLabelsX();
+			self.drawLabelsX();
 
-			_cfg.yLabels.isShow && self.drawLabelsY();
+			self.drawLabelsY();
 
 			self.diffStocksSize();
 
 			self.drawAllStocks();
 
-			_cfg.legend.isShow && self.renderLegend();
+			self.renderLegend();
 			//事件层
 			self.renderEvtLayout();
 
@@ -784,15 +778,6 @@
 		afterRender: function() {
 			var self = this;
 			self.fire("afterRender", self);
-		},
-		/*
-			TODO get htmlpaper
-			@deprecated As Of KCharts 1.2 replaced by
-			getHtmlPaper
-			@see #getHtmlPaper
-		*/
-		getPaper: function() {
-			return this.htmlPaper;
 		},
 		/*
 			TODO get htmlpaper

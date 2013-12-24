@@ -1,5 +1,5 @@
 /*
-combined files :
+combined files : 
 
 gallery/kcharts/1.3/raphael/index
 gallery/kcharts/1.3/dashboard/pointer
@@ -8618,50 +8618,60 @@ gallery/kcharts/1.3/dashboard/index
  * 指针
  * @author cookieu@gmail.com
  * */
-;KISSY.add('gallery/kcharts/1.3/dashboard/pointer',function(S){
-  function Pointer(){
-    Pointer.superclass.constructor.apply(this,arguments)
-  }
+;KISSY.add('gallery/kcharts/1.3/dashboard/pointer',function(S,Base){
+   var methods = {
+     pointTo:function(angle,effect){
+       var paper = this.get('paper')
+         , that = this
+         , dashboard = this.get('dashboard')
+         , pointer
+         , paperCx = dashboard.get('cx')
+         , paperCy = dashboard.get('cy')
+         , cfg = dashboard.get('pointer') || {}
+         , cx = cfg.cx || 0 // 指针头中心x y
+         , cy = cfg.cy || 0
+         , x = paperCx+cx      // 指针头实际开始位置x y
+         , y = paperCy+cy
+         , w = dashboard.get('width')
+         , h = dashboard.get('height')
+
+       // 指针主题
+       var themes = {
+         "a":function(cfg){
+           var transform = ['r',angle-90,x,y].join(',')
+             , pathString
+             , circlepath
+           if(!that.pointer){
+             that.pointer = pointer1(paper,x,y,cfg.r || 5,cfg.R || 80,cfg)
+           }
+           if(angle){
+             that.pointer.animate({transform:transform},effect.ms,effect.easing,effect.callback)
+           }
+         },
+         "b":function(){
+
+         }
+       }
+       var render = (cfg.theme && cfg.theme.name && themes[cfg.theme.name]) || themes['a']
+       render && render(cfg.theme)
+     }
+   };
+
+   //==================== extend ====================
+  var Pointer;
+   if(Base.extend){
+     Pointer = Base.extend(methods);
+   }else{
+     Pointer = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+     }
+     S.extend(Pointer,Base,methods)
+   }
+
+   //==================== extend end ====================
 
   var M = "M" , L = "L" , A = "A"
-  S.extend(Pointer,S.Base,{
-    pointTo:function(angle,effect){
-      var paper = this.get('paper')
-        , that = this
-        , dashboard = this.get('dashboard')
-        , pointer
-        , paperCx = dashboard.get('cx')
-        , paperCy = dashboard.get('cy')
-        , cfg = dashboard.get('pointer') || {}
-        , cx = cfg.cx || 0 // 指针头中心x y
-        , cy = cfg.cy || 0
-        , x = paperCx+cx      // 指针头实际开始位置x y
-        , y = paperCy+cy
-        , w = dashboard.get('width')
-        , h = dashboard.get('height')
-
-      // 指针主题
-      var themes = {
-        "a":function(cfg){
-          var transform = ['r',angle-90,x,y].join(',')
-            , pathString
-            , circlepath
-          if(!that.pointer){
-            that.pointer = pointer1(paper,x,y,cfg.r || 5,cfg.R || 80,cfg)
-          }
-          if(angle){
-            that.pointer.animate({transform:transform},effect.ms,effect.easing,effect.callback)
-          }
-        },
-        "b":function(){
-
-        }
-      }
-      var render = (cfg.theme && cfg.theme.name && themes[cfg.theme.name]) || themes['a']
-      render && render(cfg.theme)
-    }
-  })
-
   // 圆头指针
   /**
    * @param paper
@@ -8746,6 +8756,8 @@ gallery/kcharts/1.3/dashboard/index
   }
 
   return Pointer
+},{
+   requires:["base"]
 })
 
 // -*- coding: utf-8; -*-
@@ -8787,98 +8799,107 @@ gallery/kcharts/1.3/dashboard/index
   requires:['./pointer']
 })
 
-// -*- coding: utf-8; -*-
 /**
  * 矢量画刻度
  * @author cookieu@gmail.com
  * */
-;KISSY.add('gallery/kcharts/1.3/dashboard/dashboard-ticks',function(S){
-  function Ticks(){
-    Ticks.superclass.constructor.apply(this,arguments)
-    this.init()
-  }
+;KISSY.add('gallery/kcharts/1.3/dashboard/dashboard-ticks',function(S,Base){
+   var methods = {
+     initializer:function(){
+       var cfg = this.get('cfg')
+       var n          // 圆被分成的份数
+         , m          // 粗线
+         , start      // 始末弧度
+         , end
+         , totalAngle //end - start
+         , step       // 步长
+         , r = cfg.r1 || 100
+         , r2 = cfg.r2 || 105
+         , R = cfg.R || 110
+         , unit_x
+         , unit_y
+         , dashboard = this.get('dashboard')
+         , paper = this.get('paper')
+         , cx = dashboard.get('cx')
+         , cy = dashboard.get('cy')
+         , x1
+         , y1
+         , x2
+         , y2
+         , patharray = []
+         , pathstring = ''
+       start = cfg.start || 0
+       end = cfg.end  || 2*Math.PI
+       n = cfg.n || 60
+       m = cfg.m
 
-  S.extend(Ticks,S.Base,{
-    init:function(){
-      var cfg = this.get('cfg')
-      var n          // 圆被分成的份数
-        , m          // 粗线
-        , start      // 始末弧度
-        , end
-        , totalAngle //end - start
-        , step       // 步长
-        , r = cfg.r1 || 100
-        , r2 = cfg.r2 || 105
-        , R = cfg.R || 110
-        , unit_x
-        , unit_y
-        , dashboard = this.get('dashboard')
-        , paper = this.get('paper')
-        , cx = dashboard.get('cx')
-        , cy = dashboard.get('cy')
-        , x1
-        , y1
-        , x2
-        , y2
-        , patharray = []
-        , pathstring = ''
-      start = cfg.start || 0
-      end = cfg.end  || 2*Math.PI
-      n = cfg.n || 60
-      m = cfg.m
+       start -= Math.PI
+       end -= Math.PI
 
-      start -= Math.PI
-      end -= Math.PI
+       totalAngle = end - start
+       // step = parseFloat((totalAngle / n).toFixed(2))
+       step = totalAngle / n
 
-      totalAngle = end - start
-      // step = parseFloat((totalAngle / n).toFixed(2))
-      step = totalAngle / n
+       for(var i=0;i<=n;i+=1){
+         if(m && i%m == 0){
+           continue
+         }
+         var theta = start+i*step
+         unit_x = Math.cos(theta)
+         unit_y = Math.sin(theta)
+         x1 = cx + r2*unit_x
+         y1 = cy + r2*unit_y
 
-      for(var i=0;i<=n;i+=1){
-        if(m && i%m == 0){
-          continue
-        }
-        var theta = start+i*step
-        unit_x = Math.cos(theta)
-        unit_y = Math.sin(theta)
-        x1 = cx + r2*unit_x
-        y1 = cy + r2*unit_y
+         x2 = cx + R*unit_x
+         y2 = cy + R*unit_y
 
-        x2 = cx + R*unit_x
-        y2 = cy + R*unit_y
+         patharray.push("M",x1,y1,"L",x2,y2)
+       }
+       pathstring = patharray.join(',')
+       var thinTick = paper.path(pathstring)
+         , style4thin = {
 
-        patharray.push("M",x1,y1,"L",x2,y2)
-      }
-      pathstring = patharray.join(',')
-      var thinTick = paper.path(pathstring)
-        , style4thin = {
+         }
+       S.mix(style4thin,cfg.thinStyle,true,['stroke-width','stroke'])
+       thinTick.attr(style4thin)
+       if(m){
+         var patharray4thick = []
+         for(var j=0;j<=n;j+=m){
+           var theta = start+j*step
+           unit_x = Math.cos(theta)
+           unit_y = Math.sin(theta)
+           x1 = cx + r*unit_x
+           y1 = cy + r*unit_y
+           x2 = cx + R*unit_x
+           y2 = cy + R*unit_y
+           patharray4thick.push("M",x1,y1,"L",x2,y2)
+         }
+         pathstring = patharray4thick.join(',')
+         var thick = paper.path(pathstring)
+           , style4thick = {
+             'stroke-width':2
+           }
+         S.mix(style4thick,cfg.thickStyle,true,['stroke-width','stroke'])
+         thick.attr(style4thick)
+       }
+     }
+   }
 
-        }
-      S.mix(style4thin,cfg.thinStyle,true,['stroke-width','stroke'])
-      thinTick.attr(style4thin)
-      if(m){
-        var patharray4thick = []
-        for(var j=0;j<=n;j+=m){
-          var theta = start+j*step
-          unit_x = Math.cos(theta)
-          unit_y = Math.sin(theta)
-          x1 = cx + r*unit_x
-          y1 = cy + r*unit_y
-          x2 = cx + R*unit_x
-          y2 = cy + R*unit_y
-          patharray4thick.push("M",x1,y1,"L",x2,y2)
-        }
-        pathstring = patharray4thick.join(',')
-        var thick = paper.path(pathstring)
-          , style4thick = {
-            'stroke-width':2
-          }
-        S.mix(style4thick,cfg.thickStyle,true,['stroke-width','stroke'])
-        thick.attr(style4thick)
-      }
-    }
-  })
-  return Ticks
+   var Ticks;
+
+   if(Base.extend){
+     Ticks = Base.extend(methods);
+   }else{
+     Ticks = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Ticks,Base,methods);
+   }
+   return Ticks
+ },{
+   requires:["base"]
 })
 
 // -*- coding: utf-8; -*-
@@ -8886,77 +8907,60 @@ gallery/kcharts/1.3/dashboard/index
  * 仪表盘
  * @author cookieu@gmail.com
  */
-;KISSY.add('gallery/kcharts/1.3/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks){
-  var D = S.DOM
-    , E = S.Event
-    , R = Raphael
+;KISSY.add('gallery/kcharts/1.3/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks,Base,D,E){
+   window.console && window.console.log('asdfaf');
+  var R = Raphael;
+   var methods = {
+     initializer:function(){
+       var con = this.get('renderTo');
 
-  function DashBoard(){
-    DashBoard.superclass.constructor.apply(this,arguments)
-    var con = this.get('renderTo')
-    if(S.isString(con)){
-      con = S.get(con)
-    }
-    var w = this.get('width')
-      , h = this.get('height')
-    this.paper = R(con,w,h)
-    this.init()
-  }
+       if(S.isString(con)){
+         con = S.get(con)
+       }
 
-  DashBoard.ATTRS = {
-    width:{
-      value:400
-    },
-    height:{
-      value:400
-    },
-    cx:{
-      value:0
-    },
-    cy:{
-      value:0
-    }
-  }
+       var w = this.get('width')
+         , h = this.get('height')
 
-  S.extend(DashBoard,S.Base,{
-    init:function(){
-      var cx = this.get('cx') || this.get('width')/2
-        , cy = this.get('cy') || this.get('width')/2
-        , that = this
-      this.set('cx',cx)
-      this.set('cy',cy)
+       this.paper = R(con,w,h)
 
-      this.bindEvent()
+       var cx = this.get('cx') || this.get('width')/2
+         , cy = this.get('cy') || this.get('width')/2
+         , that = this
 
-      var tick
-        , pointer
-        , bg
+       this.set('cx',cx)
+       this.set('cy',cy)
 
-      tick = this.get('ticks')
-      pointer = this.get('pointer')
-      bg = this.get('background')
+       this.bindEvent()
 
-      if(S.isObject(bg)){
-        this.drawBg(bg)
-      }else if(S.isFunction(bg)){
-        bg.call(this)
-      }
+       var tick
+         , pointer
+         , bg
 
-      if(S.isObject(pointer)){
-        this.drawPointer(pointer)
-      }else if(S.isFunction(pointer)){
-        pointer.call(this)
-      }
+       tick = this.get('ticks')
+       pointer = this.get('pointer')
+       bg = this.get('background')
 
-      if(S.isObject(tick)){
-        this.drawTicks(tick)
-      }else if(S.isFunction(tick)){
-        this.ticks = tick.call(this)
-      }
-    },
-    bindEvent:function(){
-      var that = this
-    },
+       if(S.isObject(bg)){
+         this.drawBg(bg)
+       }else if(S.isFunction(bg)){
+         bg.call(this)
+       }
+
+       if(S.isObject(pointer)){
+         this.drawPointer(pointer)
+       }else if(S.isFunction(pointer)){
+         pointer.call(this)
+       }
+
+       if(S.isObject(tick)){
+         this.drawTicks(tick)
+       }else if(S.isFunction(tick)){
+         this.ticks = tick.call(this)
+       }
+     },
+     bindEvent:function(){
+       var that = this
+     },
     drawBg:function(cfg){
       if(cfg.src){
         this.drawPictureBg(cfg)
@@ -9028,10 +9032,31 @@ gallery/kcharts/1.3/dashboard/index
     pointTo:function(angle,effect){
       this.pointer && this.pointer.pointTo(angle,effect)
     }
-  })
+  }
+
+   var DashBoard;
+
+   if(Base.extend){
+     DashBoard = Base.extend(methods);
+   }else{
+     DashBoard = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(DashBoard,Base,methods)
+   }
   return DashBoard
 },{
-  requires:['../raphael/index','./pointer','./pointer-pic','./dashboard-ticks']
+  requires:[
+    '../raphael/index',
+    './pointer',
+    './pointer-pic',
+    './dashboard-ticks',
+    'base',
+    'dom',
+    'event'
+  ]
 })
 
 /**

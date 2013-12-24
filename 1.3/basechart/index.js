@@ -1,13 +1,14 @@
 /*
 TODO 坐标运算  画布大小计算
 */
-;KISSY.add('gallery/kcharts/1.3/basechart/index', function(S,Base,Node) {
+;
+KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 	var $ = S.all;
 	var isNagitive = false;
 	var isPositive = false;
-    var methods = {
+	var methods = {
 		init: function(cfg) {
-            cfg || (cfg = this.userConfig);
+			cfg || (cfg = this.userConfig);
 			var self = this,
 				_cfg, series;
 			if (cfg && cfg.renderTo) {
@@ -203,8 +204,8 @@ TODO 坐标运算  画布大小计算
 			if (axis.text && S.isArray(axis.text)) {
 				return axis.text;
 			} else {
-				var cmax = axis.max/1,
-					cmin = axis.min/1,
+				var cmax = axis.max / 1,
+					cmin = axis.min / 1,
 					num = axis.num || 5,
 					_max = Math.max.apply(null, allDatas),
 					_min = Math.min.apply(null, allDatas);
@@ -700,23 +701,23 @@ TODO 坐标运算  画布大小计算
 			var num = Math.round((arg + "").replace(/\s+|px/g, ''));
 			return Math.round((arg + "").replace(/\s+|px/g, ''));
 		},
-      getOffset: function(e) {
-        // see http://stackoverflow.com/questions/11334452/event-offsetx-in-firefox
-		var target = e.currentTarget // 当前触发的目标对象
-		if (e.offsetX) {
-          return {
-			offsetX: e.offsetX,
-			offsetY: e.offsetY
-          }
-		}else{
-          var offset = S.DOM.offset(target);
-          return {
-			offsetX: (e.offsetX || e.clientX - offset.left),
-			offsetY: (e.offsetY || e.clientY - offset.top)
-          }
-        }
-	  },
-	  onResize:function(e){
+		getOffset: function(e) {
+			// see http://stackoverflow.com/questions/11334452/event-offsetx-in-firefox
+			var target = e.currentTarget // 当前触发的目标对象
+			if (e.offsetX) {
+				return {
+					offsetX: e.offsetX,
+					offsetY: e.offsetY
+				}
+			} else {
+				var offset = S.DOM.offset(target);
+				return {
+					offsetX: (e.offsetX || e.clientX - offset.left),
+					offsetY: (e.offsetY || e.clientY - offset.top)
+				}
+			}
+		},
+		onResize: function(e) {
 			var self = this,
 				$ctnNode = self._$ctnNode;
 
@@ -732,17 +733,17 @@ TODO 坐标运算  画布大小计算
 					self.fire("resize");
 				}
 			});
-	  }
+		}
 	};
 	var BaseChart;
 
-    if(Base.extend){
-      BaseChart = Base.extend(methods);
-	}else{
-	  BaseChart = function() {};
-	  S.extend(BaseChart, Base, methods);
-    }
+	if (Base.extend) {
+		BaseChart = Base.extend(methods);
+	} else {
+		BaseChart = function() {};
+		S.extend(BaseChart, Base, methods);
+	}
 	return BaseChart;
 }, {
-	requires: ['base','node']
+	requires: ['base', 'node']
 });

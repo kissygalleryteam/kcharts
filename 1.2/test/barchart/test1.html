@@ -6,9 +6,9 @@
 <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
 <style type="text/css">
 #demo1{
-	width:750px;
-	height:300px;
-	margin:0px auto;
+    width:750px;
+    height:300px;
+    margin:0px auto;
 }
 </style>
 </head>
@@ -16,7 +16,7 @@
 <div id="demo1">
 
 </div>
-<script src="//g.tbcdn.cn/kissy/k/1.3.0/seed-min.js"></script>
+<script src="//g.tbcdn.cn/kissy/k/1.3.0/seed.js"></script>
 <script type="text/javascript">
 KISSY.Config.debug = true;
 KISSY.config({
@@ -27,25 +27,32 @@ KISSY.config({
     }
   ]
 });
-	KISSY.use('gallery/kcharts/1.2/barchart/index',function(S,BarChart){
-	
-		var barChart = new BarChart({
-			renderTo:"#demo1",
-			title:{
-            	content:"Monthly Average Rainfall",
-            	css:{
-            	}
+    KISSY.use('gallery/kcharts/1.2/barchart/index',function(S,BarChart){
+    
+        var barChart = new BarChart({
+            renderTo:"#demo1",
+            title:{
+                content:"Monthly Average Rainfall",
+                css:{
+                }
             },
             anim:{},
             subTitle:{
-            	content:"Source: WorldClimate.com",
-            	css:{
+                content:"Source: WorldClimate.com",
+                css:{
 
-            	}
+                }
             },
-			 xAxis: {
-			 		text:[
-			 		'Jan',
+            xLabels:{
+                isShow:false
+            },
+            yLabels:{
+                isShow:false
+            },
+             xAxis: {
+                    isShow:false,
+                    text:[
+                    'Jan',
                     'Feb',
                     'Mar',
                     'Apr',
@@ -59,13 +66,14 @@ KISSY.config({
                     'Dec']
             },
             yAxis:{
-            	min:0
+                 isShow:false,
+                min:0
             },
             bars:{
                 barsRatio:0.8,
                 barRatio:0.6
             },
-			series:[{
+            series:[{
                 text: 'Tokyo',
                 data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
     
@@ -82,19 +90,19 @@ KISSY.config({
             legend:{
                 isShow:true,y:-10
             },
-			tip:{
-				template:"{{text}} {{y}} mm",
-				alignX:"right",
-				css:{"border-color":"{COLOR}"},
-				offset:{
-					y:-10
-				}
-			}
-		});
+            tip:{
+                template:"{{text}} {{y}} mm",
+                alignX:"right",
+                css:{"border-color":"{COLOR}"},
+                offset:{
+                    y:-10
+                }
+            }
+        });
     barChart.on("barClick",function(e){
         S.log(e)
     })
-	});
+    });
 
 </script>
 </body>
