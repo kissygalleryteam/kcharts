@@ -283,6 +283,8 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
   // @param n{Number} 期望分成的份数
   //
   var getlabel = function(arr,n){
+    var rawMax = Math.max.apply(Math,arr);
+
     // 1.
     var unit = chooseUnit(arr,n);
     if(!unit){
@@ -305,6 +307,11 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
 
     var mindate = Math.min.apply(Math,labelnums) * UNIT;
     var maxdate = Math.max.apply(Math,labelnums) * UNIT;
+
+    // 保证不小于原来的
+    if(maxdate < rawMax){
+      maxdate+=UNIT;
+    }
 
     // 6.
     labelnums = labelnums.map(function(i){
@@ -482,7 +489,10 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
       , y1,y2; // 右边的点？
     x1 = x0+iy*scale; y1=y0-ix*scale;
     x2 = x0-iy*scale; y2=y0+ix*scale;
+
     return {
+      x0:roundToFixed(x0,unit), // 保留原始值
+      y0:roundToFixed(y0,unit),
       x1:roundToFixed(x1,unit),
       y1:roundToFixed(y1,unit),
       x2:roundToFixed(x2,unit),
@@ -572,7 +582,34 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
   // console.log(ss);
 
   //==================== test combineSerie end ====================
+  function fixSVGLineStyle($path,svg){
+    var el = svg && $path && $path[0];
+    el && el.setAttribute("shape-rendering", "crispEdges");
+  }
+  Util.fixSVGLineStyle = fixSVGLineStyle;
 
+  /**
+   * 求一组点的平均位置
+   * @param pts {Array} eg. [{x:x,y:y},...]
+   * @return pt {Object} eg. {x:x,y:y}
+   * */
+  function averagePoints(pts){
+    var x,y;
+    var sx,sy;
+    sx = sy = 0;
+    var n=0;
+    for(var i=0,l=pts.length;i<l;i++){
+      if(pts[i] && typeof pts[i].x === "number"){
+        sx+= pts[i].x;
+        sy+= pts[i].y;
+        n++;
+      }
+    }
+    x = sx/n;
+    y = sy/n;
+    return {x:x,y:y};
+  }
+  Util.averagePoints = averagePoints;
   // ==================== end util ====================
   return Util;
 });
