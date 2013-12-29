@@ -15,7 +15,7 @@
 <div id="demo1">
 
 </div>
-<script src="//g.tbcdn.cn/kissy/k/1.3.0/seed-min.js"></script>
+<script src="//g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
 KISSY.Config.debug = true;
 KISSY.config({
@@ -26,16 +26,16 @@ KISSY.config({
     }
   ]
 });
-KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
+KISSY.use("gallery/kcharts/1.3/linechart/index",function(S,LineChart){
   var linechart = new LineChart({
       renderTo:"#demo1",
+      themeCls:"ks-chart-rainbow",
       points:{
         attr:{
           type:"auto"
         }
       },
       yLabels:{
-        isShow:false,
         css:{
           "marginLeft":"-4px",
           "font-family":"Microsoft Yahei",
@@ -43,17 +43,16 @@ KISSY.use("gallery/kcharts/1.2/linechart/index",function(S,LineChart){
         }
       },
       xLabels:{
-        isShow:false,
         css:{
           "font-family":"Microsoft Yahei",
            "font-size":"10px"
         }
       },
       yGrids:{
-        isShow:true
+        isShow:false
       },
       xGrids:{
-        isShow:true
+        isShow:false
       },
       title:{
               content:"Monthly Average Temperature"

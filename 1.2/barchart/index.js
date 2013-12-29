@@ -174,6 +174,7 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		},
 		//主标题
 		drawTitle: function() {
+			if(!this._cfg.title.isShow) return;
 			var self = this,
 				paper = self.htmlPaper,
 				cls = themeCls + "-title",
@@ -182,14 +183,13 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 				//高度占 60%
 				h = ctn.y * 0.6;
 
-			if (_cfg.title.isShow && _cfg.title.content != "") {
 				self._title = paper.rect(0, 0, self._$ctnNode.width(), h).addClass(cls).css(S.mix({
 					"line-height": h + "px"
 				}, _cfg.title.css)).html(_cfg.title.content);
-			}
 		},
 		//副标题
 		drawSubTitle: function() {
+			if(!this._cfg.subTitle.isShow) return;
 			var self = this,
 				paper = self.htmlPaper,
 				cls = themeCls + "-subtitle",
@@ -198,11 +198,9 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 				//高度占 40%
 				h = ctn.y * 0.4;
 
-			if (_cfg.subTitle.isShow && _cfg.subTitle.content != "") {
 				self._subTitle = paper.rect(0, ctn.y * 0.6, self._$ctnNode.width(), h).addClass(cls).css(S.mix({
 					"line-height": h + "px"
 				}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
-			}
 		},
 		//画柱
 		drawBar: function(groupIndex, barIndex, callback) {
@@ -383,10 +381,10 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		},
 		//x轴上 平行于y轴的网格线
 		drawGridsX: function() {
+			if (!this._cfg.xGrids.isShow) return;
 			var self = this,
 				points = self._points[0],
 				gridPointsX;
-			if (!self._cfg.xGrids.isShow) return;
 
 			self._gridsX = [];
 
@@ -441,11 +439,10 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		},
 		//y轴上 平行于x轴的网格线
 		drawGridsY: function() {
+			if (!this._cfg.yGrids.isShow) return;
 			var self = this,
 				x = self._innerContainer.tl.x,
 				isY = self._cfg.zoomType == "x" ? false : true;
-
-			if (!self._cfg.yGrids.isShow) return;
 
 			self._gridsY = [];
 
@@ -460,7 +457,8 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			}
 		},
 		//x轴
-		drawAxisX: function() {
+			drawAxisX: function() {
+			if(!this._cfg.xAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				bl = _innerContainer.bl,
@@ -473,6 +471,7 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		},
 		//y轴
 		drawAxisY: function() {
+			if(!this._cfg.yAxis.isShow) return;
 			var self = this,
 				_innerContainer = self._innerContainer,
 				tl = _innerContainer.tl,
@@ -485,6 +484,7 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			return self._axisY;
 		},
 		drawLabelsX: function() {
+			if(!this._cfg.xLabels.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				isY = _cfg.zoomType == "y" ? true : false;
@@ -505,6 +505,7 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			}
 		},
 		drawLabelsY: function() {
+			if(!this._cfg.yLabels.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				isY = _cfg.zoomType == "x" ? false : true;
@@ -571,6 +572,7 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		},
 		//渲染tip
 		renderTip: function() {
+			if(!this._cfg.tip.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
@@ -647,6 +649,7 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			}
 		},
 		renderLegend: function() {
+			if(!this._cfg.legend.isShow) return;
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
@@ -740,21 +743,21 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 			//事件层
 			self.renderEvtLayout();
 			//渲染tip
-			_cfg.tip.isShow && self.renderTip();
+			self.renderTip();
 			//画x轴上的平行线
 			self.drawGridsX();
 
 			self.drawGridsY();
 			//画横轴
-			_cfg.xAxis.isShow && self.drawAxisX();
+			self.drawAxisX();
 
-			_cfg.yAxis.isShow && self.drawAxisY();
+			self.drawAxisY();
 			//画横轴刻度
-			_cfg.xLabels.isShow && self.drawLabelsX();
+			self.drawLabelsX();
 
-			_cfg.yLabels.isShow && self.drawLabelsY();
+			self.drawLabelsY();
 
-			_cfg.legend.isShow && self.renderLegend();
+			self.renderLegend();
 			//画柱
 			self.drawBars(function() {
 
@@ -882,17 +885,22 @@ KISSY.add('gallery/kcharts/1.2/barchart/index', function(S, Template, BaseChart,
 		//处理网格和标注
 		animateGridsAndLabels: function() {
 			var self = this,
-				zoomType = self._cfg.zoomType;
+				cfg = self._cfg,
+				zoomType = cfg.zoomType;
 			if (zoomType == "y") {
 				for (var i in self._labelX) {
 					self._labelX[i] && self._labelX[i][0] && $(self._labelX[i][0]).remove();
+				}
+				for(var i in self._gridsX){
 					self._gridsX[i] && self._gridsX[i][0] && $(self._gridsX[i][0]).remove();
 				}
-				self.drawGridsX();
 				self.drawLabelsX();
+				self.drawGridsX();
 			} else if (zoomType == "x") {
 				for (var i in self._labelY) {
 					self._labelY[i] && self._labelY[i][0] && self._labelY[i][0].remove();
+				}
+				for(var i in self._gridsY){
 					self._gridsY[i] && self._gridsY[i][0] && self._gridsY[i][0].remove();
 				}
 				self.drawGridsY();

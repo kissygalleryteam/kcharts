@@ -1,5 +1,5 @@
 /*
-combined files :
+combined files : 
 
 gallery/kcharts/1.3/mapchart/theme
 gallery/kcharts/1.3/mapchart/mapdata
@@ -12156,10 +12156,8 @@ KISSY.add("gallery/kcharts/1.3/mapchart/mapdata", function (S) {
         "svgHeight": 620
     }
 });
-KISSY.add("gallery/kcharts/1.3/mapchart/index", function (S, Raphael, Theme, MapData) {
-    var $ = S.all,
-        Event = S.Event;
-
+KISSY.add("gallery/kcharts/1.3/mapchart/index", function (S, Raphael, Theme, MapData , Node, Event) {
+    var $ = S.all;
     var MapChart = function (container, cfg) {
         var self = this;
         self._container = $(container);
@@ -12702,6 +12700,8 @@ KISSY.add("gallery/kcharts/1.3/mapchart/index", function (S, Raphael, Theme, Map
 }, {requires: [
     'gallery/kcharts/1.3/raphael/index',
     './theme',
-    './mapdata'
+    './mapdata',
+    'node',
+    'event'
 ]
 });

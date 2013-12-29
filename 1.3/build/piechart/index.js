@@ -1,5 +1,5 @@
 /*
-combined files :
+combined files : 
 
 gallery/kcharts/1.3/piechart/util
 gallery/kcharts/1.3/piechart/sector
@@ -303,7 +303,8 @@ gallery/kcharts/1.3/piechart/index
         if(donut && l==1){
           r = [rs[0],rs[1]]
         }
-        f.el = new Sector(paper,cx,cy,r,initdeg,initdeg-1,pathcfg,f);
+
+        f.el = new Sector({paper:paper,cx:cx,cy:cy,r:r,start:initdeg,end:initdeg-1,pathcfg:pathcfg,framedata:f});
 
         $path = f.el.get("$path")
 
@@ -443,13 +444,12 @@ gallery/kcharts/1.3/piechart/index
       , gradienton = pie.get("gradient")
 
     for(var i=0,l=set.length;i<l;i++){
-      var rset = paper.set()
-        , iniColor = set[i][0].color
+      var iniColor = set[i][0].color
         , llen = set[i].length
         , setcolor = new degrade(iniColor,llen)
       for(var j=0,ll=set[i].length;j<ll;j++){
-        var setij = set[i][j]
-          , setij$el = setij.el
+        var setij = set[i][j]   //
+          , setij$el = setij.el // 对应的sector
           , framedata = setij$el.get("framedata")
           , $path = setij$el.get('$path')
           , ss
@@ -471,6 +471,9 @@ gallery/kcharts/1.3/piechart/index
             }
           }
         }
+
+        // 用于tip
+        setij$el.set("fill",c);
 
         $path.attr("fill",c);
         //渐变色
@@ -577,7 +580,7 @@ gallery/kcharts/1.3/piechart/index
 });
 
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.3/piechart/sector",function(S){
+;KISSY.add("gallery/kcharts/1.3/piechart/sector",function(S,Base){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○
@@ -667,17 +670,12 @@ gallery/kcharts/1.3/piechart/index
     return ret;
   }
 
-  function Sector(paper,cx,cy,r,start,end,pathcfg,framedata){
-    if(!(this instanceof Sector)){
-      return new Sector(paper,cx,cy,r,start,end,pathcfg);
-    }
-    this.set({cx:cx,cy:cy,r:r,start:start,end:end,pathcfg:pathcfg,paper:paper,framedata:framedata})
-    this.draw();
-    this.bindEvent();
-    return this;
-  }
-
-  S.extend(Sector,S.Base,{
+   var methods = {
+     initializer:function(){
+       this.draw();
+       this.bindEvent();
+       return this;
+     },
     bindEvent:function(){
       this.on('afterCxChange',function(){
         this.draw();
@@ -790,699 +788,867 @@ gallery/kcharts/1.3/piechart/index
       this.unbindEvent();
       this.get('$path').remove();
     }
-  })
+  };
+
+   var Sector;
+   if(Base.extend){
+     Sector = Base.extend(methods)
+   }else{
+     Sector = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Sector,S.Base,methods)
+   }
   return Sector;
+},{
+  requires:["base"]
 });
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.3/piechart/label",function(S){
-  var D = S.DOM
+;KISSY.add("gallery/kcharts/1.3/piechart/label",function(S,Node,Base,D){
+   // helpers
+   function distance(a,b){
+     var x1,x2,y1,y2;
+     x1 = a[0],y1=a[1],x2=b[0],y2=b[1];
+     return Math.sqrt(Math.pow((x1-x2),2)+Math.pow((y1-y2),2));
+   }
 
-  // helpers
-  function distance(a,b){
-    var x1,x2,y1,y2;
-    x1 = a[0],y1=a[1],x2=b[0],y2=b[1];
-    return Math.sqrt(Math.pow((x1-x2),2)+Math.pow((y1-y2),2));
-  }
+   function closest(list,i,least_n){
+     function rec(l,min,min_el,min_el_left){
+       if(least_n >= l.length){
+         return {min:min_el,left:min_el_left};
+       }else if(min > distance(i,l[0])){
+         var left = l.slice(1);
+         return rec(left,distance(i,l[0]),l[0],left);
+       }else{
+         return rec(l.slice(1),min,min_el,min_el_left);
+       }
+     }
+     return rec(list,Infinity,list[0],[])
+   }
+   function find(l1,l2){
+     function iter(l,s,acm){
+       if(l.length == 0){
+         return acm;
+       }else{
+         var ret = closest(s,l[0],l.length-1);
+         acm.push(ret.min);
+         return iter(l.slice(1),ret.left,acm);
+       }
+     }
+     return iter(l1,l2,[]);
+   }
+   // end
 
-  function closest(list,i,least_n){
-    function rec(l,min,min_el,min_el_left){
-      if(least_n >= l.length){
-        return {min:min_el,left:min_el_left};
-      }else if(min > distance(i,l[0])){
-        var left = l.slice(1);
-        return rec(left,distance(i,l[0]),l[0],left);
-      }else{
-        return rec(l.slice(1),min,min_el,min_el_left);
-      }
-    }
-    return rec(list,Infinity,list[0],[])
-  }
-  function find(l1,l2){
-    function iter(l,s,acm){
-      if(l.length == 0){
-        return acm;
-      }else{
-        var ret = closest(s,l[0],l.length-1);
-        acm.push(ret.min);
-        return iter(l.slice(1),ret.left,acm);
-      }
-    }
-    return iter(l1,l2,[]);
-  }
-  // end
+   var $detector
+   function blockSizeOf(html){
+     $detector || ($detector = Node("<span/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
+     $detector.html(html);
+     return {
+       width:D.width($detector),
+       height:D.height($detector)
+     }
+   }
 
-  var $detector
-  function blockSizeOf(html){
-    $detector || ($detector = S.Node("<span/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo(document.body));
-    $detector.html(html);
-    return {
-      width:D.width($detector),
-      height:D.height($detector)
-    }
-  }
+   var Label;
+   var props = {
+     initializer:function(){
+       var $label    = this.get('label')
+         , x         = this.get('x')
+         , y         = this.get('y')
+         , size      = this.get('size')
+         , pie       = this.get('pie')
+         , sector    = this.get("sector")
+         , container = pie.get('container')
+       $label.css({"position":"absolute","left":x+'px',"top":y+'px',width:size.width+'px',"height":size.height+'px'}).appendTo(container);
+       this.set('el',$label)
+     },
+     destroy:function(){
+       this.get("el").remove();
+       this.get("$path").remove();
+     }
+   };
 
-  function Label(cfg){
-    this.set(cfg)
-    this.init();
-  }
-  S.extend(Label,S.Base,{
-    init:function(){
-      var $label = this.get('label')
-        , x = this.get('x')
-        , y = this.get('y')
-        , size = this.get('size')
-        , pie = this.get('pie')
-        , sector = this.get("sector")
-        , container = pie.get('container')
+   if(Base.extend){ // 1.4
+     Label = Base.extend(props)
+   }else{           // 1.3
+     Label = function(cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Label,Base,props);
+   }
 
-      $label.css({"position":"absolute","left":x+'px',"top":y+'px',width:size.width+'px',"height":size.height+'px'}).appendTo(container);
-      this.set('el',$label)
-    },
-    destroy:function(){
-      this.get("el").remove();
-      this.get("$path").remove();
-    }
-  })
-  /**
-   * 分布策略：
-   * 自然分布
-   * 若空间不足，拓展空间
-   * */
+   /**
+    * 分布策略：
+    * 自然分布
+    * 若空间不足，拓展空间
+    * */
+   var Labels;
+   var props2 = {
+     initializer:function(){
+       var pie = this.get("pie");
+       var $sectors = this.get("$sectors");
+       var bool_left = this.get("isleft");
 
-  function Labels(pie,$sectors,bool_left){
-    var paper = pie.get('paper')
-      , container = pie.get('container')
-      , count = $sectors.length
-      , paperHeight //画布高度
-      , pieHeight //饼图高度
-      , unitHeight //单条label的高度
-      , minLalebelHeight //排布label需要的最小高度
-      , fromY // 画label的上边界
-      , toY // 下边界
-      , xys = []
-      , xysr = []
-      , xysr2 = []
-      , cx = pie.get('cx')
-      , cy = pie.get('cy')
-      , rs = pie.get('rs')
-      , paddingDonutSize1 = pie.get("padding") || 20 // label 和 pie 之间的距离
-      , paddingDonutSize2 = paddingDonutSize1+10
-      , R
-      , R1
-      , R2
-      , cos = Math.cos
-      , sin = Math.sin
-      , asin = Math.asin
-      , pi = Math.PI
-      , rad = Math.PI/180
-      , $firstSector
+       var paper = pie.get('paper')
+         , container = pie.get('container')
+         , count = $sectors.length
+         , paperHeight //画布高度
+         , pieHeight //饼图高度
+         , unitHeight //单条label的高度
+         , minLalebelHeight //排布label需要的最小高度
+         , fromY // 画label的上边界
+         , toY // 下边界
+         , xys = []
+         , xysr = []
+         , xysr2 = []
+         , cx = pie.get('cx')
+         , cy = pie.get('cy')
+         , rs = pie.get('rs')
+         , paddingDonutSize1 = pie.get("padding") || 20 // label 和 pie 之间的距离
+         , paddingDonutSize2 = paddingDonutSize1+10
+         , R
+         , R1
+         , R2
+         , cos = Math.cos
+         , sin = Math.sin
+         , asin = Math.asin
+         , pi = Math.PI
+         , rad = Math.PI/180
+         , $firstSector
 
-    this.labels = []
-    $firstSector = $sectors[0]
+       this.labels = []
+       $firstSector = $sectors[0]
 
-    if(!$firstSector)return;
+       if(!$firstSector)return;
 
-    unitHeight = blockSizeOf($firstSector.get("label")).height
-    R = Math.max.apply(Math,rs)
-    R1 = R + paddingDonutSize1
-    R2 = R + paddingDonutSize2
+       // bugfix:如果没有配置label，那么，"label"字段为空，获取到的unitHeight就为0
+       // 下面的for循环的步长为0,导致死循环
+       unitHeight = blockSizeOf($firstSector.get("label")).height
+       // fix it：如果unitHeight为0,则返回
+       if(!unitHeight)
+         return;
+       R = Math.max.apply(Math,rs)
+       R1 = R + paddingDonutSize1
+       R2 = R + paddingDonutSize2
 
-    fromY = cy - R2;
-    toY = cy + R2;
-    for(fromY+=unitHeight;fromY<toY-unitHeight;fromY+=unitHeight){
-      // x=a+rcosθ y=b+rsinθ
-      // (y-b)/r = sinθ
-      var y = fromY;
-      var t = Math.asin((y-cy)/R2);
-      var x = cx+R2*Math.cos(t);
-      x = bool_left ? (2*cx - x):x;
-      xys.push([x,y]);
+       fromY = cy - R2;
+       toY = cy + R2;
+       for(fromY+=unitHeight;fromY<toY-unitHeight;fromY+=unitHeight){
+         // x=a+rcosθ y=b+rsinθ
+         // (y-b)/r = sinθ
+         var y = fromY;
+         var t = Math.asin((y-cy)/R2);
+         var x = cx+R2*Math.cos(t);
+         x = bool_left ? (2*cx - x):x;
+         xys.push([x,y]);
 
-      // paper.circle(x,y,4);
-      // paper.circle(2*cx - x,y,4);
-    }
-    // 若不足以放下所有的label，剔除比例较小的
+         // paper.circle(x,y,4);
+         // paper.circle(2*cx - x,y,4);
+       }
+       // 若不足以放下所有的label，剔除比例较小的
 
-    if($sectors.length>xys.length){
-      $sectors = $sectors.sort(function(a,b){
-                   var d1 = Math.abs(a.get("start") - a.get("end"))
-                     , d2 = Math.abs(b.get("start") - b.get("end"))
-                   return d1>d2 ? -1 : (d1<d2) ? 1 : 0;
-                 });
-      $sectors = $sectors.slice(0,xys.length);
-    }
+       if($sectors.length>xys.length){
+         $sectors = $sectors.sort(function(a,b){
+                      var d1 = Math.abs(a.get("start") - a.get("end"))
+                        , d2 = Math.abs(b.get("start") - b.get("end"))
+                      return d1>d2 ? -1 : (d1<d2) ? 1 : 0;
+                    });
+         $sectors = $sectors.slice(0,xys.length);
+       }
 
-    $sectors = $sectors.sort(function(a,b){
-                 var ay = a.get("middley")
-                   , by = b.get("middley")
-                 // return [a.a, a.b] > [b.a, b.b] ? 1:-1;
-                 // return  [ay,ay] < [by,by];
-                 return ay<by ? 1 : ay>by ? -1 : 0;
-               });
+       $sectors = $sectors.sort(function(a,b){
+                    var ay = a.get("middley")
+                      , by = b.get("middley")
+                    // return [a.a, a.b] > [b.a, b.b] ? 1:-1;
+                    // return  [ay,ay] < [by,by];
+                    return ay<by ? 1 : ay>by ? -1 : 0;
+                  });
 
-    var unitdeg = Math.PI/180;
-    S.each($sectors,function($sector){
-      var x = $sector.get("middlex")
-        , y = $sector.get("middley")
-        , theta = $sector.get("middleangle")*rad
-      // paper.circle(x12,y12,3);
-      var x12,y12;
-      x12 = cx+R1*Math.cos(-theta);
-      y12 = cy+R1*Math.sin(-theta);
-      xysr2.push([x12,y12]);
+       var unitdeg = Math.PI/180;
+       S.each($sectors,function($sector){
+         var x = $sector.get("middlex")
+           , y = $sector.get("middley")
+           , theta = $sector.get("middleangle")*rad
+         // paper.circle(x12,y12,3);
+         var x12,y12;
+         x12 = cx+R1*Math.cos(-theta);
+         y12 = cy+R1*Math.sin(-theta);
+         xysr2.push([x12,y12]);
 
-      xysr.push([x,y]);
-      // paper.circle(x,y,2);
-    });
+         xysr.push([x,y]);
+         // paper.circle(x,y,2);
+       });
 
-    xysr = xysr.reverse();
-    xysr2 = xysr2.reverse();
+       xysr = xysr.reverse();
+       xysr2 = xysr2.reverse();
 
-    $sectors = $sectors.reverse();
+       $sectors = $sectors.reverse();
 
-    var bestxys = find(xysr,xys);
+       var bestxys = find(xysr,xys);
 
-    for(var i=0,l=bestxys.length;i<l;i++){
-      var pxy = xysr[i];
-      var pxy2 = bestxys[i];
-      var x1,x2,y1,y2;
-      x1 = pxy[0];
-      y1 = pxy[1];
-      x2 = pxy2[0];
-      y2 = pxy2[1];
+       for(var i=0,l=bestxys.length;i<l;i++){
+         var pxy = xysr[i];
+         var pxy2 = bestxys[i];
+         var x1,x2,y1,y2;
+         x1 = pxy[0];
+         y1 = pxy[1];
+         x2 = pxy2[0];
+         y2 = pxy2[1];
 
-      var x12,y12;
-      x12 = xysr2[i][0],y12 = xysr2[i][1];
+         var x12,y12;
+         x12 = xysr2[i][0],y12 = xysr2[i][1];
 
-      var x23,y23 = y2;
-      x23 = bool_left ? x2 - 10 : x2 + 10;
-      var path = paper.path(["M",x1,y1,"Q",x12,y12,x23,y23].join(","));
+         var x23,y23 = y2;
+         x23 = bool_left ? x2 - 10 : x2 + 10;
+         var path = paper.path(["M",x1,y1,"Q",x12,y12,x23,y23].join(","));
 
-      var $sector = $sectors[i]
-        , sizefn = pie.get("sizefn")
-        , label = $sector.get('label')
-        , labelfn = pie.get('labelfn')
-        , size
-        , x3 ,y3
-        , that = this
-        , pathcolor = $sector.get("$path").attr("fill")
-        , autoLabelPathColor = pie.get('autoLabelPathColor')
+         var $sector = $sectors[i]
+           , sizefn = pie.get("sizefn")
+           , label = $sector.get('label')
+           , labelfn = pie.get('labelfn')
+           , size
+           , x3 ,y3
+           , that = this
+           , pathcolor = $sector.get("$path").attr("fill")
+           , autoLabelPathColor = pie.get('autoLabelPathColor')
 
-      if(labelfn && S.isFunction(labelfn)){
-        label = labelfn(label,$sector,pie);
-      }
-      size = blockSizeOf(label)
+         if(labelfn && S.isFunction(labelfn)){
+           label = labelfn(label,$sector,pie);
+         }
+         size = blockSizeOf(label)
+         path && path.toBack && path.toBack();
+         (autoLabelPathColor != "undefined") && path.attr("stroke",pathcolor)
 
-      path && path.toBack && path.toBack();
-      (autoLabelPathColor != "undefined") && path.attr("stroke",pathcolor)
+         if(sizefn && S.isFunction(sizefn)){
+           size = sizefn(size,$sector,pie);
+         }
 
-      if(sizefn && S.isFunction(sizefn)){
-        size = sizefn(size,$sector,pie);
-      }
+         if(bool_left){
+           x3 = x23 - size.width
+           y3 = y23 - size.height/2
+         }else{
+           x3 = x23;
+           y3 = y23 - size.height/2;
+         }
 
-      if(bool_left){
-        x3 = x23 - size.width
-        y3 = y23 - size.height/2
-      }else{
-        x3 = x23;
-        y3 = y23 - size.height/2;
-      }
+         var $label = Node("<span class='kcharts-label'>"+label+"</span>")
 
-      var $label = S.Node("<span class='kcharts-label'>"+label+"</span>")
+         var labelInstance  = new Label({label:$label,sector:$sector,$path:path,x:x3,y:y3,size:size,pie:pie});
+         var $el = labelInstance.get('el');
 
-      var labelInstance  = new Label({label:$label,sector:$sector,$path:path,x:x3,y:y3,size:size,pie:pie});
-      var $el = labelInstance.get('el');
+         var fn = function($el,$sector,labelInstance){
+           $el.on('click',function(e){
+             that.fire('click',{
+               el:e.currentTarget,
+               label:labelInstance,
+               sector:$sector
+             })
+           });
+         }
+         fn($el,$sector,labelInstance);
 
-      var fn = function($el,$sector,labelInstance){
-        $el.on('click',function(e){
-          that.fire('click',{
-            el:e.currentTarget,
-            label:labelInstance,
-            sector:$sector
-          })
-        });
-      }
-      fn($el,$sector,labelInstance);
+         that.labels.push(labelInstance);
+       }
+     },
+     destroy:function(){
+       S.each(this.labels,function(label){
+         label.destroy();
+       });
+     }
+   };
 
-      that.labels.push(labelInstance);
-    }
-  }
-  S.extend(Labels,S.Base,{
-    destroy:function(){
-      S.each(this.labels,function(label){
-        label.destroy();
-      });
-    }
-  })
-  Labels.getSizeOf = blockSizeOf
-  return Labels;
-})
+   if(Base.extend){ // 1.4
+     Labels = Base.extend(props2);
+   }else{           // 1.3
+     Labels = function(cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Labels,Base,props2);
+   }
+
+   Labels.getSizeOf = blockSizeOf
+   return Labels;
+ },{
+   requires:["node","base","dom"]
+ })
+
 // -*- coding: utf-8; -*-
-;KISSY.add("gallery/kcharts/1.3/piechart/index",function(S,Util,Sector,Animate,Labels,Raphael,Color){
-  var D = S.DOM
-    , E = S.Event
+;KISSY.add("gallery/kcharts/1.3/piechart/index",function(S,Util,Sector,Animate,Labels,Raphael,Color,Base,E,D){
+   var COLOR_TPL = "{COLOR}";
+   function render(){
+     this.destroy();
+     var paper = Raphael(this.get("container"),this.get("width"),this.get("height"));
+     this.set("paper",paper);
 
-  function render(){
-    this.destroy();
-    var paper = Raphael(this.get("container"),this.get("width"),this.get("height"));
-    this.set("paper",paper);
+     this.initPath();
+     this.fire("beforeRender");
+     var framedata = this.get('framedata')
+     this.animate(framedata)
+   }
 
-    this.initPath();
-    this.fire("beforeRender");
-    var framedata = this.get('framedata')
-    this.animate(framedata)
-  }
+   // 调整cfg
+   function setupcfg(cfg){
+     var w = this.get("width")
+       , h = this.get("height")
+       , min = Math.min(w,h)
+       , d
+       , rpadding = cfg.rpadding //留给label
+     if(!cfg.rs){
+       if(!rpadding){
+         rpadding = 40;
+         this.set("rpadding",rpadding);
+       }
+       if(min>rpadding){
+         d = min - rpadding;
+       }else{
+         d = min;
+       }
+       cfg.rs = [d/2];
+     }
+     //自动找圆心
+     if(!S.isNumber(cfg.cx)){
+       cfg.cx = w/2;
+     }
+     if(!S.isNumber(cfg.cy)){
+       cfg.cy = h/2;
+     }
 
-  // 调整cfg
-  function setupcfg(cfg){
-    var w = this.get("width")
-      , h = this.get("height")
-      , min = Math.min(w,h)
-      , d
-      , rpadding = cfg.rpadding //留给label
-    if(!cfg.rs){
-      if(!rpadding){
-        rpadding = 40;
-        this.set("rpadding",rpadding);
-      }
-      if(min>rpadding){
-        d = min - rpadding;
-      }else{
-        d = min;
-      }
-      cfg.rs = [d/2];
-    }
-    //自动找圆心
-    if(!S.isNumber(cfg.cx)){
-      cfg.cx = w/2;
-    }
-    if(!S.isNumber(cfg.cy)){
-      cfg.cy = h/2;
-    }
+     //设置重绘频率
+     if(!S.isNumber(cfg.repaintRate)){
+       cfg.repaintRate = 200;
+     }
 
-    //设置重绘频率
-    if(!S.isNumber(cfg.repaintRate)){
-      cfg.repaintRate = 200;
-    }
+     //如果要画面包圈
+     if(cfg.donut){
+       if(cfg.rs.length != 2){
+         cfg.donutSize || (cfg.donutSize = 30);
+         if(cfg.donutSize>cfg.rs[0]){
+           //设为半径的一半
+           cfg.donutSize = cfg.rs[0]/2;
+         }
+         cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
+       }
+     }
+   }
 
-    //如果要画面包圈
-    if(cfg.donut){
-      if(cfg.rs.length != 2){
-        cfg.donutSize || (cfg.donutSize = 30);
-        if(cfg.donutSize>cfg.rs[0]){
-          //设为半径的一半
-          cfg.donutSize = cfg.rs[0]/2;
-        }
-        cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
-      }
-    }
-  }
+   /**
+    * @param cfg {Object}
+    * cfg.rpadding 留来画label的距离
+    * cfg.repaintRate {Number} 重绘频率
+    * cfg.donut {Bool} 是否为面包圈图
+    * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
+    * cfg.initdeg {Number} 画扇形的起始位置，默认为90度
+    * cfg.gradient {Bool} 是否开启渐变，可以手动配置framedata.gradientcolor
+    * */
+   var init = function(){
+     var container = S.get(this.get('renderTo'))
+        , width = D.width(container)
+        , height = D.height(container)
+        , paper = Raphael(container)
+        , isStatic = D.css(container,'position') == "static" ? true : false
 
-  /**
-   * @param cfg {Object}
-   * cfg.rpadding 留来画label的距离
-   * cfg.repaintRate {Number} 重绘频率
-   * cfg.donut {Bool} 是否为面包圈图
-   * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
-   * cfg.initdeg {Number} 画扇形的起始位置，默认为90度
-   * cfg.gradient {Bool} 是否开启渐变，可以手动配置framedata.gradientcolor
-   * */
+      this.set({"paper":paper,width:width,height:height,container:container})
 
-  function Pie(cfg){
-    var container = S.get(cfg.renderTo)
-      , width = D.width(container)
-      , height = D.height(container)
-      , paper = Raphael(container)
-      , isStatic = D.css(container,'position') == "static" ? true : false
+     var cfg = this.userConfig;
+       // 若没有cx|cy|r，则算一个默认的出来
+      this._setupcfg(cfg);
 
-    this.set({"paper":paper,width:width,height:height,container:container})
-
-    //若没有cx|cy|r，则算一个默认的出来
-    this._setupcfg(cfg);
-
-    if(!S.isArray(cfg.rs)){
-      cfg.rs = [cfg.rs];
-    }
-
-    isStatic && D.css(container,"position","relative");
-
-    this.set(cfg);
-
-    // adjust animation cfg
-    this.adjustCfg();
-    // adjustData
-    this.adjustData();
-    // 有标题则显示标题
-    this.drawTitle();
-    if(cfg.autoRender != false){
-      var that = this;
-      //延迟渲染
-      setTimeout(function(){
-        that.render();
-      },0);
-    }
-  }
-  S.extend(Pie,S.Base,{
-    bindEvent:function(){
-      this.on("afterCxChange",function(){
-        this.render();
-      });
-      this.on("afterCyChange",function(){
-        this.render();
-      });
-      this.on("afterRsChange",function(){
-        this.render();
-      });
-      this.on("afterDataChange",function(){
-        this.render();
-      });
-      E.on(this.get("container"),"mouseleave",function(){
-        this.fire("mouseleave");
-      },this)
-      this.on("afterRender",this.onafterrender,this);
-    },
-    _setupcfg:setupcfg,
-    onafterrender:function(){
-      //只执行一次
-      if(this.legendrendered)return;
-      this.legendrendered = true;
-      var that = this,
-          paper,
-          container,
-          bbox
-      var config = this.get("legend")
-
-      if(config){
-        paper = this.get("paper")
-        container = this.get("container")
-
-        //bboxing
-        var rs = this.get("rs")
-          , rl = rs[rs.length-1]
-          , rpadding = this.get("rpadding") || 0
-          , padding = this.get("padding") || 0
-          , cx = this.get("cx")
-          , cy = this.get("cy")
-
-        var width = (rl+rpadding+padding)*2
-          , left = cx - width/2
-          , top = cy - width/2
-
-        bbox = {
-          width:width,
-          height:width,
-          left:left,
-          top:top
-        }
-
-        function buildparts(){
-          var $sectors = that.get("$sectors")
-            , ret
-          ret = S.map($sectors,function($sector){
-                  var el = $sector.get("$path")
-                    , fill = el.attr("fill")
-                    , framedata = $sector.get("framedata")
-                    , text = framedata.label
-                  return {color:fill,text:text,$path:el}
-                });
-          return ret;
-        }
-
-        S.use("gallery/kcharts/1.3/legend/index",function(S,Legend){
-          var parts = buildparts();
-          var dft = {
-            //legend需要的原始信息
-            paper:paper,
-            container:container,
-            bbox:bbox,//图表主体的信息
-            iconAttrHook:function(index){//每次绘制icon的时调用，返回icon的属性信息
-              return {
-                fill:parts[index].color
-              }
-            },
-            spanAttrHook:function(index){//每次绘制“文本描述”的时候调用，返回span的样式
-              var color = Raphael.getRGB(parts[index].color);
-              return {
-                color:color.hex
-              }
-            },
-            config:parts
-          }
-          var legend = new Legend(S.merge(dft,config));
-          that.set("legend",legend);
-          that.fire("afterLegendRender");
-        });
-      }
-    },
-    //调整动画的配置
-    adjustCfg:function(){
-      var anim = this.get('anim')
-        , that = this
-        , _end = S.isFunction(anim.endframe) && anim.endframe
-        , lablecfg = that.get("label")
-      //若无动画配置则duration设置为0
-      anim || (anim = {duration:0});
-      anim.endframe = function(){
-        if(lablecfg != false){
-          that.drawLabel(lablecfg);
-        }
-        _end && _end.call(that);
-        that.fire('afterRender');
-      }
-    },
-    /**
-     * 过滤函数
-     * */
-    adjustData:function(){
-      var fn = this.get('filterfn')
-      if(fn && S.isFunction(fn)){
-        var data = this.get('data')
-          , ret
-        ret = Util.filterdata(data,fn)
-        this.set("data",ret);
-      }
-    },
-    initPath:function(){
-      var ret = Util.initPath(this)
-      this.set("$sectors",ret.$sectors);
-      this.set("groups",ret.groups)
-      this.set("set",ret.set);
-      this.set("framedata",ret.framedata);
-    },
-    render:function(){
-      this.initPath();
-      this.fire("beforeRender");
-      var framedata = this.get('framedata')
-      this.animate(framedata)
-      // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘
-      var bufferedDraw = S.buffer(render,this.get("repaintRate"),this)
-      this.render = bufferedDraw;
-      this.bindEvent();
-    },
-    /**
-     * 调整饼图：隐藏部分扇形
-     * */
-    adjust:function(){
-      var that = this
-        , groups = this.get("groups").slice(0)
-        , framedata = this.get("framedata")
-      framedata = S.filter(framedata,function(frame){
-                   return !frame.hide;
-                 })
-      Util.adjustFrameData(groups,this);
-      var $labels = this.get("$labels")
-      S.each($labels,function(i){
-        i && i.destroy();
-      });
-      this.animate(framedata);
-    },
-    /**
-     * 自动调整r,cx,cy
-     * */
-    autoResize:function(){
-      var con = this.get("container")
-        , w = D.width(con)
-        , h = D.height(con)
-        , min = Math.min(w,h)
-        , d
-        , rpadding = this.get("rpadding")
-        , cx = this.get("cx")
-        , cy = this.get("cy")
-        , cx1 , cy1
-
-      cx1= w/2 ,cy1 = h/2;
-
-      //考虑title带来的影响
-      var titlebbox = this.get("titlebbox")
-      if(titlebbox){
-        cy1+=titlebbox.height;
+      if(!S.isArray(cfg.rs)){
+        cfg.rs = [cfg.rs];
       }
 
-      var attrs = {"width":w,"height":h};
-      this.set(attrs);
+      isStatic && D.css(container,"position","relative");
 
-      if(!Util.closeto(cx1,cx)){
-        this.set("cx",cx1);
-      }
-      if(!Util.closeto(cy1,cy)){
-        this.set("cy",cy1);
-      }
+      this.set(cfg);
 
-      if(min>rpadding){
-        d = min - rpadding;
-      }else{
-        d = min;
-      }
-
-      if(titlebbox){
-        d -= titlebbox.height;
+      // adjust animation cfg
+      this.adjustCfg();
+      // adjustData
+      this.adjustData();
+      // 有标题则显示标题
+      this.drawTitle();
+      if(cfg.autoRender != false){
+        var that = this;
+        // 延迟渲染
+        setTimeout(function(){
+          that.render();
+        },0);
       }
 
-      //如果要画面包圈
-      var drawDonut = this.get("donut")
-        , donutSize = this.get("donutSize")
-        , r0 ,r1
-
-      if(drawDonut){
-        r0 = d/2
-        if(donutSize>r0){
-          r1 = r0/2;
-        }else{
-          r1 = r0 - donutSize;
-        }
-        this.set("rs",[r0,r1]);
-      }else{
-        var rs = this.get("rs")
-        if(rs.length == 1){
-          this.set("rs",[d/2]);
-        }
+      // 渲染tip
+      var tipconfig = this.get("tip");
+      if(tipconfig && tipconfig != false){
+        this.renderTip();
       }
-    },
-    animate:function(framedata){
-      var that = this
-        , anim = this.get("anim")
+   }
 
-      if(this.isRunning()){
-        this.stop();
-      }
-      that.fire("beginRender");
-      this.animateInstance = Animate.AnimateObject(framedata,anim);
-    },
-    drawTitle:function(){
-      var titleconfig = this.get("title")
-        , title
-        , offset
-        , align
-      if(titleconfig){
-        title = titleconfig.content
-        offset = titleconfig.offset || [0,10]
-        align = titleconfig.align || "center"
+   var methods = {
+     initializer:init,
+     bindEvent:function(){
+       this.on("afterCxChange",function(){
+         this.render();
+       });
+       this.on("afterCyChange",function(){
+         this.render();
+       });
+       this.on("afterRsChange",function(){
+         this.render();
+       });
+       this.on("afterDataChange",function(){
+         this.render();
+       });
+       E.on(this.get("container"),"mouseleave",function(){
+         this.fire("mouseleave");
+       },this)
+       this.on("afterRender",this.onafterrender,this);
+     },
+     _setupcfg:setupcfg,
+     onafterrender:function(){
+       //只执行一次
+       if(this.legendrendered)return;
+       this.legendrendered = true;
+       var that = this,
+           paper,
+           container,
+           bbox
+       var config = this.get("legend")
 
-        var size = Labels.getSizeOf(title)
-          , container = this.get("container")
-          , w = D.width(container)
-          , h = D.height(container)
-          , left, top
-        if(align == "left"){
-          left = 0;
-        }else if(align == "right"){
-          left = w - size.width;
-        }else{//center
-          left = (w - size.width)/2 + offset[0]
-        }
-        top = offset[1];
-        var $title = S.Node("<div>"+title+"</div>");
-        $title.css({"top":top+"px","left":left+"px","position":"absolute"});
-        this.set("title",$title);
-        this.set("titlebbox",{
-          left:left,
-          top:top,
-          width:size.width,
-          height:size.height
-        });
-        $title.appendTo(container);
-      }
-    },
-    /**
-     * 绘制外层label
-     * */
-    drawLabel:function(){
-      var leftSectors = [] // 最外层的
-        , rightSectors = []
-        , $sectors = this.get('$sectors')
-        , $leftLables
-        , $rightLables
+       if(config){
+         paper = this.get("paper")
+         container = this.get("container")
 
-      S.each($sectors,function($sector){
-        var ma = $sector.get('middleangle')
-          , groupLength = $sector.get("groupLength")
-          , groupIndex = $sector.get("groupIndex")
-          , isright = Util.isRightAngel(ma)
-          , framedata = $sector.get("framedata")
-        //如果隐藏了，那么也不展示对应的label
-        if(!framedata.hide){
-          if(S.indexOf(groupLength-1,groupIndex) > -1){
-            if(isright){
-              rightSectors.push($sector);
-            }else{
-              $sector.set("isleft",true);
-              leftSectors.push($sector);
-            }
-          }else{
-            if(isright){
-              $sector.set("isright",true);
-            }else{
-              $sector.set("isleft",true);
-            }
-          }
-        }
-      });
-      $leftLables = new Labels(this,leftSectors,true)
-      $rightLables = new Labels(this,rightSectors,false)
+         // 写成独立方法
+         // var rs = this.get("rs")
+         //   , rl = rs[rs.length-1]
+         //   , rpadding = this.get("rpadding") || 0
+         //   , padding = this.get("padding") || 0
+         //   , cx = this.get("cx")
+         //   , cy = this.get("cy")
 
-      $leftLables.on('click',this.onLabelClick,this);
-      $rightLables.on('click',this.onLabelClick,this);
+         // var width = (rl+rpadding+padding)*2
+         //   , left = cx - width/2
+         //   , top = cy - width/2
 
-      this.set("$labels",[].concat($leftLables,$rightLables));
-    },
-    /**
-     * 绘制内部label，需配置
-     * */
-    drawSetLabel:function(){
-    },
-    onLabelClick:function(e){
-      this.fire('labelclick',{
-        el:e.el,
-        label:e.label,
-        sector:e.sector
-      })
-    },
-    isRunning:function(){
-      return this.animateInstance && this.animateInstance.isRunning();
-    },
-    stop:function(){
-      if(this.animateInstance){
-        this.animateInstance.stop();
-        delete this.animateInstance;
-      }
-    },
-    destroy:function(){
-      var $sectors = this.get("$sectors")
-        , $labels = this.get("$labels")
-        , litter = [].concat($sectors,$labels)
-      S.each(litter,function(i){
-        i && i.destroy();
-      });
-      this.set("$sectors",null);
-      this.set("$labels",null);
-      this.get("paper").remove();
-    }
-  });
+         // bbox = {
+         //   width:width,
+         //   height:width,
+         //   left:left,
+         //   top:top
+         // }
 
-  Pie.getSizeOf =  Labels.getSizeOf
+         bbox = this.getbbox();
 
-  return Pie;
+         function buildparts(){
+           var $sectors = that.get("$sectors")
+             , ret
+           ret = S.map($sectors,function($sector){
+                   var el = $sector.get("$path")
+                     , fill = el.attr("fill")
+                     , framedata = $sector.get("framedata")
+                     , text = framedata.label
+                   return {color:fill,text:text,$path:el}
+                 });
+           return ret;
+         }
+
+         S.use("gallery/kcharts/1.3/legend/index",function(S,Legend){
+           var parts = buildparts();
+           var dft = {
+             //legend需要的原始信息
+             paper:paper,
+             container:container,
+             bbox:bbox,//图表主体的信息
+             iconAttrHook:function(index){//每次绘制icon的时调用，返回icon的属性信息
+               return {
+                 fill:parts[index].color
+               }
+             },
+             spanAttrHook:function(index){//每次绘制“文本描述”的时候调用，返回span的样式
+               var color = Raphael.getRGB(parts[index].color);
+               return {
+                 color:color.hex
+               }
+             },
+             config:parts
+           }
+           var legend = new Legend(S.merge(dft,config));
+           that.set("legend",legend);
+           that.fire("afterLegendRender");
+         });
+       }
+     },
+     //调整动画的配置
+     adjustCfg:function(){
+       var anim = this.get('anim')
+         , that = this
+         , _end = S.isFunction(anim.endframe) && anim.endframe
+         , lablecfg = that.get("label")
+       //若无动画配置则duration设置为0
+       anim || (anim = {duration:0});
+       anim.endframe = function(){
+         if(lablecfg != false){
+           that.drawLabel(lablecfg);
+         }
+         _end && _end.call(that);
+         that.fire('afterRender');
+       }
+     },
+     /**
+      * 过滤函数
+      * */
+     adjustData:function(){
+       var fn = this.get('filterfn')
+       if(fn && S.isFunction(fn)){
+         var data = this.get('data')
+           , ret
+         ret = Util.filterdata(data,fn)
+         this.set("data",ret);
+       }
+     },
+     initPath:function(){
+       var ret = Util.initPath(this)
+       this.set("$sectors",ret.$sectors);
+       this.set("groups",ret.groups)
+       this.set("set",ret.set);
+       this.set("framedata",ret.framedata);
+     },
+     render:function(){
+       this.initPath();
+       this.fire("beforeRender");
+       var framedata = this.get('framedata')
+       this.animate(framedata)
+
+       // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘
+       var bufferedDraw = S.buffer(render,this.get("repaintRate"),this);
+       this.render = bufferedDraw;
+       this.bindEvent();
+     },
+     /**
+      * 调整饼图：隐藏部分扇形
+      * */
+     adjust:function(){
+       var that = this
+         , groups = this.get("groups").slice(0)
+         , framedata = this.get("framedata")
+       framedata = S.filter(framedata,function(frame){
+                     return !frame.hide;
+                   })
+       Util.adjustFrameData(groups,this);
+       var $labels = this.get("$labels")
+       S.each($labels,function(i){
+         i && i.destroy();
+       });
+       this.animate(framedata);
+     },
+     /**
+      * 自动调整r,cx,cy
+      * */
+     autoResize:function(){
+       var con = this.get("container")
+         , w = D.width(con)
+         , h = D.height(con)
+         , min = Math.min(w,h)
+         , d
+         , rpadding = this.get("rpadding")
+         , cx = this.get("cx")
+         , cy = this.get("cy")
+         , cx1 , cy1
+
+       cx1= w/2 ,cy1 = h/2;
+
+       //考虑title带来的影响
+       var titlebbox = this.get("titlebbox")
+       if(titlebbox){
+         cy1+=titlebbox.height;
+       }
+
+       var attrs = {"width":w,"height":h};
+       this.set(attrs);
+
+       if(!Util.closeto(cx1,cx)){
+         this.set("cx",cx1);
+       }
+       if(!Util.closeto(cy1,cy)){
+         this.set("cy",cy1);
+       }
+
+       if(min>rpadding){
+         d = min - rpadding;
+       }else{
+         d = min;
+       }
+
+       if(titlebbox){
+         d -= titlebbox.height;
+       }
+
+       //如果要画面包圈
+       var drawDonut = this.get("donut")
+         , donutSize = this.get("donutSize")
+         , r0 ,r1
+
+       if(drawDonut){
+         r0 = d/2
+         if(donutSize>r0){
+           r1 = r0/2;
+         }else{
+           r1 = r0 - donutSize;
+         }
+         this.set("rs",[r0,r1]);
+       }else{
+         var rs = this.get("rs")
+         if(rs.length == 1){
+           this.set("rs",[d/2]);
+         }
+       }
+     },
+     animate:function(framedata){
+       var that = this
+         , anim = this.get("anim")
+
+       if(this.isRunning()){
+         this.stop();
+       }
+       that.fire("beginRender");
+       this.animateInstance = Animate.AnimateObject(framedata,anim);
+     },
+     drawTitle:function(){
+       var titleconfig = this.get("title")
+         , title
+         , offset
+         , align
+       if(titleconfig){
+         title = titleconfig.content
+         offset = titleconfig.offset || [0,10]
+         align = titleconfig.align || "center"
+
+         var size = Labels.getSizeOf(title)
+           , container = this.get("container")
+           , w = D.width(container)
+           , h = D.height(container)
+           , left, top
+         if(align == "left"){
+           left = 0;
+         }else if(align == "right"){
+           left = w - size.width;
+         }else{//center
+           left = (w - size.width)/2 + offset[0]
+         }
+         top = offset[1];
+         var $title = S.Node("<div>"+title+"</div>");
+         $title.css({"top":top+"px","left":left+"px","position":"absolute"});
+         this.set("title",$title);
+         this.set("titlebbox",{
+           left:left,
+           top:top,
+           width:size.width,
+           height:size.height
+         });
+         $title.appendTo(container);
+       }
+     },
+     /**
+      * 绘制外层label
+      * */
+     drawLabel:function(){
+       var leftSectors = [] // 最外层的
+         , rightSectors = []
+         , $sectors = this.get('$sectors')
+         , $leftLables
+         , $rightLables
+
+       S.each($sectors,function($sector){
+         var ma = $sector.get('middleangle')
+           , groupLength = $sector.get("groupLength")
+           , groupIndex = $sector.get("groupIndex")
+           , isright = Util.isRightAngel(ma)
+           , framedata = $sector.get("framedata")
+         //如果隐藏了，那么也不展示对应的label
+         if(!framedata.hide){
+           if(S.indexOf(groupLength-1,groupIndex) > -1){
+             if(isright){
+               rightSectors.push($sector);
+             }else{
+               $sector.set("isleft",true);
+               leftSectors.push($sector);
+             }
+           }else{
+             if(isright){
+               $sector.set("isright",true);
+             }else{
+               $sector.set("isleft",true);
+             }
+           }
+         }
+       });
+       $leftLables = new Labels({pie:this,$sectors:leftSectors,isleft:true});
+       $rightLables = new Labels({pie:this,$sectors:rightSectors,isleft:false});
+
+       $leftLables.on('click',this.onLabelClick,this);
+       $rightLables.on('click',this.onLabelClick,this);
+
+       this.set("$labels",[].concat($leftLables,$rightLables));
+     },
+     /**
+      * 绘制内部label，需配置
+      * */
+     drawSetLabel:function(){
+     },
+     getbbox:function(){
+       var bbox ;
+       var rs = this.get("rs")
+         , rl = rs[rs.length-1]
+         , rpadding = this.get("rpadding") || 0
+         , padding = this.get("padding") || 0
+         , cx = this.get("cx")
+         , cy = this.get("cy");
+
+       var width = (rl+rpadding+padding)*2
+         , left = cx - width/2
+         , top = cy - width/2;
+
+       bbox = {
+         width  : width,
+         height : width,
+         left   : left,
+         top    : top
+       };
+       return bbox;
+     },
+     /**
+      * afterRender事件后渲染
+      * */
+     renderTip:function(tipconfig){
+       // 渲染过后就不再重复渲染
+       if(this.tip)
+         return
+
+       tipconfig || (tipconfig = this.get("tip"));
+       if(!tipconfig)
+         return;
+
+       // {
+	   //   x: ctn.tl.x,
+	   //   y: ctn.tl.y,
+	   //   width: ctn.width,
+	   //   height: ctn.height
+	   // }
+
+	   var self = this;
+       var container = self.get("container");
+
+       S.use("gallery/kcharts/1.3/tip/index",function(S,Tip){
+         var bbox = self.getbbox();
+         // 修正bbox字段
+         bbox.x = bbox.left;
+         bbox.y = bbox.top;
+
+         var themeCls = tipconfig.themeCls || "ks-chart-default";
+
+		 var boundryCfg = tipconfig.boundryDetect ? bbox : {},
+		     tipCfg     = S.mix(tipconfig, {
+			   rootNode: container,
+			   clsName: themeCls,
+			   boundry: boundryCfg
+		     }, undefined, undefined, true);
+
+	     var tip  = new Tip(tipCfg);
+         self.tip = tip;
+         self.on("mouseover",function(e){
+           // 移动tip
+           var sector     = e.sector;
+           var x          = sector.get("middlex"),
+               y          = sector.get("middley"),
+               data       = sector.get("framedata"), // 即配置的数据
+               label      = data.label,
+               groupIndex = sector.get("groupIndex"),
+               donutIndex = sector.get("donutIndex"),
+               percent    = data.percent
+
+           var color = sector.get("color");
+
+           var size   = Labels.getSizeOf(label); // label的尺寸
+
+           percent = (percent*100).toFixed(2)+"%";
+           if(S.isFunction(tipconfig.template)){
+             tip.setContent(tipconfig.template.apply(tip,[donutIndex,groupIndex,label,percent]));
+           }else{
+             tip.renderTemplate(tipconfig.template,{"donutIndex":donutIndex,index:groupIndex,label:label,"percent":percent});
+           }
+           tip.fire('move',{x:x,y:y,style:self.processAttr(tipconfig.css, color)});
+         },self);
+
+       });
+	 },
+     processAttr:function(attrs,color){
+	   var newAttrs = S.clone(attrs);
+	   for (var i in newAttrs) {
+		 if (newAttrs[i] && typeof newAttrs[i] == "string") {
+		   newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
+		 }
+	   }
+	   return newAttrs;
+     },
+     onLabelClick:function(e){
+       this.fire('labelclick',{
+         el:e.el,
+         label:e.label,
+         sector:e.sector
+       })
+     },
+     isRunning:function(){
+       return this.animateInstance && this.animateInstance.isRunning();
+     },
+     stop:function(){
+       if(this.animateInstance){
+         this.animateInstance.stop();
+         delete this.animateInstance;
+       }
+     },
+     destroy:function(){
+       var $sectors = this.get("$sectors")
+         , $labels = this.get("$labels")
+         , litter = [].concat($sectors,$labels)
+       S.each(litter,function(i){
+         i && i.destroy();
+       });
+       this.set("$sectors",null);
+       this.set("$labels",null);
+       this.get("paper").remove();
+     }
+   }
+
+   var Pie;
+   if(Base.extend){ // 1.4
+     Pie = Base.extend(methods);
+   }else{           // 1.3
+     Pie = function(cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Pie,Base,methods);
+   }
+
+   Pie.getSizeOf =  Labels.getSizeOf
+   return Pie;
 },{
-  requires:["./util","./sector","gallery/kcharts/1.3/animate/index","./label","gallery/kcharts/1.1/raphael/index","gallery/kcharts/1.1/tools/color/index"]
+  requires:[
+    "./util",
+    "./sector",
+    "gallery/kcharts/1.3/animate/index",
+    "./label",
+    "gallery/kcharts/1.3/raphael/index",
+    "gallery/kcharts/1.3/tools/color/index",
+    "base",
+    "event",
+    "dom"
+  ]
 });
 
