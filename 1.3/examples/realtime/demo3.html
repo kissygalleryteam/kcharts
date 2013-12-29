@@ -29,7 +29,7 @@
     <script type="text/javascript" src="../../realtime/util.js"></script>
     <script type="text/javascript" src="../../realtime/index.js"></script>
     <script type="text/javascript">
-     KISSY.use("gallery/kcharts/1.3/realtime/index,gallery/kcharts/1.3/realtime/util,dom,event",function(S,RealTime,Util,D,E){
+     KISSY.use("gallery/kcharts/1.3/realtime/index,dom,event",function(S,RealTime,D,E){
        S.jsonp("data.php",{callback:"callback"},function(data){
          var stock = new RealTime({
            renderTo:"#J_Realtime",
@@ -42,44 +42,73 @@
            tip:{
              template:"index: {{index}},原始x值：{{xvalue}},原始y值：{{yvalue}}"
            },
-           xAxis:{
+           xRuller:{ruller:"-"},  // x刻度尺
+           yRuller:{ruller:"--",size:3,isShow:false},  // y刻度尺
+           xGrid:{
+             isShow:true
            },
-           yAxis:{
-             num:10
+           yGrid:{
+             isShow:false,
            },
            xLabel:{
-             rotate:true
+             rotate:true // 不开启旋转的样式
+           },
+           yLabel:{
+           },
+           xAxis:{
+             range:{
+               duration:"day"
+             },
+             arrow:true
+           },
+           yAxis:{
+             num:10,
+             style:{
+               "stroke":"#999",
+             },
+             arrow:true
            },
            legend:{
              
            },
            point:{
-             isShow:false // 大数据，可选是否绘制出点
+             isShow:true
            },
            series:[
              {
 			   name : 'AAQL',
 			   data : [
-                 [1147996800000,64.51],
-                 [1148256000000,63.38],
-                 [1148342400000,63.15],
-                 [1148428800000,40],
-                 [1148515200000,50]
+                 [1,64.51],
+                 [2,50],
+                 [3,63.15],
+                 [4,40],
+                 [5,80],
+                 [6,50],
+                 [7,20],
+                 [8,30],
+                 [9,60],
+                 [10,35],
+                 [11,20]
                ]
-		     },{
-			   name : 'AAPL',
-			   data : data
 		     }
            ]
          });
 
+         stock.on("afterRender",function(){
+           /* var line1 = stock.drawLine("x=300",{raw:true});*/
+           /* var line2 = stock.drawLine("y=100",{raw:true}); */
+           /* var line3 = stock.drawLine("y=60"); */
+           var line4 = stock.drawLine("x=6",{style:{"stroke":"red"}});
+         });
+
          E.on("#J_Update",'click',refresh);
-         var start = 1148515200000;// 初始时间
+         var start = 11;// 初始时间
          var val = 60; // 初始值
+
          function refresh(){
-           start +=24*3600*1000;
+           start += 1;
            // 上下波动10
-           val += (2 * Math.random() - 1)*10;
+           val += (2 * Math.random() - 1)*50;
            var slice = [
              {
 			   name : 'AAQL',
@@ -88,11 +117,9 @@
                ]
 		     }
            ];
-           console.log(Util.formatDate(new Date(start),"yy-MM-dd"));
            stock.addData(slice);
            stock.render();
          }
-         // setInterval(refresh,1000);
        });
      })
     </script>

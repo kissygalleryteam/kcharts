@@ -23,7 +23,6 @@
   function Animate(fromProps,toProps,opts){
     opts || (opts = {});
     opts = S.merge(dft,opts);
-
     var begin = +new Date
       , end = begin + opts.duration
       , now = begin
