@@ -916,13 +916,13 @@
        this.bindEvent();
      },
      /**
-      * 0. 移除之前绘制产生的dom
-      * 1. 容器、画布尺寸计算
-      * 2. 数据处理，提取、过滤
-      * 2.1 算出series数据的范围
-      * 2.2 转换为paper上的点
-      * 2.3 将paper上的点串联起来：a. 直接连接 b. 平滑过度连接
-      * 2.4 保存series数据信息，用于绘制legend
+      * 0. 容器、画布尺寸计算
+      * 1. 数据处理，提取、过滤
+      * 1.1 算出series数据的范围
+      * 1.2 转换为paper上的点
+      * 1.3 将paper上的点串联起来：a. 直接连接 b. 平滑过度连接
+      * 1.4 保存series数据信息，用于绘制legend
+      * 2. 移除之前绘制产生的dom
       * 3. 画x y 轴上的label
       * 3.1 x label a. 包含日期的格式化输出 b. 旋转的标注样式
       * 3.2 y label
@@ -940,14 +940,7 @@
        var series = this.get("series") || [];
        if(series.length === 0)
          return;
-
-       this.removeElements();
-
-       var Rxlabels = this.get("$xlabels");
-       var Rylabels = this.get("$ylabels");
-       var RjointPoints = this.get("$jointPoints");
-
-       // 1.
+       // 0.
        var w = D.width(container), h = D.height(container); // 容器总宽高
        var w2 , h2;                                         // 画布实际可用宽高
        this.set("width",w);
@@ -973,13 +966,13 @@
          this.set('paper',paper);
        }
 
-       // 2. 数据处理
+       // 1. 数据处理
        var yAxis = this.get("yAxis") || {};
        var xAxis = this.get("xAxis") || {};
        var xrangeConfig = xAxis.range;
        rangeDuration = xrangeConfig && xrangeConfig.duration;
 
-       // 2.0 过滤series
+       // 1.0 过滤series
        series = filterSeries(series,xAxis,yAxis,function(xrange,yrange,x,y){
                   // 超出范围的情况1:指定范围
                   if((xrange && typeof xrange.min === 'number' && x < xrange.min) ||
@@ -999,16 +992,19 @@
                   }
                 });
 
-       // 2.0.1 再次过滤，从最后数据开始倒推，只要最近多长时间的数据
-       series = S.filter(series,function(){
-                  return true;
-                });
-
-       // 2.1 算出series数据的范围
+       // 1.1 算出series数据的范围
        var valuesAndDates = extractValuesAndDates(series);
 
        if(!valuesAndDates.values.length)
          return;
+
+       // 2.
+       this.removeElements();
+
+       var Rxlabels = this.get("$xlabels");
+       var Rylabels = this.get("$ylabels");
+       var RjointPoints = this.get("$jointPoints");
+
        var valuerange = getValueRange(valuesAndDates.values,{
          range:yAxis.range,
          n:5
@@ -1031,7 +1027,7 @@
        // y轴是否为标准时间格式
        var standardDate;
        var rangeDuration;
-       // 2.1.1 固定范围的表示，比如24h，星期一，星期二
+       // 1.1.1 固定范围的表示，比如24h，星期一，星期二
        if(xrangeConfig){
          if(rangeDuration){
            xrange = convertDateUnit2Nums(rangeDuration)
@@ -1072,7 +1068,7 @@
            xrangeMax = result.max;
            xrangeLen = result.len;
          }
-         // 2.1.2 标准日期格式，后面需要Util.formatDate的
+         // 1.1.2 标准日期格式，后面需要Util.formatDate的
        }else{
          standardDate = true;
          var rangeOption = {n:yAxis.num};
@@ -1099,7 +1095,7 @@
        yrangeMax = valuerange.max;
        yrangeLen = valuerangelen;
 
-       // 2.2 转换为paper上的点
+       // 1.2 转换为paper上的点
        var points;
        var colorIndex = 0;
 
@@ -1235,7 +1231,7 @@
        //     }
        //   }
 
-       //   // 2.3 将点串联起来
+       //   // 1.3 将点串联起来
        //   var pathstring;
        //   if(this.get("lineType") === 'arc'){
        //     pathstring = curveLine(points);
@@ -1259,7 +1255,7 @@
        //   })(line,color);
 
        //   Rlines.push(line);
-       //   // 2.4 保存series数据信息，用于绘制legend
+       //   // 1.4 保存series数据信息，用于绘制legend
        //   serie.color = color;
        //   serie.$path = line;
 
