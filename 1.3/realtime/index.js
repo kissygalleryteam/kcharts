@@ -73,10 +73,18 @@
     * 获取vals的范围
     * */
    function getValueRange(vals,opt){
-     opt || (opt = {n:5});
+     opt || (opt = {});
+     opt.n || (opt.n = 5);
      var val_min = Math.min.apply(Math,vals)
        , val_max = Math.max.apply(Math,vals)
-
+     if(opt.range && typeof opt.range.min === 'number'){
+       if(val_min>opt.range.min)
+         val_min = opt.range.min;
+     }
+     if(opt.range && typeof opt.range.max === 'number'){
+       if(val_max<opt.range.max)
+         val_max = opt.range.max;
+     }
      var val_labels = Util.axis(val_min,val_max,opt.n)
 
      var vmin = Math.min.apply(Math,val_labels)
@@ -251,7 +259,7 @@
        return false;
 
      var style = opt.style || {};
-     var joinStyle = style.ruller || "-"; // 连线样式
+     var joinStyle = style.ruller || "-."; // 连线样式
 
      var s = [];
      var p;
@@ -261,7 +269,7 @@
      for(var i=1,l=collection.length;i<l;i++){
        p = collection[i];
 
-       if(joinStyle === '-'){
+       if(joinStyle === '-.'){
          ax = p.x0;
          ay = p.y0;
          if(opt.xaxis){
@@ -271,9 +279,19 @@
            bx = p.x1;
            by = p.y1;
          }
-       }else{
+       }else if(joinStyle === ".-"){
+         if(opt.xaxis){
+           ax = p.x0;ay=p.y0;
+           bx = p.x2;by=p.y2;
+         }else{
+           ax = p.x0;ay=p.y0;
+           bx = p.x1;by=p.y1;
+         }
+       }else if(joinStyle === "-.-"){
          ax = p.x1;ay=p.y1;
          bx = p.x2;by=p.y2;
+       }else{
+         return false;
        }
        s.push("M",
               Util.roundToFixed(ax,10),
@@ -324,7 +342,8 @@
        y = null;
      }else{
        x = (x0- xmin) / (xmax - xmin) * w+ px;
-       y = (y0- ymin) / (ymax - ymin) * h+ py;
+       // 注意y轴翻转
+       y = h - (y0- ymin) / (ymax - ymin) * h+ py;
      }
      return [x,y];
    }
@@ -886,7 +905,7 @@
        var container = D.get(selector);
        this.set("container",container);
 
-       var themeCls = "ks-chart-default";
+       var themeCls = this.get("theme") || "ks-chart-default";
 
        this.colorManager = new ColorLib({
          themeCls:themeCls
@@ -899,7 +918,7 @@
      /**
       * 0. 移除之前绘制产生的dom
       * 1. 容器、画布尺寸计算
-      * 2. 数据处理
+      * 2. 数据处理，提取、过滤
       * 2.1 算出series数据的范围
       * 2.2 转换为paper上的点
       * 2.3 将paper上的点串联起来：a. 直接连接 b. 平滑过度连接
@@ -918,50 +937,15 @@
        var container = this.get("container")
          , paper = this.get('paper')
 
-       // 0.
-       // 0.1 移除点，不移除连线，用于做动画
-       removeSeries(this.get("$series"));
+       var series = this.get("series") || [];
+       if(series.length === 0)
+         return;
 
-       // 0.2 移除Rxlabels
+       this.removeElements();
+
        var Rxlabels = this.get("$xlabels");
-       if(Rxlabels){
-         removeRaphaelElements(Rxlabels);
-       }else{
-         Rxlabels = [];
-         this.set("$xlabels",Rxlabels);
-       }
-
-       // 0.3 移除Rxlabels
        var Rylabels = this.get("$ylabels");
-       if(Rylabels){
-         removeRaphaelElements(Rylabels);
-       }else{
-         Rylabels = [];
-         this.set("$ylabels",Rylabels);
-       }
-       // 0.4 移除rullers
-       // if(this.get("$rullerX")){
-       //   this.get("$rullerX").remove();
-       // }
-       // if(this.get("$rullerY")){
-       //   this.get("$rullerY").remove();
-       // }
-
-       // 0.5 移除xaxis 、yaxis
-       if(this.get("$xaxis")){
-         this.get("$xaxis").remove();
-       }
-       if(this.get("$yaxis")){
-         this.get("$yaxis").remove();
-       }
-       // 0.6 移除曲线连接点
        var RjointPoints = this.get("$jointPoints");
-       if(RjointPoints){
-         removeRaphaelElements(RjointPoints);
-       }else{
-         RjointPoints = [];
-         this.set("$jointPoints",RjointPoints);
-       }
 
        // 1.
        var w = D.width(container), h = D.height(container); // 容器总宽高
@@ -990,7 +974,6 @@
        }
 
        // 2. 数据处理
-       var series = this.get("series");
        var yAxis = this.get("yAxis") || {};
        var xAxis = this.get("xAxis") || {};
        var xrangeConfig = xAxis.range;
@@ -1016,13 +999,21 @@
                   }
                 });
 
+       // 2.0.1 再次过滤，从最后数据开始倒推，只要最近多长时间的数据
+       series = S.filter(series,function(){
+                  return true;
+                });
+
        // 2.1 算出series数据的范围
        var valuesAndDates = extractValuesAndDates(series);
 
        if(!valuesAndDates.values.length)
          return;
+       var valuerange = getValueRange(valuesAndDates.values,{
+         range:yAxis.range,
+         n:5
+       });
 
-       var valuerange = getValueRange(valuesAndDates.values);
        var valuerangelen = valuerange.range.length;
 
        var xrange;
@@ -1033,6 +1024,9 @@
        var yrangeMax;
        var xrangeLen;
        var yrangeLen;
+
+       // x轴配置
+       var fixedInterval = this.get("fixedInterval");
 
        // y轴是否为标准时间格式
        var standardDate;
@@ -1060,6 +1054,15 @@
            var xrangeStart = xrangeConfig.min
              , xrangeEnd = xrangeConfig.max
              , xrangeInterval = xrangeConfig.step || 1 ;
+
+           // x轴数据是否为日期，默认为日期
+           if(xrangeConfig.isDate != false)
+             standardDate = true;
+
+           if(typeof xrangeStart !== 'number')
+             xrangeStart = Math.min.apply(Math,valuesAndDates.dates)
+           if(typeof xrangeEnd !== 'number')
+             xrangeEnd = Math.max.apply(Math,valuesAndDates.dates)
 
            // 返回不大于xrangeEnd的最大值
            var result = getIntRange(xrangeStart,xrangeEnd,xrangeInterval);
@@ -1288,10 +1291,14 @@
          }else{
            text = xrange[k];
          }
+         var xlabelConfig = this.get("xLabel");
+         // 钩子，自定义文案样式
+         if(xlabelConfig.hook && S.isFunction(xlabelConfig.hook)){
+           text = xlabelConfig.hook.call(that,text);
+         }
          var xlabel = paper.text(x,y,text);
 
          // 是否开启旋转
-         var xlabelConfig = this.get("xLabel");
          if(xlabelConfig && xlabelConfig.rotate){
            xlabel.attr({
              "text-anchor":"end",
@@ -1308,6 +1315,7 @@
        for(var l=0;l<yrangeLen;l++){
          var x,y;
          x = paddingx;
+         // y = paddingy + l/(yrangeLen -1) * h2;
          y = h - paddingy - l/(yrangeLen -1) * h2;
 
          if(l === 0){
@@ -1317,13 +1325,13 @@
          }
 
          // 不重复画第一个点
-         if(l){
-           var ylabel = paper.text(x,y,valuerange.range[l]).attr({
-             "text-anchor":"end",
-             "transform":"t-5,0"
-           });
-           Rylabels.push(ylabel);
-         }
+         // if(l){
+         var ylabel = paper.text(x,y,valuerange.range[l]).attr({
+           "text-anchor":"end",
+           "transform":"t-5,0"
+         });
+         Rylabels.push(ylabel);
+         // }
        }
 
        // 4.
@@ -1339,6 +1347,7 @@
        var hasRullerY = this.get("$rullerY");
 
        if(yRullerStyle.isShow !== false){
+         // 画y的时候，要先翻转一下
          var $rullerY = drawRullerPoints(rullerPointsY,paper,{yaxis:true,style:yRullerStyle,path:hasRullerY});
          if(!hasRullerY){
            this.set("$rullerY",$rullerY);
@@ -1457,6 +1466,9 @@
        for(var i=0,l=newSeries.length;i<l;i++){
          Util.combineSeries(newSeries[i],series);
        }
+     },
+     clearData:function(){
+       this.set("series",[]);
      },
      /**
       * 画线
@@ -1657,7 +1669,7 @@
              , yval = e.yvalue
            //==================== TODO 填充数据 ==========
            if(S.isFunction(tipconfig.template)){
-             tip.setContent(tipconfig.template.apply(tip,[index,xval,yval]));
+             tip.setContent(tipconfig.template.apply(tip,[e.index,e.data]));
            }else{
              tip.renderTemplate(tipconfig.template,e);
            }
@@ -1718,8 +1730,56 @@
          }
        }
      },
+     removeElements:function(){
+       // 0.
+       // 0.1 移除点，不移除连线，用于做动画
+       removeSeries(this.get("$series"));
+
+       // 0.2 移除Rxlabels
+       var Rxlabels = this.get("$xlabels");
+       if(Rxlabels){
+         removeRaphaelElements(Rxlabels);
+       }else{
+         Rxlabels = [];
+         this.set("$xlabels",Rxlabels);
+       }
+
+       // 0.3 移除Rxlabels
+       var Rylabels = this.get("$ylabels");
+       if(Rylabels){
+         removeRaphaelElements(Rylabels);
+       }else{
+         Rylabels = [];
+         this.set("$ylabels",Rylabels);
+       }
+
+       // 0.4 移除rullers
+       // if(this.get("$rullerX")){
+       //   this.get("$rullerX").remove();
+       // }
+       // if(this.get("$rullerY")){
+       //   this.get("$rullerY").remove();
+       // }
+
+       // 0.5 移除xaxis 、yaxis
+       if(this.get("$xaxis")){
+         this.get("$xaxis").remove();
+       }
+       if(this.get("$yaxis")){
+         this.get("$yaxis").remove();
+       }
+       // 0.6 移除曲线连接点
+       var RjointPoints = this.get("$jointPoints");
+       if(RjointPoints){
+         removeRaphaelElements(RjointPoints);
+       }else{
+         RjointPoints = [];
+         this.set("$jointPoints",RjointPoints);
+       }
+     },
      destroy:function(){
        this.unbindEvent();
+       this.removeElements();
      }
    }
    var RealTime;

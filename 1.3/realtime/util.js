@@ -610,6 +610,12 @@ KISSY.add('gallery/kcharts/1.3/realtime/util',function(S){
     return {x:x,y:y};
   }
   Util.averagePoints = averagePoints;
+
+  // http://stackoverflow.com/questions/2686855/is-there-a-javascript-function-that-can-pad-a-string-to-get-to-a-determined-leng
+  function pad(width, string, padding) {
+    return (width <= string.length) ? string : pad(width, padding + string, padding)
+  }
+  Util.pad = pad;
   // ==================== end util ====================
   return Util;
 });
