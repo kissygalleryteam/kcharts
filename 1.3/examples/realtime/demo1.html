@@ -91,8 +91,11 @@
            console.log(Util.formatDate(new Date(start),"yy-MM-dd"));
            stock.addData(slice);
            stock.render();
+           
+           // setTimeout(refresh,3000);
          }
          setInterval(refresh,2000);
+         // refresh();
        });
      })
     </script>

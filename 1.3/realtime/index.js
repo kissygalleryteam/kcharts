@@ -146,7 +146,9 @@
    function removeRaphaelElements(arr){
      while(arr.length){
        var el = arr.pop();
-       el && el.remove && el.remove();
+       if(el && el.remove){
+         el.remove();
+       }
      }
    }
 
@@ -441,9 +443,6 @@
            if(lastVal !== 1){
              $line.attr({"path":pathString});
            }
-           that.renderLegend();
-           that.fire('afterRender');
-           onafterrender(that);
            defer.resolve({
              $line:$line,
              $points:$points,
@@ -471,39 +470,6 @@
        each(points,function(pt,index){
          var c = paper.circle(pt.x,pt.y,4);
          c.attr({"stroke":"#fff","fill":color.DEFAULT,"stroke-width":2});
-         /*
-         c.hover(
-           function(e){
-             c.attr({"stroke":color.HOVER,"fill":color.HOVER});
-             var seriesPoints = that.get("seriesPoints");
-             var pts = getPointBy(seriesPoints,pt.x,"x");
-             var data = [];
-             each(pts,function(pt,index){
-               data.push({
-                 index:index,
-                 xvalue:pt.rawx,
-                 yvalue:pt.rawy
-               });
-             });
-             var point = Util.averagePoints(pts);
-             that.fire("pointover",{
-               x:point.x,
-               y:point.y,
-               data:data
-             });
-
-             // 设置响应线
-             var $line = getOrCreateLine(that);
-             var padding = that.getPadding();
-             var pathString = ["M",pt.x,padding.paddingy,"L",pt.x,padding.paddingy+that.get("innerHeight")].join(",");
-
-             $line.attr({"path":pathString}).attr(getDefaultLineStyle());
-
-           },function(e){
-               c.attr({"stroke":"#fff","fill":color.DEFAULT});
-               that.fire("pointout");
-             });
-         */
          $points.push(c);
        });
        // 大数据，可以选择不绘制出连接点
@@ -748,12 +714,14 @@
      var ret = [];
      var flag = false;
      for(var i=0,l=series.length;i<l;i++){
-       var ret2;
+       var ret2 = null;
        for(var j=0,k=series[i].length;j<k;j++){
          if(isNearBy(series[i][j],fieldvalue,fieldname)){
            ret2 = series[i][j]
            flag = true;
            break;
+         }else{
+           ret2 = null;
          }
        }
        ret.push(ret2);
@@ -846,7 +814,7 @@
        each(pts,function(pt,index){
          if(pt){
            if($pointers[index]){
-             $pointers[index].attr({cx:pt.x,cy:pt.y});
+             $pointers[index].attr({cx:pt.x,cy:pt.y,"fill":$series[index].color.DEFAULT,"stroke":"#fff","stroke-width":2});
            }else{
              $pointers[index] = paper.circle(pt.x,pt.y,5)
              $series[index] && $series[index].color && $pointers[index].attr({"fill":$series[index].color.DEFAULT,"stroke":"#fff","stroke-width":2});
@@ -910,13 +878,15 @@
        this.colorManager = new ColorLib({
          themeCls:themeCls
        })
+       // 0. 更新容器基本信息
+       this.updateContainer();
+
        this.render();
 
        // 必须要在render之后
        this.bindEvent();
      },
      /**
-      * 0. 容器、画布尺寸计算
       * 1. 数据处理，提取、过滤
       * 1.1 算出series数据的范围
       * 1.2 转换为paper上的点
@@ -934,31 +904,55 @@
       * 7. tip
       * */
      render:function(){
+       var that = this;
+
+       // 防止在绘制过程还没完成，又进行绘制的情况
+       if(this._isRunning){
+         this._runningTimer && clearTimeout(this._runningTimer);
+         this._runningTimer = setTimeout(function(){
+                                that.render();
+                              },300);
+
+         return;
+       }
+       this._isRunning = true;
+       // end
+
        var container = this.get("container")
          , paper = this.get('paper')
 
        var series = this.get("series") || [];
        if(series.length === 0)
          return;
+
        // 0.
-       var w = D.width(container), h = D.height(container); // 容器总宽高
-       var w2 , h2;                                         // 画布实际可用宽高
-       this.set("width",w);
-       this.set("height",h);
+       // var w = D.width(container), h = D.height(container); // 容器总宽高
+       // var w2 , h2;                                         // 画布实际可用宽高
+       // this.set("width",w);
+       // this.set("height",h);
 
-       // 水平和竖直方向上的填充
-       var paddingx,paddingy;
+       // // 水平和竖直方向上的填充
+       // var paddingx,paddingy;
+       // var padding = this.getPadding();
+       // paddingx = padding.paddingx;
+       // paddingy = padding.paddingy;
+
+       // // 出去paddingleft paddingtop x2 后的画布大小
+       // w2 = w - paddingx*2;
+       // h2 = h -  paddingy*2;
+
+       // // 内部实际使用的宽度、高度
+       // this.set("innerWidth",w2);
+       // this.set("innerHeight",h2);
+
+       var w = this.get("width");
+       var h = this.get("height");
+       var w2 = this.get("innerWidth");
+       var h2 = this.get("innerHeight");
+
        var padding = this.getPadding();
-       paddingx = padding.paddingx;
-       paddingy = padding.paddingy;
-
-       // 出去paddingleft paddingtop x2 后的画布大小
-       w2 = w - paddingx*2;
-       h2 = h -  paddingy*2;
-
-       // 内部实际使用的宽度、高度
-       this.set("innerWidth",w2);
-       this.set("innerHeight",h2);
+       var paddingx = padding.paddingx;
+       var paddingy = padding.paddingy;
 
        // 若还未初始化画布，创建一个
        if(!paper){
@@ -1122,9 +1116,6 @@
          ymax:yrangeMax
        })
 
-
-       var that = this;
-
        var $series = this.get("$series");
        if(!$series){
          $series = [];
@@ -1160,6 +1151,17 @@
              $lines[index] = newSerie.$line;
              newSerie.name = oldSerie.name;
              $series[index] = newSerie;
+
+             that.renderLegend()
+             .then(function(){
+               that.fire('afterRender');
+               that._isRunning = false;
+             })
+             .fail(function(e){
+               if(window.console)
+                 window.console.log(e);
+             });
+             onafterrender(that);
            }).fail(function(e){
 
            });
@@ -1429,11 +1431,31 @@
        }
      },
      /**
-      * update和render的区别就是
-      * update不移除画布上的数据
+      * 更新容器相关的信息
       * */
-     update:function(){
+     updateContainer:function(){
+       var container = this.get("container");
 
+       var w = D.width(container) // 容器总宽高
+         , h = D.height(container);
+       var w2,h2;// 内部宽度高度
+
+       this.set("width",w);
+       this.set("height",h);
+
+       // 水平和竖直方向上的填充
+       var paddingx,paddingy;
+       var padding = this.getPadding();
+       paddingx = padding.paddingx;
+       paddingy = padding.paddingy;
+
+       // 出去paddingleft paddingtop x2 后的画布大小
+       w2 = w - paddingx*2;
+       h2 = h -  paddingy*2;
+
+       // 内部实际使用的宽度、高度
+       this.set("innerWidth",w2);
+       this.set("innerHeight",h2);
      },
      bindEvent:function(){
        var con = this.get("container");
@@ -1568,6 +1590,9 @@
        var that = this;
        var cfg = that.get("legend");
 
+     var defer = new Promise.Defer()
+       , promise = defer.promise;
+
        if( cfg && cfg.isShow != false){
          var legend = this.get("$legend");
          if(legend){
@@ -1582,8 +1607,10 @@
              , newLegendString = that.legendString
 
            // legendString未发生变化，不用再重新绘制
-           if(oldLegendString === newLegendString)
+           if(oldLegendString === newLegendString){
+             defer.resolve();
              return;
+           }
            var legend = this.get("legend");
            // 如果之前已经创建过了，那么先销毁
            if(legend){
@@ -1626,8 +1653,11 @@
 			 }
 		   },that);
            that.set("legend",legend);
+           // the end
+           defer.resolve();
          });
        }
+       return promise;
      },
      renderTip:function(tipconfig){
        if(this.get("$tip")){
@@ -1663,13 +1693,11 @@
              , index = e.index
              , xval = e.xvalue
              , yval = e.yvalue
-           //==================== TODO 填充数据 ==========
            if(S.isFunction(tipconfig.template)){
              tip.setContent(tipconfig.template.apply(tip,[e.index,e.data]));
            }else{
              tip.renderTemplate(tipconfig.template,e);
            }
-           //==================== TODO ====================
            tip.fire('move',{x:x,y:y,style:that.processAttr(tipconfig.css, {DEFAULT:"yellow",HOVER:"blue"})});
          },that);
        });
@@ -1727,6 +1755,7 @@
        }
      },
      removeElements:function(){
+       var paper = this.get("paper");
        // 0.
        // 0.1 移除点，不移除连线，用于做动画
        removeSeries(this.get("$series"));
@@ -1736,7 +1765,7 @@
        if(Rxlabels){
          removeRaphaelElements(Rxlabels);
        }else{
-         Rxlabels = [];
+         Rxlabels = paper.set();
          this.set("$xlabels",Rxlabels);
        }
 
@@ -1745,7 +1774,7 @@
        if(Rylabels){
          removeRaphaelElements(Rylabels);
        }else{
-         Rylabels = [];
+         Rylabels = paper.set();
          this.set("$ylabels",Rylabels);
        }
 
