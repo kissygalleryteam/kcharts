@@ -9,10 +9,16 @@
 [无边框的饼图](../demo/piechart/pie-without-border.html)
 
 
-### rs
+### rs 简单饼图可选，嵌套饼图必须为一个由小到大的数组
 半径，对于面包圈图的半径为数组
 
-### data
+配置示例:
+
+```
+rs:[60,80]
+```
+
+### series
 格式为嵌套的数组数据，比如
 ```
        [{
@@ -49,6 +55,20 @@
 
  - `easing` {string} 扇形展开动画效果。同kissy的动画配置
  - `duration` {number} 动画时长，单位秒
+
+## title （可选）
+ - title.content 标题内容
+ - title.offset [offsetx,offsety] x,y方向上的偏移量，
+ - title.align title排列方向，可选值为 "left"、"right"、"center"，默认"center"
+
+ 示例 ：
+```
+title: {
+  content: '<div class="kcharts-title">浏览器市场占比</div>',
+  offset: [0, 0],
+  align: "center"
+}
+```
 
 ### interval
 多级面包圈图之间的间隔，只对面包圈图有效。当data数据嵌套情况会自动生成面包圈图。示例：demo/piechart/pie-nest.html
@@ -128,6 +148,24 @@ piechart对应的数据
 ### `set` 
 扇形同级分组 为一个 Raphael `set`
 
+### `legend`
+ - `isShow` 是否显示legend
+ - `offset` 偏移量
+ 
+简单配置如下
+
+```
+"legend": {
+  align: "bc",
+  offset: [0, 25],
+  spanAttrHook: function (index) {
+                  return {
+                    color: "#333"
+                  }
+                }
+}
+```
+更多配置参看[legend文档](./legend.html)
 
 ---
 扇形属性
@@ -244,4 +282,3 @@ pie.on('mouseover',function(e){
 
  - 普通饼图、面包圈、嵌套的饼图 examples/all.html
  - 浏览器分布图 examples/pie-browser.html
- 
