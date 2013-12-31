@@ -1280,9 +1280,10 @@
          }
          var text;
          if(standardDate){
+           var dateformat = this.get("dateformat") || "yyyy-MM-dd";
            text = Util.formatDate(
              new Date(xrange[k]),
-             "yyyy-MM-dd"
+             dateformat
            );
          }else if(rangeDuration){
            text = formatRange(k,rangeDuration);

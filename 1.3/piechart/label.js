@@ -58,8 +58,14 @@
        this.set('el',$label)
      },
      destroy:function(){
-       this.get("el").remove();
-       this.get("$path").remove();
+       var el = this.get("el");
+       var path = this.get("$path");
+
+       // 解绑事件
+       el.detach("click");
+
+       el.remove();
+       path.remove();
      }
    };
 
