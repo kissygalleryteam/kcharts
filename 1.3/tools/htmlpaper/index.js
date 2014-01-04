@@ -51,8 +51,10 @@
 					width:_cfg.width || $tgt.width(),
 					height:_cfg.height || $tgt.height(),
 					position:"absolute",
-					marginTop:_cfg.top || 0,
-					marginLeft:_cfg.left || 0
+					// marginTop:_cfg.top || 0,
+					// marginLeft:_cfg.left || 0
+					top:_cfg.top || 0,
+					left:_cfg.left || 0
 				}).css(_cfg.css);
 
 			_cfg.prependTo ? $paper.prependTo($tgt) : $paper.appendTo($tgt);
@@ -119,8 +121,12 @@
             }
 
 			$text.css({
-				marginLeft:x + offsetX,
-				marginTop:y + offsetY
+				// marginLeft:x + offsetX,
+				// marginTop:y + offsetY
+				left:x,
+				top:y,
+				marginLeft:offsetX,
+				marginTop:offsetY
 			})
 
 			return $text;
@@ -134,8 +140,10 @@
 				y = y - self._cfg.top;
 
 			var $rect = $("<div></div>").css({
-				marginLeft:x,
-				marginTop:y,
+				// marginLeft:x,
+				// marginTop:y,
+				left:x,
+				top:y,
 				width:w,
 				height:h,
 				"font-size":"1px",
@@ -154,8 +162,10 @@
 				y = y - self._cfg.top;
 
 			var $line = $("<div></div>").css({
-				marginLeft:x,
-				marginTop:y,
+				// marginLeft:x,
+				// marginTop:y,
+				left:x,
+				top:y,
 				display:"block",
 				position:"absolute",
 				width:len,
@@ -174,8 +184,10 @@
 				y = y - self._cfg.top;
 
 			var $line = $("<div></div>").css({
-				marginLeft:x,
-				marginTop:y,
+				// marginLeft:x,
+				// marginTop:y,
+				left:x,
+				top:y,
 				display:"block",
 				position:"absolute",
 				width:0,
