@@ -29,7 +29,6 @@ gallery/kcharts/1.3/animate/index
   function Animate(fromProps,toProps,opts){
     opts || (opts = {});
     opts = S.merge(dft,opts);
-
     var begin = +new Date
       , end = begin + opts.duration
       , now = begin

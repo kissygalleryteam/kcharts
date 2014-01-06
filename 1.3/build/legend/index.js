@@ -154,6 +154,28 @@ gallery/kcharts/1.3/legend/index
          });
        });
      },
+     unbindEvent:function(){
+       var els = this.get("els")
+         , that = this;
+       S.each(els,function(el){
+         var $icon = el.icon
+           , $text = el.des
+         S.each(["click","mouseover","mouseout"],function(e,i){
+           $icon['un'+e]();
+           $text.detach(e);
+         });
+       });
+     },
+     remmoveLegendIconAndText:function(){
+       var els = this.get("els")
+         , that = this;
+       S.each(els,function(el){
+         var $icon = el.icon
+           , $text = el.des
+         $icon.remove();
+         $text.remove();
+       });
+     },
      onframeend :function(){
        this.bindEvent();
      },
@@ -586,6 +608,8 @@ gallery/kcharts/1.3/legend/index
       * 销毁legend实例
       **/
      destroy:function(){
+       this.unbindEvent();
+       this.remmoveLegendIconAndText();
      }
    };
 

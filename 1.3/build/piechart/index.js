@@ -865,8 +865,14 @@ gallery/kcharts/1.3/piechart/index
        this.set('el',$label)
      },
      destroy:function(){
-       this.get("el").remove();
-       this.get("$path").remove();
+       var el = this.get("el");
+       var path = this.get("$path");
+
+       // 解绑事件
+       el.detach("click");
+
+       el.remove();
+       path.remove();
      }
    };
 
@@ -1218,29 +1224,12 @@ gallery/kcharts/1.3/piechart/index
            container,
            bbox
        var config = this.get("legend")
+       if(config && config.isShow === false)
+         return;
 
        if(config){
          paper = this.get("paper")
          container = this.get("container")
-
-         // 写成独立方法
-         // var rs = this.get("rs")
-         //   , rl = rs[rs.length-1]
-         //   , rpadding = this.get("rpadding") || 0
-         //   , padding = this.get("padding") || 0
-         //   , cx = this.get("cx")
-         //   , cy = this.get("cy")
-
-         // var width = (rl+rpadding+padding)*2
-         //   , left = cx - width/2
-         //   , top = cy - width/2
-
-         // bbox = {
-         //   width:width,
-         //   height:width,
-         //   left:left,
-         //   top:top
-         // }
 
          bbox = this.getbbox();
 
@@ -1277,6 +1266,11 @@ gallery/kcharts/1.3/piechart/index
              },
              config:parts
            }
+           config.globalConfig = S.merge({
+             shape: "square",
+             interval: 20, //legend之间的间隔
+             iconright: 5  //icon后面的空白
+           },config.globalConfig);
            var legend = new Legend(S.merge(dft,config));
            that.set("legend",legend);
            that.fire("afterLegendRender");
@@ -1305,7 +1299,7 @@ gallery/kcharts/1.3/piechart/index
      adjustData:function(){
        var fn = this.get('filterfn')
        if(fn && S.isFunction(fn)){
-         var data = this.get('data')
+         var data = this.get('series') || this.get("data")
            , ret
          ret = Util.filterdata(data,fn)
          this.set("data",ret);
