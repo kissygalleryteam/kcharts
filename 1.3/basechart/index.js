@@ -2,10 +2,11 @@
 TODO 坐标运算  画布大小计算
 */
 ;
-KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
-	var $ = S.all;
-	var isNagitive = false;
-	var isPositive = false;
+KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node,Common) {
+	var $ = S.all,
+		isNagitive = false,
+		isPositive = false;
+		
 	var methods = {
 		init: function(cfg) {
 			cfg || (cfg = this.userConfig);
@@ -30,18 +31,16 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 						x: 60,
 						y: 60
 					},
-					defineKey: {
-
-					},
 					zoomType: "x"
 				}, cfg);
 
-				self._$ctnNode = $(cfg.renderTo);
-
-				self._$ctnNode.css({
+				self._$ctnNode = $("<div></div>").css({
+					"position":"absolute",
+					"width":$(cfg.renderTo).width(),
+					"height":$(cfg.renderTo).height(),
 					"-webkit-text-size-adjust": "none", //chrome最小字体限制
 					"-webkit-tap-highlight-color": "rgba(0,0,0,0)" //去除touch时的闪烁背景
-				})
+				}).prependTo($(cfg.renderTo));
 				//构建内部容器
 				self.createContainer();
 
@@ -160,9 +159,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 			if (_cfg.stackable) {
 				//堆叠图 需要叠加多组数据 进行计算
 				for (var i in self._datas['cur']) {
-					if (dataType == "object" && _cfg.defineKey.y && _cfg.defineKey.x) {
-						numbers = self.getArrayByKey(self._datas['cur'][i]['data'], _cfg.defineKey.y);
-					} else if (S.isArray(self._datas['cur'][i]['data'])) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
 						numbers = self._datas['cur'][i]['data'];
 					}
 					for (var j in numbers) {
@@ -172,9 +169,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 				}
 			} else {
 				for (var i in self._datas['cur']) {
-					if (dataType == "object" && _cfg.defineKey.y && _cfg.defineKey.x) {
-						numbers = self.getArrayByKey(self._datas['cur'][i]['data'], _cfg.defineKey.y);
-					} else if (S.isArray(self._datas['cur'][i]['data'])) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
 						if (zoomType == "xy") {
 							numbers = self.getArrayByKey(self._datas['cur'][i]['data'], arg)
 						} else {
@@ -245,24 +240,28 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 			self._pointsY = [];
 			self._pointsX = [];
 
-			if (zoomType == "x") {
-				//获取所有刻度值
-				allDatas = self.getAllDatas();
-				//获取刻度 从定义刻度中获取
-				curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.yAxis);
-				//刻度值转换成图上的点
-				coordPos = self.data2GrapicData(coordNum, false, true);
-			} else if (zoomType == "y") {
-				allDatasX = self.getAllDatas();
-				curCoordNum = coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.xAxis);
-				coordPosX = self.data2GrapicData(coordNumX, true, false);
-			} else if (zoomType == "xy") {
-				allDatas = self.getAllDatas(0);
-				allDatasX = self.getAllDatas(1);
-				curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.xAxis);
-				coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.yAxis);
-				coordPos = self.data2GrapicData(coordNum, false, false);
-				coordPosX = self.data2GrapicData(coordNumX, true, true);
+			switch(zoomType){
+				case "x":
+					//获取所有刻度值
+					allDatas = self.getAllDatas();
+					//获取刻度 从定义刻度中获取
+					curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.yAxis);
+					//刻度值转换成图上的点
+					coordPos = self.data2GrapicData(coordNum, false, true);
+					break;
+				case "y":
+					allDatasX = self.getAllDatas();
+					curCoordNum = coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.xAxis);
+					coordPosX = self.data2GrapicData(coordNumX, true, false);
+					break;
+				case "xy":
+					allDatas = self.getAllDatas(0);
+					allDatasX = self.getAllDatas(1);
+					curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.xAxis);
+					coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.yAxis);
+					coordPos = self.data2GrapicData(coordNum, false, false);
+					coordPosX = self.data2GrapicData(coordNumX, true, true);
+					break;
 			}
 
 			var getDataPoints = function(data, index, coordNum) {
@@ -270,35 +269,12 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 					//坐标刻度的最大值
 					max = Math.max.apply(null, coordNum),
 					min = Math.min.apply(null, coordNum),
-					defineKey = _cfg.defineKey,
-					defineKeyX = defineKey.x,
-					defineKeyY = defineKey.y,
 					points = [],
 					j = 0,
 					dataType = self.getDataType();
 
-				if (zoomType == "x") {
-					//复杂数据 data 的 元素为 object
-					if (defineKeyX && defineKeyY && dataType == "object") {
-						for (var i in self._pointsX) {
-							if (data[j] && _cfg.xAxis.text[i] == data[j][defineKeyX]) {
-								points[i] = {
-									x: self._pointsX[i].x, //横坐标
-									y: self.data2Grapic(data[j][defineKeyY], max, min, height, y, true), //纵坐标
-									dataInfo: data[j], //数据信息 暂时将series.data的数据 和 series下的数据 耦合
-									index: Math.round(i) //索引
-								};
-
-								j++;
-							} else {
-								points[i] = {
-									x: self._pointsX[i].x, //横坐标
-									index: Math.round(i) //索引
-								};
-							}
-						}
-						//简单数据 data 的元素为 number 类型
-					} else {
+				switch(zoomType){
+					case "x" :
 						for (var i in self._pointsX) {
 							if (data[i] === '' || data[i] === null) {
 								points[i] = {
@@ -318,30 +294,8 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 							}
 
 						}
-					}
-				} else if (zoomType == "y") {
-					//复杂数据 data 的 元素为 object
-					if (defineKeyX && defineKeyY && S.isPlainObject(self._datas['total'][0]['data'][0])) {
-						for (var i in self._pointsY) {
-							if (data[j] && _cfg.yAxis.text[i] == data[j][defineKeyX]) {
-								points[i] = {
-									x: self.data2Grapic(data[j][defineKeyY], max, min, width, x), //横坐标
-									y: self._pointsY[i].y, //纵坐标
-									dataInfo: {
-										y: data[j]
-									}, //数据信息 暂时将series.data的数据 和 series下的数据 耦合
-									index: Math.round(i) //索引
-								};
-								j++;
-							} else {
-								points[i] = {
-									y: self._pointsY[i].y, //纵坐标
-									index: Math.round(i) //索引
-								};
-							}
-						}
-						//简单数据 data 的元素为 number 类型
-					} else {
+						break;
+					case "y" :
 						for (var i in self._pointsY) {
 							points[i] = {
 								x: self.data2Grapic(data[i], max, min, width, x), //横坐标
@@ -353,8 +307,8 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 								index: Math.round(i) //索引
 							};
 						}
-					}
-				} else if (zoomType == "xy") {
+						break;
+					case "xy":
 					var xs = self.data2GrapicData(self.getArrayByKey(series.data, 0)),
 						ys = self.data2GrapicData(self.getArrayByKey(series.data, 1), true, true);
 					for (var i in series.data) {
@@ -367,56 +321,68 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 							index: Math.round(i) //索引
 						};
 					}
+						break;
 				}
 				return points;
 			};
 
-			if (zoomType == "x") {
-				for (var i in coordPos) {
-					self._pointsY[i] = {
-						number: coordNum[i] + "",
-						y: coordPos[i],
-						x: x
-					};
+			switch(zoomType){
+				case "x" :
+					for (var i in coordPos) {
+						self._pointsY[i] = {
+							number: coordNum[i] + "",
+							y: coordPos[i],
+							x: x
+						};
+					}
+					try {
+						self._gridPoints = self.getSplitPoints(x, y + height, x + width, y + height, _cfg.xAxis.text.length, true);
+						self._pointsX = self.getCenterPoints(self._gridPoints);
+						for(var i in _cfg.xAxis.text){
+							self._pointsX[i]['number'] = _cfg.xAxis.text[i];
+						}
+					} catch (e) {
+						throw new Error("未配置正确的xAxis.text数组");
+					}
+					break;
+				case "y" :
+					for (var i in coordPosX) {
+						self._pointsX[i] = {
+							number: coordNumX[i] + "",
+							y: y + height,
+							x: coordPosX[i]
+						};
+					}
+					try {
+						self._pointsY = self.getSplitPoints(x, y, x, y + height, _cfg.yAxis.text.length + 1);
+						for(var i in _cfg.yAxis.text){
+							self._pointsY[i]['number'] = _cfg.yAxis.text[i];
+						}
+					} catch (e) {
+						throw new Error("未配置正确的yAxis.text数组");
+					}
+					break;
+				case "xy" :
+					for (var i in coordPosX) {
+						self._pointsY[i] = {
+							number: coordNumX[i] + "",
+							y: coordPosX[i],
+							x: x
+						};
+					}
+					for (var i in coordPos) {
+						self._pointsX[i] = {
+							number: coordNum[i] + "",
+							y: y + height,
+							x: coordPos[i]
+						};
+					}
+					break;
 				}
-				try {
-					self._gridPoints = self.getSplitPoints(x, y + height, x + width, y + height, _cfg.xAxis.text.length, true);
-					self._pointsX = self.getCenterPoints(self._gridPoints);
-				} catch (e) {
-					throw new Error("未配置正确的xAxis.text数组");
+
+				for (var i in self._datas['cur']) {
+					self._points[i] = getDataPoints(self._datas['cur'][i]['data'], i, curCoordNum);
 				}
-			} else if (zoomType == "y") {
-				for (var i in coordPosX) {
-					self._pointsX[i] = {
-						number: coordNumX[i] + "",
-						y: y + height,
-						x: coordPosX[i]
-					};
-				}
-				try {
-					self._pointsY = self.getSplitPoints(x, y, x, y + height, _cfg.yAxis.text.length + 1);
-				} catch (e) {
-					throw new Error("未配置正确的yAxis.text数组");
-				}
-			} else if (zoomType == "xy") {
-				for (var i in coordPosX) {
-					self._pointsY[i] = {
-						number: coordNumX[i] + "",
-						y: coordPosX[i],
-						x: x
-					};
-				}
-				for (var i in coordPos) {
-					self._pointsX[i] = {
-						number: coordNum[i] + "",
-						y: y + height,
-						x: coordPos[i]
-					};
-				}
-			}
-			for (var i in self._datas['cur']) {
-				self._points[i] = getDataPoints(self._datas['cur'][i]['data'], i, curCoordNum);
-			}
 		},
 		/*
 			TODO 将实际数值转化为图上的值
@@ -438,14 +404,17 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 				min = isY ? Math.min.apply(null, self.coordNumX) : Math.min.apply(null, self.coordNum),
 				tmp = [];
 
-			if (zoomType == "xy") {
-				dist = isY ? height : width;
-			} else if (zoomType == "x") {
-				dist = height;
-			} else if (zoomType == "y") {
-				dist = width;
+			switch(zoomType){
+				case "xy":
+					dist = isY ? height : width;
+					break;
+				case "x":
+					dist = height;
+					break;
+				case "y":
+					dist = width;
+					break;
 			}
-
 			//如果是数组
 			if (S.isArray(data)) {
 				for (var i in data) {
@@ -736,14 +705,14 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 		}
 	};
 	var BaseChart;
-
 	if (Base.extend) {
 		BaseChart = Base.extend(methods);
 	} else {
 		BaseChart = function() {};
 		S.extend(BaseChart, Base, methods);
 	}
+	BaseChart.Common = Common;
 	return BaseChart;
 }, {
-	requires: ['base', 'node']
+	requires: ['base', 'node','./common']
 });

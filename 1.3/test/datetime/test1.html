@@ -166,14 +166,19 @@
              isShow:false
            },
            yLabels:{
-            isShow:false
-           },
+               css:{
+                    "text-indent":"-5px"
+               },
+               template:function(i,t){
+                 return  i%2 == 0 ? t :"";
+               }
+             },
            xAxis: {
              text:xAxis
            },
            yAxis:{
              isShow:false,
-             num:10
+             num:20
            },
            line:{
              attr:{

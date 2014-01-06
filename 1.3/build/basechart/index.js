@@ -1,17 +1,491 @@
 /*
 combined files : 
 
+gallery/kcharts/1.3/basechart/common
 gallery/kcharts/1.3/basechart/index
 
 */
+KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
+
+	function drawTitle(chart, themeCls) {
+		console.log(chart)
+		if (!chart._cfg.title.isShow) return;
+		var paper = chart.htmlPaper,
+			cls = themeCls + "-title",
+			_cfg = chart._cfg,
+			ctn = chart.getInnerContainer(),
+			//高度占 60%
+			h = ctn.y * 0.6;
+		chart._title = paper.rect(0, 0, chart._$ctnNode.width(), h).addClass(cls).css(S.mix({
+			"line-height": h + "px"
+		}, _cfg.title.css)).html(_cfg.title.content);
+	}
+
+	function drawSubTitle(chart, themeCls) {
+		if (!chart._cfg.subTitle.isShow) return;
+		var paper = chart.htmlPaper,
+			cls = themeCls + "-subtitle",
+			_cfg = chart._cfg,
+			ctn = chart.getInnerContainer(),
+			//高度占 40%
+			h = ctn.y * 0.4;
+		chart._subTitle = paper.rect(0, ctn.y * 0.6, chart._$ctnNode.width(), h).addClass(cls).css(S.mix({
+			"line-height": h + "px"
+		}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
+	}
+
+	function drawAreas(chart) {
+		if (!chart._cfg.areas.isShow) return;
+		var ctn = chart.getInnerContainer(),
+			y = ctn.tl.y,
+			points = chart._points[0],
+			w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || ctn.width),
+			h = Math.round(ctn.height),
+			paper = chart.htmlPaper,
+			cls = chart._cfg.themeCls + "-areas",
+			css = chart._cfg.areas.css,
+			x;
+
+		for (var i = 0, len = points.length; i < len; i++) {
+			var area = paper.rect(points[i].x - w / 2, y, w, h).addClass(cls).css(css);
+			chart._areas.push(area);
+		}
+	}
+
+	function drawAxisX(chart) {
+		if (!chart._cfg.xAxis.isShow) return;
+		var ctn = chart.getInnerContainer(),
+			bl = ctn.bl,
+			w = ctn.width,
+			paper = chart.htmlPaper,
+			cls = chart._cfg.themeCls + "-axisx";
+
+		chart._axisX = paper.lineX(bl.x, bl.y, w).addClass(cls).css(chart._cfg.xAxis.css || {});
+
+		return chart._axisX;
+	}
+
+	function drawAxisY(chart) {
+		if (!chart._cfg.yAxis.isShow) return;
+		var ctn = chart.getInnerContainer(),
+			tl = ctn.tl,
+			h = ctn.height,
+			paper = chart.htmlPaper,
+			cls = chart._cfg.themeCls + "-axisy";
+
+		chart._axisY = paper.lineY(tl.x, tl.y, h).addClass(cls).css(chart._cfg.yAxis.css || {});
+		return chart._axisY;
+	}
+
+	function drawGridsY(chart) {
+		if (!chart._cfg.yGrids.isShow) return;
+		var ctn = chart.getInnerContainer(),
+			x = ctn.x,
+			points = chart._pointsY;
+		for (var i = 0, len = points.length; i < len; i++) {
+			chart._gridsY[i] = {
+				0: drawGridY(chart, {
+					x: x,
+					y: points[i].y
+				}),
+				x: x,
+				y: points[i].y,
+				num: points[i]['number']
+			};
+		}
+	}
+
+	function drawGridsX(chart) {
+		if (!chart._cfg.xGrids.isShow) return;
+		var points = chart._points[0],
+			ctn = chart.getInnerContainer(),
+			gridPointsX;
+		chart._gridsX = [];
+		if (chart._cfg.zoomType == "x") {
+			gridPointsX = function() {
+				var len = points.length,
+					tmp = [];
+				if (len > 1) {
+					var d = (points[1]['x'] - points[0]['x']) / 2;
+					tmp.push({
+						x: points[0]['x'] - d
+					})
+					for (var i in points) {
+						tmp.push({
+							x: points[i]['x'] - (-d)
+						});
+					}
+				}
+				return tmp;
+			}();
+			for (var i = 0, len = gridPointsX.length; i < len; i++) {
+				chart._gridsX[i] = {
+					0:drawGridX(chart, gridPointsX[i]),
+					x:gridPointsX[i]['x'],
+					y:ctn.bl.y,
+					num: chart.coordNum[i] 
+				};
+			}
+		} else {
+			for (var i in chart._pointsX) {
+				chart._gridsX[i] = {
+					0:drawGridX(chart, chart._pointsX[i]),
+					x:chart._pointsX[i]['x'],
+					y:ctn.bl.y,
+					num:chart.coordNumX[i]
+				};
+			}
+		}
+		return chart._gridsX;
+	}
+
+	function drawGridX(chart, point, css) {
+		if (!chart._cfg.xGrids.isShow) return;
+		var ctn = chart.getInnerContainer(),
+			css = css || chart._cfg.xGrids.css,
+			paper = chart.htmlPaper,
+			cls = chart._cfg.themeCls + "-gridsx";
+
+		return paper.lineY(point.x, ctn.tl.y, ctn.height).addClass(cls).css(chart._cfg.xGrids.css);
+	}
+
+	function drawGridY(chart, point, css) {
+		if (!chart._cfg.yGrids.isShow) return;
+		var ctn = chart.getInnerContainer(),
+			css = css || chart._cfg.yGrids.css,
+			paper = chart.htmlPaper,
+			cls = chart._cfg.themeCls + "-gridsy";
+
+		return paper.lineX(ctn.x, point.y, ctn.width).addClass(cls).css(css);
+	}
+
+	function drawLabelsY(chart) {
+		if (!chart._cfg.yLabels.isShow) return;
+		var ctn = chart.getInnerContainer();
+		for (var i in chart._pointsY) {
+			chart._labelY[i] = {
+				0: drawLabelY(chart, i, chart._pointsY[i].number),
+				'num': chart._pointsY[i].number,
+				x: ctn.x,
+				y: chart._pointsY[i]['y']
+			}
+		}
+		return chart._labelY;
+	}
+
+	function drawLabelsX(chart) {
+		if (!chart._cfg.xLabels.isShow) return;
+		//画x轴刻度线
+		for (var i in chart._pointsX) {
+			chart._labelX[i] = {
+				0:drawLabelX(chart, i, chart._pointsX[i].number),
+				'num':chart._pointsX[i].number,
+				x:chart._pointsX[i]['x'],
+				y:chart._pointsX[i]['y']
+			};
+		}
+	}
+	//横轴标注
+	function drawLabelX(chart, index, text) {
+		if (!chart._cfg.xLabels.isShow) return;
+		var paper = chart.htmlPaper,
+			len = chart._pointsX.length || 0,
+			lbl,
+			cls = chart._cfg.themeCls + "-xlabels",
+			tpl = "{{data}}",
+			content = "";
+		if (index < len) {
+			tpl = chart._cfg.xLabels.template || tpl;
+			if (S.isFunction(tpl)) {
+				content = tpl(index, text);
+			} else {
+				content = Template(tpl).render({
+					data: text
+				});
+			}
+			lbl = paper.text(chart._pointsX[index].x, chart._pointsX[index].y, '<span class=' + cls + '>' + content + '</span>', "center");
+			lbl.children().css(chart._cfg.xLabels.css)
+			return lbl;
+		}
+	}
+	//纵轴标注
+	function drawLabelY(chart, index, text) {
+		if (!chart._cfg.yLabels.isShow) return;
+		var paper = chart.htmlPaper,
+			cls = chart._cfg.themeCls + "-ylabels",
+			tpl = "{{data}}",
+			content = "",
+			lbl;
+		tpl = chart._cfg.yLabels.template || tpl;
+		if (S.isFunction(tpl)) {
+			content = tpl(index, text);
+		} else {
+			content = Template(tpl).render({
+				data: text
+			});
+		}
+		lbl = paper.text(chart._pointsY[index].x, chart._pointsY[index].y, '<span class=' + cls + '>' + content + '</span>', "right", "middle");
+		lbl.children().css(chart._cfg.yLabels.css);
+		return lbl;
+	}
+	/*
+			网格和label的动画
+			1.将刻度值相同的进行动画
+			2.新产生刻度的渐入
+			3.旧刻度的渐出
+		*/
+	function animateGridsAndLabels(chart) {
+		var cfg = chart._cfg,
+			zoomType = cfg.zoomType,
+			pointsY = chart._pointsY,
+			pointsX = chart._pointsX,
+			ctn = chart.getInnerContainer(),
+			duration = 0.5,
+			//存放动画过了的刻度
+			animatedCoordsY = [],
+			animatedCoordsX = [],
+			destroyedNodesY = [],
+			destroyedNodesX = [],
+			//创建 刻度数组
+			coordsY = [],
+			coordsX = [];
+		//通过刻度找点位置
+		var getPointByNum = function(num, points, animatedCoords) {
+			for (var i in points) {
+				if (num === points[i]['number']) {
+					animatedCoords.push(num);
+					return points[i];
+				}
+			}
+		}
+		//判断上下移动的方向 返回位置
+		var judgeDirect2Move = function(point) {
+			if(!point) return;
+			var spacing = Math.min.apply(null, [cfg.canvasAttr.x, cfg.canvasAttr.y]) / 2;
+			//垂直中点
+			var middle = ctn.y + ctn.height / 2;
+			//水平重点
+			var center = ctn.x + ctn.width / 2;
+			//判断zoomType
+			switch (zoomType) {
+				case "x":
+					return {
+						y: point.y > middle ? ctn.bl.y + spacing : ctn.y - spacing,
+						x: point.x
+					};
+					break;
+				case "y":
+					return {
+						x: point.x > center ? ctn.br.x + spacing : ctn.x - spacing,
+						y: point.y
+					};
+					break;
+				case "xy":
+					return {
+						y: point.y > middle ? ctn.bl.y + spacing : ctn.y - spacing,
+						x: point.x > center ? ctn.br.x + spacing : ctn.x - spacing
+					};
+					break;
+			}
+		}
+
+		switch (zoomType) {
+			case "x":
+				anim("Y", coordsY, pointsY, destroyedNodesY, animatedCoordsY);
+				break;
+			case "y":
+				anim("X", coordsX, pointsX, destroyedNodesX, animatedCoordsX);
+				break;
+			case "xy":
+				anim("X", coordsX, pointsX, destroyedNodesX, animatedCoordsX);
+				anim("Y", coordsY, pointsY, destroyedNodesY, animatedCoordsY);
+				break;
+
+		}
+
+		function anim(zoomName, coords, points, destroyedNodes, animatedCoords) {
+			var _grids = "_grids" + zoomName;
+			var _label = "_label" + zoomName;
+			var len = Math.max.apply(null,[chart[_label]['length'],chart[_grids]['length']]);
+			var callback = function() {
+				chart[_grids] = [];
+				chart[_label] = [];
+				for (var i in coords) {
+					chart[_grids][i] = {
+						0: coords[i]['grid'],
+						y: points[i]['y'],
+						x: points[i]['x'],
+						num: coords[i]['num']
+					};
+					chart[_label][i] = {
+						0: coords[i]['lbl'],
+						y: points[i]['y'],
+						x: points[i]['x'],
+						num: coords[i]['num']
+					};
+				}
+				for (var i in destroyedNodes) {
+					destroyedNodes[i].remove();
+				}
+			}
+
+			//动画
+			for (var i = 0;i< len;i++) {
+				(function(i) {
+					var num = chart[_label][i] ? chart[_label][i]['num'] : chart[_grids][i]['num'];
+					var point = getPointByNum(num, points, animatedCoords);
+					if (point && point.x !== undefined && point.y !== undefined) {
+						var animAttrs = zoomName == "Y" ? {
+							top: point.y + "px"
+						} : {
+							left: point.x + "px"
+						};
+						coords.push({
+							num: num,
+							lbl: chart[_label][i] && chart[_label][i][0] && chart[_label][i][0].animate(animAttrs, duration, "easeNone"),
+							grid:chart[_grids][i] && chart[_grids][i][0] && chart[_grids][i][0].animate(animAttrs, duration, "easeNone")
+						});
+					} else {
+						//渐隐（两侧）
+						var animAttrs = zoomName == "Y" ? {
+							top: chart[_label][i] && judgeDirect2Move(chart[_label][i])['y'] + "px",
+							opacity: 0
+						} : {
+							left: chart[_label][i] && judgeDirect2Move(chart[_label][i])['x'] + "px",
+							opacity: 0
+						};
+						chart[_label][i] && chart[_label][i][0] && destroyedNodes.push(chart[_label][i][0].animate(animAttrs, duration, "easeNone"));
+						chart[_grids][i] && chart[_grids][i][0] && destroyedNodes.push(chart[_grids][i][0].animate(animAttrs, duration, "easeNone"));
+					}
+					
+				})(i)
+			}
+
+			//两侧移入
+			for (var i in points) {
+				if (!isInArray(points[i]['number'], animatedCoords)) {
+					var margin = zoomName == "Y" ? judgeDirect2Move(points[i])['y'] + "px" : judgeDirect2Move(points[i])['x'] + "px";
+					var beginAttrs = zoomName == "Y" ? {
+						top: margin,
+						opacity: 0
+					} : {
+						left: margin,
+						opacity: 0
+					};
+					var endAttrs = zoomName == "Y" ? {
+						top: points[i]['y'],
+						opacity: 1
+					} : {
+						left: points[i]['x'],
+						opacity: 1
+					};
+
+					if(zoomName == "Y"){
+						var $lbl = drawLabelY(chart, i, points[i]['number']);
+						var $grid = drawGridY(chart, judgeDirect2Move(points[i])['y']);
+						coords.push({
+							num: points[i]['number'],
+							lbl: $lbl && $lbl.css(beginAttrs).animate(endAttrs, duration, "easeNone"),
+							grid: $grid && $grid.css(beginAttrs).animate(endAttrs, duration, "easeNone")
+						});
+					}else{
+						var $lbl = drawLabelX(chart, i, points[i]['number']);
+						var $grid = drawGridX(chart, judgeDirect2Move(points[i])['x']);
+						coords.push({
+							num: points[i]['number'],
+							lbl: $lbl && $lbl.css(beginAttrs).animate(endAttrs, duration, "easeNone"),
+							grid: $grid && $grid.css(beginAttrs).animate(endAttrs, duration, "easeNone")
+						});
+					}
+					
+				}
+			}
+
+			Array.prototype.sort.call(coords);
+
+			setTimeout(function() {
+				callback()
+			}, 500)
+		}
+	}
+
+
+	/**
+			TODO 获取直线的路径
+		**/
+	function getLinePath(chart, points) {
+		var path = "",
+			ctnY = chart._innerContainer.bl.y,
+			len = chart.getRealPointsNum(points),
+			start = 0;
+		//找出起始点
+		if (!points) return "";
+
+		start = (function() {
+			for (var i in points) {
+				if (!chart.isEmptyPoint(points[i])) {
+					return Math.round(i);
+				}
+			}
+		})();
+
+		path += "M" + points[start]['x'] + "," + points[start]['y'];
+		//当只有2个点的时候 则用直线绘制
+		if (chart._cfg.lineType == "arc" && len > 2) {
+			path += " R";
+			for (var i = start + 1, len = points.length; i < len; i++)
+				if (points[i]['x'] && points[i]['y']) {
+					//贝塞尔曲线
+					path += points[i]['x'] + "," + points[i]['y'] + " ";
+				}
+		} else {
+			for (var i = start + 1, len = points.length; i < len; i++)
+				if (points[i]['x'] && points[i]['y']) {
+					path += " L" + points[i]['x'] + "," + points[i]['y'];
+				}
+		}
+		return path;
+	}
+
+	function isInArray(el, ary) {
+		for (var i in ary) {
+			if (ary[i] === el) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	return {
+		drawTitle: drawTitle,
+		drawSubTitle: drawSubTitle,
+		drawAreas: drawAreas,
+		drawAxisX: drawAxisX,
+		drawAxisY: drawAxisY,
+		drawGridsX: drawGridsX,
+		drawGridX: drawGridX,
+		drawGridY: drawGridY,
+		drawGridsY: drawGridsY,
+		drawLabelsX: drawLabelsX,
+		drawLabelsY: drawLabelsY,
+		drawLabelX: drawLabelX,
+		drawLabelY: drawLabelY,
+		animateGridsAndLabels: animateGridsAndLabels,
+		getLinePath: getLinePath,
+		isInArray: isInArray
+	};
+}, {
+	requires: ['gallery/template/1.0/index']
+})
 /*
 TODO 坐标运算  画布大小计算
 */
 ;
-KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
-	var $ = S.all;
-	var isNagitive = false;
-	var isPositive = false;
+KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node,Common) {
+	var $ = S.all,
+		isNagitive = false,
+		isPositive = false;
+		
 	var methods = {
 		init: function(cfg) {
 			cfg || (cfg = this.userConfig);
@@ -36,18 +510,16 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 						x: 60,
 						y: 60
 					},
-					defineKey: {
-
-					},
 					zoomType: "x"
 				}, cfg);
 
-				self._$ctnNode = $(cfg.renderTo);
-
-				self._$ctnNode.css({
+				self._$ctnNode = $("<div></div>").css({
+					"position":"absolute",
+					"width":$(cfg.renderTo).width(),
+					"height":$(cfg.renderTo).height(),
 					"-webkit-text-size-adjust": "none", //chrome最小字体限制
 					"-webkit-tap-highlight-color": "rgba(0,0,0,0)" //去除touch时的闪烁背景
-				})
+				}).prependTo($(cfg.renderTo));
 				//构建内部容器
 				self.createContainer();
 
@@ -166,9 +638,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 			if (_cfg.stackable) {
 				//堆叠图 需要叠加多组数据 进行计算
 				for (var i in self._datas['cur']) {
-					if (dataType == "object" && _cfg.defineKey.y && _cfg.defineKey.x) {
-						numbers = self.getArrayByKey(self._datas['cur'][i]['data'], _cfg.defineKey.y);
-					} else if (S.isArray(self._datas['cur'][i]['data'])) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
 						numbers = self._datas['cur'][i]['data'];
 					}
 					for (var j in numbers) {
@@ -178,9 +648,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 				}
 			} else {
 				for (var i in self._datas['cur']) {
-					if (dataType == "object" && _cfg.defineKey.y && _cfg.defineKey.x) {
-						numbers = self.getArrayByKey(self._datas['cur'][i]['data'], _cfg.defineKey.y);
-					} else if (S.isArray(self._datas['cur'][i]['data'])) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
 						if (zoomType == "xy") {
 							numbers = self.getArrayByKey(self._datas['cur'][i]['data'], arg)
 						} else {
@@ -251,24 +719,28 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 			self._pointsY = [];
 			self._pointsX = [];
 
-			if (zoomType == "x") {
-				//获取所有刻度值
-				allDatas = self.getAllDatas();
-				//获取刻度 从定义刻度中获取
-				curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.yAxis);
-				//刻度值转换成图上的点
-				coordPos = self.data2GrapicData(coordNum, false, true);
-			} else if (zoomType == "y") {
-				allDatasX = self.getAllDatas();
-				curCoordNum = coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.xAxis);
-				coordPosX = self.data2GrapicData(coordNumX, true, false);
-			} else if (zoomType == "xy") {
-				allDatas = self.getAllDatas(0);
-				allDatasX = self.getAllDatas(1);
-				curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.xAxis);
-				coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.yAxis);
-				coordPos = self.data2GrapicData(coordNum, false, false);
-				coordPosX = self.data2GrapicData(coordNumX, true, true);
+			switch(zoomType){
+				case "x":
+					//获取所有刻度值
+					allDatas = self.getAllDatas();
+					//获取刻度 从定义刻度中获取
+					curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.yAxis);
+					//刻度值转换成图上的点
+					coordPos = self.data2GrapicData(coordNum, false, true);
+					break;
+				case "y":
+					allDatasX = self.getAllDatas();
+					curCoordNum = coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.xAxis);
+					coordPosX = self.data2GrapicData(coordNumX, true, false);
+					break;
+				case "xy":
+					allDatas = self.getAllDatas(0);
+					allDatasX = self.getAllDatas(1);
+					curCoordNum = coordNum = self.coordNum = self._getScales(allDatas, _cfg.xAxis);
+					coordNumX = self.coordNumX = self._getScales(allDatasX, _cfg.yAxis);
+					coordPos = self.data2GrapicData(coordNum, false, false);
+					coordPosX = self.data2GrapicData(coordNumX, true, true);
+					break;
 			}
 
 			var getDataPoints = function(data, index, coordNum) {
@@ -276,35 +748,12 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 					//坐标刻度的最大值
 					max = Math.max.apply(null, coordNum),
 					min = Math.min.apply(null, coordNum),
-					defineKey = _cfg.defineKey,
-					defineKeyX = defineKey.x,
-					defineKeyY = defineKey.y,
 					points = [],
 					j = 0,
 					dataType = self.getDataType();
 
-				if (zoomType == "x") {
-					//复杂数据 data 的 元素为 object
-					if (defineKeyX && defineKeyY && dataType == "object") {
-						for (var i in self._pointsX) {
-							if (data[j] && _cfg.xAxis.text[i] == data[j][defineKeyX]) {
-								points[i] = {
-									x: self._pointsX[i].x, //横坐标
-									y: self.data2Grapic(data[j][defineKeyY], max, min, height, y, true), //纵坐标
-									dataInfo: data[j], //数据信息 暂时将series.data的数据 和 series下的数据 耦合
-									index: Math.round(i) //索引
-								};
-
-								j++;
-							} else {
-								points[i] = {
-									x: self._pointsX[i].x, //横坐标
-									index: Math.round(i) //索引
-								};
-							}
-						}
-						//简单数据 data 的元素为 number 类型
-					} else {
+				switch(zoomType){
+					case "x" :
 						for (var i in self._pointsX) {
 							if (data[i] === '' || data[i] === null) {
 								points[i] = {
@@ -324,30 +773,8 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 							}
 
 						}
-					}
-				} else if (zoomType == "y") {
-					//复杂数据 data 的 元素为 object
-					if (defineKeyX && defineKeyY && S.isPlainObject(self._datas['total'][0]['data'][0])) {
-						for (var i in self._pointsY) {
-							if (data[j] && _cfg.yAxis.text[i] == data[j][defineKeyX]) {
-								points[i] = {
-									x: self.data2Grapic(data[j][defineKeyY], max, min, width, x), //横坐标
-									y: self._pointsY[i].y, //纵坐标
-									dataInfo: {
-										y: data[j]
-									}, //数据信息 暂时将series.data的数据 和 series下的数据 耦合
-									index: Math.round(i) //索引
-								};
-								j++;
-							} else {
-								points[i] = {
-									y: self._pointsY[i].y, //纵坐标
-									index: Math.round(i) //索引
-								};
-							}
-						}
-						//简单数据 data 的元素为 number 类型
-					} else {
+						break;
+					case "y" :
 						for (var i in self._pointsY) {
 							points[i] = {
 								x: self.data2Grapic(data[i], max, min, width, x), //横坐标
@@ -359,8 +786,8 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 								index: Math.round(i) //索引
 							};
 						}
-					}
-				} else if (zoomType == "xy") {
+						break;
+					case "xy":
 					var xs = self.data2GrapicData(self.getArrayByKey(series.data, 0)),
 						ys = self.data2GrapicData(self.getArrayByKey(series.data, 1), true, true);
 					for (var i in series.data) {
@@ -373,56 +800,68 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 							index: Math.round(i) //索引
 						};
 					}
+						break;
 				}
 				return points;
 			};
 
-			if (zoomType == "x") {
-				for (var i in coordPos) {
-					self._pointsY[i] = {
-						number: coordNum[i] + "",
-						y: coordPos[i],
-						x: x
-					};
+			switch(zoomType){
+				case "x" :
+					for (var i in coordPos) {
+						self._pointsY[i] = {
+							number: coordNum[i] + "",
+							y: coordPos[i],
+							x: x
+						};
+					}
+					try {
+						self._gridPoints = self.getSplitPoints(x, y + height, x + width, y + height, _cfg.xAxis.text.length, true);
+						self._pointsX = self.getCenterPoints(self._gridPoints);
+						for(var i in _cfg.xAxis.text){
+							self._pointsX[i]['number'] = _cfg.xAxis.text[i];
+						}
+					} catch (e) {
+						throw new Error("未配置正确的xAxis.text数组");
+					}
+					break;
+				case "y" :
+					for (var i in coordPosX) {
+						self._pointsX[i] = {
+							number: coordNumX[i] + "",
+							y: y + height,
+							x: coordPosX[i]
+						};
+					}
+					try {
+						self._pointsY = self.getSplitPoints(x, y, x, y + height, _cfg.yAxis.text.length + 1);
+						for(var i in _cfg.yAxis.text){
+							self._pointsY[i]['number'] = _cfg.yAxis.text[i];
+						}
+					} catch (e) {
+						throw new Error("未配置正确的yAxis.text数组");
+					}
+					break;
+				case "xy" :
+					for (var i in coordPosX) {
+						self._pointsY[i] = {
+							number: coordNumX[i] + "",
+							y: coordPosX[i],
+							x: x
+						};
+					}
+					for (var i in coordPos) {
+						self._pointsX[i] = {
+							number: coordNum[i] + "",
+							y: y + height,
+							x: coordPos[i]
+						};
+					}
+					break;
 				}
-				try {
-					self._gridPoints = self.getSplitPoints(x, y + height, x + width, y + height, _cfg.xAxis.text.length, true);
-					self._pointsX = self.getCenterPoints(self._gridPoints);
-				} catch (e) {
-					throw new Error("未配置正确的xAxis.text数组");
+
+				for (var i in self._datas['cur']) {
+					self._points[i] = getDataPoints(self._datas['cur'][i]['data'], i, curCoordNum);
 				}
-			} else if (zoomType == "y") {
-				for (var i in coordPosX) {
-					self._pointsX[i] = {
-						number: coordNumX[i] + "",
-						y: y + height,
-						x: coordPosX[i]
-					};
-				}
-				try {
-					self._pointsY = self.getSplitPoints(x, y, x, y + height, _cfg.yAxis.text.length + 1);
-				} catch (e) {
-					throw new Error("未配置正确的yAxis.text数组");
-				}
-			} else if (zoomType == "xy") {
-				for (var i in coordPosX) {
-					self._pointsY[i] = {
-						number: coordNumX[i] + "",
-						y: coordPosX[i],
-						x: x
-					};
-				}
-				for (var i in coordPos) {
-					self._pointsX[i] = {
-						number: coordNum[i] + "",
-						y: y + height,
-						x: coordPos[i]
-					};
-				}
-			}
-			for (var i in self._datas['cur']) {
-				self._points[i] = getDataPoints(self._datas['cur'][i]['data'], i, curCoordNum);
-			}
 		},
 		/*
 			TODO 将实际数值转化为图上的值
@@ -444,14 +883,17 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 				min = isY ? Math.min.apply(null, self.coordNumX) : Math.min.apply(null, self.coordNum),
 				tmp = [];
 
-			if (zoomType == "xy") {
-				dist = isY ? height : width;
-			} else if (zoomType == "x") {
-				dist = height;
-			} else if (zoomType == "y") {
-				dist = width;
+			switch(zoomType){
+				case "xy":
+					dist = isY ? height : width;
+					break;
+				case "x":
+					dist = height;
+					break;
+				case "y":
+					dist = width;
+					break;
 			}
-
 			//如果是数组
 			if (S.isArray(data)) {
 				for (var i in data) {
@@ -742,14 +1184,14 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node) {
 		}
 	};
 	var BaseChart;
-
 	if (Base.extend) {
 		BaseChart = Base.extend(methods);
 	} else {
 		BaseChart = function() {};
 		S.extend(BaseChart, Base, methods);
 	}
+	BaseChart.Common = Common;
 	return BaseChart;
 }, {
-	requires: ['base', 'node']
+	requires: ['base', 'node','./common']
 });
