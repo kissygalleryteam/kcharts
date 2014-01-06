@@ -310,10 +310,9 @@ gallery/kcharts/1.3/barchart/index
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
-;KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, undefined, Tip, Evt,Cfg) {
+;KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, Touch, Tip, Evt,Cfg) {
 
 	var $ = S.all,
-		win = window,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		canvasCls = themeCls + "-canvas",
@@ -340,14 +339,12 @@ gallery/kcharts/1.3/barchart/index
 			if (!self._$ctnNode[0]) return;
 			//柱形对象数组
 			self._bars = {};
-
 			//统计渲染完成的数组
 			self._finished = [];
-
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
-			self._cfg = S.mix(S.mix(Cfg, Theme[themeCls], undefined, undefined, true), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 
 			self.color = color = new Color({
 				themeCls: themeCls
@@ -364,6 +361,7 @@ gallery/kcharts/1.3/barchart/index
 				color.setColor(self._cfg.colors[i]);
 
 			}
+			
 			self._cfg.autoRender && self.render(true);
 		},
 		//画柱
@@ -937,7 +935,6 @@ gallery/kcharts/1.3/barchart/index
 		hideBar: function(barIndex) {
 			var self = this,
 				ctn = self._innerContainer;
-
 			BaseChart.prototype.removeData.call(self, barIndex);
 			delete self._clonePoints[barIndex];
 			BaseChart.Common.animateGridsAndLabels.call(null,self);
@@ -1010,7 +1007,6 @@ gallery/kcharts/1.3/barchart/index
       };
       S.extend(BarChart, BaseChart, methods);
 	}
-
 	return BarChart;
 
 }, {

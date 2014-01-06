@@ -2,6 +2,7 @@
 combined files : 
 
 gallery/kcharts/1.3/scatterchart/theme
+gallery/kcharts/1.3/scatterchart/cfg
 gallery/kcharts/1.3/scatterchart/index
 
 */
@@ -235,36 +236,11 @@ gallery/kcharts/1.3/scatterchart/index
 	return themeCfg;
 
 });
-/**
- * @fileOverview KChart 1.3  scatterchart
- * @author huxiaoqi567@gmail.com
- */
-;KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
-	var $ = S.all,
-		clsPrefix = "ks-chart-",
+;KISSY.add("gallery/kcharts/1.3/scatterchart/cfg",function(S){
+	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
-		evtLayoutCls = clsPrefix + "evtlayout",
-		evtLayoutAreasCls = evtLayoutCls + "-areas",
-		evtLayoutRectsCls = evtLayoutCls + "-rects",
-		COLOR_TPL = "{COLOR}",
-		color;
-
-	var methods = {
-		initializer: function() {
-		  var self = this;
-
-          var cfg = this.userConfig;
-
-          self._cfg = cfg;
-		  self._cfg.zoomType = "xy";
-
-			BaseChart.prototype.init.call(self, self._cfg);
-
-			self.chartType = "scatterchart";
-
-			if (!self._$ctnNode[0]) return;
-
-			var _defaultConfig = {
+		COLOR_TPL = "{COLOR}";
+	return {
 				themeCls: themeCls,
 				autoRender: true,
 				title: {
@@ -362,13 +338,45 @@ gallery/kcharts/1.3/scatterchart/index
 					boundryDetect: true
 				}
 			};
+})
+/**
+ * @fileOverview KChart 1.3  scatterchart
+ * @author huxiaoqi567@gmail.com
+ */
+;
+KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg) {
+	var $ = S.all,
+		clsPrefix = "ks-chart-",
+		themeCls = clsPrefix + "default",
+		evtLayoutCls = clsPrefix + "evtlayout",
+		evtLayoutAreasCls = evtLayoutCls + "-areas",
+		evtLayoutRectsCls = evtLayoutCls + "-rects",
+		COLOR_TPL = "{COLOR}",
+		color;
+
+	var methods = {
+		initializer: function() {
+			var self = this;
+
+			var cfg = this.userConfig;
+
+			self._cfg = cfg;
+			
+			self._cfg.zoomType = "xy";
+
+			BaseChart.prototype.init.call(self, self._cfg);
+
+			self.chartType = "scatterchart";
+
+			if (!self._$ctnNode[0]) return;
+
 
 			//统计渲染完成的数组
 			self._finished = [];
 			//主题
-			themeCls = self._cfg.themeCls || _defaultConfig.themeCls;
+			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
-			self._cfg = S.mix(S.mix(_defaultConfig, Theme[themeCls], undefined, undefined, true), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 
 			self.color = color = new ColorLib({
 				themeCls: themeCls
@@ -464,7 +472,7 @@ gallery/kcharts/1.3/scatterchart/index
 		},
 		//渲染tip
 		renderTip: function() {
-			if(!this._cfg.tip.isShow) return;
+			if (!this._cfg.tip.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
@@ -556,7 +564,7 @@ gallery/kcharts/1.3/scatterchart/index
 			渲染legend
 		**/
 		renderLegend: function() {
-			if(!this._cfg.legend.isShow) return;
+			if (!this._cfg.legend.isShow) return;
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
@@ -626,7 +634,7 @@ gallery/kcharts/1.3/scatterchart/index
 
 			self._clonePoints[index] = self._points[index];
 
-			BaseChart.Common.animateGridsAndLabels.call(null,self);
+			BaseChart.Common.animateGridsAndLabels.call(null, self);
 
 			self.animateSiblingsPoints(index);
 
@@ -656,7 +664,7 @@ gallery/kcharts/1.3/scatterchart/index
 
 			delete self._clonePoints[index];
 
-			BaseChart.Common.animateGridsAndLabels.call(null,self);
+			BaseChart.Common.animateGridsAndLabels.call(null, self);
 
 			for (var i in self._stocks[index]['stocks']) {
 				self._stocks[index]['stocks'][i].remove();
@@ -711,23 +719,23 @@ gallery/kcharts/1.3/scatterchart/index
 
 			self._clonePoints = self._points;
 
-			BaseChart.Common.drawTitle.call(null,this,themeCls);
+			BaseChart.Common.drawTitle.call(null, this, themeCls);
 
-			BaseChart.Common.drawSubTitle.call(null,this,themeCls);
+			BaseChart.Common.drawSubTitle.call(null, this, themeCls);
 			//渲染tip
 			self.renderTip();
 			//画x轴上的平行线
-			BaseChart.Common.drawGridsX.call(null,this);
+			BaseChart.Common.drawGridsX.call(null, this);
 
-			BaseChart.Common.drawGridsY.call(null,this);
+			BaseChart.Common.drawGridsY.call(null, this);
 			//画横轴
-			BaseChart.Common.drawAxisX.call(null,this);
+			BaseChart.Common.drawAxisX.call(null, this);
 
-			BaseChart.Common.drawAxisY.call(null,this);
+			BaseChart.Common.drawAxisY.call(null, this);
 			//画横轴刻度
-			BaseChart.Common.drawLabelsX.call(null,this);
+			BaseChart.Common.drawLabelsX.call(null, this);
 
-			BaseChart.Common.drawLabelsY.call(null,this);
+			BaseChart.Common.drawLabelsY.call(null, this);
 
 			self.diffStocksSize();
 
@@ -837,23 +845,23 @@ gallery/kcharts/1.3/scatterchart/index
 	}
 	var ScatterChart;
 
-	if(Base.extend){
-      ScatterChart = BaseChart.extend(methods);
-	}else{
-      ScatterChart = function (cfg){
-		var self = this;
-        this.userConfig = cfg;
-        this.initializer();
-      }
-      S.extend(ScatterChart,BaseChart,methods);
-    }
+	if (Base.extend) {
+		ScatterChart = BaseChart.extend(methods);
+	} else {
+		ScatterChart = function(cfg) {
+			var self = this;
+			this.userConfig = cfg;
+			this.initializer();
+		}
+		S.extend(ScatterChart, BaseChart, methods);
+	}
 	return ScatterChart;
 }, {
 	requires: [
 		'base',
-        'node',
-        'dom',
-        'event',
+		'node',
+		'dom',
+		'event',
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.3/basechart/index',
 		'gallery/kcharts/1.3/raphael/index',
@@ -862,6 +870,7 @@ gallery/kcharts/1.3/scatterchart/index
 		'gallery/kcharts/1.3/legend/index',
 		'./theme',
 		'gallery/kcharts/1.3/tools/touch/index',
-		'gallery/kcharts/1.3/tip/index'
+		'gallery/kcharts/1.3/tip/index',
+		'./cfg'
 	]
 });

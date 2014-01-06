@@ -3,7 +3,7 @@
  * @author huxiaoqi567@gmail.com
  */
 ;
-KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool,Cfg) {
+KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, Touch, Tip, Anim, graphTool,Cfg) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -27,6 +27,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			self._cfg || (self._cfg = self.userConfig);
 
 			BaseChart.prototype.init.call(self, self._cfg);
+
 			self.chartType = "linechart";
 
 			if (!self._$ctnNode[0]) return;
@@ -37,7 +38,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
-			self._cfg = S.mix(S.mix(Cfg, Theme[themeCls], undefined, undefined, true), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 
 			self.color = color = new ColorLib({
 				themeCls: themeCls
@@ -60,6 +61,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			w && self.set("area-width", w);
 
 			self._cfg.autoRender && self.render(true);
+
 		},
 		//获取属性
 		cloneSeriesConfig: function(wl) {
@@ -121,6 +123,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 					}),
 					//默认显示的直线条数
 					show_num = self.getVisableLineNum();
+
 				self._stocks[lineIndex]['stocks'] = self.drawStocks(lineIndex, self.processAttr(self._cfg.points.attr, color));
 				//finish state
 				self._finished.push(true);

@@ -5,15 +5,17 @@
 <title>A Simple BarChart</title>
 <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
 <style type="text/css">
-#demo1{
-	width:650px;
-	height:400px;
-	margin:0px auto;
+#demo1,#demo2{
+	width:500px;
+    height: 300px;
 }
 </style>
 </head>
 <body>
 <div id="demo1">
+
+</div>
+<div id="demo2">
 
 </div>
 <script src="//g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
@@ -34,17 +36,11 @@ KISSY.config({
             zoomType:"y",
 			renderTo:"#demo1",
 			title:{
-            	content:"Monthly Average Rainfall",
+            	content:"111",
             	css:{
             	}
             },
             anim:{},
-            subTitle:{
-            	content:"Source: WorldClimate.com",
-            	css:{
-
-            	}
-            },
 			 yAxis: {
                     isShow:false,
 			 		text:[
@@ -69,10 +65,6 @@ KISSY.config({
                 text: 'Tokyo',
                 data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
     
-            }, {
-                text: 'New York',
-                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
-    
             }
             ],
             legend:{
@@ -87,9 +79,54 @@ KISSY.config({
 				}
 			}
 		});
-    barChart.on("barClick",function(e){
-        S.log(e)
-    })
+
+var barChart2 = new BarChart({
+             // zoomType:"y",
+            renderTo:"#demo2",
+            title:{
+                content:"222",
+                css:{
+                }
+            },
+            anim:{},
+             xAxis: {
+                    isShow:false,
+                    text:[
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec']
+            },
+            bars:{
+                barsRatio:0.8,
+                barRatio:0.6
+            },
+            series:[ {
+                text: 'New York',
+                data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+    
+            }
+            ],
+            legend:{
+                isShow:true,y:-10
+            },
+            tip:{
+                template:"{{text}} {{y}} mm",
+                alignX:"right",
+                css:{"border-color":"{COLOR}"},
+                offset:{
+                    y:-10
+                }
+            }
+        });
 	});
 
 </script>

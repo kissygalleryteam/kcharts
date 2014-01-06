@@ -2,6 +2,7 @@
 combined files : 
 
 gallery/kcharts/1.3/datetime/theme
+gallery/kcharts/1.3/datetime/cfg
 gallery/kcharts/1.3/datetime/index
 
 */
@@ -103,40 +104,11 @@ gallery/kcharts/1.3/datetime/index
 	return themeCfg;
 
 });
-/**
- * @fileOverview KChart 1.3  datetime
- * @author huxiaoqi567@gmail.com
- */
-;
-KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, undefined, Tip, Anim, graphTool) {
-	var $ = S.all,
-		clsPrefix = "ks-chart-",
+;KISSY.add("gallery/kcharts/1.3/datetime/cfg",function(S){
+	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
-		evtLayoutCls = clsPrefix + "evtlayout",
-		evtLayoutAreasCls = evtLayoutCls + "-areas",
-		evtLayoutRectsCls = evtLayoutCls + "-rects",
-		COLOR_TPL = "{COLOR}",
-		//点的类型集合
-		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"],
-		color;
-	var methods = {
-		initializer: function() {
-			this.init();
-		},
-		init: function() {
-			// 兼容kissy < 1.4版本的
-			this._cfg || (this._cfg = this.userConfig);
-
-			var self = this,
-				points;
-
-			BaseChart.prototype.init.call(self, self._cfg);
-
-			self.chartType = "linechart";
-
-			if (!self._$ctnNode[0]) return;
-
-			var _defaultConfig = {
+		COLOR_TPL = "{COLOR}";
+	return {
 				themeCls: themeCls,
 				autoRender: true,
 				comparable: false,
@@ -260,14 +232,47 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 				}
 
 			};
+})
+/**
+ * @fileOverview KChart 1.3  datetime
+ * @author huxiaoqi567@gmail.com
+ */
+;
+KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, Touch, Tip, Anim, graphTool,Cfg) {
+	var $ = S.all,
+		clsPrefix = "ks-chart-",
+		themeCls = clsPrefix + "default",
+		evtLayoutCls = clsPrefix + "evtlayout",
+		evtLayoutAreasCls = evtLayoutCls + "-areas",
+		evtLayoutRectsCls = evtLayoutCls + "-rects",
+		COLOR_TPL = "{COLOR}",
+		//点的类型集合
+		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"],
+		color;
+	var methods = {
+		initializer: function() {
+			this.init();
+		},
+		init: function() {
+			// 兼容kissy < 1.4版本的
+			this._cfg || (this._cfg = this.userConfig);
+
+			var self = this,
+				points;
+
+			BaseChart.prototype.init.call(self, self._cfg);
+
+			self.chartType = "linechart";
+
+			if (!self._$ctnNode[0]) return;
 
 			self._lines = {};
 			//统计渲染完成的数组
 			self._finished = [];
 			//主题
-			themeCls = self._cfg.themeCls || _defaultConfig.themeCls;
+			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
-			self._cfg = S.mix(S.mix(_defaultConfig, Theme[themeCls], undefined, undefined, true), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 
 			self.color = color = new ColorLib({
 				themeCls: themeCls
@@ -1191,6 +1196,7 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 		'gallery/kcharts/1.3/tools/touch/index',
 		'gallery/kcharts/1.3/tip/index',
 		'gallery/kcharts/1.3/animate/index',
-		'gallery/kcharts/1.3/tools/graphtool/index'
+		'gallery/kcharts/1.3/tools/graphtool/index',
+		'./cfg'
 	]
 });

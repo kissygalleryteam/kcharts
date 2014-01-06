@@ -2,7 +2,8 @@
  * @fileOverview KChart 1.3  scatterchart
  * @author huxiaoqi567@gmail.com
  */
-;KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, undefined) {
+;
+KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -14,12 +15,13 @@
 
 	var methods = {
 		initializer: function() {
-		  var self = this;
+			var self = this;
 
-          var cfg = this.userConfig;
+			var cfg = this.userConfig;
 
-          self._cfg = cfg;
-		  self._cfg.zoomType = "xy";
+			self._cfg = cfg;
+			
+			self._cfg.zoomType = "xy";
 
 			BaseChart.prototype.init.call(self, self._cfg);
 
@@ -27,111 +29,13 @@
 
 			if (!self._$ctnNode[0]) return;
 
-			var _defaultConfig = {
-				themeCls: themeCls,
-				autoRender: true,
-				title: {
-					content: "",
-					css: {
-						"text-align": "center",
-						"font-size": "16px"
-					},
-					isShow: true
-				},
-				colors: [],
-				subTitle: {
-					content: "",
-					css: {
-						"text-align": "center",
-						"font-size": "12px"
-					},
-					isShow: true
-				},
-				//圆形的点 r 为半径
-				points: {
-					attr: {
-						"stroke": "#fff",
-						"r": 4,
-						"stroke-width": 1.5,
-						"fill": COLOR_TPL,
-						"opacity": 0.6
-					},
-					hoverAttr: {
-						"stroke": "#fff",
-						"r": 5,
-						"fill": COLOR_TPL,
-						"stroke-width": 0,
-						"opacity": 1
-					}
-				},
-				legend: {
-					isShow: false
-				},
-				xLabels: {
-					isShow: true,
-					css: {
-						"color": "#666",
-						"font-size": "12px",
-						"white-space": "nowrap",
-						"position": "absolute" //修复ie7被遮住的Bug
-					}
-				},
-				yLabels: {
-					isShow: true,
-					css: {
-						"color": "#666",
-						"font-size": "12px",
-						"white-space": "nowrap",
-						"position": "absolute" //修复ie7被遮住的Bug
-					}
-				},
-				//横轴
-				xAxis: {
-					isShow: true,
-					css: {
-						zIndex: 10
-					}
-				},
-				//纵轴
-				yAxis: {
-					isShow: true,
-					css: {
-						zIndex: 10
-					},
-					num: 5
-				},
-
-				//x轴上纵向网格
-				xGrids: {
-					isShow: true,
-					css: {}
-				},
-				//y轴上横向网格
-				yGrids: {
-					isShow: true,
-					css: {}
-				},
-				tip: {
-					isShow: true,
-					clsName: "",
-					template: "",
-					css: {
-
-					},
-					offset: {
-						x: 0,
-						y: 0
-					},
-					boundryDetect: true
-				}
-			};
 
 			//统计渲染完成的数组
 			self._finished = [];
 			//主题
-			themeCls = self._cfg.themeCls || _defaultConfig.themeCls;
+			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
-			self._cfg = S.mix(S.mix(_defaultConfig, Theme[themeCls], undefined, undefined, true), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 
 			self.color = color = new ColorLib({
 				themeCls: themeCls
@@ -227,7 +131,7 @@
 		},
 		//渲染tip
 		renderTip: function() {
-			if(!this._cfg.tip.isShow) return;
+			if (!this._cfg.tip.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
@@ -319,7 +223,7 @@
 			渲染legend
 		**/
 		renderLegend: function() {
-			if(!this._cfg.legend.isShow) return;
+			if (!this._cfg.legend.isShow) return;
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
@@ -389,7 +293,7 @@
 
 			self._clonePoints[index] = self._points[index];
 
-			BaseChart.Common.animateGridsAndLabels.call(null,self);
+			BaseChart.Common.animateGridsAndLabels.call(null, self);
 
 			self.animateSiblingsPoints(index);
 
@@ -419,7 +323,7 @@
 
 			delete self._clonePoints[index];
 
-			BaseChart.Common.animateGridsAndLabels.call(null,self);
+			BaseChart.Common.animateGridsAndLabels.call(null, self);
 
 			for (var i in self._stocks[index]['stocks']) {
 				self._stocks[index]['stocks'][i].remove();
@@ -474,23 +378,23 @@
 
 			self._clonePoints = self._points;
 
-			BaseChart.Common.drawTitle.call(null,this,themeCls);
+			BaseChart.Common.drawTitle.call(null, this, themeCls);
 
-			BaseChart.Common.drawSubTitle.call(null,this,themeCls);
+			BaseChart.Common.drawSubTitle.call(null, this, themeCls);
 			//渲染tip
 			self.renderTip();
 			//画x轴上的平行线
-			BaseChart.Common.drawGridsX.call(null,this);
+			BaseChart.Common.drawGridsX.call(null, this);
 
-			BaseChart.Common.drawGridsY.call(null,this);
+			BaseChart.Common.drawGridsY.call(null, this);
 			//画横轴
-			BaseChart.Common.drawAxisX.call(null,this);
+			BaseChart.Common.drawAxisX.call(null, this);
 
-			BaseChart.Common.drawAxisY.call(null,this);
+			BaseChart.Common.drawAxisY.call(null, this);
 			//画横轴刻度
-			BaseChart.Common.drawLabelsX.call(null,this);
+			BaseChart.Common.drawLabelsX.call(null, this);
 
-			BaseChart.Common.drawLabelsY.call(null,this);
+			BaseChart.Common.drawLabelsY.call(null, this);
 
 			self.diffStocksSize();
 
@@ -600,23 +504,23 @@
 	}
 	var ScatterChart;
 
-	if(Base.extend){
-      ScatterChart = BaseChart.extend(methods);
-	}else{
-      ScatterChart = function (cfg){
-		var self = this;
-        this.userConfig = cfg;
-        this.initializer();
-      }
-      S.extend(ScatterChart,BaseChart,methods);
-    }
+	if (Base.extend) {
+		ScatterChart = BaseChart.extend(methods);
+	} else {
+		ScatterChart = function(cfg) {
+			var self = this;
+			this.userConfig = cfg;
+			this.initializer();
+		}
+		S.extend(ScatterChart, BaseChart, methods);
+	}
 	return ScatterChart;
 }, {
 	requires: [
 		'base',
-        'node',
-        'dom',
-        'event',
+		'node',
+		'dom',
+		'event',
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.3/basechart/index',
 		'gallery/kcharts/1.3/raphael/index',
@@ -625,6 +529,7 @@
 		'gallery/kcharts/1.3/legend/index',
 		'./theme',
 		'gallery/kcharts/1.3/tools/touch/index',
-		'gallery/kcharts/1.3/tip/index'
+		'gallery/kcharts/1.3/tip/index',
+		'./cfg'
 	]
 });

@@ -1,7 +1,6 @@
 KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 
 	function drawTitle(chart, themeCls) {
-		console.log(chart)
 		if (!chart._cfg.title.isShow) return;
 		var paper = chart.htmlPaper,
 			cls = themeCls + "-title",
@@ -321,7 +320,6 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 					destroyedNodes[i].remove();
 				}
 			}
-
 			//动画
 			for (var i = 0;i< len;i++) {
 				(function(i) {
@@ -350,7 +348,6 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 						chart[_label][i] && chart[_label][i][0] && destroyedNodes.push(chart[_label][i][0].animate(animAttrs, duration, "easeNone"));
 						chart[_grids][i] && chart[_grids][i][0] && destroyedNodes.push(chart[_grids][i][0].animate(animAttrs, duration, "easeNone"));
 					}
-					
 				})(i)
 			}
 
@@ -393,15 +390,13 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 					
 				}
 			}
-
-			Array.prototype.sort.call(coords);
-
+			//排序
+			Array.prototype.sort.call(coords,function(a,b){return a.num - b.num});
 			setTimeout(function() {
 				callback()
 			}, 500)
 		}
 	}
-
 
 	/**
 			TODO 获取直线的路径
