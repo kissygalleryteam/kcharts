@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
-    <title>chart test</title>
+    <title>显示某个月的数据</title>
     <style type="text/css" media="screen">
      .con{
        border:1px solid #999;width:700px;height:350px;margin:10px 0 0 10px;
@@ -42,19 +42,39 @@
            tip:{
              template:"index: {{index}},原始x值：{{xvalue}},原始y值：{{yvalue}}"
            },
-           xAxis:{
+           xRuller:{ruller:"-"},  // x刻度尺
+           yRuller:{ruller:"--",size:3,isShow:false},  // y刻度尺
+           fixedInterval:"1",
+           xGrid:{
+             isShow:true
            },
-           yAxis:{
-             num:10
+           yGrid:{
+             isShow:false,
            },
            xLabel:{
-             rotate:true
+             rotate:true // 不开启旋转的样式
+           },
+           yLabel:{
+           },
+           xAxis:{
+             range:{
+               step:2*24*3600*1000, // 1天
+               max:+new Date("2006-06-30")
+             },
+             arrow:true
+           },
+           yAxis:{
+             num:10,
+             style:{
+               "stroke":"#999",
+             },
+             arrow:true
            },
            legend:{
              
            },
            point:{
-             isShow:false // 大数据，可选是否绘制出点
+             isShow:true
            },
            series:[
              {
@@ -66,11 +86,15 @@
                  [1148428800000,40],
                  [1148515200000,50]
                ]
-		     },{
-			   name : 'AAPL',
-			   data : data
 		     }
            ]
+         });
+
+         stock.on("afterRender",function(){
+           /* var line1 = stock.drawLine("x=300",{raw:true});*/
+           /* var line2 = stock.drawLine("y=100",{raw:true}); */
+           /* var line3 = stock.drawLine("y=60"); */
+           var line4 = stock.drawLine("x=6",{style:{"stroke":"red"}});
          });
 
          E.on("#J_Update",'click',refresh);
@@ -91,11 +115,7 @@
            console.log(Util.formatDate(new Date(start),"yy-MM-dd"));
            stock.addData(slice);
            stock.render();
-           
-           // setTimeout(refresh,3000);
          }
-         setInterval(refresh,2000);
-         // refresh();
        });
      })
     </script>
