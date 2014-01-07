@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style>
+#demo1{
+  width:750px;
+  height:300px;
+  margin:0px auto;
+}
+#demo1 .ks-charts-legend ul li{
+  float: left;  
+  padding: 10px;
+}
+#demo1 .ks-charts-legend .disable{
+  color:#ccc;
+}
+#demo1 .ks-charts-legend .legend-text{
+  padding-left: 5px;
+}
+</style>
+</head>
+<body>
+<div id="demo1">
+
+</div>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+<script type="text/javascript">
+KISSY.Config.debug = true;
+
+KISSY.use("gallery/kcharts/1.3/linechart/index",function(S,LineChart){
+  var linechart = new LineChart({
+      renderTo:"#demo1",
+      points:{
+        attr:{
+          type:"auto"
+        }
+      },
+      yLabels:{
+        css:{
+          "marginLeft":"-4px",
+          "font-family":"Microsoft Yahei",
+          "font-size":"10px"
+        },
+        //画垂直坐标
+        template:function(index,text){
+          //index 当前索引  text 内容
+          return text + " \u2103";
+
+        }
+      },
+      xLabels:{
+        css:{
+          "font-family":"Microsoft Yahei",
+           "font-size":"10px"
+        }
+      },
+      title:{
+              content:"Monthly Average Temperature"
+            },
+            anim:{},
+            subTitle:{
+              content:"Source: WorldClimate.com"
+            },
+            lineType:"arc",
+       xAxis: {
+          text:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis:{
+              num:7
+            },
+          comparable:true,
+      series:[{
+                text: 'Tokyo',
+                data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+            }
+            ],
+      legend:{
+        isShow:true,y:-10
+      },
+      tip:{
+        offset:{
+                    x:10,
+                    y:10
+                },
+        template:function(e){
+          var html = "";
+          for(var i in e.datas){
+            html +="<span style='font-size:10px;color:"+e.datas[i]['color']+"'>"+e.datas[i]['text'] +" "+e.datas[i]['y']+" \u2103</span><br/>"
+          }
+          return html;
+        }
+      }
+  });
+
+
+
+
+  //获取主绘图区域
+  var container = linechart.getInnerContainer();
+  //获取html画布
+  var htmlPaper = linechart.getHtmlPaper();
+
+  var lineX = htmlPaper.lineX(container.x,0,container.width).css({"border-top":"1px solid #ccc"}).hide();
+
+    var lineY = htmlPaper.lineY(0,container.y,container.height).css({"border-left":"1px solid #ccc"}).hide();
+
+    var lblY = htmlPaper.text(container.x,0,'00.0 \u2103',"right","top").css({color:"#f60"}).hide();
+    linechart.on("stockChange",function(e){
+      lineX.css({marginTop:e.y}).show();
+      lineY.css({marginLeft:e.x}).show();
+      for(var i in linechart._labelX){
+        linechart._labelX[i].css({color:"#444"})
+      }
+      linechart._labelX[e.stockIndex].css({color:"#f60"});
+      lblY.css({marginTop:e.y}).html(e.dataInfo.y+" \u2103").show();
+
+    });
+
+  linechart.on("paperLeave",function(){
+    lineX.hide();
+    lineY.hide();
+    lblY.hide();
+  });
+
+});</script>
+</body>
+</html>
