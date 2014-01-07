@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="demo1"></div>
-<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script>
 (function(S){
     S.Config.combine = true;
@@ -53,7 +53,8 @@
                     '20131029']
             },
             yAxis:{
-                min:0
+                min:0,
+                max:300
             },
             bars:{
                 barsRatio:0.8,
@@ -88,8 +89,7 @@
      
      //旋转逻辑
      barChart.on("afterRender",function(){
-       // var paper = new Raphael(barChart._$ctnNode.attr("id"));
-       paper = barChart.getRaphaelPaper();
+       var paper = new Raphael(barChart._$ctnNode.attr("id"));
        var texts = barChart._cfg.xAxis.text;
        for(var i in barChart._pointsX){
          var pt = barChart._pointsX[i];
