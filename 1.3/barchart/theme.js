@@ -55,11 +55,6 @@
 					"color":"#666",
 					"font-size": "12px"
 				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
-				}
 			}
 		},
 		"ks-chart-analytiks":{
@@ -113,11 +108,6 @@
 					"color":"#666",
 					"font-size": "12px"
 				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
-				}
 			}
 		},
 		"ks-chart-rainbow":{
@@ -170,11 +160,6 @@
 				css:{
 					"color":"#666",
 					"font-size": "12px"
-				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
 				}
 			}
 		}

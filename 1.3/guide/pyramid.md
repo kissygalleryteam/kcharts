@@ -9,15 +9,7 @@ Demo
 代码示例
 ---
 ```
-//配置kissy包路径
-KISSY.config({
-  packages:[
-      {
-        name:"gallery",
-        path:"http://a.tbcdn.cn/s/kissy/"
-      }
-    ]
-});
+
 //载入Funnel
 KISSY.use('gallery/kcharts/1.3/pyramid/index',function(S,Triangle){
         //数据格式

@@ -40,44 +40,39 @@
 			},
 			xGrids:{
 				css:{
-					color:"#eee"
+					color:"#aaa"
 				}
 			},
 			yGrids:{
 				css:{
-					color:"#eee"
+					color:"#aaa"
 				}
 			},
 			yAxis:{
 				css:{
-					color:"#ccc"
+					color:"#000"
 				}
 			},
 			xAxis:{
 				css:{
-					color:"#ccc"
+					color:"#000"
 				}
 			},
 			xLabels:{
 				css:{
-					"color":"#666",
+					"color":"#000",
 					"font-size": "12px"
 				}
 			},
 			yLabels:{
 				css:{
-					"color":"#666",
+					"color":"#000",
 					"font-size": "12px"
 				}
 			},
 			pointLine:{
 				css:{
-					color:"#ccc"
-				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
+					color:"#aaa"
 				}
 			}
 		},
@@ -153,11 +148,6 @@
 				css:{
 					color:"#ccc"
 				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
-				}
 			}
 		},
 		"ks-chart-rainbow":{
@@ -231,11 +221,6 @@
 			pointLine:{
 				css:{
 					color:"#ccc"
-				}
-			},
-			tip:{
-				css:{
-					border:"1px solid {COLOR}"
 				}
 			}
 		}
