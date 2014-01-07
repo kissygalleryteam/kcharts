@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="demo1"></div>
-<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
 <script>
 (function(S){
     S.Config.combine = true;
@@ -89,7 +89,7 @@
 		});
 barchart.on("afterRender",function(){
   var points = barchart._points[0];
-  var htmlPaper = barchart.getPaper();
+  var htmlPaper = barchart.getHtmlPaper();
   for(var i in points){
     htmlPaper.text(points[i]['x'],points[i]['y']-8,points[i]['dataInfo']['y']+" \u2103","center","bottom");
   }
