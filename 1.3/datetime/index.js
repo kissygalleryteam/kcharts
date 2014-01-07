@@ -81,16 +81,6 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 			}
 			return cfgs;
 		},
-		//获取有效的点数目
-		getRealPointsNum: function(points) {
-			var j = 0;
-			for (var i in points) {
-				if (points[i]['x'] && points[i]['y']) {
-					j++;
-				}
-			}
-			return j;
-		},
 		//获取默认可见的直线数量
 		getVisableLineNum: function() {
 			var self = this,
@@ -157,68 +147,6 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 			}
 			return;
 		},
-		//曲线动画
-		animateLine: function(lineIndex, callback) {
-			var self = this,
-				sub_path,
-				idx = 0,
-				from = 0,
-				to, box,
-				show_num,
-				first_index,
-				_cfg = self._cfg,
-				paper = self.paper,
-				points = self._points[lineIndex],
-				type = self._stocks[lineIndex]['type'],
-				path = BaseChart.Common.getLinePath.call(null,self,points),
-				total_len = Raphael.getTotalLength(path),
-				//总共的点 包含不带x,y的点
-				total_num = points.length || 0,
-				//获取有效点的个数
-				real_num = self.getRealPointsNum(points),
-				duration = _cfg.anim ? _cfg.anim.duration || 500 : 500,
-				easing = "easeNone",
-				// 每段直线的宽度
-				aver_len = self.get("area-width"),
-				_attr = S.mix({
-					"stroke": color.getColor(lineIndex).DEFAULT
-				}, _cfg.line.attr),
-				lineAttr = self.__cfg['line'][lineIndex]['attr'],
-				$line = paper.path(sub_path).attr(lineAttr).attr({
-					"stroke": color.getColor(lineIndex).DEFAULT
-				});
-			first_index = self.getFirstUnEmptyPointIndex(lineIndex);
-			//默认显示的直线条数
-			show_num = self.getVisableLineNum();
-			//动画
-			var anim = new Anim({}, {}, {
-				duration: duration,
-				easing: easing,
-				step: function() {
-					//arguments[1] 代表经过缓动函数处理后的0到1之间的数值
-					to = arguments[1] * total_len;
-					//获取子路径
-					sub_path = Raphael.getSubpath(path, from, to);
-					//获取路径所占的矩形区域
-					box = Raphael.pathBBox(sub_path);
-					//当前渲染点的索引
-					idx = Math.floor((box.width * 1.01) / aver_len) - (-first_index);
-					$line && $line.attr({
-						path: sub_path
-					});
-				},
-				end: function() {
-					//finish state
-					self._finished.push(true);
-
-					if (self._finished.length == show_num && callback) {
-						callback();
-					}
-				}
-			});
-
-			return $line;
-		},
 		//获取块区域的路径
 		getAreaPath: function(points) {
 			var self = this;
@@ -252,7 +180,6 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 					type: pointsAttr.type == "auto" ? POINTS_TYPE[i % len] : pointsAttr.type
 				};
 
-				// line = _cfg.series[i]['isShow'] == false ? undefined : self.drawLine(i,callback);
 				if (_cfg.series[i]['isShow'] !== false) {
 					area = self._areas[i] = self.drawArea(i);
 					line = self.drawLine(i, callback);

@@ -43,22 +43,25 @@
 				}
 			},
 			 xGrids:{
-                isShow:false
+                isShow:false,
+                css:{
+					color:"#aaa"
+				}
             },
 			yGrids:{
 				css:{
-					color:"#eee"
+					color:"#aaa"
 				}
 			},
 			yAxis:{
 				isShow:false,
 				css:{
-					color:"#ccc"
+					color:"#000"
 				}
 			},
 			xAxis:{
 				css:{
-					color:"#ccc"
+					color:"#000"
 				}
 			},
 			xLabels:{
@@ -76,7 +79,7 @@
 			},
 			pointLine:{
 				css:{
-					color:"#ccc"
+					color:"#aaa"
 				}
 			},
 			tip:{

@@ -13,7 +13,9 @@
 	z-index: 10;
 	font-size: 12px;
 	font-weight: bolder;
-	box-shadow:5px 5px 5px 5px #ccc;
+	-webkit-box-shadow:2px 2px 2px 2px #ccc;
+	-moz-box-shadow:2px 2px 2px 2px #ccc;
+	box-shadow:2px 2px 2px 2px #ccc;
 }
 .ks-chart-default-tip span,.ks-chart-analytiks-tip span,.ks-chart-rainbow-tip span{
 	font-weight: normal;

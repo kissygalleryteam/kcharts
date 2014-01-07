@@ -81,11 +81,14 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 		var ctn = chart.getInnerContainer(),
 			x = ctn.x,
 			points = chart._pointsY;
+		var tpl = chart._cfg.yGrids.template;
+
 		for (var i = 0, len = points.length; i < len; i++) {
 			chart._gridsY[i] = {
 				0: drawGridY(chart, {
 					x: x,
-					y: points[i].y
+					y: points[i].y,
+					index:i
 				}),
 				x: x,
 				y: points[i].y,
@@ -119,22 +122,25 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			}();
 			for (var i = 0, len = gridPointsX.length; i < len; i++) {
 				chart._gridsX[i] = {
-					0:drawGridX(chart, gridPointsX[i]),
-					x:gridPointsX[i]['x'],
-					y:ctn.bl.y,
-					num: chart.coordNum[i] 
+					0: drawGridX(chart, {index:i,x:gridPointsX[i].x}),
+					x: gridPointsX[i]['x'],
+					y: ctn.bl.y,
+					index:i,
+					num: chart.coordNum[i]
 				};
 			}
 		} else {
 			for (var i in chart._pointsX) {
 				chart._gridsX[i] = {
-					0:drawGridX(chart, chart._pointsX[i]),
-					x:chart._pointsX[i]['x'],
-					y:ctn.bl.y,
-					num:chart.coordNumX[i]
+					index:i,
+					0: drawGridX(chart, {index:i,x:chart._pointsX[i].x}),
+					x: chart._pointsX[i]['x'],
+					y: ctn.bl.y,
+					num: chart.coordNumX[i]
 				};
 			}
 		}
+
 		return chart._gridsX;
 	}
 
@@ -144,8 +150,24 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			css = css || chart._cfg.xGrids.css,
 			paper = chart.htmlPaper,
 			cls = chart._cfg.themeCls + "-gridsx";
-
-		return paper.lineY(point.x, ctn.tl.y, ctn.height).addClass(cls).css(chart._cfg.xGrids.css);
+		var tpl = chart._cfg.xGrids.template;
+		var params = {
+				index:point.index,
+				paper:paper,
+				x:point.x,
+				y:ctn.tl.y,
+				height:ctn.height,
+				css:css,
+				className:cls
+			};
+		if(!tpl){
+			return paper.lineY(point.x, ctn.tl.y, ctn.height).addClass(cls).css(css);
+		}
+		if(S.isFunction(tpl)){
+			return tpl(params);
+		}else{
+			return Template(tpl).render({data:params});
+		}
 	}
 
 	function drawGridY(chart, point, css) {
@@ -154,8 +176,24 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			css = css || chart._cfg.yGrids.css,
 			paper = chart.htmlPaper,
 			cls = chart._cfg.themeCls + "-gridsy";
-
-		return paper.lineX(ctn.x, point.y, ctn.width).addClass(cls).css(css);
+		var tpl = chart._cfg.yGrids.template;
+		var params = {
+				index:point.index,
+				paper:paper,
+				x:ctn.x,
+				y:point.y,
+				width:ctn.width,
+				css:css,
+				className:cls
+			};
+		if(!tpl){
+			return paper.lineX(ctn.x, point.y, ctn.width).addClass(cls).css(css);
+		}
+		if(S.isFunction(tpl)){
+			return tpl(params);
+		}else{
+			return Template(tpl).render({data:params});
+		}
 	}
 
 	function drawLabelsY(chart) {
@@ -177,10 +215,10 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 		//画x轴刻度线
 		for (var i in chart._pointsX) {
 			chart._labelX[i] = {
-				0:drawLabelX(chart, i, chart._pointsX[i].number),
-				'num':chart._pointsX[i].number,
-				x:chart._pointsX[i]['x'],
-				y:chart._pointsX[i]['y']
+				0: drawLabelX(chart, i, chart._pointsX[i].number),
+				'num': chart._pointsX[i].number,
+				x: chart._pointsX[i]['x'],
+				y: chart._pointsX[i]['y']
 			};
 		}
 	}
@@ -259,7 +297,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 		}
 		//判断上下移动的方向 返回位置
 		var judgeDirect2Move = function(point) {
-			if(!point) return;
+			if (!point) return;
 			var spacing = Math.min.apply(null, [cfg.canvasAttr.x, cfg.canvasAttr.y]) / 2;
 			//垂直中点
 			var middle = ctn.y + ctn.height / 2;
@@ -305,7 +343,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 		function anim(zoomName, coords, points, destroyedNodes, animatedCoords) {
 			var _grids = "_grids" + zoomName;
 			var _label = "_label" + zoomName;
-			var len = Math.max.apply(null,[chart[_label]['length'],chart[_grids]['length']]);
+			var len = Math.max.apply(null, [chart[_label]['length'], chart[_grids]['length']]);
 			var callback = function() {
 				chart[_grids] = [];
 				chart[_label] = [];
@@ -328,7 +366,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 				}
 			}
 			//动画
-			for (var i = 0;i< len;i++) {
+			for (var i = 0; i < len; i++) {
 				(function(i) {
 					var num = chart[_label][i] ? chart[_label][i]['num'] : chart[_grids][i]['num'];
 					var point = getPointByNum(num, points, animatedCoords);
@@ -341,7 +379,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 						coords.push({
 							num: num,
 							lbl: chart[_label][i] && chart[_label][i][0] && chart[_label][i][0].animate(animAttrs, duration, "easeNone"),
-							grid:chart[_grids][i] && chart[_grids][i][0] && chart[_grids][i][0].animate(animAttrs, duration, "easeNone")
+							grid: chart[_grids][i] && chart[_grids][i][0] && chart[_grids][i][0].animate(animAttrs, duration, "easeNone")
 						});
 					} else {
 						//渐隐（两侧）
@@ -377,7 +415,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 						opacity: 1
 					};
 
-					if(zoomName == "Y"){
+					if (zoomName == "Y") {
 						var $lbl = drawLabelY(chart, i, points[i]['number']);
 						var $grid = drawGridY(chart, judgeDirect2Move(points[i])['y']);
 						coords.push({
@@ -385,7 +423,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 							lbl: $lbl && $lbl.css(beginAttrs).animate(endAttrs, duration, "easeNone"),
 							grid: $grid && $grid.css(beginAttrs).animate(endAttrs, duration, "easeNone")
 						});
-					}else{
+					} else {
 						var $lbl = drawLabelX(chart, i, points[i]['number']);
 						var $grid = drawGridX(chart, judgeDirect2Move(points[i])['x']);
 						coords.push({
@@ -394,15 +432,27 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 							grid: $grid && $grid.css(beginAttrs).animate(endAttrs, duration, "easeNone")
 						});
 					}
-					
+
 				}
 			}
 			//排序
-			Array.prototype.sort.call(coords,function(a,b){return a.num - b.num});
+			Array.prototype.sort.call(coords, function(a, b) {
+				return a.num - b.num
+			});
 			setTimeout(function() {
 				callback()
 			}, 500)
 		}
+	}
+	//获取有效的点数目
+	function getRealPointsNum(points) {
+		var j = 0;
+		for (var i in points) {
+			if (points[i]['x'] && points[i]['y']) {
+				j++;
+			}
+		}
+		return j;
 	}
 
 	/**
@@ -411,7 +461,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 	function getLinePath(chart, points) {
 		var path = "",
 			ctnY = chart._innerContainer.bl.y,
-			len = chart.getRealPointsNum(points),
+			len = getRealPointsNum(points),
 			start = 0;
 		//找出起始点
 		if (!points) return "";

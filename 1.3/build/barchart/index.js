@@ -63,11 +63,6 @@ gallery/kcharts/1.3/barchart/index
 					"color":"#666",
 					"font-size": "12px"
 				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
-				}
 			}
 		},
 		"ks-chart-analytiks":{
@@ -121,11 +116,6 @@ gallery/kcharts/1.3/barchart/index
 					"color":"#666",
 					"font-size": "12px"
 				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
-				}
 			}
 		},
 		"ks-chart-rainbow":{
@@ -178,11 +168,6 @@ gallery/kcharts/1.3/barchart/index
 				css:{
 					"color":"#666",
 					"font-size": "12px"
-				}
-			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
 				}
 			}
 		}
