@@ -503,6 +503,18 @@
        destroySerie(series[i]);
      }
    }
+   function removeSeries2(series){
+     var $line,$points;
+     for(var i=0,l=series.length;i<l;i++){
+       $line = series[i].$line;
+       // 线只隐藏
+       $line && $line.hide();
+
+       $points = series[i].$points;
+       $points && $points.unhover();
+       $points && $points.remove();
+     }
+   }
    // 获取缓存的连线
    function getCachedLine(that,index){
      var all = that.get("$lines");
@@ -898,7 +910,9 @@
       * 3.2 y label
       * 4. 化刻度尺
       * 4.1 x 刻度尺
+      * 4.1.1 x网格
       * 4.2 y 刻度尺
+      * 4.2.1 y网格
       * 5. 画x轴y轴
       * 6. legend
       * 7. tip
@@ -922,8 +936,13 @@
          , paper = this.get('paper')
 
        var series = this.get("series") || [];
-       if(series.length === 0)
+       if(series.length === 0){
+         // 只移除线条
+
+         // 移除线的连接点，隐藏线
+         removeSeries2(this.get("$series"));
          return;
+       }
 
        // 0.
        // var w = D.width(container), h = D.height(container); // 容器总宽高
@@ -1046,8 +1065,9 @@
              , xrangeInterval = xrangeConfig.step || 1 ;
 
            // x轴数据是否为日期，默认为日期
-           if(xrangeConfig.isDate != false)
+           if(xrangeConfig.isDate !== false){
              standardDate = true;
+           }
 
            if(typeof xrangeStart !== 'number')
              xrangeStart = Math.min.apply(Math,valuesAndDates.dates)
@@ -1386,40 +1406,49 @@
 
        // 5. 画x轴y轴
        var xstartend2,ystartend2;
-       if(xAxis.arrow){
-         xstartend2 = xstartend.map(function(i,index){
-                            if(index){
-                              return {x:i.x+15,y:i.y};
-                            }else{
-                              return {x:i.x,y:i.y};
-                            }
-                          });
-       }else{
-         xstartend2 = xstartend;
+
+       // 5.1
+       if(xAxis.isShow !== false){
+         if(xAxis.arrow){
+           xstartend2 = xstartend.map(function(i,index){
+                      if(index){
+                        return {x:i.x+15,y:i.y};
+                      }else{
+                        return {x:i.x,y:i.y};
+                      }
+                    });
+         }else{
+           xstartend2 = xstartend;
+         }
+         var xaxis = paper.path(polyLine(xstartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},xAxis.style)));
+         if(xAxis.arrow === true){
+           xaxis.attr({'arrow-end':"classic-wide-long"});
+         }
+         this.set("$xaxis",xaxis);
+         Util.fixSVGLineStyle(xaxis,Raphael.svg);
        }
-       if(yAxis.arrow){
-         ystartend2 = ystartend.map(function(i,index){
-                            if(index){
-                              return {x:i.x,y:i.y - 15};
-                            }else{
-                              return {x:i.x,y:i.y};
-                            }
-                          });
-       }else{
-         ystartend2 = ystartend;
+
+       // 5.2
+       if(yAxis.isShow !== false){
+         if(yAxis.arrow){
+           ystartend2 = ystartend.map(function(i,index){
+                      if(index){
+                        return {x:i.x,y:i.y - 15};
+                      }else{
+                        return {x:i.x,y:i.y};
+                      }
+                    });
+         }else{
+           ystartend2 = ystartend;
+         }
+
+         var yaxis = paper.path(polyLine(ystartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},yAxis.style)));
+         if(yAxis.arrow === true){
+           yaxis.attr({'arrow-end':"classic-wide-long"});
+         }
+         this.set("$yaxis",yaxis);
+         Util.fixSVGLineStyle(yaxis,Raphael.svg);
        }
-       var xaxis = paper.path(polyLine(xstartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},xAxis.style)));
-       var yaxis = paper.path(polyLine(ystartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},yAxis.style)));
-       if(xAxis.arrow === true){
-         xaxis.attr({'arrow-end':"classic-wide-long"});
-       }
-       if(yAxis.arrow === true){
-         yaxis.attr({'arrow-end':"classic-wide-long"});
-       }
-       this.set("$xaxis",xaxis);
-       this.set("$yaxis",yaxis);
-       Util.fixSVGLineStyle(xaxis,Raphael.svg);
-       Util.fixSVGLineStyle(yaxis,Raphael.svg);
 
        // 6. 若配置了legend,绘制legend
        // 移到lineend动画完成后执行
@@ -1801,6 +1830,13 @@
        }else{
          RjointPoints = [];
          this.set("$jointPoints",RjointPoints);
+       }
+     },
+     // 全量更新数据
+     updateAllData:function(data){
+       if(data){
+         this.clearData();
+         this.render();
        }
      },
      destroy:function(){
