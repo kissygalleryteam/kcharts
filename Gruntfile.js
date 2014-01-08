@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+
   var widgets = [
     'animate',
     'barchart',
@@ -19,29 +20,21 @@ module.exports = function(grunt) {
     "tools/graphtool",
     "tools/htmlpaper",
     "tools/touch"
-    // "gallery/trianglechart",
-    // "gallery/funnel",
-    // "gallery/pyramid"
   ];
-  //kmc的文件队列
-  var kmcFiles = (function() {
-                    var tmp = [];
-                    for (var i = 0; i < widgets.length; i++) {
-                      tmp.push({
-                        src: '<%= pkg.version %>/' + widgets[i] + '/index.js',
-                        dest: '<%= pkg.version %>/build/' + widgets[i] + '/index.js'
-                      });
-                    }
-                    return tmp;
-                  })();
 
-  var uglifyFiles = (function(){
-                       var tmp = {};
-                       for (var i = 0; i < widgets.length; i++) {
-                         tmp['<%= pkg.version %>/build/' + widgets[i] + '/index-min.js'] = ['<%= pkg.version %>/build/' + widgets[i] + '/index.js']
-                       }
-                       return tmp;
-                     })();
+  //kmc的文件队列
+  var kmcFiles = widgets.map(function(widget){
+               return {
+                 src:'<%= pkg.version %>/' + widget + '/index.js',
+                 dest:'<%= pkg.version %>/build/' + widget + '/index.js'
+               }
+             });
+
+  var uglifyFiles = {};
+
+  widgets.forEach(function(widget){
+    uglifyFiles['<%= pkg.version %>/build/' + widget + '/index-min.js'] = ['<%= pkg.version %>/build/' + widget + '/index.js']
+  });
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('abc.json'),
@@ -74,6 +67,7 @@ module.exports = function(grunt) {
       }
     }
   });
+
   grunt.loadNpmTasks('grunt-kmc');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
