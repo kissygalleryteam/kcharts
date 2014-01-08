@@ -70,10 +70,10 @@
 				_css = self.processAttr(_cfg.bars.css, color),
 				isY = _cfg.zoomType == "x" ? false : true,
 				barPos = self._barsPos[groupIndex][barIndex],
-				x = (barPos.x - 0).toFixed(2),
-				y = (barPos.y - 0).toFixed(2),
-				w = (barPos.width - 0).toFixed(2),
-				h = (barPos.height - 0).toFixed(2),
+				x = Math.round(barPos.x - 0),
+				y = Math.round(barPos.y - 0),
+				w = Math.round(barPos.width - 0),
+				h = Math.round(barPos.height - 0),
 				rect;
 			//允许动画
 			if (_cfg.anim) {

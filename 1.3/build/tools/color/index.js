@@ -38,24 +38,24 @@ KISSY.add('gallery/kcharts/1.3/tools/color/index', function(S) {
 		},
 		colorCfg: {
 			"ks-chart-default": [{
-				DEFAULT: "#2ca02c",
-				HOVER: "#2ca02c"
-			},{
-				DEFAULT: "#ff7f0e",
-				HOVER: "#ff7f0e"
-			},{
 				DEFAULT: "#1f77b4",
 				HOVER: "#1f77b4"
 			}, {
 				DEFAULT: "#aec7e8",
 				HOVER: "#aec7e8"
 			}, {
-				DEFAULT: "#ffbb78",
-				HOVER: "#ffbb78"
-			}, {
 				DEFAULT: "#98df8a",
 				HOVER: "#98df8a"
-			}, {
+			},{
+				DEFAULT: "#ff7f0e",
+				HOVER: "#ff7f0e"
+			},{
+				DEFAULT: "#2ca02c",
+				HOVER: "#2ca02c"
+			},{
+				DEFAULT: "#ffbb78",
+				HOVER: "#ffbb78"
+			},  {
 				DEFAULT: "#d62728",
 				HOVER: "#d62728"
 			}, {
