@@ -8,6 +8,7 @@
 [饼图中间自定义文本或图片](../demo/piechart/pie-center-text.html)
 [无边框的饼图](../demo/piechart/pie-without-border.html)
 
+## 配置
 
 ### rs 简单饼图可选，嵌套饼图必须为一个由小到大的数组
 半径，对于面包圈图的半径为数组
@@ -117,9 +118,19 @@ templte可以为函数，参数为 `donutIndex,groupIndex,label,percent`
 
 `true` or `false`
 
----
-piechart 实例属性
----
+
+## piechart 方法
+
+### setConfig
+用于更新pie的配置
+
+### render
+重绘饼图  配合setConfig可以实现更改饼图数据的目的
+
+## piechart 实例属性
+
+实例化后 `pie = new Pie(config)`，通过 `pie.get(propName)` 来获取
+
 ### `cx`
 
 ### `cy` 
@@ -278,7 +289,3 @@ pie.on('mouseover',function(e){
     });
 ```
 
-### exmamples
-
- - 普通饼图、面包圈、嵌套的饼图 examples/all.html
- - 浏览器分布图 examples/pie-browser.html
