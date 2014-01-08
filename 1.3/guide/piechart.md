@@ -1,25 +1,29 @@
 # PieChart
 
 ## Demo
-[自适应容器尺寸](../demo/piechart/pie-auto-resize.html) 
-[自适应容器尺寸面包圈](../demo/piechart/pie-auto-resize-donut.html) 
-[浏览器市场占有率](../demo/piechart/pie-bs.html) 
-[简单饼图](../demo/piechart/pie-simple.html)
-[饼图中间自定义文本或图片](../demo/piechart/pie-center-text.html)
-[无边框的饼图](../demo/piechart/pie-without-border.html)
+- [自适应容器尺寸](../demo/piechart/pie-auto-resize.html) 
+- [自适应容器尺寸面包圈](../demo/piechart/pie-auto-resize-donut.html) 
+- [浏览器市场占有率](../demo/piechart/pie-bs.html) 
+- [简单饼图](../demo/piechart/pie-simple.html)
+- [饼图中间自定义文本或图片](../demo/piechart/pie-center-text.html)
+- [无边框的饼图](../demo/piechart/pie-without-border.html)
 
+## 配置
 
-### rs 简单饼图可选，嵌套饼图必须为一个由小到大的数组
-半径，对于面包圈图的半径为数组
+### rs 饼图半径
+如果是面包圈或者嵌套的饼图时，存在多个r，配置项为一个数组，且由内到外半径z值要逐渐增大，如下的示例配置
 
 配置示例:
 
 ```
 rs:[60,80]
 ```
+注：当为简单饼图是，rs为可选配置，组件会为您自动生成一个半径值
 
 ### series
-格式为嵌套的数组数据，比如
+
+饼图成分数据，格式为嵌套的数组数据，比如
+
 ```
        [{
           color:"#78a5da",
@@ -71,13 +75,17 @@ title: {
 ```
 
 ### interval
-多级面包圈图之间的间隔，只对面包圈图有效。当data数据嵌套情况会自动生成面包圈图。示例：demo/piechart/pie-nest.html
+多级面包圈的间隔，只对面包圈图有效。
+
+当series数据嵌套情况会自动生成面包圈图。示例：demo/piechart/pie-nest.html
 
 ### padding
-label和饼图之前的填充
+
+label连线的间隔
 
 ### labelfn
-label生成函数
+
+饼图label文案生成函数
 
 ```
       labelfn:function(txt,sector,pie){
@@ -87,20 +95,21 @@ label生成函数
       }
 ```
 
-### cx
+### cx 可选
 饼图中心点x
 
-### cy
+### cy 可选
 饼图中心点y
 
 ### renderTo
 渲染到的容器
 
-### label
+### label 可选
 是否显示label。默认显示
 
-### tip 
-集成的tip配置，同其它图表，示例：
+### tip 可选
+
+tip配置，同其它图表，示例：
 
 ```
 {
@@ -111,36 +120,64 @@ label生成函数
   }
 }
 ```
-templte可以为函数，参数为 `donutIndex,groupIndex,label,percent`
 
-### autoLabelPathColor label曲线路径是否自动为为扇形的颜色
+template可以为函数，参数为 `donutIndex,groupIndex,label,percent`
 
-`true` or `false`
+### autoLabelPathColor 可选，默认为true
 
----
-piechart 实例属性
----
+label曲线路径是否自动为为扇形的颜色
+
+值为 `true` 或 `false`
+
+## piechart 方法
+
+### `setConfig(config)`
+
+用于更新pie的配置，`config`是一个Object字段为配置项字段
+
+### render()
+
+重绘饼图  配合setConfig可以实现更改饼图数据展现的目的
+
+## piechart 实例属性
+
+实例化后 `pie = new Pie(config)`，通过 `pie.get(propName)` 来获取
+
 ### `cx`
 
 ### `cy` 
 
 ### `paper`
-Raphael画布
+
+Raphael画布实例
 
 ### `width`
-宽度
+饼图容器宽度
 
 ### `height`
-高度
+饼图容器高度
+
+### `innerWidth`
+饼图内部绘制区域宽度
+
+### `innerHeight`
+饼图内部绘制区域高度
 
 ### `container`
-饼图所在的容器 KISSY Node 
+饼图所在的容器 ，是一个 KISSY `Node` 实例
 
-### `data`
-piechart对应的数据
+### `series`
+piechart占比数据
 
 ### `$sectors`
-所有的扇形 为一个 Raphael `set`
+所有的扇形 为一个 Raphael 集合 `set`
+
+你可以这样使用：
+
+```
+var sectors = pie.get("set");
+sectors.attr({"fill":"#f60"}); // sectors是一个类似数组的封装对象，可以调用Raphael element 的方法
+```
 
 ### `groups`
 扇形嵌套分组 为一个 Raphael `set`
@@ -167,9 +204,9 @@ piechart对应的数据
 ```
 更多配置参看[legend文档](./legend.html)
 
----
-扇形属性
----
+
+## 扇形属性
+
 ### 获取
 
 当通过监听扇形的事件，能获取到扇形对象
@@ -216,10 +253,10 @@ sector具有下列属性
 ### `$path`
 扇形对应的路径 为一个 Raphael path对象
 
----
-label 属性
----
-### 获取
+
+## `label` 属性
+
+### 获取 `label` 属性
 ```javascript
 
  pie.on("labelclick",function(e){
@@ -227,7 +264,8 @@ label 属性
  });
 ```
 ### `el`
-label对应的HTML元素 为一个 KISSY Node
+label对应的HTML元素 为一个 KISSY `Node`
+
 ### `x` 
 
 ### `y`
@@ -241,9 +279,9 @@ label的大小，为一个 object，包含width和height属性
 ### `container`
 容器
 
----
-事件 Event 
----
+
+## 事件 Event 
+
 
 ### `mouseover`
 
@@ -269,6 +307,7 @@ pie.on('mouseover',function(e){
 ### `afterRender`
 
 ### `labelClick`
+
 点击label时触发
 
 ```
@@ -277,8 +316,3 @@ pie.on('mouseover',function(e){
       sector.fire("click");
     });
 ```
-
-### exmamples
-
- - 普通饼图、面包圈、嵌套的饼图 examples/all.html
- - 浏览器分布图 examples/pie-browser.html
