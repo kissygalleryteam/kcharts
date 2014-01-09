@@ -26,23 +26,23 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 		}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
 	}
 
-	function drawAreas(chart) {
-		if (!chart._cfg.areas.isShow) return;
-		var ctn = chart.getInnerContainer(),
-			y = ctn.tl.y,
-			points = chart._points[0],
-			w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || ctn.width),
-			h = Math.round(ctn.height),
-			paper = chart.htmlPaper,
-			cls = chart._cfg.themeCls + "-areas",
-			css = chart._cfg.areas.css,
-			x;
+	// function drawAreas(chart) {
+	// 	if (!chart._cfg.areas.isShow) return;
+	// 	var ctn = chart.getInnerContainer(),
+	// 		y = ctn.tl.y,
+	// 		points = chart._points[0],
+	// 		w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || ctn.width),
+	// 		h = Math.round(ctn.height),
+	// 		paper = chart.htmlPaper,
+	// 		cls = chart._cfg.themeCls + "-areas",
+	// 		css = chart._cfg.areas.css,
+	// 		x;
 
-		for (var i = 0, len = points.length; i < len; i++) {
-			var area = paper.rect(points[i].x - w / 2, y, w, h).addClass(cls).css(css);
-			chart._areas.push(area);
-		}
-	}
+	// 	for (var i = 0, len = points.length; i < len; i++) {
+	// 		var area = paper.rect(points[i].x - w / 2, y, w, h).addClass(cls).css(css);
+	// 		chart._areas.push(area);
+	// 	}
+	// }
 
 	function drawAxisX(chart) {
 		if (!chart._cfg.xAxis.isShow) return;
@@ -497,7 +497,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 	return {
 		drawTitle: drawTitle,
 		drawSubTitle: drawSubTitle,
-		drawAreas: drawAreas,
+		// drawAreas: drawAreas,
 		drawAxisX: drawAxisX,
 		drawAxisY: drawAxisY,
 		drawGridsX: drawGridsX,

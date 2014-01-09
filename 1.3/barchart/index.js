@@ -393,9 +393,6 @@
 			self.renderEvtLayout();
 			//渲染tip
 			self.renderTip();
-			
-			//画背景块状区域
-			BaseChart.Common.drawAreas.call(null,this);
 			//画x轴上的平行线
 			BaseChart.Common.drawGridsX.call(null,this);
 
