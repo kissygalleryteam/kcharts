@@ -91,7 +91,7 @@ barchart.on("afterRender",function(){
   var points = barchart._points[0];
   var htmlPaper = barchart.getHtmlPaper();
   for(var i in points){
-    htmlPaper.text(points[i]['x'],points[i]['y']-8,points[i]['dataInfo']['y']+" \u2103","center","bottom");
+    htmlPaper.text(points[i]['x'],points[i]['y']-8,points[i]['dataInfo']['y']+" \u2103","center","bottom").css({"color":"#666"});
   }
 })
 	});
