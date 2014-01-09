@@ -26,6 +26,7 @@
 				},
 				//圆形的点 r 为半径
 				points: {
+					isShow:true,
 					attr: {
 						type: "circle",
 						stroke: "#fff",
@@ -86,9 +87,11 @@
 				},
 				//背景区域
 				areas: {
-					isShow: false,
-					css: {
-
+					isShow:false,
+					attr: {
+						"fill": "90-#fff-" + COLOR_TPL,
+						"stroke-width": 0,
+						"opacity": 0.5
 					}
 				},
 				//折线

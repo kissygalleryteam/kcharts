@@ -26,6 +26,7 @@
 				},
 				//圆形的点 r 为半径
 				points: {
+					isShow:false,
 					attr: {
 						type: "circle",
 						stroke: "#fff",
@@ -76,7 +77,7 @@
 				},
 				//x轴上纵向网格
 				xGrids: {
-					isShow: true,
+					isShow: false,
 					css: {}
 				},
 				//y轴上横向网格

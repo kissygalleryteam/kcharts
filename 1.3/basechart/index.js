@@ -11,7 +11,8 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 		init: function(cfg) {
 			cfg || (cfg = this.userConfig);
 			var self = this,
-				_cfg, series;
+				_cfg = self._cfg,
+				 series;
 			if (cfg && cfg.renderTo) {
 				if (!self.__isInited) {
 					_cfg = self._cfg = S.mix({
@@ -63,7 +64,6 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 						_labelY: [],
 						_evtEls: [],
 						_gridPoints: [], //存放网格线
-						_multiple: false,
 						stackable: false
 					});
 					//过滤Array原型上的属性及方法
@@ -79,7 +79,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 					_cfg.yAxis.min = 0;
 				}
 				if (!series || series.length <= 0 || !series[0].data) return;
-				series.length > 1 ? self._multiple = true : undefined;
+
 				for (var i in series) {
 					self._datas['total'][i] = {
 						index: i,
@@ -685,6 +685,12 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 					offsetY: (e.offsetY || e.clientY - offset.top)
 				}
 			}
+		},
+		getConfig:function(){
+			return this._cfg;
+		},
+		setConfig:function(cfg){
+			this._cfg = S.mix(this._cfg,cfg,undefined,undefined,true);
 		},
 		onResize: function() {
 			var self = this,

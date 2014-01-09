@@ -173,7 +173,7 @@
                 isShow: false
             },
             areas: {
-                isShow: false
+                isShow: true
             },
             xAxis: {
                 text: xAxis
@@ -204,7 +204,7 @@
                 }
             }
         });
-    datetime.render();
+        datetime.render();
         S.one('#J_update').on('click', function (e) {
             var tmp = datetime._cfg.series[0]['data'];
             tmp.shift()
@@ -213,8 +213,7 @@
                 text: Math.random(),
                 data: tmp
             }
-            datetime.init();
-            datetime.render(true);
+            datetime.render();
        });
 
     });
