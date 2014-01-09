@@ -68,12 +68,16 @@
     * */
    var init = function(){
      var container = S.get(this.get('renderTo'))
-        , width = D.width(container)
-        , height = D.height(container)
-        , paper = Raphael(container)
-        , isStatic = D.css(container,'position') == "static" ? true : false
+       , width = D.width(container)
+       , height = D.height(container)
+       , paper = Raphael(container)
+       , isStatic = D.css(container,'position') == "static" ? true : false
 
-      this.set({"paper":paper,width:width,height:height,container:container})
+     var data = this.get("series") || this.get("data");
+     this.set("series",data);
+     this.set("data",data);
+
+     this.set({"paper":paper,width:width,height:height,container:container})
 
      var cfg = this.userConfig;
        // 若没有cx|cy|r，则算一个默认的出来
@@ -213,7 +217,7 @@
      adjustData:function(){
        var fn = this.get('filterfn')
        if(fn && S.isFunction(fn)){
-         var data = this.get('series') || this.get("data")
+         var data = this.get('data')
            , ret
          ret = Util.filterdata(data,fn)
          this.set("data",ret);
@@ -517,6 +521,18 @@
        if(this.animateInstance){
          this.animateInstance.stop();
          delete this.animateInstance;
+       }
+     },
+     // 添加和line/bar统一更新数据/配置的机制
+     setConfig:function(o){
+       if(o){
+         // 兼容以前的写法
+         if(o.series){
+           // this.set("series",o.data);
+           this.set("data",o.series);
+           delete o.series;
+         }
+         this.set(o);
        }
      },
      destroy:function(){
