@@ -131,13 +131,16 @@ label曲线路径是否自动为为扇形的颜色
 
 ## piechart 方法
 
-### `setConfig(config)`
+### setConfig(config)
 
 用于更新pie的配置，`config`是一个Object字段为配置项字段
 
 ### render()
 
 重绘饼图  配合setConfig可以实现更改饼图数据展现的目的
+
+### getConfig(field)
+获取field配置
 
 ## piechart 实例属性
 
