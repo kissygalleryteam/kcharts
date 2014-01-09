@@ -9,6 +9,7 @@
 - label标注可选，既可以一曲线条线指出来进行文案标注，也可以只要文案标注，并且可以
   标注在饼图内部
 - 饼图的渐变色
+- 更加丰富的事件支持 labelclick labeldbclick sectorclick？
 
 ## 接口统一问题
 - 仙羽反馈barchart是否可以和piechart的配置接口统一掉
