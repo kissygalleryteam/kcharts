@@ -24,3 +24,4 @@
 - 更加漂亮的颜色主题
 - 混合的图表，常见的需求是linechart、barchart、pie的混搭
 - 提高接口的一致性
+- **delay** isv适配
