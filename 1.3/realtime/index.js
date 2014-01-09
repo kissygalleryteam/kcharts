@@ -4,8 +4,10 @@
    //==================== STATIC end ====================
 
    //==================== utils start ====================
-   var each = S.each
-     , map = S.map;
+   var each    = S.each
+     , map     = S.map
+     , indexOf = S.indexOf
+     , merge   = S.merge;
 
    /**
     * 从series提取x:values,y:dates
@@ -768,13 +770,37 @@
 
    /**
     * 数据hover线
+    * @param opt{Object}
+    *  - pt pt.x 、pt.y
+    *  - padding padding.paddingx 、padding.paddingy
+    *  - innerHeight
+    *  - innerWidth
     * */
-   function getOrCreateLine(that,pts){
+   function getOrCreateLine(that,opt){
      var $line = that.get("$floatLine");
      if(!$line){
        $line = that.get("paper").path("");
        that.set("$floatLine",$line);
+
+       // 确保不会被线图和线图的连接点覆盖住hover响应线
+       var $allLines = that.get("$lines");
+       var $firstLine = $allLines[0];
+       $line.insertBefore($firstLine);
+
        Util.fixSVGLineStyle($line,Raphael.svg);
+     }
+     // 如果有配置项
+     if(opt && opt.pt){
+       var type = opt.type;
+       // hover线样式 1
+       if(type === 'arrow'){
+         var pathString = arrowLine({x:opt.pt.x,y:opt.padding.paddingy},{x:opt.pt.x,y:opt.padding.paddingy+opt.innerHeight});
+         $line.attr(merge({"path":pathString,"stroke-width":0,"fill":"#bbb"},opt.attr));
+         // hover线样式 2
+       }else{
+         var pathString = ["M",opt.pt.x,opt.padding.paddingy,"L",opt.pt.x,opt.padding.paddingy+opt.innerHeight].join(",");
+         $line.attr({"path":pathString}).attr(merge(getDefaultLineStyle(),opt.attr));
+       }
      }
      return $line;
    }
@@ -788,6 +814,30 @@
      return pt.x >= bbox.left && pt.x <= bbox.left+bbox.width &&
             pt.y >= bbox.top  && pt.y <= bbox.top+bbox.height;
    }
+   /**
+    * 获取线图hover的时候的指示器线条绘制，带箭头
+    *   a ----b  ab之间是from
+    *    \  /
+    *     \/c
+    *      |
+    *      |d
+    *     / \
+    *    /   \
+    *   f-----e  fe之间是to
+    * */
+   function arrowLine(from,to){
+     var hunit=6,vunit=6;
+     var a = {x:from.x - hunit,y:from.y};
+     var b = {x:from.x + hunit,y:from.y};
+     var c = {x:from.x     ,y:from.y+vunit};
+     var d = {x:to.x       ,y:to.y-vunit};
+     var e = {x:to.x   + hunit,y:to.y};
+     var f = {x:to.x   - hunit,y:to.y};
+
+     var M = "M",L = "L";
+     var arr = [M,a.x,a.y,L,b.x,b.y,L,c.x,c.y,L,d.x,d.y,L,e.x,e.y,L,f.x,f.y,L,d.x,d.y,L,c.x,c.y,L,a.x,a.y,"Z"];
+     return arr.join(",");
+   }
    //==================== utils end ====================
 
    //==================== handlers start ====================
@@ -800,6 +850,10 @@
    //
    var onmousemoveTimer;
    function onmousemove(e){
+     //移动时，如果还未完成渲染，那么什么也不做
+     if(this._isRunning)
+       return;
+
      var offset = getOffset(e);
      var x = offset.offsetX;
      var y = offset.offsetY;
@@ -852,12 +906,16 @@
          });
 
          // 设置响应线
-         $line = getOrCreateLine(this);
-         var padding = this.getPadding();
-         var pathString = ["M",pt.x,padding.paddingy,"L",pt.x,padding.paddingy+this.get("innerHeight")].join(",");
-
-         $line.attr({"path":pathString}).attr(getDefaultLineStyle());
-         $line.show();
+         var hoverLineOption = this.get("hoverLineOption") || {};
+         if(hoverLineOption.isShow !== false){
+           var padding = this.getPadding();
+           hoverLineOption.pt = pt;
+           hoverLineOption.padding = padding;
+           hoverLineOption.innerHeight = that.get("innerHeight");
+           hoverLineOption.innerWidth = that.get("innerWidth");
+           $line = getOrCreateLine(this,hoverLineOption);
+           $line.show();
+         }
        }
      }
      onmousemoveTimer = setTimeout(function(){
@@ -893,10 +951,13 @@
        // 0. 更新容器基本信息
        this.updateContainer();
 
-       this.render();
-
-       // 必须要在render之后
-       this.bindEvent();
+       // 延时执行，以触发beforeRender事件
+       var that = this;
+       setTimeout(function(){
+         that.render();
+         // 必须要在render之后
+         that.bindEvent();
+       },0);
      },
      /**
       * 1. 数据处理，提取、过滤
@@ -914,6 +975,9 @@
       * 4.2 y 刻度尺
       * 4.2.1 y网格
       * 5. 画x轴y轴
+      * 5.1 xAxisLabel
+      * 5.2 yAxisLabel
+      * 5.3 画xAxisLabel、yAxisLabel
       * 6. legend
       * 7. tip
       * */
@@ -929,8 +993,20 @@
 
          return;
        }
+       // 是否阻止渲染？
+       if(this.fire("beforeRender") === false){
+         return;
+       }
+
        this._isRunning = true;
        // end
+
+       // 垃圾回收，比如一些添加的文案等
+       this._gc_el || (this._gc_el = []);
+       while(this._gc_el.length){
+         var gcel = this._gc_el.pop();
+         gcel.remove();
+       }
 
        var container = this.get("container")
          , paper = this.get('paper')
@@ -1420,7 +1496,7 @@
          }else{
            xstartend2 = xstartend;
          }
-         var xaxis = paper.path(polyLine(xstartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},xAxis.style)));
+         var xaxis = paper.path(polyLine(xstartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},xAxis.attr)));
          if(xAxis.arrow === true){
            xaxis.attr({'arrow-end':"classic-wide-long"});
          }
@@ -1442,12 +1518,27 @@
            ystartend2 = ystartend;
          }
 
-         var yaxis = paper.path(polyLine(ystartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},yAxis.style)));
+         var yaxis = paper.path(polyLine(ystartend2)).attr(getDefaultLineStyle(S.merge({"stroke-width":1.5},yAxis.attr)));
          if(yAxis.arrow === true){
            yaxis.attr({'arrow-end':"classic-wide-long"});
          }
          this.set("$yaxis",yaxis);
          Util.fixSVGLineStyle(yaxis,Raphael.svg);
+       }
+       // 5.3
+       var xAxisLabel = this.get("xAxisLabel") || {};
+       if(xAxisLabel.isShow !== false && xstartend2){
+         var xAxisLabelText = xAxisLabel.text || 'x';
+         var $xAxisLabel = paper.text(xstartend2[1].x,xstartend2[1].y,xAxisLabelText).attr({"text-anchor":"start"});
+         // 方便重绘时移除
+         this.addGCel($xAxisLabel);
+       }
+       var yAxisLabel = this.get("xAxisLabel") || {};
+       if(yAxisLabel.isShow !== false && ystartend2){
+         var yAxisLabelText = xAxisLabel.text || 'y';
+         var $yAxisLabel = paper.text(ystartend2[1].x,ystartend2[1].y,yAxisLabelText).attr({"text-anchor":"end"});
+         // 方便重绘时移除
+         this.addGCel($yAxisLabel);
        }
 
        // 6. 若配置了legend,绘制legend
@@ -1506,17 +1597,61 @@
        var con = this.get("container");
        E.detach(con,"mouseleave",onmouseleave);
      },
-     /**
-      * TODO 动态增加点后，使用上次计算结果的缓存
-      * */
-     addData:function(newSeries){
-       var series = this.get("series")
-       for(var i=0,l=newSeries.length;i<l;i++){
-         Util.combineSeries(newSeries[i],series);
-       }
-     },
      clearData:function(){
        this.set("series",[]);
+     },
+     /**
+      * 将数据转为图表上的点
+      * @param arr {Array}
+      * */
+     data2point:function(arr){
+       var innerWidth = this.get("innerWidth");
+       var innerHeight = this.get("innerHeight");
+       var padding = this.getPadding();
+       var rangeData = this.get("rangeData");
+
+       var x1 = arr[0];
+       var y1 = arr[1];
+
+       // 将x1，y1换算为画布上的点
+       var x,y;
+       if(typeof x1 === 'number'){
+         x = padding.paddingx + (x1 - rangeData.xmin) / (rangeData.xmax - rangeData.xmin) * innerWidth;
+       }
+       // 注意y点的算法，要翻转一下! y值的画布的0点在上边，x轴的0点在左边（不用反转）
+       if(typeof y1 === 'number'){
+         y = padding.paddingy + (innerHeight - (y1 - rangeData.ymin) / (rangeData.ymax - rangeData.ymin) * innerHeight);
+       }
+       return [x,y];
+     },
+     text:function(x,y,s,opt){
+       opt || (opt = {});
+       var xy = this.data2point([x,y]);
+       var paper;
+       var $text;
+       var x2,y2;
+       if(typeof xy[0] === 'number' && typeof xy[1] === 'number'){
+         paper = this.get("paper");
+         x2 = xy[0];y2 = xy[1];
+         var attr = opt.attr || {};
+         var offset = opt.offset || {};
+         var offsetx = offset.x || 0;var offsety = offset.y || 0;
+         $text = paper.text(x2+offsetx,y2+offsety,s).attr(attr);
+         // 如果不是手动指定了不回收
+         if(opt.autoGC != false){
+           this.addGCel($text);
+         }
+       }
+       return $text;
+     },
+     /**
+      * 添加要gc的元素
+      * */
+     addGCel:function(el){
+       this._gc_el || (this._gc_el = []);
+       if(indexOf(el,this._gc_el) === -1){
+         this._gc_el.push(el);
+       }
      },
      /**
       * 画线
@@ -1832,10 +1967,23 @@
          this.set("$jointPoints",RjointPoints);
        }
      },
-     // 全量更新数据
-     updateAllData:function(data){
-       if(data){
+     /**
+      * 增量添加数据
+      * TODO 动态增加点后，使用上次计算结果的缓存
+      * */
+     addSeries:function(newSeries){
+       var series = this.get("series")
+       for(var i=0,l=newSeries.length;i<l;i++){
+         Util.combineSeries(newSeries[i],series);
+       }
+     },
+     /**
+      * 全量更新数据
+      * */
+     updateAllSeries:function(series){
+       if(series){
          this.clearData();
+         this.set("series",series);
          this.render();
        }
      },

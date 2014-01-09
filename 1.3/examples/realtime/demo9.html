@@ -49,6 +49,9 @@
                min:0,
                step:1,
                max:24
+             },
+             attr:{
+               "stroke":"#666"
              }
            },
            yAxis:{
@@ -64,6 +67,18 @@
            },
            xLabel:{
              rotate:false // 是否旋转x周标注
+           },
+           xAxisLabel:{
+             isShow:true,
+             text:"x轴"
+           },
+           hoverLineOption:{
+             type:"arrow",//尖角样式
+             attr:{
+               "fill":"red"
+               //"stroke":"#ccc",
+               //"stroke-width":1
+             }
            },
            legend:{
              align:"bc",
@@ -97,6 +112,24 @@
 		     }
            ]
          });
+       
+       /*
+       stock.on("beforeRender",function(e){
+         console.log('blah');
+       });
+       */
+       stock.on("afterRender",function(){
+         // [16,103480] 即为上面的最后一个点
+         stock.text(16,103480,"abc",{
+           offset:{
+             x:10
+           },
+           attr:{
+             "font-weight":"bold",
+             "text-anchor":"start"
+           }
+         });
+       });
      })
     </script>
   </body>
