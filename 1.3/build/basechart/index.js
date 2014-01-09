@@ -33,23 +33,23 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 		}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
 	}
 
-	function drawAreas(chart) {
-		if (!chart._cfg.areas.isShow) return;
-		var ctn = chart.getInnerContainer(),
-			y = ctn.tl.y,
-			points = chart._points[0],
-			w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || ctn.width),
-			h = Math.round(ctn.height),
-			paper = chart.htmlPaper,
-			cls = chart._cfg.themeCls + "-areas",
-			css = chart._cfg.areas.css,
-			x;
+	// function drawAreas(chart) {
+	// 	if (!chart._cfg.areas.isShow) return;
+	// 	var ctn = chart.getInnerContainer(),
+	// 		y = ctn.tl.y,
+	// 		points = chart._points[0],
+	// 		w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || ctn.width),
+	// 		h = Math.round(ctn.height),
+	// 		paper = chart.htmlPaper,
+	// 		cls = chart._cfg.themeCls + "-areas",
+	// 		css = chart._cfg.areas.css,
+	// 		x;
 
-		for (var i = 0, len = points.length; i < len; i++) {
-			var area = paper.rect(points[i].x - w / 2, y, w, h).addClass(cls).css(css);
-			chart._areas.push(area);
-		}
-	}
+	// 	for (var i = 0, len = points.length; i < len; i++) {
+	// 		var area = paper.rect(points[i].x - w / 2, y, w, h).addClass(cls).css(css);
+	// 		chart._areas.push(area);
+	// 	}
+	// }
 
 	function drawAxisX(chart) {
 		if (!chart._cfg.xAxis.isShow) return;
@@ -504,7 +504,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 	return {
 		drawTitle: drawTitle,
 		drawSubTitle: drawSubTitle,
-		drawAreas: drawAreas,
+		// drawAreas: drawAreas,
 		drawAxisX: drawAxisX,
 		drawAxisY: drawAxisY,
 		drawGridsX: drawGridsX,
@@ -535,7 +535,8 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 		init: function(cfg) {
 			cfg || (cfg = this.userConfig);
 			var self = this,
-				_cfg, series;
+				_cfg = self._cfg,
+				 series;
 			if (cfg && cfg.renderTo) {
 				if (!self.__isInited) {
 					_cfg = self._cfg = S.mix({
@@ -587,7 +588,6 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 						_labelY: [],
 						_evtEls: [],
 						_gridPoints: [], //存放网格线
-						_multiple: false,
 						stackable: false
 					});
 					//过滤Array原型上的属性及方法
@@ -603,7 +603,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 					_cfg.yAxis.min = 0;
 				}
 				if (!series || series.length <= 0 || !series[0].data) return;
-				series.length > 1 ? self._multiple = true : undefined;
+
 				for (var i in series) {
 					self._datas['total'][i] = {
 						index: i,
@@ -1209,6 +1209,12 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 					offsetY: (e.offsetY || e.clientY - offset.top)
 				}
 			}
+		},
+		getConfig:function(){
+			return this._cfg;
+		},
+		setConfig:function(cfg){
+			this._cfg = S.mix(this._cfg,cfg,undefined,undefined,true);
 		},
 		onResize: function() {
 			var self = this,
