@@ -30,16 +30,16 @@
 					attr: {
 						type: "circle",
 						stroke: "#fff",
-						"r": 4,
+						"r": 0,
 						"stroke-width": 1.5,
 						"fill": COLOR_TPL
 					},
 					hoverAttr: {
 						type: "circle",
 						stroke: "#fff",
-						"r": 5,
+						"r": 3,
 						"fill": COLOR_TPL,
-						"stroke-width": 0
+						"stroke-width": 1
 					}
 				},
 				xLabels: {

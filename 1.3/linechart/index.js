@@ -53,6 +53,8 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			self._evtEls = {};
 			//统计渲染完成的数组
 			self._finished = [];
+			//hover 点
+			self._hoverstocks = {};
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
@@ -110,6 +112,8 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 
 			//画折线
 			self.drawLines(function() {
+
+				self.__drawHoverStocks();
 				//事件层
 				self.renderEvtLayout();
 
@@ -204,36 +208,30 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 		},
 		//曲线动画
 		animateLine: function(lineIndex, cb) {
-			var self = this,
-				sub_path,
+			var self = this;
+			var	sub_path,
 				idx = 0,
 				from = 0,
+				tmpStocks = [],
 				to, box,
-				first_index,
-				_cfg = self._cfg,
+				first_index;
+			var	_cfg = self._cfg,
 				color = self.color,
 				paper = self.paper,
 				points = self._points[lineIndex];
-			var tmpStocks = [];
 			var path = BaseChart.Common.getLinePath.call(null, self, points),
-				total_len = Raphael.getTotalLength(path),
+				totalLen = Raphael.getTotalLength(path),
 				duration = _cfg.anim ? _cfg.anim.duration || 500 : 500,
 				easing = "easeNone",
-				// 每段直线的宽度
-				aver_len = self.get("area-width"),
+				areaWidth = self.get("area-width"),
 				lineAttr = self.__cfg['line'][lineIndex]['attr'];
-
 			var $line = paper.path(sub_path).attr(lineAttr).attr({
 				"stroke": color.getColor(lineIndex).DEFAULT
 			});
-
 			for (var i in self._points[lineIndex]) {
-				//放入空
 				tmpStocks[i] = "";
 			}
-
 			first_index = self.getFirstUnEmptyPointIndex(lineIndex);
-
 			tmpStocks[first_index] = self.drawStock(lineIndex, first_index);
 			//动画
 			var anim = new Anim({}, {}, {
@@ -241,21 +239,19 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				easing: easing,
 				frame: function() {
 					//arguments[1] 代表经过缓动函数处理后的0到1之间的数值
-					to = arguments[1] * total_len;
+					to = arguments[1] * totalLen;
 					//获取子路径
 					sub_path = Raphael.getSubpath(path, from, to);
 					//获取路径所占的矩形区域
 					box = Raphael.pathBBox(sub_path);
 					//当前渲染点的索引
-					idx = Math.floor((box.width * 1.01) / aver_len) - (-first_index);
+					idx = Math.floor((box.width * 1.01) / areaWidth) - (-first_index);
 					if (!tmpStocks[idx] && points[idx]) {
 						tmpStocks[idx] = self.drawStock(lineIndex, idx);
 					}
 					for (var i in points)
-						if (i < idx) {
-							if (!tmpStocks[i]) {
-								tmpStocks[i] = self.drawStock(lineIndex, i);
-							}
+						if (i < idx && !tmpStocks[i]) {
+							tmpStocks[i] = self.drawStock(lineIndex, i);
 						}
 					$line && $line.attr({
 						path: sub_path
@@ -263,15 +259,27 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				},
 				endframe: function() {
 					self._stocks[lineIndex]['stocks'] = tmpStocks;
-					//finish state
 					self._finished.push(true);
-
 					if (self._finished.length == _cfg.series.length && cb) {
 						cb();
 					}
+					self.__drawHoverStocks(lineIndex);
 				}
 			});
 			return $line;
+		},
+		//绘制hover上去的 点（stock） 替身
+		__drawHoverStocks:function(){
+			var self = this;
+			for(var i in self._stocks){
+				self.removeHoverStock(i);
+				self._hoverstocks[i] = self.drawStock(i,self.getFirstUnEmptyPointIndex(i),{x:0,y:0}).attr(self._stocks[i]['hoverAttr']).hide();
+			}
+		},
+		removeHoverStock:function(lineIndex){
+			var self = this;
+			self._hoverstocks[lineIndex] && self._hoverstocks[lineIndex].remove && self._hoverstocks[lineIndex].remove();
+			delete self._hoverstocks[lineIndex];
 		},
 		//画线
 		drawLines: function(cb) {
@@ -333,15 +341,14 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			if (!this._cfg.points.isShow) return;
 			var self = this,
 				stocks = [];
-
 			for (var i in self._points[lineIndex]) {
 				stocks.push(self.drawStock(lineIndex, i));
 			}
 			return stocks;
 		},
 		//画单个圆点
-		drawStock: function(lineIndex, stockIndex) {
-			if (!this._cfg.points.isShow) return;
+		drawStock: function(lineIndex, stockIndex,attrs) {
+			if (!this._cfg.points.isShow && attrs === undefined) return;
 			var self = this,
 				cfg = self._cfg,
 				paper = self.paper,
@@ -351,10 +358,11 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				type = self._stocks[lineIndex]['type'],
 				point = self._points[lineIndex][stockIndex],
 				template = cfg.points.template,
-				x = point.x,
-				y = point.y,
+				attrs = attrs || {},
+				x = attrs.x !== undefined ? attrs.x : point.x,
+				y = attrs.y !== undefined ? attrs.y : point.y,
 				$stock;
-			if (x && y) {
+			if (x !== undefined && y !== undefined) {
 				if (S.isFunction(template)) {
 					return template({
 						paper: paper,
@@ -381,7 +389,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 						$stock = paper.circle(x, y, attr["r"], attr);
 						break;
 				}
-				$stock.attr(attr);
+				$stock.attr(attr).attr({cx:x,cy:y});
 				return $stock;
 			}
 			return;
@@ -463,17 +471,17 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				var stocks = self._stocks[i],
 					tmp = [],
 					points = stocks['points'];
-				if (stocks['stocks']) {
-					for (var j in points) {
-						tmp[j] = {
-							x: points[j].x - w / 2,
-							y: points[j].y - 5,
-							width: w,
-							height: 10
-						};
-					}
-					rects[i] = tmp;
+				// if (stocks['stocks']) {
+				for (var j in points) {
+					tmp[j] = {
+						x: points[j].x - w / 2,
+						y: points[j].y - 5,
+						width: w,
+						height: 10
+					};
 				}
+				rects[i] = tmp;
+				// }
 			}
 		},
 		//清除事件层
@@ -569,10 +577,8 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				self._lines[0]['line'].attr(self._lines[0]['attr']);
 				self.tip && self.tip.hide();
 				self._pointline && self._pointline.hide();
-				for (var i in self._stocks) {
-					for (var j in self._stocks[i]['stocks']) {
-						self._stocks[i]['stocks'][j] && self._stocks[i]['stocks'][j].attr && self._stocks[i]['stocks'][j].attr(self._stocks[i]['attr']);
-					}
+				for(var i in self._hoverstocks){
+					self._hoverstocks[i].hide();
 				}
 				self.curStockIndex = undefined;
 				self.paperLeave();
@@ -637,62 +643,49 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				}
 			}
 		},
-		tipHandler: function(curLineIndex, curStockIndex) {
+		/**
+			TODO 线条切换
+		**/
+		lineChangeTo: function(lineIndex) {
+			var self = this,
+				_cfg = self._cfg,
+				hoverLineAttr = self.__cfg['line'][lineIndex]['hoverAttr'];
+			if (self._isAnimating || !self._lines[lineIndex]['isShow']) return;
+			for (var i in self._stocks) {
+				self._stocks[i]['points'] = self._points[i];
+			}
+			for (var i in self._lines)
+				if (i != lineIndex) {
+					self._lines[i]['line'] && self._lines[i]['line'].attr(self.__cfg['line'][i]['attr']);
+				}
+			self.removeLine(lineIndex);
+			self._lines[lineIndex]['line'] = self.drawLine(lineIndex).attr(hoverLineAttr);
+			self.__drawHoverStocks();
+			self.curLineIndex = lineIndex;
+		},
+		tipHandler: function(lineIndex, stockIndex) {
 			var self = this;
-			if (curLineIndex === undefined || curStockIndex === undefined) return;
+			if (lineIndex === undefined || stockIndex === undefined) return;
 			var tip = self.tip,
 				_cfg = self._cfg,
 				series = _cfg.series,
 				tpl = _cfg.tip.template,
 				$tip = tip.getInstance(),
-				curPoint = self._points[curLineIndex][curStockIndex],
-				color = self._lines[curLineIndex]['color']['DEFAULT'], //获取当前直线的填充色
+				currentPoints = self._points[lineIndex],
+				currentStocks = self._stocks[lineIndex],
+				curPoint = currentPoints[stockIndex],
+				color = self._lines[lineIndex]['color']['DEFAULT'], //获取当前直线的填充色
 				tipData;
 			if (!tpl || !_cfg.tip.isShow || self.curStockIndex === undefined) return;
-			//当前直线的点对象
-			currentPoints = self._points[curLineIndex],
-			//当前直线的点
-			currentStocks = self._stocks[curLineIndex];
-
-			if (currentPoints && !self.isEmptyPoint(currentPoints[curStockIndex]) && self._lines[curLineIndex]['isShow']) {
-				if (self._pointline) {
-					self._pointline.css({
-						"margin-left": self._pointsX[curStockIndex]['x']
-					}).show();
-				}
-				for (var i in self._stocks) {
-					for (var j in self._stocks[i]['stocks']) {
-						self._stocks[i]['stocks'][j] && self._stocks[i]['stocks'][j].attr && self._stocks[i]['stocks'][j].attr(self._stocks[i].attr);
-					}
-				}
-				if (self._cfg.comparable) {
-					for (var i in self._stocks) {
-						self._stocks[i]['stocks'] && self._stocks[i]['stocks'][curStockIndex] && self._stocks[i]['stocks'][curStockIndex].attr && self._stocks[i]['stocks'][curStockIndex].attr(self._stocks[i]['hoverAttr']);
-					}
-				} else {
-					currentStocks && currentStocks['stocks'] && currentStocks['stocks'][curStockIndex] && currentStocks['stocks'][curStockIndex].attr && currentStocks['stocks'][curStockIndex].attr(currentStocks['hoverAttr']);
-				}
-			} else {
-				var index = self.getFirstNotEmptyPointsLineIndex(curStockIndex);
-				if (index) {
-					self.lineChangeTo(index);
-				}
-			}
-			if (self._points[curLineIndex][curStockIndex].dataInfo && self._lines[curLineIndex]['isShow']) {
-				self.stockChange(curLineIndex, curStockIndex);
-			}
-			//如果tip需要展示多组数据 则存放数组
+			// 如果tip需要展示多组数据 则存放数组
 			if (self._cfg.comparable) {
-				var tipAllDatas = {
-					datas: {}
-				},
-					tmpArray = [];
+				var tipAllDatas = {datas: {}};
+				var tmpArray = [];
 				for (var i in self._points)
 					if (self._stocks[i]['stocks']) {
-						if (self._points[i][curStockIndex].dataInfo) {
-							self._points[i][curStockIndex].dataInfo.color = self._stocks[i]['color']['DEFAULT']
-							var tmp = S.merge(self._points[i][curStockIndex].dataInfo, series[i]);
-							//删除data 避免不必要的数据
+						if (self._points[i][stockIndex].dataInfo) {
+							self._points[i][stockIndex].dataInfo.color = self._stocks[i]['color']['DEFAULT']
+							var tmp = S.merge(self._points[i][stockIndex].dataInfo, series[i]);
 							delete tmp.data;
 							tipAllDatas.datas[i] = tmp;
 						}
@@ -700,31 +693,57 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				for (var i in tipAllDatas.datas) {
 					tmpArray.push(tipAllDatas.datas[i]);
 				}
-				//根据纵轴数值大小进行排序
 				tipAllDatas.datas = BaseChart.prototype.arraySort(tmpArray, true, "y");
 				tipData = tipAllDatas;
 			} else {
-				var tipData = S.merge(self._points[curLineIndex][curStockIndex].dataInfo, series[curLineIndex]);
-				//删除data 避免不必要的数据
-				delete tipData.data;
+				tipData = S.merge(self._points[lineIndex][stockIndex].dataInfo, series[lineIndex]);
+				delete tipData['data'];
 			}
-			if (!self.isEmptyPoint(currentPoints[curStockIndex])) {
-				S.mix(tipData, {
-					lineindex: curLineIndex,
-					pointindex: curStockIndex
-				});
-				tip.fire("setcontent", {
-					data: tipData
-				});
+			self.stockChange(lineIndex,stockIndex);
+			if (!self.isEmptyPoint(currentPoints[stockIndex])) {
+				tipData['lineindex'] = lineIndex;
+				tipData['pointindex'] = stockIndex;
+				tip.fire("setcontent", {data: tipData});
 				tip.fire("move", {
 					x: curPoint.x,
 					y: curPoint.y,
 					style: self.processAttr(_cfg.tip.css, color)
 				});
 			}
-
 		},
+		stockChange: function(lineIndex, stockIndex) {
+			var self = this,
+				currentPoints = self._points[lineIndex],
+				currentStocks = self._stocks[lineIndex],
+				tgt = currentStocks['stocks'] && currentStocks['stocks'][stockIndex];
 
+			if (currentPoints && !self.isEmptyPoint(currentPoints[stockIndex]) && self._lines[lineIndex]['isShow']) {
+					self._pointline && self._pointline.css({"left": self._pointsX[stockIndex]['x']}).show();
+				if (self._cfg.comparable) {
+					for (var i in self._hoverstocks) {
+						var point = self._points[i][stockIndex];
+						self._lines[i]['isShow'] && self._hoverstocks[i].transform(["T",point.x ,",",point.y ].join("")).show();
+					}
+				} else {
+					var point = currentPoints[stockIndex];
+					self._lines[lineIndex]['isShow'] && self._hoverstocks[lineIndex].transform(["T",point.x ,",",point.y ].join("")).show();
+				}
+			} else {
+				var index = self.getFirstNotEmptyPointsLineIndex(stockIndex);
+				if (index) {
+					self.lineChangeTo(index);
+				}
+			}
+			if (self._points[lineIndex][stockIndex].dataInfo && self._lines[lineIndex]['isShow']) {
+				var e = S.mix({
+					target: tgt,
+					currentTarget: tgt,
+					lineIndex: Math.round(lineIndex),
+					stockIndex: Math.round(stockIndex)
+				}, currentStocks['points'][stockIndex]);
+				self.fire("stockChange", e);
+			}
+		},
 		/**
 			TODO 获取当前index的point不为空的lineIndex
 			@return lineIndex
@@ -773,42 +792,54 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			delete self._stocks[lineIndex]['stocks'];
 		},
 		//line area transform anim
-		transformLines: function(i) {
+		transformLine: function(lineIndex) {
 			var self = this;
 			var duration = 500;
-			var newPath = BaseChart.Common.getLinePath.call(null, self, self._points[i]),
-				oldPath = self._lines[i]['path'];
-			var newAreaPath = self.getAreaPath(self._points[i]);
+			var newPath = BaseChart.Common.getLinePath.call(null, self, self._points[lineIndex]);
+			var oldPath = self._lines[lineIndex]['path'];
 			//防止不必要的动画
 			if (oldPath != newPath && newPath != "") {
 				// 动画状态
 				self._isAnimating = true;
-				self._lines[i]['line'] && self._lines[i]['line'].stop() && self._lines[i]['line'].animate({
-					path: newPath
-				}, duration, function() {
-					delete self._isAnimating;
-				});
-				self._lines[i]['path'] = newPath;
 				//区域动画
-				self._areas[i][0] && self._areas[i][0].stop() && self._areas[i][0].animate({
-					path: newAreaPath
-				}, duration, function() {
-					delete self._isAnimating;
-				});
-
-				self._areas[i]['path'] = newAreaPath;
+				self.__transformArea(lineIndex,duration);
 				//点动画
-				for (var j in self._stocks[i]['stocks']) {
-					if (self._stocks[i]['stocks'][j]) {
-						stock = self._stocks[i]['stocks'][j];
+				self.__transformStock(lineIndex,duration);
+				//线动画
+				self.__transformLine(lineIndex,{path: newPath},duration,function(){
+					self._isAnimating = false;
+				});
+			}
+		},
+		__transformArea:function(lineIndex,duration,cb){
+			var self = this;
+			var area = self._areas[lineIndex];
+			var path = self.getAreaPath(self._points[lineIndex]);
+			if(area){
+				area[0] && area[0].stop() && area[0].animate({path:path}, duration, cb);
+				area['path'] = path;
+			}
+		},
+		__transformLine:function(lineIndex,attrs,duration,cb){
+			var self = this;
+			var line = self._lines[lineIndex];
+			line['line'] && line['line'].stop() && line['line'].animate(attrs, duration, cb);
+			line['path'] = attrs['path'];
+		},
+		__transformStock:function(lineIndex,duration){
+			var self = this;
+			var stocks = self._stocks[lineIndex];
+			var stock;
+			for (var j in stocks['stocks']) {
+					if (stocks['stocks'][j]) {
+						stock = stocks['stocks'][j];
 						//transform进行动画需要计算动画开始和结束的偏移量
 						stock.stop().animate({
-							transform: "T" + (self._stocks[i]['points'][j]['x'] - self._stocks[i]['stocks'][j].attr("cx")) + "," + (self._stocks[i]['points'][j]['y'] - self._stocks[i]['stocks'][j].attr("cy"))
+							transform: "T" + (stocks['points'][j]['x'] - stocks['stocks'][j].attr("cx")) + 
+							           "," + (stocks['points'][j]['y'] - stocks['stocks'][j].attr("cy"))
 						}, duration)
 					}
 				}
-
-			}
 		},
 		/*
 			TODO 移除直线及直线上的点和对应的区域
@@ -821,6 +852,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				if (lineIndex == i) {
 					self.removeStock(lineIndex);
 					self.removeArea(lineIndex);
+					self.removeHoverStock(lineIndex);
 				}
 				self._stocks[i]['points'] = self._points[i];
 			}
@@ -842,7 +874,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			self.removeLine(lineIndex);
 			for (var i in self._lines) {
 				if (i != lineIndex) {
-					self.transformLines(i);
+					self.transformLine(i);
 				}
 			}
 			self.clearEvtLayout();
@@ -863,47 +895,16 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			BaseChart.prototype.recoveryData.call(self, lineIndex);
 			BaseChart.Common.animateGridsAndLabels.call(null, self);
 			self._lines[lineIndex]['line'] = self.drawLine(lineIndex);
+			self.__drawHoverStocks();
 			for (var i in self._stocks) {
 				self._stocks[i]['points'] = self._points[i];
 			}
 			for (var i in self._lines) {
-				self.transformLines(i);
+				self.transformLine(i);
 			}
 			self.clearEvtLayout();
 			self.renderEvtLayout();
 			self.bindEvt();
-		},
-		/**
-			TODO 线条切换
-		**/
-		lineChangeTo: function(lineIndex) {
-			var self = this,
-				_cfg = self._cfg,
-				hoverLineAttr = self.__cfg['line'][lineIndex]['hoverAttr'];
-			//若正在动画 则return
-			if (self._isAnimating || !self._lines[lineIndex]['isShow']) return;
-			for (var i in self._stocks) {
-				self._stocks[i]['points'] = self._points[i];
-			}
-			for (var i in self._lines)
-				if (i != lineIndex) {
-					self._lines[i]['line'] && self._lines[i]['line'].attr(self.__cfg['line'][i]['attr']);
-				}
-			self._lines[lineIndex]['line'].remove();
-			for (var i in self._stocks[lineIndex]['stocks']) {
-				self._stocks[lineIndex]['stocks'][i] && self._stocks[lineIndex]['stocks'][i].remove && self._stocks[lineIndex]['stocks'][i].remove();
-			}
-			self._lines[lineIndex]['line'] = self.drawLine(lineIndex).attr(hoverLineAttr);
-			for (var i in self._stocks) {
-				for (var j in self._stocks[i]['stocks']) {
-					if (self._stocks[i]['stocks'][j]) {
-						var stock = self._stocks[i]['stocks'][j];
-						stock.attr && stock.attr(self._stocks[i]['attr']);
-					}
-				}
-			}
-			//保存当前选中直线
-			self.curLineIndex = lineIndex;
 		},
 		fix2Resize: function() {
 			var self = this,
@@ -932,18 +933,6 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				stockIndex: Math.round(stockIndex)
 			}, currentStocks['points'][stockIndex]);
 			self.fire("stockClick", e);
-		},
-		stockChange: function(lineIndex, stockIndex) {
-			var self = this,
-				currentStocks = self._stocks[lineIndex],
-				tgt = currentStocks['stocks'] && currentStocks['stocks'][stockIndex];
-			var e = S.mix({
-				target: tgt,
-				currentTarget: tgt,
-				lineIndex: Math.round(lineIndex),
-				stockIndex: Math.round(stockIndex)
-			}, currentStocks['points'][stockIndex]);
-			self.fire("stockChange", e);
 		},
 		beforeRender: function() {
 			var self = this;

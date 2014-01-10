@@ -21,9 +21,7 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 				points;
 			// KISSY > \1.4 逻辑
 			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig));
-
 			self._cfg.autoRender && self.render();
-
 		}
 	}
 
