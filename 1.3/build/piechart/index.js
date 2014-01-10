@@ -1609,6 +1609,9 @@ gallery/kcharts/1.3/piechart/index
          delete this.animateInstance;
        }
      },
+     getConfig:function(name){
+       return name && this.get(name);
+     },
      // 添加和line/bar统一更新数据/配置的机制
      setConfig:function(o){
        if(o){

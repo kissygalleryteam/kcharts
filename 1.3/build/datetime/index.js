@@ -6,100 +6,112 @@ gallery/kcharts/1.3/datetime/cfg
 gallery/kcharts/1.3/datetime/index
 
 */
-;KISSY.add("gallery/kcharts/1.3/datetime/theme",function(S){
+;
+KISSY.add("gallery/kcharts/1.3/datetime/theme", function(S) {
 
 	var COLOR_TPL = "{COLOR}";
 
 	var themeCfg = {
 		//默认主题
-		"ks-chart-default":{
-			 lineType:"arc",
-			anim:false,
-			title:{
-		           content:"",
-		           css:{
-		            		"text-align":"center",
-		            		"font-size":"16px",
-		            		"font-weight": "bold",
-		            		"color":"#666"
-		           },
-		           isShow:true
-		    },
-		    subTitle:{
-		       content:"",
-		       css:{
-		            "text-align":"center",
-		            "font-size":"12px",
-		            "color":"#666"
-		        },
-		        isShow:true
-		    },
-		    line:{
-              attr:{
-                "stroke-width":1
-              },
-                hoverAttr:{
-                    "stroke-width":1
-                }
-            },
-			points:{
-				attr:{
-					stroke:"#fff",
-					"r":4,
-					"stroke-width":1.5,
-					"fill":COLOR_TPL
+		"ks-chart-default": {
+			lineType: "arc",
+			anim: false,
+			title: {
+				content: "",
+				css: {
+					"text-align": "center",
+					"font-size": "16px",
+					"font-weight": "bold",
+					"color": "#666"
+				},
+				isShow: true
+			},
+			subTitle: {
+				content: "",
+				css: {
+					"text-align": "center",
+					"font-size": "12px",
+					"color": "#666"
+				},
+				isShow: true
+			},
+			line: {
+				attr: {
+					"stroke-width": 1
+				},
+				hoverAttr: {
+					"stroke-width": 1
 				}
 			},
-			 xGrids:{
-                isShow:false,
-                css:{
-					color:"#aaa"
-				}
-            },
-			yGrids:{
-				css:{
-					color:"#aaa"
-				}
-			},
-			yAxis:{
-				isShow:false,
-				css:{
-					color:"#000"
-				}
-			},
-			xAxis:{
-				css:{
-					color:"#000"
+			points: {
+				isShow: false,
+				attr: {
+					type: "circle",
+					stroke: "#fff",
+					"r": 0,
+					"stroke-width": 1.5,
+					"fill": COLOR_TPL
+				},
+				hoverAttr: {
+					type: "circle",
+					stroke: "#fff",
+					"r": 5,
+					"fill": COLOR_TPL,
+					"stroke-width": 0
 				}
 			},
-			xLabels:{
-				css:{
-					"color":"#666",
+			xGrids: {
+				isShow: false,
+				css: {
+					color: "#aaa"
+				}
+			},
+			yGrids: {
+				css: {
+					color: "#aaa"
+				}
+			},
+			yAxis: {
+				isShow: false,
+				css: {
+					color: "#000"
+				}
+			},
+			xAxis: {
+				css: {
+					color: "#000"
+				}
+			},
+			xLabels: {
+				css: {
+					"color": "#666",
 					"font-size": "12px"
 				}
 			},
-			yLabels:{
-				css:{
-					"color":"#666",
+			yLabels: {
+				css: {
+					"color": "#666",
 					"font-size": "12px",
-					 marginLeft:-10
+					marginLeft: -10
 				}
 			},
-			pointLine:{
-				css:{
-					color:"#aaa"
+			pointLine: {
+				css: {
+					color: "#aaa"
 				}
 			},
-			tip:{
-				css:{
-					"border":"1px solid {COLOR}"
+			tip: {
+				css: {
+					"border": "1px solid {COLOR}"
 				},
-				alignX:"right",
-		        css:{"border-color":"{COLOR}"},
-		        offset:{
-		          y:-10,
-		          x:-10
-		        }
+				alignX: "right",
+				css: {
+					"border-color": "{COLOR}"
+				},
+				offset: {
+					y: -10,
+					x: -10
+				}
 			}
 		}
 	}
@@ -139,16 +151,16 @@ gallery/kcharts/1.3/datetime/index
 					attr: {
 						type: "circle",
 						stroke: "#fff",
-						"r": 4,
+						"r": 0,
 						"stroke-width": 1.5,
 						"fill": COLOR_TPL
 					},
 					hoverAttr: {
 						type: "circle",
 						stroke: "#fff",
-						"r": 5,
+						"r": 3,
 						"fill": COLOR_TPL,
-						"stroke-width": 0
+						"stroke-width": 1
 					}
 				},
 				xLabels: {
@@ -260,9 +272,7 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 				points;
 			// KISSY > \1.4 逻辑
 			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig));
-
 			self._cfg.autoRender && self.render();
-
 		}
 	}
 
