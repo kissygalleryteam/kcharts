@@ -23,6 +23,9 @@
   <body>
     <div id="J_Pie1" class="pi-con">
     </div>
+    <button id="J_Redraw" style="margin-left:50px;margin-top:50px;">
+        重绘
+    </button>
     <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
     <script type="text/javascript">
      KISSY.use("gallery/kcharts/1.3/piechart/index",function(S,Pie){
@@ -30,10 +33,7 @@
          var data = [ {label:"Chrome", data:1 },{ label:"FireFox", data:2 },{ label:"IE", data:3 },{ label:"Opera",data:4 },{ label:"Safari", data:5 }];
 
          var cfg = {
-           series:data,
-           color:{
-             initial:"#f00"
-           },
+           data:data,
            renderTo:"#J_Pie1",
            cx:350,cy:150,
            rs:80,
@@ -45,8 +45,19 @@
            theme:"ks-chart-default"
          }
          var pie = new Pie(cfg);
+         
+         function redrawPie(){
+           // 1. 改变颜色
+           // 2. 数据更新
+           pie.setConfig({theme:'ks-chart-rainbow'});
+           // 3. 重绘
+           pie.render();
+         };
+         
+         S.one("#J_Redraw").on("click",redrawPie);
        }
        pie1();
+       
      })
     </script>
   </body>

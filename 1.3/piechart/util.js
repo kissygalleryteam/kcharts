@@ -424,7 +424,8 @@
   function buildPropsArray3(set,pie,len){
     var paper = pie.get('paper')
       , color = pie.get('color')
-      , themeColor = new Color()
+      , theme = pie.get('theme')
+      , themeColor = new Color({"themeCls":theme || 'ks-chart-default'})
 
     var initial = color && color.initial
       , initialColor = initial && Raphael.getRGB(initial)
@@ -444,7 +445,7 @@
           , framedata = setij$el.get("framedata")
           , $path = setij$el.get('$path')
           , ss
-          , c
+          , c;
         if(setij.color){
           c = setij.color
         }else{
@@ -567,5 +568,5 @@
 
   return util;
 },{
-  requires:["gallery/kcharts/1.3/piechart/sector","gallery/kcharts/1.1/tools/color/index","gallery/kcharts/1.1/raphael/index"]
+  requires:["gallery/kcharts/1.3/piechart/sector","gallery/kcharts/1.3/tools/color/index","gallery/kcharts/1.3/raphael/index"]
 });
