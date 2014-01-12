@@ -53,15 +53,7 @@ KISSY.use("gallery/kcharts/1.3/linechart/index",function(S,LineChart){
 - [scatterchart 散点图](scatterchart.html)
 - [mapchart 地图](mapchart.html)
 - [dashboard 油表](dashboard.html)
-- [ratiochart](ratiochart.html)
-- [sumdetailchart](sumdetailchart.html)
 - [radar 雷达图](radar.html)
-
-###gallery
-
-- [funnel 漏斗图](funnel.html)
-- [trianglechart 三角形图](trianglechart.html)
-- [pyramid 金字塔](pyramid.html)
 
 ###widget
 
