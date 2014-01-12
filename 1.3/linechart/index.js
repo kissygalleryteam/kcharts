@@ -13,7 +13,6 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 		COLOR_TPL = "{COLOR}",
 		//点的类型集合
 		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"];
-
 	var methods = {
 		initializer: function() {
 			this.init();
@@ -21,13 +20,11 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 		init: function() {
 			var self = this,
 				points;
+			self.chartType = "linechart";
 			// KISSY > 1.4 逻辑
-			self._cfg || (self._cfg = S.mix({
-				autoRender: true
-			}, self.userConfig));
-
+			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig,undefined,undefined,true));
+			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
-
 		},
 		/**
 			渲染
@@ -35,18 +32,13 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 		render: function() {
 			var self = this,
 				w,
-
 				_cfg = self._cfg,
-
 				themeCls = _cfg.themeCls,
-
 				color;
 
-			BaseChart.prototype.init.call(self, self._cfg);
-
-			self.chartType = "linechart";
-
 			if (!self._$ctnNode[0]) return;
+
+			BaseChart.prototype.dataFormat.call(self, self._cfg);
 
 			self._lines = {};
 			//事件代理层清空
@@ -109,7 +101,6 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			BaseChart.Common.drawLabelsX.call(null, this);
 
 			BaseChart.Common.drawLabelsY.call(null, this);
-
 			//画折线
 			self.drawLines(function() {
 
@@ -194,7 +185,8 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			var self = this;
 			var linepath = BaseChart.Common.getLinePath.call(null, self, points);
 			var ctn = self.getInnerContainer();
-			var path = [linepath, " L", ctn.br.x, ",", ctn.br.y, " ", ctn.bl.x, ",", ctn.bl.y, " z"].join("");
+			var box = Raphael.pathBBox(linepath);
+			var path = [linepath, " L", box.x2, ",", ctn.br.y, " ", box.x, ",", ctn.bl.y, " z"].join("");
 			return path;
 		},
 		//获取第一个不为空数据的索引

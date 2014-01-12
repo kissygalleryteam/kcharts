@@ -8,7 +8,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			ctn = chart.getInnerContainer(),
 			//高度占 60%
 			h = ctn.y * 0.6;
-		chart._title = paper.rect(0, 0, chart._$ctnNode.width(), h).addClass(cls).css(S.mix({
+		chart._title = paper.rect(ctn.x, 0, ctn.width, h).addClass(cls).css(S.mix({
 			"line-height": h + "px"
 		}, _cfg.title.css)).html(_cfg.title.content);
 	}
@@ -21,7 +21,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			ctn = chart.getInnerContainer(),
 			//高度占 40%
 			h = ctn.y * 0.4;
-		chart._subTitle = paper.rect(0, ctn.y * 0.6, chart._$ctnNode.width(), h).addClass(cls).css(S.mix({
+		chart._subTitle = paper.rect(ctn.x, ctn.y * 0.6, ctn.width, h).addClass(cls).css(S.mix({
 			"line-height": h + "px"
 		}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
 	}
@@ -57,7 +57,6 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			x = ctn.x,
 			points = chart._pointsY;
 		var tpl = chart._cfg.yGrids.template;
-
 		for (var i = 0, len = points.length; i < len; i++) {
 			chart._gridsY[i] = {
 				0: drawGridY(chart, {

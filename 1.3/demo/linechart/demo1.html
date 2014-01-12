@@ -15,10 +15,10 @@
 <div id="demo1">
 
 </div>
-<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.3.0/seed-min.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
 // KISSY.Config.combine = true;
-/*
+
 KISSY.Config.debug = true;
 KISSY.config({
   packages:[
@@ -29,7 +29,7 @@ KISSY.config({
     }
   ]
 });
-*/
+
 KISSY.use("gallery/kcharts/1.3/linechart/index",function(S,LineChart){
 
   function data() {
@@ -60,7 +60,6 @@ function axis(){
   }
   return tmp;
 }
-
   var linechart = new LineChart({
       line:{
         attr:{
@@ -70,23 +69,20 @@ function axis(){
           "stroke-width":2
         }
       },
+      // autoRender:false,
       renderTo:"#demo1",
       points:{
-        template:function(e){
-          return e.stockIndex % 10 == 0 ? e.paper.circle(e.x,e.y,e.attr.r).attr(e.attr) : "";
-        },
-        attr:{
-          type:"circle",
-          "r":3,
-          "stroke-width":0
-        },
-        hoverAttr:{
-          "r":5,
-          "stroke-width":3,
-          opacity:0.8,
-          fill:"#FFF",
-          stroke:"{COLOR}"
-        },
+        // template:function(e){
+        //   return e.stockIndex % 10 == 0 ? e.paper.circle(e.x,e.y,e.attr.r).attr(e.attr) : "";
+        // },
+        isShow:false,
+        // hoverAttr:{
+        //   "r":5,
+        //   "stroke-width":3,
+        //   opacity:0.8,
+        //   fill:"#FFF",
+        //   stroke:"{COLOR}"
+        // },
       },
       colors:[
         "#ff7f0e","#2ca02c"
@@ -116,6 +112,7 @@ function axis(){
         }
       },
       yGrids:{
+        isShow:false,
         css:{
           "border-color":"#aaa"
         }
@@ -151,6 +148,7 @@ function axis(){
         }
       }
   });
+console.log(linechart)
 
 });</script>
 </body>

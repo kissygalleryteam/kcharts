@@ -16,6 +16,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 			if (cfg && cfg.renderTo) {
 				if (!self.__isInited) {
 					_cfg = self._cfg = S.mix({
+						autoRender:true,
 						zIndex: 0,
 						yAxis: {
 							spacing: {
@@ -34,8 +35,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 							y: 60
 						},
 						zoomType: "x"
-					}, cfg);
-
+					}, cfg,undefined,undefined,true);
 					self._$ctnNode = $("<div></div>").css({
 						"position": "absolute",
 						"width": $(cfg.renderTo).width(),
@@ -90,7 +90,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 						data: series[i].data
 					};
 				}
-				self.dataFormat();
+				// self.dataFormat();
 
 				self.onResize();
 
@@ -691,6 +691,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 		},
 		setConfig:function(cfg){
 			this._cfg = S.mix(this._cfg,cfg,undefined,undefined,true);
+			console.log(this._cfg)
 		},
 		onResize: function() {
 			var self = this,
