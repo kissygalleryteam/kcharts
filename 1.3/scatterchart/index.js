@@ -15,55 +15,97 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 
 	var methods = {
 		initializer: function() {
-			var self = this;
-
-			var cfg = this.userConfig;
-
-			self._cfg = cfg;
-			
-			self._cfg.zoomType = "xy";
-
-			BaseChart.prototype.init.call(self, self._cfg);
-
+			this.init();
+		},
+		init:function(){
+			var self = this,
+				points;
 			self.chartType = "scatterchart";
+			// KISSY > 1.4 逻辑
+			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig,undefined,undefined,true));
+			self._cfg.zoomType = "xy";
+			BaseChart.prototype.init.call(self, self._cfg);
+			self._cfg.autoRender && self.render();
+		},
+		/**
+			渲染
+		**/
+		render: function() {
+			var self = this,
+				_cfg = self._cfg,
+				themeCls = _cfg.themeCls;
 
 			if (!self._$ctnNode[0]) return;
 
-
+			BaseChart.prototype.dataFormat.call(self, self._cfg);
+			//清空所有节点
+			self._$ctnNode.html("");
 			//统计渲染完成的数组
 			self._finished = [];
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
-
 			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
-
 			self.color = color = new ColorLib({
 				themeCls: themeCls
 			});
-
 			if (self._cfg.colors.length > 0) {
-
 				color.removeAllColors();
-
 			}
-
 			for (var i in self._cfg.colors) {
-
 				color.setColor(self._cfg.colors[i]);
-
 			}
+			//获取矢量画布
+			self.paper = Raphael(self._$ctnNode[0], _cfg.width, _cfg.height, {
+				"position": "absolute"
+			});
+			//渲染html画布
+			self.htmlPaper = new HtmlPaper(self._$ctnNode, {
+				clsName: themeCls
+			});
 
-			self._cfg.autoRender && self.render(true);
+			self._clonePoints = self._points;
+
+			BaseChart.Common.drawTitle.call(null, this, themeCls);
+
+			BaseChart.Common.drawSubTitle.call(null, this, themeCls);
+			//渲染tip
+			self.renderTip();
+			//画x轴上的平行线
+			BaseChart.Common.drawGridsX.call(null, this);
+
+			BaseChart.Common.drawGridsY.call(null, this);
+			//画横轴
+			BaseChart.Common.drawAxisX.call(null, this);
+
+			BaseChart.Common.drawAxisY.call(null, this);
+			//画横轴刻度
+			BaseChart.Common.drawLabelsX.call(null, this);
+
+			BaseChart.Common.drawLabelsY.call(null, this);
+
+			self.diffStocksSize();
+
+			self.drawAllStocks();
+
+			self.renderLegend();
+			//事件层
+			self.renderEvtLayout();
+
+			self.afterRender();
+
+			self.fix2Resize();
+
+			self.bindEvt();
+
+			S.log(self);
 		},
 		processAttr: function(attrs, color) {
 			var newAttrs = S.clone(attrs);
-
 			for (var i in newAttrs) {
 				if (newAttrs[i] && typeof newAttrs[i] == "string") {
 					newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
 				}
 			}
-
 			return newAttrs;
 		},
 		//不同大小的圆形计算
@@ -354,64 +396,6 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 					}
 				}
 		},
-		/**
-			渲染
-			@param clear 是否清空容器
-		**/
-		render: function(clear) {
-
-			var self = this,
-
-				_cfg = self._cfg,
-
-				themeCls = _cfg.themeCls;
-			//清空所有节点
-			clear && self._$ctnNode.html("");
-			//获取矢量画布
-			self.paper = Raphael(self._$ctnNode[0], _cfg.width, _cfg.height, {
-				"position": "absolute"
-			});
-			//渲染html画布
-			self.htmlPaper = new HtmlPaper(self._$ctnNode, {
-				clsName: themeCls
-			});
-
-			self._clonePoints = self._points;
-
-			BaseChart.Common.drawTitle.call(null, this, themeCls);
-
-			BaseChart.Common.drawSubTitle.call(null, this, themeCls);
-			//渲染tip
-			self.renderTip();
-			//画x轴上的平行线
-			BaseChart.Common.drawGridsX.call(null, this);
-
-			BaseChart.Common.drawGridsY.call(null, this);
-			//画横轴
-			BaseChart.Common.drawAxisX.call(null, this);
-
-			BaseChart.Common.drawAxisY.call(null, this);
-			//画横轴刻度
-			BaseChart.Common.drawLabelsX.call(null, this);
-
-			BaseChart.Common.drawLabelsY.call(null, this);
-
-			self.diffStocksSize();
-
-			self.drawAllStocks();
-
-			self.renderLegend();
-			//事件层
-			self.renderEvtLayout();
-
-			self.afterRender();
-
-			self.fix2Resize();
-
-			self.bindEvt();
-
-			S.log(self);
-		},
 		bindEvt: function() {
 			var self = this,
 				evtEls = self._evtEls,
@@ -509,8 +493,8 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 	} else {
 		ScatterChart = function(cfg) {
 			var self = this;
-			this.userConfig = cfg;
-			this.initializer();
+			self._cfg = cfg;
+			this.init();
 		}
 		S.extend(ScatterChart, BaseChart, methods);
 	}

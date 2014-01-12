@@ -6,7 +6,6 @@
  * 新增barClick事件
  */
 ;KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, Touch, Tip, Evt,Cfg) {
-
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -16,48 +15,95 @@
 		evtLayoutBarsCls = evtLayoutCls + "-bars",
 		COLOR_TPL = "{COLOR}",
 		color;
-
     var methods = {
         initializer: function(){
             this.init();
 		},
 		init: function() {
-            // 兼容kissy < 1.4版本的
-            this._cfg || (this._cfg = this.userConfig);
-
-			var self = this;
-
+            var self = this;
 			self.chartType = "barchart";
-
+			// KISSY > 1.4 逻辑
+			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig,undefined,undefined,true));
 			BaseChart.prototype.init.call(self, self._cfg);
-
+			self._cfg.autoRender && self.render();
+		},
+		render: function(clear) {
+			var self = this,
+				_cfg = self._cfg,
+				ctn = self._innerContainer,
+				themeCls = _cfg.themeCls;
 			if (!self._$ctnNode[0]) return;
+
+			BaseChart.prototype.dataFormat.call(self, self._cfg);
+
+			self._$ctnNode.html("");
 			//柱形对象数组
 			self._bars = {};
 			//统计渲染完成的数组
 			self._finished = [];
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
-
 			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
-
 			self.color = color = new Color({
 				themeCls: themeCls
 			});
-
 			if (self._cfg.colors.length > 0) {
-
 				color.removeAllColors();
-
 			}
-
 			for (var i in self._cfg.colors) {
-
 				color.setColor(self._cfg.colors[i]);
-
 			}
-			
-			self._cfg.autoRender && self.render(true);
+			self.raphaelPaper = Raphael(self._$ctnNode[0], _cfg.width, _cfg.height);
+			//渲染html画布 只放图形
+			self.paper = new HtmlPaper(self._$ctnNode, {
+				clsName: canvasCls,
+				width: ctn.width,
+				height: ctn.height,
+				left: ctn.tl.x,
+				top: ctn.tl.y
+			});
+			//clone
+			self._clonePoints = self._points;
+
+			self.getBarsPos();
+			//渲染html画布
+			self.htmlPaper = new HtmlPaper(self._$ctnNode, {
+				clsName: themeCls
+			});
+
+			BaseChart.Common.drawTitle.call(null,this,themeCls);
+
+			BaseChart.Common.drawSubTitle.call(null,this,themeCls);
+			//事件层
+			self.renderEvtLayout();
+			//渲染tip
+			self.renderTip();
+			//画x轴上的平行线
+			BaseChart.Common.drawGridsX.call(null,this);
+
+			BaseChart.Common.drawGridsY.call(null,this);
+			//画横轴
+			BaseChart.Common.drawAxisX.call(null,this);
+
+			BaseChart.Common.drawAxisY.call(null,this);
+			//画横轴刻度
+			BaseChart.Common.drawLabelsX.call(null,this);
+
+			BaseChart.Common.drawLabelsY.call(null,this);
+
+			self.renderLegend();
+			//画柱
+			self.drawBars(function() {
+
+				self.afterRender();
+
+				self.fix2Resize();
+			});
+
+			self.bindEvt();
+
+			S.log(self);
+
 		},
 		//画柱
 		drawBar: function(groupIndex, barIndex, callback) {
@@ -356,71 +402,6 @@
 			}, this);
 			return self.legend;
 		},
-		render: function(clear) {
-
-			var self = this,
-
-				_cfg = self._cfg,
-
-				ctn = self._innerContainer,
-
-				themeCls = _cfg.themeCls;
-
-			clear && self._$ctnNode.html("");
-
-			self.raphaelPaper = Raphael(self._$ctnNode[0], _cfg.width, _cfg.height);
-			//渲染html画布 只放图形
-			self.paper = new HtmlPaper(self._$ctnNode, {
-				clsName: canvasCls,
-				width: ctn.width,
-				height: ctn.height,
-				left: ctn.tl.x,
-				top: ctn.tl.y
-			});
-			//clone
-			self._clonePoints = self._points;
-
-			self.getBarsPos();
-			//渲染html画布
-			self.htmlPaper = new HtmlPaper(self._$ctnNode, {
-				clsName: themeCls
-			});
-
-			BaseChart.Common.drawTitle.call(null,this,themeCls);
-
-			BaseChart.Common.drawSubTitle.call(null,this,themeCls);
-			//事件层
-			self.renderEvtLayout();
-			//渲染tip
-			self.renderTip();
-			//画x轴上的平行线
-			BaseChart.Common.drawGridsX.call(null,this);
-
-			BaseChart.Common.drawGridsY.call(null,this);
-			//画横轴
-			BaseChart.Common.drawAxisX.call(null,this);
-
-			BaseChart.Common.drawAxisY.call(null,this);
-			//画横轴刻度
-			BaseChart.Common.drawLabelsX.call(null,this);
-
-			BaseChart.Common.drawLabelsY.call(null,this);
-
-			self.renderLegend();
-			//画柱
-			self.drawBars(function() {
-
-				self.afterRender();
-
-				self.fix2Resize();
-			});
-
-			self.bindEvt();
-
-			S.log(self);
-
-		},
-
 		bindEvt: function() {
 			var self = this,
 				_cfg = self._cfg;
@@ -694,7 +675,7 @@
 	}else{
       BarChart = function(cfg) {
           var self = this;
-          self._cfg = cfg;
+          self._cfg = S.mix(Cfg,cfg,undefined,undefined,true);
           self.init();
       };
       S.extend(BarChart, BaseChart, methods);
