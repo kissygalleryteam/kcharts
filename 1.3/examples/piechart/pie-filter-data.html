@@ -121,6 +121,8 @@
 					filterfn:function(data,percent){
 						return percent>.1;
 					},
+					combineSmallData:true,// 是否合并小数据，默认为true，即合并小数据为“其它”
+					smallDataLabel:"other", // 小数据合并为其它的文案，默认为"其它"，这里配置为 "other"，combineSmallData:true此配置才生效
 					anim:{
 						easing:'swing',
 						duration:800
