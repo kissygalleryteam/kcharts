@@ -134,8 +134,11 @@
        R1 = R + paddingDonutSize1
        R2 = R + paddingDonutSize2
 
-       fromY = cy - R2;
-       toY = cy + R2;
+       // 拓高label的展示区域
+       var extraHeight = pie.get("extraLabelHeight") || 0;
+
+       fromY = cy - R2 - extraHeight;
+       toY = cy + R2 + extraHeight;
        for(fromY+=unitHeight;fromY<toY-unitHeight;fromY+=unitHeight){
          // x=a+rcosθ y=b+rsinθ
          // (y-b)/r = sinθ

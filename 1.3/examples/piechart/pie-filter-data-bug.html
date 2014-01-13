@@ -7,6 +7,8 @@
     <title>filter 数据 bugfix</title>
     <!-- 
     bug 症状：本来只有8组数据，但是只显示了7组数据
+    原因是：label的标注区域太小，导致较小的数据被去掉了
+    解决办法是：允许用户配置扩展label展示区域，
     -->
     <style type="text/css" media="screen">
      .pi-con{
@@ -39,12 +41,13 @@
            },
            renderTo:"#J_Pie1",
            cx:350,cy:150,
-           rs:80,
+           rs:30,
            interval:5,
            anim:{
              easing:'swing',
              duration:800
            },
+           extraLabelHeight:30,
            theme:"ks-chart-default"
          }
          var pie = new Pie(cfg);
