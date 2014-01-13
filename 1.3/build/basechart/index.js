@@ -515,8 +515,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 		init: function(cfg) {
 			cfg || (cfg = this.userConfig);
 			var self = this,
-				_cfg = self._cfg,
-				 series;
+				_cfg = self._cfg;
 			if (cfg && cfg.renderTo) {
 				if (!self.__isInited) {
 					_cfg = self._cfg = S.mix({
@@ -576,13 +575,24 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 					}
 				}
 
-				series = _cfg.series || null;
 				//若为堆叠图 则最小值为0 暂时不兼容负值
 				if (self.chartType == "barchart") {
 					_cfg.xAxis.min = 0;
 					_cfg.yAxis.min = 0;
 				}
-				if (!series || series.length <= 0 || !series[0].data) return;
+				
+				// self.dataFormat();
+				self.__setData();
+
+				self.onResize();
+
+				self.__isInited = 1;
+			}
+		},
+		__setData:function(){
+			var self= this,
+				series = self._cfg.series;
+			if (!series || series.length <= 0 || !series[0].data) return;
 
 				for (var i in series) {
 					self._datas['total'][i] = {
@@ -594,133 +604,6 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 						data: series[i].data
 					};
 				}
-				// self.dataFormat();
-
-				self.onResize();
-
-				self.__isInited = 1;
-			}
-		},
-		//减少当前的数据
-		removeData: function(index) {
-			var self = this;
-			delete self._datas['cur'][index];
-			self.dataFormat();
-		},
-		//恢复数据
-		recoveryData: function(index) {
-			var self = this;
-			self._datas['cur'][index] = self._datas['total'][index];
-			self.dataFormat();
-		},
-		//获取内部容器信息
-		createContainer: function() {
-			var self = this,
-				_$ctnNode = self._$ctnNode,
-				canvasAttr = self._cfg.canvasAttr,
-				innerWidth = canvasAttr.width || (_$ctnNode.width() - 2 * canvasAttr.x),
-				innerHeight = canvasAttr.height || (_$ctnNode.height() - 2 * canvasAttr.y),
-				x = canvasAttr.x,
-				y = canvasAttr.y,
-				width = innerWidth,
-				height = innerHeight,
-				tl = {
-					x: x,
-					y: y
-				},
-				tr = {
-					x: x + innerWidth,
-					y: y
-				},
-				bl = {
-					x: x,
-					y: y + height
-				},
-				br = {
-					x: x + innerWidth,
-					y: y + height
-				};
-			//内部容器的信息
-			self._innerContainer = {
-				x: x,
-				y: y,
-				width: width,
-				height: height,
-				tl: tl,
-				tr: tr,
-				bl: bl,
-				br: br
-			};
-		},
-		//获取内部容器
-		getInnerContainer: function() {
-			return this._innerContainer;
-		},
-		getAllDatas: function() {
-			var self = this,
-				_cfg = self._cfg,
-				allDatas = [],
-				zoomType = _cfg.zoomType,
-				numbers,
-				arg = arguments[0],
-				dataType = self.getDataType();
-			if (_cfg.stackable) {
-				//堆叠图 需要叠加多组数据 进行计算
-				for (var i in self._datas['cur']) {
-					if (S.isArray(self._datas['cur'][i]['data'])) {
-						numbers = self._datas['cur'][i]['data'];
-					}
-					for (var j in numbers) {
-						//fixed number bug
-						allDatas[j] = allDatas[j] ? (numbers[j] - 0) + (allDatas[j] - 0) : numbers[j];
-					}
-				}
-			} else {
-				for (var i in self._datas['cur']) {
-					if (S.isArray(self._datas['cur'][i]['data'])) {
-						if (zoomType == "xy") {
-							numbers = self.getArrayByKey(self._datas['cur'][i]['data'], arg)
-						} else {
-							numbers = self._datas['cur'][i]['data'];
-						}
-					}
-					allDatas.push(numbers.join(","));
-				}
-			}
-			return allDatas.length ? allDatas.join(",").split(",") : [];
-		},
-		getDataType: function() {
-			var self = this;
-			if (!self._datas['total'][0] || !self._datas['total'][0]['data']) return;
-			for (var i in self._datas['total'][0]['data']) {
-				if (S.isPlainObject(self._datas['total'][0]['data'][i])) {
-					return "object";
-				} else if (S.isNumber(self._datas['total'][0]['data'][i] - 0)) {
-					return "number";
-				}
-			}
-		},
-		//获取刻度
-		_getScales: function(allDatas, axis) {
-			var self = this;
-			//若直接配置了text 则按照text返回
-			if (axis.text && S.isArray(axis.text)) {
-				return axis.text;
-			} else {
-				var cmax = axis.max / 1,
-					cmin = axis.min / 1,
-					num = axis.num || 5,
-					_max = Math.max.apply(null, allDatas),
-					_min = Math.min.apply(null, allDatas);
-				isNagitive = _max <= 0 ? 1 : 0;
-				isPositive = _min >= 0 ? 1 : 0;
-				//纵轴上下各有10%的延展
-				var offset = (_max - _min) * 0.1;
-				//修复最大值最小值的问题  bug
-				var max = (cmax || cmax == 0) ? (cmax >= _max ? cmax : _max + offset) : _max + offset;
-				var min = (cmin || cmin == 0) ? (cmin <= _min ? cmin : _min - offset) : _min - offset;
-				return self.getScales(max, min, num);
-			}
 		},
 		//计算坐标刻度
 		dataFormat: function() {
@@ -886,6 +769,127 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 			}
 			for (var i in self._datas['cur']) {
 				self._points[i] = getDataPoints(self._datas['cur'][i]['data'], i, curCoordNum);
+			}
+		},
+		//减少当前的数据
+		removeData: function(index) {
+			var self = this;
+			delete self._datas['cur'][index];
+			self.dataFormat();
+		},
+		//恢复数据
+		recoveryData: function(index) {
+			var self = this;
+			self._datas['cur'][index] = self._datas['total'][index];
+			self.dataFormat();
+		},
+		//获取内部容器信息
+		createContainer: function() {
+			var self = this,
+				_$ctnNode = self._$ctnNode,
+				canvasAttr = self._cfg.canvasAttr,
+				innerWidth = canvasAttr.width || (_$ctnNode.width() - 2 * canvasAttr.x),
+				innerHeight = canvasAttr.height || (_$ctnNode.height() - 2 * canvasAttr.y),
+				x = canvasAttr.x,
+				y = canvasAttr.y,
+				width = innerWidth,
+				height = innerHeight,
+				tl = {
+					x: x,
+					y: y
+				},
+				tr = {
+					x: x + innerWidth,
+					y: y
+				},
+				bl = {
+					x: x,
+					y: y + height
+				},
+				br = {
+					x: x + innerWidth,
+					y: y + height
+				};
+			//内部容器的信息
+			self._innerContainer = {
+				x: x,
+				y: y,
+				width: width,
+				height: height,
+				tl: tl,
+				tr: tr,
+				bl: bl,
+				br: br
+			};
+		},
+		//获取内部容器
+		getInnerContainer: function() {
+			return this._innerContainer;
+		},
+		getAllDatas: function() {
+			var self = this,
+				_cfg = self._cfg,
+				allDatas = [],
+				zoomType = _cfg.zoomType,
+				numbers,
+				arg = arguments[0],
+				dataType = self.getDataType();
+			if (_cfg.stackable) {
+				//堆叠图 需要叠加多组数据 进行计算
+				for (var i in self._datas['cur']) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
+						numbers = self._datas['cur'][i]['data'];
+					}
+					for (var j in numbers) {
+						//fixed number bug
+						allDatas[j] = allDatas[j] ? (numbers[j] - 0) + (allDatas[j] - 0) : numbers[j];
+					}
+				}
+			} else {
+				for (var i in self._datas['cur']) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
+						if (zoomType == "xy") {
+							numbers = self.getArrayByKey(self._datas['cur'][i]['data'], arg)
+						} else {
+							numbers = self._datas['cur'][i]['data'];
+						}
+					}
+					allDatas.push(numbers.join(","));
+				}
+			}
+			return allDatas.length ? allDatas.join(",").split(",") : [];
+		},
+		getDataType: function() {
+			var self = this;
+			if (!self._datas['total'][0] || !self._datas['total'][0]['data']) return;
+			for (var i in self._datas['total'][0]['data']) {
+				if (S.isPlainObject(self._datas['total'][0]['data'][i])) {
+					return "object";
+				} else if (S.isNumber(self._datas['total'][0]['data'][i] - 0)) {
+					return "number";
+				}
+			}
+		},
+		//获取刻度
+		_getScales: function(allDatas, axis) {
+			var self = this;
+			//若直接配置了text 则按照text返回
+			if (axis.text && S.isArray(axis.text)) {
+				return axis.text;
+			} else {
+				var cmax = axis.max / 1,
+					cmin = axis.min / 1,
+					num = axis.num || 5,
+					_max = Math.max.apply(null, allDatas),
+					_min = Math.min.apply(null, allDatas);
+				isNagitive = _max <= 0 ? 1 : 0;
+				isPositive = _min >= 0 ? 1 : 0;
+				//纵轴上下各有10%的延展
+				var offset = (_max - _min) * 0.1;
+				//修复最大值最小值的问题  bug
+				var max = (cmax || cmax == 0) ? (cmax >= _max ? cmax : _max + offset) : _max + offset;
+				var min = (cmin || cmin == 0) ? (cmin <= _min ? cmin : _min - offset) : _min - offset;
+				return self.getScales(max, min, num);
 			}
 		},
 		/*
@@ -1195,7 +1199,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 		},
 		setConfig:function(cfg){
 			this._cfg = S.mix(this._cfg,cfg,undefined,undefined,true);
-			console.log(this._cfg)
+			this.__setData();
 		},
 		onResize: function() {
 			var self = this,

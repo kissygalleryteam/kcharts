@@ -312,8 +312,9 @@ gallery/kcharts/1.3/barchart/index
 		init: function() {
             var self = this;
 			self.chartType = "barchart";
+			var defaultCfg = S.clone(Cfg);
 			// KISSY > 1.4 逻辑
-			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig,undefined,undefined,true));
+			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true)
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		},
@@ -965,7 +966,7 @@ gallery/kcharts/1.3/barchart/index
 	}else{
       BarChart = function(cfg) {
           var self = this;
-          self._cfg = S.mix(Cfg,cfg,undefined,undefined,true);
+          self.userConfig = cfg;
           self.init();
       };
       S.extend(BarChart, BaseChart, methods);
