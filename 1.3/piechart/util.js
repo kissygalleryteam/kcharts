@@ -40,8 +40,11 @@
   }
   /**
    * filter 原始数据并返回其它
+   * @param fn 过滤函数
+   * @param combine 是否合并小数据
+   * @param otherText "其它"的文案
    * */
-  function filterdata(data,fn){
+  function filterdata(data,fn,combine,otherText){
     var ret = []
       , other = 0
       , _data
@@ -65,7 +68,10 @@
       }
     }
     rec(data,ret);
-    ret.push({label:"其它",data:other});
+    // 如果合并产生一个数据组，“其它”
+    if(combine === true){
+      ret.push({label:otherText,data:other});
+    }
     return ret;
   }
   /**

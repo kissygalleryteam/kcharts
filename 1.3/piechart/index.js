@@ -219,7 +219,10 @@
        if(fn && S.isFunction(fn)){
          var data = this.get('data')
            , ret
-         ret = Util.filterdata(data,fn)
+           , combine = this.get("combineSmallData")
+           , otherText = this.get("smallDataLabel") || "其它"
+
+         ret = Util.filterdata(data,fn,combine,otherText)
          this.set("data",ret);
        }
      },
