@@ -129,6 +129,37 @@ label曲线路径是否自动为为扇形的颜色
 
 值为 `true` 或 `false`
 
+### filterfn {Function}
+
+[使用filterfn的对比的demo](http://jsbin.com/AQecEVew)
+
+饼图数据过滤函数 <em class="high-light">new!</em>
+
+当比例小于 0.1 时，默认将这些小数据合并为一个"其它"的数据想，"其它"这个文案也是可以配置的
+
+当 `combineSmallData` 为 `false` 时，表示将小数据丢弃
+
+```
+filterfn:function(data,percent){
+  return percent>0.1;
+},
+combineSmallData:true, // 是否合并小数据，默认为true，即合并小数据为“其它”
+smallDataLabel:"other", // 小数据合并为 "其它" 文案，默认为"其它"，这里配置为 "other"，combineSmallData:true此配置才生效
+```
+### combineSmallData {Bool}
+[使用combineSmallData 的 demo](http://jsbin.com/AQecEVew)
+
+是否合并小数据
+
+### smallDataLabel
+小数据合并为 "其它" 的文案，默认为 "其它"
+[使用combineSmallLabel 的 demo](http://jsbin.com/AQecEVew)
+
+### extraLabelHeight <em class="high-light">new!</em>
+[扩展label高度的demo](http://jsbin.com/OlApukA)
+
+扩展label展示区域的高度 。因为，当label文案较多的时候，默认的label展示区域是圆饼的上下距离，可能放不下太多label，当放不下时，会不展示较小数据的label。这个配置能扩展圆饼的上下距离，以放置下更多的label。
+
 ## piechart 方法
 
 ### setConfig(config)
