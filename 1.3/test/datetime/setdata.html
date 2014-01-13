@@ -209,10 +209,12 @@
             var tmp = datetime._cfg.series[0]['data'];
             tmp.shift()
             tmp.push(Math.random());
-            datetime._cfg.series[0] = {
+            datetime.setConfig({
+                series:[{
                 text: Math.random(),
                 data: tmp
-            }
+            }]
+            })
             datetime.render();
        });
 

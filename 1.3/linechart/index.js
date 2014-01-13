@@ -21,8 +21,9 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			var self = this,
 				points;
 			self.chartType = "linechart";
+			var defaultCfg = S.clone(Cfg);
 			// KISSY > 1.4 逻辑
-			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig,undefined,undefined,true));
+			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true);
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		},
@@ -962,7 +963,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 	} else {
 		LineChart = function(cfg) {
 			var self = this;
-			self._cfg = cfg;
+			self.userConfig = cfg;
 			self.init();
 		};
 		S.extend(LineChart, BaseChart, methods);

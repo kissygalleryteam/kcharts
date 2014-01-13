@@ -271,8 +271,9 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 			var self = this,
 				points;
 			self.chartType = "datetime";
+			var defaultCfg = S.clone(Cfg);
 			// KISSY > 1.4 逻辑
-			self._cfg || (self._cfg = S.mix(Cfg, self.userConfig,undefined,undefined,true));
+			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true);
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		}
@@ -284,7 +285,7 @@ KISSY.add("gallery/kcharts/1.3/datetime/index", function(S, D, Evt, Node, Base, 
 	} else {
 		DateTime = function(cfg) {
 			var self = this;
-			self._cfg = cfg;
+			self.userConfig = cfg;
 			self.init();
 		};
 		S.extend(DateTime, LineChart, methods);
