@@ -1010,9 +1010,6 @@ gallery/kcharts/1.3/piechart/index
        $sectors = $sectors.reverse();
 
        var bestxys = find(xysr,xys);
-       console.log(JSON.stringify(xys));
-       console.log(JSON.stringify(xysr));
-       console.log(bestxys);
        for(var i=0,l=bestxys.length;i<l;i++){
          var pxy = xysr[i];
          var pxy2 = bestxys[i];
