@@ -49,8 +49,11 @@ gallery/kcharts/1.3/piechart/index
   }
   /**
    * filter 原始数据并返回其它
+   * @param fn 过滤函数
+   * @param combine 是否合并小数据
+   * @param otherText "其它"的文案
    * */
-  function filterdata(data,fn){
+  function filterdata(data,fn,combine,otherText){
     var ret = []
       , other = 0
       , _data
@@ -74,7 +77,10 @@ gallery/kcharts/1.3/piechart/index
       }
     }
     rec(data,ret);
-    ret.push({label:"其它",data:other});
+    // 如果合并产生一个数据组，“其它”
+    if(combine === true){
+      ret.push({label:otherText,data:other});
+    }
     return ret;
   }
   /**
@@ -433,7 +439,8 @@ gallery/kcharts/1.3/piechart/index
   function buildPropsArray3(set,pie,len){
     var paper = pie.get('paper')
       , color = pie.get('color')
-      , themeColor = new Color()
+      , theme = pie.get('theme')
+      , themeColor = new Color({"themeCls":theme || 'ks-chart-default'})
 
     var initial = color && color.initial
       , initialColor = initial && Raphael.getRGB(initial)
@@ -453,7 +460,7 @@ gallery/kcharts/1.3/piechart/index
           , framedata = setij$el.get("framedata")
           , $path = setij$el.get('$path')
           , ss
-          , c
+          , c;
         if(setij.color){
           c = setij.color
         }else{
@@ -576,7 +583,7 @@ gallery/kcharts/1.3/piechart/index
 
   return util;
 },{
-  requires:["gallery/kcharts/1.3/piechart/sector","gallery/kcharts/1.1/tools/color/index","gallery/kcharts/1.1/raphael/index"]
+  requires:["gallery/kcharts/1.3/piechart/sector","gallery/kcharts/1.3/tools/color/index","gallery/kcharts/1.3/raphael/index"]
 });
 
 // -*- coding: utf-8; -*-
@@ -941,8 +948,11 @@ gallery/kcharts/1.3/piechart/index
        R1 = R + paddingDonutSize1
        R2 = R + paddingDonutSize2
 
-       fromY = cy - R2;
-       toY = cy + R2;
+       // 拓高label的展示区域
+       var extraHeight = pie.get("extraLabelHeight") || 0;
+
+       fromY = cy - R2 - extraHeight;
+       toY = cy + R2 + extraHeight;
        for(fromY+=unitHeight;fromY<toY-unitHeight;fromY+=unitHeight){
          // x=a+rcosθ y=b+rsinθ
          // (y-b)/r = sinθ
@@ -1305,7 +1315,10 @@ gallery/kcharts/1.3/piechart/index
        if(fn && S.isFunction(fn)){
          var data = this.get('data')
            , ret
-         ret = Util.filterdata(data,fn)
+           , combine = this.get("combineSmallData")
+           , otherText = this.get("smallDataLabel") || "其它"
+
+         ret = Util.filterdata(data,fn,combine,otherText)
          this.set("data",ret);
        }
      },
