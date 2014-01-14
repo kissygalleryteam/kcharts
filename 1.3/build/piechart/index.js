@@ -945,11 +945,11 @@ gallery/kcharts/1.3/piechart/index
        if(!unitHeight)
          return;
        R = Math.max.apply(Math,rs)
-       R1 = R + paddingDonutSize1
-       R2 = R + paddingDonutSize2
-
        // 拓高label的展示区域
        var extraHeight = pie.get("extraLabelHeight") || 0;
+       R1 = R + paddingDonutSize1;
+       R2 = R + paddingDonutSize2;
+
 
        fromY = cy - R2 - extraHeight;
        toY = cy + R2 + extraHeight;
@@ -957,11 +957,16 @@ gallery/kcharts/1.3/piechart/index
          // x=a+rcosθ y=b+rsinθ
          // (y-b)/r = sinθ
          var y = fromY;
-         var t = Math.asin((y-cy)/R2);
+         var rate=(y-cy)/R2;
+         if(rate<-1){
+           rate = -1;
+         }else if(rate > 1){
+           rate = 1;
+         }
+         var t = Math.asin(rate);
          var x = cx+R2*Math.cos(t);
          x = bool_left ? (2*cx - x):x;
          xys.push([x,y]);
-
          // paper.circle(x,y,4);
          // paper.circle(2*cx - x,y,4);
        }
@@ -1005,7 +1010,9 @@ gallery/kcharts/1.3/piechart/index
        $sectors = $sectors.reverse();
 
        var bestxys = find(xysr,xys);
-
+       console.log(JSON.stringify(xys));
+       console.log(JSON.stringify(xysr));
+       console.log(bestxys);
        for(var i=0,l=bestxys.length;i<l;i++){
          var pxy = xysr[i];
          var pxy2 = bestxys[i];
