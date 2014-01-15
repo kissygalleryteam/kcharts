@@ -1,12 +1,12 @@
 # LineChart
 
----
-Demo
----
-[大数据量线图](../demo/datetime/demo1.html) <br/>
----
-代码示例
----
+
+## Demo
+
+- [大数据量线图](../demo/datetime/demo1.html)
+
+## 代码示例
+
 ```
 //配置kissy包路径 
 KISSY.config({
@@ -38,10 +38,10 @@ KISSY.use('gallery/kcharts/1.3/datetime/index',function(S,DateTime){
 });
 ```
 
----
-Config（详细配置）
----
-### renderTo  
+
+## Config（详细配置）
+
+### renderTo
 
 { id|HTMLElement } 容器 <span style='color:#f60'>注:容器必须要有width和height的绝对值</span>
 
@@ -175,7 +175,7 @@ Config（详细配置）
 
    ```
 
-### tip  
+### tip
 
   {object} 数据提示层配置
 
@@ -210,9 +210,9 @@ Config（详细配置）
   - `align`  {string} 水平对齐方式 可选："left" 左对齐 "center" 居中 "right" 右对齐
   - `verticalAlign` {string} 垂直对齐方式 可选："top" 顶部对齐 "middle" 垂直居中 "bottom" 底部对齐
 
----
-Method（方法）
----
+
+## Method（方法）
+
 
 ### render()
 
@@ -257,9 +257,9 @@ Method（方法）
 
 清除画布上的所有内容
 
----
-Event（事件）
----
+
+## Event（事件）
+
 
 ### afterRender
 
