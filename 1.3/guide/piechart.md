@@ -330,6 +330,8 @@ pie.on('mouseover',function(e){
   // sector.get("framedata")
   // sector.get("donutIndex")
   // sector.get("groupIndex")
+
+  // 若渲染了label，可以通过sector.$label来获取对应的dom元素
 });
 
 ```

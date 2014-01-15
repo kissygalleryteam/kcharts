@@ -247,6 +247,9 @@
          var $el = labelInstance.get('el');
 
          var fn = function($el,$sector,labelInstance){
+           // 往$sector上附加dom元素
+           $sector.$label = $el;
+
            $el.on('click',function(e){
              that.fire('click',{
                el:e.currentTarget,
