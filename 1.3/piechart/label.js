@@ -196,9 +196,6 @@
        $sectors = $sectors.reverse();
 
        var bestxys = find(xysr,xys);
-       console.log(JSON.stringify(xys));
-       console.log(JSON.stringify(xysr));
-       console.log(bestxys);
        for(var i=0,l=bestxys.length;i<l;i++){
          var pxy = xysr[i];
          var pxy2 = bestxys[i];
@@ -250,6 +247,9 @@
          var $el = labelInstance.get('el');
 
          var fn = function($el,$sector,labelInstance){
+           // 往$sector上附加dom元素
+           $sector.$label = $el;
+
            $el.on('click',function(e){
              that.fire('click',{
                el:e.currentTarget,

@@ -122,6 +122,11 @@
 				w = Math.round(barPos.width - 0),
 				h = Math.round(barPos.height - 0),
 				rect;
+            // 确保柱子有高度，并在y方向做一点修正
+            if(h<=1){
+              h = 1;
+              y -= 2;
+            }
 			//允许动画
 			if (_cfg.anim) {
 				var duration = _cfg.anim.duration ? (S.isNumber(_cfg.anim.duration) ? _cfg.anim.duration : 0.5) : 0.5,
@@ -324,6 +329,9 @@
 				var bars = [];
 				for (var j in self._barsPos[i]) {
 					var barPos = self._barsPos[i][j];
+		            // 确保柱子有高度
+                    if(barPos.height<=1)
+                       barPos.height = 1;
 					bars[j] = paper.rect(barPos.x, barPos.y, barPos.width, barPos.height).addClass(evtLayoutBarsCls).attr({
 						"barGroup": i,
 						"barIndex": j
