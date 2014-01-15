@@ -122,6 +122,9 @@
 				w = Math.round(barPos.width - 0),
 				h = Math.round(barPos.height - 0),
 				rect;
+            // 确保柱子有高度
+            if(h<2)
+              h = 2;
 			//允许动画
 			if (_cfg.anim) {
 				var duration = _cfg.anim.duration ? (S.isNumber(_cfg.anim.duration) ? _cfg.anim.duration : 0.5) : 0.5,
