@@ -412,8 +412,8 @@ gallery/kcharts/1.3/barchart/index
 				w = Math.round(barPos.width - 0),
 				h = Math.round(barPos.height - 0),
 				rect;
-            // 确保柱子有高度，并在y方向做一点修正
-            if(h<=1){
+            // 确保柱子有高度：数据为大于0的一个小数，产生的高度小于1。在y方向做一点修正 y-=2
+            if(h > 0 && h <= 1){
               h = 1;
               y -= 2;
             }
@@ -619,9 +619,10 @@ gallery/kcharts/1.3/barchart/index
 				var bars = [];
 				for (var j in self._barsPos[i]) {
 					var barPos = self._barsPos[i][j];
-		            // 确保柱子有高度
-                    if(barPos.height<=1)
+		            // 确保柱子有高度：有数据即高度大于0，但是小于1
+                    if(barPos.height > 0 && barPos.height < 1){
                        barPos.height = 1;
+                    }
 					bars[j] = paper.rect(barPos.x, barPos.y, barPos.width, barPos.height).addClass(evtLayoutBarsCls).attr({
 						"barGroup": i,
 						"barIndex": j
