@@ -15,18 +15,7 @@ Demo
 代码示例
 ---
 ```
-//配置kissy包路径 
-KISSY.config({
-  packages:[
-      {
-        name:"gallery",
-        path:"http://a.tbcdn.cn/s/kissy/"
-      }
-    ]
-});
-//若为kissy 1.3版本 请忽略以上包配置
 
-//载入linechart
 KISSY.use('gallery/kcharts/1.3/linechart/index',function(S,LineChart){
   var lineChart = new LineChart({
         renderTo:"#demo1",
@@ -43,6 +32,7 @@ KISSY.use('gallery/kcharts/1.3/linechart/index',function(S,LineChart){
         }
       });
 });
+
 ```
 
 ---
@@ -96,13 +86,20 @@ Config（详细配置）
 
 {object} 点的配置
 
-   - `attr` { object } 默认样式
+   - `attr` { object } 属性，参见[Raphael(attr)](http://dishuostec.sinaapp.com/javascript/raphael/#Element.attr)
       >- `stroke` { string } 笔触颜色  如:"#ccc"
       >- `r` { number } 圆点半径
       >- `fill` { string } 填充色
       >- `stroke-width` { number } 笔触宽度
       >- `type` { string } 点的类型 默认是 “circle” 圆形，其余有 "auto","triangle","rhomb","square" 供选择
    - `hoverAttr` { object } hover样式 同attr
+
+### areas
+
+{object} 阴影区块配置
+
+   - `isShow` { boolean } 是否渲染显示
+   - `attr` { object } 属性，参见[Raphael(attr)](http://dishuostec.sinaapp.com/javascript/raphael/#Element.attr)
 
 ### xAxis 
 
@@ -247,7 +244,7 @@ Method（方法）
 
     var   linechart = new LineChart(cfg); 
     var   y =  linechart.data2GrapicData(400); //将返回一个纵轴坐标值
-    linechart.getPaper().text(0,y,"400");//往图上写html文本
+    linechart.getHtmlPaper().text(0,y,"400");//往图上写html文本
 
 ```
 
