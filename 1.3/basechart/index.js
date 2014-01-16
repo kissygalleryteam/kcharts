@@ -77,7 +77,6 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 					_cfg.yAxis.min = 0;
 				}
 				
-				// self.dataFormat();
 				self.__setData();
 
 				self.onResize();

@@ -24,7 +24,8 @@
     packages:[
         {
             name:"gallery",
-            path:"../../../../../"
+            path:"../../../../../",
+            tag:Math.random()
 
         }
     ]
@@ -258,10 +259,10 @@ var series = [{
                 isShow:false
              },
             series: series,
-            points:{
-                "strick-width":"2px",
-                fill:"#000"
-            },
+            // points:{
+            //     "strick-width":"2px",
+            //     fill:"#000"
+            // },
             tip:{
                 template:function(data){
                     return data.y[0]+","+data.y[1];

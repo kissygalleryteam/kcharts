@@ -36,7 +36,7 @@ gallery/kcharts/1.3/scatterchart/index
 				attr:{
 					stroke:"#fff",
 					"r":4,
-					"stroke-width":1.5,
+					"stroke-width":0,
 					"fill":COLOR_TPL
 				},
 				hoverAttr:{
@@ -108,7 +108,7 @@ gallery/kcharts/1.3/scatterchart/index
 				attr:{
 					stroke:"#fff",
 					"r":4,
-					"stroke-width":1.5,
+					"stroke-width":0,
 					"fill":COLOR_TPL
 				},
 				hoverAttr:{
@@ -182,7 +182,7 @@ gallery/kcharts/1.3/scatterchart/index
 				attr:{
 					stroke:"#fff",
 					"r":4,
-					"stroke-width":1.5,
+					"stroke-width":0,
 					"fill":COLOR_TPL
 				},
 				hoverAttr:{
@@ -265,7 +265,7 @@ gallery/kcharts/1.3/scatterchart/index
 					attr: {
 						"stroke": "#fff",
 						"r": 4,
-						"stroke-width": 1.5,
+						"stroke-width": 0,
 						"fill": COLOR_TPL,
 						"opacity": 0.6
 					},
@@ -495,23 +495,18 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 		drawStocks: function(index) {
 			var self = this,
 				stocks = [],
-				defaultColor = self.color.getColor(index).DEFAULT;
+				color = self.color.getColor(index).DEFAULT;
 			for (var i in self._points[index]) {
 				var point = self._points[index][i];
-				stocks[i] = self.drawStock(point.x, point.y, point.r, {
-					stroke: defaultColor,
-					fill: defaultColor,
-					r: point.r
-				});
+				stocks[i] = self.drawStock(point.x, point.y, point.r, self.processAttr(self._cfg.points.attr, color));
 			}
 			return stocks;
 		},
 		//画单个圆点
 		drawStock: function(x, y, r, attr) {
 			var self = this,
-				paper = self.paper,
-				_attr = self._cfg.points.attr;
-			return paper.circle(x, y, r, attr).attr(_attr).attr(attr);
+				paper = self.paper;
+			return paper.circle(x, y, r, attr).attr(attr);
 		},
 		//渲染tip
 		renderTip: function() {
@@ -742,7 +737,6 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 			var self = this,
 				evtEls = self._evtEls,
 				hoverAttr = S.clone(self._cfg.points.hoverAttr);
-
 			Evt.detach($("." + evtLayoutRectsCls, $("." + evtLayoutCls, self._$ctnNode)), "mouseenter");
 			Evt.on($("." + evtLayoutRectsCls, $("." + evtLayoutCls, self._$ctnNode)), "mouseenter", function(e) {
 				var $rect = $(e.currentTarget),
@@ -770,7 +764,6 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 					lineIndex: Math.round(lineIndex),
 					stockIndex: Math.round(stockIndex)
 				};
-
 			self.fire("stockChange", e);
 		},
 		tipHandler: function(currentLineIndex, index) {

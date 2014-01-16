@@ -132,7 +132,8 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 				y:ctn.tl.y,
 				height:ctn.height,
 				css:css,
-				className:cls
+				className:cls,
+				chart:chart
 			};
 		if(!tpl){
 			return paper.lineY(point.x, ctn.tl.y, ctn.height).addClass(cls).css(css);
@@ -158,7 +159,8 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 				y:point.y,
 				width:ctn.width,
 				css:css,
-				className:cls
+				className:cls,
+				chart:chart
 			};
 		if(!tpl){
 			return paper.lineX(ctn.x, point.y, ctn.width).addClass(cls).css(css);

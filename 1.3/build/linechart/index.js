@@ -698,7 +698,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 		},
 		//画圆点
 		drawStocks: function(lineIndex, attr) {
-			if (!this._cfg.points.isShow) return;
+			// if (!this._cfg.points.isShow) return;
 			var self = this,
 				stocks = [];
 			for (var i in self._points[lineIndex]) {
@@ -721,7 +721,9 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				attrs = attrs || {},
 				x = attrs.x !== undefined ? attrs.x : point.x,
 				y = attrs.y !== undefined ? attrs.y : point.y,
+				r = attr['r'],
 				$stock;
+
 			if (x !== undefined && y !== undefined) {
 				if (S.isFunction(template)) {
 					return template({
@@ -737,16 +739,16 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				}
 				switch (type) {
 					case "triangle":
-						$stock = graphTool.triangle(paper, x, y, attr["r"] * 1.4);
+						$stock = graphTool.triangle(paper, x, y, r * 1.4);
 						break;
 					case "rhomb":
-						$stock = graphTool.rhomb(paper, x, y, attr["r"] * 2.4, attr["r"] * 2.4);
+						$stock = graphTool.rhomb(paper, x, y, r * 2.4, r * 2.4);
 						break;
 					case "square":
-						$stock = graphTool.rhomb(paper, x, y, attr["r"] * 2.4, attr["r"] * 2.4, 45);
+						$stock = graphTool.rhomb(paper, x, y, r * 2.4, r * 2.4, 45);
 						break;
 					default:
-						$stock = paper.circle(x, y, attr["r"], attr);
+						$stock = paper.circle(x, y, r, attr);
 						break;
 				}
 				$stock.attr(attr).attr({cx:x,cy:y});
