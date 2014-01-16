@@ -62,7 +62,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 				0: drawGridY(chart, {
 					x: x,
 					y: points[i].y,
-					index:i
+					index: i
 				}),
 				x: x,
 				y: points[i].y,
@@ -96,18 +96,24 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			}();
 			for (var i = 0, len = gridPointsX.length; i < len; i++) {
 				chart._gridsX[i] = {
-					0: drawGridX(chart, {index:i,x:gridPointsX[i].x}),
+					0: drawGridX(chart, {
+						index: i,
+						x: gridPointsX[i].x
+					}),
 					x: gridPointsX[i]['x'],
 					y: ctn.bl.y,
-					index:i,
+					index: i,
 					num: chart.coordNum[i]
 				};
 			}
 		} else {
 			for (var i in chart._pointsX) {
 				chart._gridsX[i] = {
-					index:i,
-					0: drawGridX(chart, {index:i,x:chart._pointsX[i].x}),
+					index: i,
+					0: drawGridX(chart, {
+						index: i,
+						x: chart._pointsX[i].x
+					}),
 					x: chart._pointsX[i]['x'],
 					y: ctn.bl.y,
 					num: chart.coordNumX[i]
@@ -126,22 +132,24 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			cls = chart._cfg.themeCls + "-gridsx";
 		var tpl = chart._cfg.xGrids.template;
 		var params = {
-				index:point.index,
-				paper:paper,
-				x:point.x,
-				y:ctn.tl.y,
-				height:ctn.height,
-				css:css,
-				className:cls,
-				chart:chart
-			};
-		if(!tpl){
+			index: point.index,
+			paper: paper,
+			x: point.x,
+			y: ctn.tl.y,
+			height: ctn.height,
+			css: css,
+			className: cls,
+			chart: chart
+		};
+		if (!tpl) {
 			return paper.lineY(point.x, ctn.tl.y, ctn.height).addClass(cls).css(css);
 		}
-		if(S.isFunction(tpl)){
+		if (S.isFunction(tpl)) {
 			return tpl(params);
-		}else{
-			return Template(tpl).render({data:params});
+		} else {
+			return Template(tpl).render({
+				data: params
+			});
 		}
 	}
 
@@ -153,22 +161,24 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			cls = chart._cfg.themeCls + "-gridsy";
 		var tpl = chart._cfg.yGrids.template;
 		var params = {
-				index:point.index,
-				paper:paper,
-				x:ctn.x,
-				y:point.y,
-				width:ctn.width,
-				css:css,
-				className:cls,
-				chart:chart
-			};
-		if(!tpl){
+			index: point.index,
+			paper: paper,
+			x: ctn.x,
+			y: point.y,
+			width: ctn.width,
+			css: css,
+			className: cls,
+			chart: chart
+		};
+		if (!tpl) {
 			return paper.lineX(ctn.x, point.y, ctn.width).addClass(cls).css(css);
 		}
-		if(S.isFunction(tpl)){
+		if (S.isFunction(tpl)) {
 			return tpl(params);
-		}else{
-			return Template(tpl).render({data:params});
+		} else {
+			return Template(tpl).render({
+				data: params
+			});
 		}
 	}
 
@@ -216,14 +226,16 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 					data: text
 				});
 			}
-			lbl = paper.text(chart._pointsX[index].x, chart._pointsX[index].y, '<span class=' + cls + '>' + content + '</span>', "center");
-			lbl.children().css(chart._cfg.xLabels.css)
+			if (content) {
+				lbl = paper.text(chart._pointsX[index].x, chart._pointsX[index].y, '<span class=' + cls + '>' + content + '</span>', "center");
+				lbl.children().css(chart._cfg.xLabels.css)
+			}
 			return lbl;
 		}
 	}
 	//纵轴标注
 	function drawLabelY(chart, index, text) {
-		if (!chart._cfg.yLabels.isShow) return;
+		if (!chart._cfg.yLabels.isShow || !text) return;
 		var paper = chart.htmlPaper,
 			cls = chart._cfg.themeCls + "-ylabels",
 			tpl = "{{data}}",
@@ -237,8 +249,10 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 				data: text
 			});
 		}
-		lbl = paper.text(chart._pointsY[index].x, chart._pointsY[index].y, '<span class=' + cls + '>' + content + '</span>', "right", "middle");
-		lbl.children().css(chart._cfg.yLabels.css);
+		if (content) {
+			lbl = paper.text(chart._pointsY[index].x, chart._pointsY[index].y, '<span class=' + cls + '>' + content + '</span>', "right", "middle");
+			lbl.children().css(chart._cfg.yLabels.css);
+		}
 		return lbl;
 	}
 	/*
