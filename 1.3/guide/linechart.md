@@ -4,7 +4,12 @@
 Demo
 ---
 
-[默认线图](../demo/linechart/demo1.html) <br/>
+[默认线图](../demo/linechart/default.html) <br/>
+[包含空数据线图](../demo/linechart/empty-data.html) <br/>
+[不展示点线图](../demo/linechart/no-points.html) <br/>
+[有渐变色块线图](../demo/linechart/width-areas.html) <br/>
+[大数据量线图](../demo/linechart/large-data.html) <br/>
+[有标注线图](../demo/linechart/width-mark.html) <br/>
 
 ---
 代码示例
