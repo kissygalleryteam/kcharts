@@ -86,8 +86,8 @@ Config（详细配置）
 
 {object} 点的配置
 
-   - `attr` { object } 属性，参见[Raphael(attr)](http://dishuostec.sinaapp.com/javascript/raphael/#Element.attr)
-      >- `stroke` { string } 笔触颜色  如:"#ccc"
+   - `attr` { object } 属性
+   -  >- `stroke` { string } 笔触颜色  如:"#ccc"
       >- `r` { number } 圆点半径
       >- `fill` { string } 填充色
       >- `stroke-width` { number } 笔触宽度
@@ -99,7 +99,7 @@ Config（详细配置）
 {object} 阴影区块配置
 
    - `isShow` { boolean } 是否渲染显示
-   - `attr` { object } 属性，参见[Raphael(attr)](http://dishuostec.sinaapp.com/javascript/raphael/#Element.attr)
+   - `attr` { object } 属性，同points.attr
 
 ### xAxis 
 
