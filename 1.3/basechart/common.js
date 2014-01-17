@@ -267,7 +267,8 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			pointsY = chart._pointsY,
 			pointsX = chart._pointsX,
 			ctn = chart.getInnerContainer(),
-			duration = 0.5,
+			duration = 0.3,
+			easing = "easeout",
 			//存放动画过了的刻度
 			animatedCoordsY = [],
 			animatedCoordsX = [],
@@ -368,8 +369,8 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 						};
 						coords.push({
 							num: num,
-							lbl: chart[_label][i] && chart[_label][i][0] && chart[_label][i][0].animate(animAttrs, duration, "easeNone"),
-							grid: chart[_grids][i] && chart[_grids][i][0] && chart[_grids][i][0].animate(animAttrs, duration, "easeNone")
+							lbl: chart[_label][i] && chart[_label][i][0] && chart[_label][i][0].stop().animate(animAttrs, duration, easing),
+							grid: chart[_grids][i] && chart[_grids][i][0] && chart[_grids][i][0].stop().animate(animAttrs, duration, easing)
 						});
 					} else {
 						//渐隐（两侧）
@@ -380,8 +381,8 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 							left: chart[_label][i] && judgeDirect2Move(chart[_label][i])['x'] + "px",
 							opacity: 0
 						};
-						chart[_label][i] && chart[_label][i][0] && destroyedNodes.push(chart[_label][i][0].animate(animAttrs, duration, "easeNone"));
-						chart[_grids][i] && chart[_grids][i][0] && destroyedNodes.push(chart[_grids][i][0].animate(animAttrs, duration, "easeNone"));
+						chart[_label][i] && chart[_label][i][0] && destroyedNodes.push(chart[_label][i][0].stop().animate(animAttrs, duration, easing));
+						chart[_grids][i] && chart[_grids][i][0] && destroyedNodes.push(chart[_grids][i][0].stop().animate(animAttrs, duration, easing));
 					}
 				})(i)
 			}
@@ -410,16 +411,16 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 						var $grid = drawGridY(chart, judgeDirect2Move(points[i])['y']);
 						coords.push({
 							num: points[i]['number'],
-							lbl: $lbl && $lbl.css(beginAttrs).animate(endAttrs, duration, "easeNone"),
-							grid: $grid && $grid.css(beginAttrs).animate(endAttrs, duration, "easeNone")
+							lbl: $lbl && $lbl.css(beginAttrs).stop().animate(endAttrs, duration, easing),
+							grid: $grid && $grid.css(beginAttrs).stop().animate(endAttrs, duration, easing)
 						});
 					} else {
 						var $lbl = drawLabelX(chart, i, points[i]['number']);
 						var $grid = drawGridX(chart, judgeDirect2Move(points[i])['x']);
 						coords.push({
 							num: points[i]['number'],
-							lbl: $lbl && $lbl.css(beginAttrs).animate(endAttrs, duration, "easeNone"),
-							grid: $grid && $grid.css(beginAttrs).animate(endAttrs, duration, "easeNone")
+							lbl: $lbl && $lbl.css(beginAttrs).stop().animate(endAttrs, duration, easing),
+							grid: $grid && $grid.css(beginAttrs).stop().animate(endAttrs, duration, easing)
 						});
 					}
 
@@ -429,9 +430,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			Array.prototype.sort.call(coords, function(a, b) {
 				return a.num - b.num
 			});
-			setTimeout(function() {
-				callback()
-			}, 500)
+			callback();
 		}
 	}
 	//获取有效的点数目
@@ -504,6 +503,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 		drawLabelsY: drawLabelsY,
 		drawLabelX: drawLabelX,
 		drawLabelY: drawLabelY,
+		getRealPointsNum:getRealPointsNum,
 		animateGridsAndLabels: animateGridsAndLabels,
 		getLinePath: getLinePath,
 		isInArray: isInArray
