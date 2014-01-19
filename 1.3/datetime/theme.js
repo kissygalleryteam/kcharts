@@ -55,12 +55,12 @@ KISSY.add("gallery/kcharts/1.3/datetime/theme", function(S) {
 			xGrids: {
 				isShow: false,
 				css: {
-					color: "#aaa"
+					color: "#eee"
 				}
 			},
 			yGrids: {
 				css: {
-					color: "#aaa"
+					color: "#eee"
 				}
 			},
 			yAxis: {

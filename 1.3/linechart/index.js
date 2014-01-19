@@ -789,7 +789,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 		//line area transform anim
 		transformLine: function(lineIndex) {
 			var self = this;
-			var duration = 300;
+			var duration = 500;
 			var newPath = BaseChart.Common.getLinePath.call(null, self, self._points[lineIndex]);
 			var oldPath = self._lines[lineIndex]['path'];
 			//防止不必要的动画

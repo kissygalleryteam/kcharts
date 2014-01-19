@@ -40,12 +40,12 @@
 			},
 			xGrids:{
 				css:{
-					color:"#aaa"
+					color:"#eee"
 				}
 			},
 			yGrids:{
 				css:{
-					color:"#aaa"
+					color:"#eee"
 				}
 			},
 			yAxis:{

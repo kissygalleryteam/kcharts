@@ -274,7 +274,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			pointsY = chart._pointsY,
 			pointsX = chart._pointsX,
 			ctn = chart.getInnerContainer(),
-			duration = 0.3,
+			duration = 0.5,
 			easing = "easeout",
 			//存放动画过了的刻度
 			animatedCoordsY = [],
@@ -1041,7 +1041,16 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 				ary = [],
 				fixlen = 0;
 
-			if (cormax <= cormin) return;
+
+			// if (cormax < cormin) return;
+			if(cormax === cormin && cormin > 0){
+				cormin = 0;
+				cormax = cormax * 2;
+			}else if(cormax === cormin && cormin < 0){
+				cormax = 0;
+				cormin = cormin * 2;
+			}
+
 			//获取间隔宽度
 			corstep = (cormax - cormin) / cornum;
 

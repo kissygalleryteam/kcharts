@@ -267,7 +267,7 @@ KISSY.add("gallery/kcharts/1.3/basechart/common", function(S, Template) {
 			pointsY = chart._pointsY,
 			pointsX = chart._pointsX,
 			ctn = chart.getInnerContainer(),
-			duration = 0.3,
+			duration = 0.5,
 			easing = "easeout",
 			//存放动画过了的刻度
 			animatedCoordsY = [],
