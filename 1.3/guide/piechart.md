@@ -7,6 +7,7 @@
 - [简单饼图](../demo/piechart/pie-simple.html)
 - [饼图中间自定义文本或图片](../demo/piechart/pie-center-text.html)
 - [无边框的饼图](../demo/piechart/pie-without-border.html)
+- [饼图数据更新机制](../demo/piechart/pie-rerender.html)
 
 ## 配置
 
