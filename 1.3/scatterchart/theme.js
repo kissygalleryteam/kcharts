@@ -28,7 +28,7 @@
 				attr:{
 					stroke:"#fff",
 					"r":4,
-					"stroke-width":1.5,
+					"stroke-width":0,
 					"fill":COLOR_TPL
 				},
 				hoverAttr:{
@@ -100,7 +100,7 @@
 				attr:{
 					stroke:"#fff",
 					"r":4,
-					"stroke-width":1.5,
+					"stroke-width":0,
 					"fill":COLOR_TPL
 				},
 				hoverAttr:{
@@ -174,7 +174,7 @@
 				attr:{
 					stroke:"#fff",
 					"r":4,
-					"stroke-width":1.5,
+					"stroke-width":0,
 					"fill":COLOR_TPL
 				},
 				hoverAttr:{

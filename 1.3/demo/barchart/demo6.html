@@ -47,10 +47,8 @@
                     '20131023',
                     '20131024',
                     '20131025',
-                    '20131026',
-                    '20131027',
-                    '20131028',
-                    '20131029']
+                    '20131026'
+                    ]
             },
             yAxis:{
                 min:0
@@ -88,7 +86,6 @@
      
      //旋转逻辑
      barChart.on("afterRender",function(){
-       // var paper = new Raphael(barChart._$ctnNode.attr("id"));
        paper = barChart.getRaphaelPaper();
        var texts = barChart._cfg.xAxis.text;
        for(var i in barChart._pointsX){
