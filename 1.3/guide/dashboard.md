@@ -1,3 +1,7 @@
+# Demo
+- [主题一](../demo/dashboard/dashboard.html)
+- [主题二](../demo/dashboard/dashboard-theme-red.html)
+
 # properties
 
 ## renderTo

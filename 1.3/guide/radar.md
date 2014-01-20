@@ -1,3 +1,6 @@
+# Demo
+- [主题一](../demo/radar/radar-rich-simple.html)
+
 # properties
 
 ## renderTo
