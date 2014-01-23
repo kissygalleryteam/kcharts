@@ -344,15 +344,14 @@ gallery/kcharts/1.3/scatterchart/index
  * @author huxiaoqi567@gmail.com
  */
 ;
-KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg) {
+KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg,graphTool) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
-		evtLayoutAreasCls = evtLayoutCls + "-areas",
-		evtLayoutRectsCls = evtLayoutCls + "-rects",
 		COLOR_TPL = "{COLOR}",
-		color;
+		color,
+		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"];
 
 	var methods = {
 		initializer: function() {
@@ -363,7 +362,6 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 				points;
 			self.chartType = "scatterchart";
 			var defaultCfg = S.clone(Cfg);
-			// KISSY > 1.4 逻辑
 			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true);
 			self._cfg.zoomType = "xy";
 			BaseChart.prototype.init.call(self, self._cfg);
@@ -435,8 +433,6 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 
 			self.afterRender();
 
-			self.fix2Resize();
-
 			self.bindEvt();
 
 			S.log(self);
@@ -483,30 +479,76 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 		//画圆点
 		drawAllStocks: function() {
 			var self = this;
-			self._stocks = {
-				_stocks: []
-			};
+			self._stocks = {};
 			for (var i in self._points) {
-				self._stocks[i] = {
-					stocks: self.drawStocks(i)
-				}
+				self.drawStocks(i)
 			}
 		},
-		drawStocks: function(index) {
+		drawStocks: function(groupIndex) {
 			var self = this,
 				stocks = [],
-				color = self.color.getColor(index).DEFAULT;
-			for (var i in self._points[index]) {
-				var point = self._points[index][i];
-				stocks[i] = self.drawStock(point.x, point.y, point.r, self.processAttr(self._cfg.points.attr, color));
+				color = self.color.getColor(groupIndex).DEFAULT,
+				pointsAttr = self._cfg.points.attr;
+
+			self._stocks[groupIndex] = {
+				type: pointsAttr.type == "auto" ? POINTS_TYPE[groupIndex % 4] : pointsAttr.type
+			};
+			for (var i in self._points[groupIndex]) {
+				var point = self._points[groupIndex][i];
+				stocks[i] = self.drawStock(groupIndex,i,self.processAttr(self._cfg.points.attr, color));
 			}
+			self._stocks[groupIndex]['stocks'] = stocks;
+			self._stocks[groupIndex]['points'] = self._points[groupIndex];
 			return stocks;
 		},
 		//画单个圆点
-		drawStock: function(x, y, r, attr) {
+		drawStock: function(groupIndex, stockIndex,attrs) {
 			var self = this,
-				paper = self.paper;
-			return paper.circle(x, y, r, attr).attr(attr);
+				cfg = self._cfg,
+				paper = self.paper,
+				color = self.color,
+				stroke = color.getColor(groupIndex).DEFAULT,
+				type = POINTS_TYPE[groupIndex % 4],
+				type = self._stocks[groupIndex]['type'],
+				point = self._points[groupIndex][stockIndex],
+				template = cfg.points.template,
+				attrs = attrs || {},
+				x = attrs.x !== undefined ? attrs.x : point.x,
+				y = attrs.y !== undefined ? attrs.y : point.y,
+				r = self._points[groupIndex][stockIndex]['r'] || attrs['r'],
+				$stock;
+
+			if (x !== undefined && y !== undefined) {
+				if (S.isFunction(template)) {
+					return template({
+						paper: paper,
+						groupIndex: groupIndex,
+						stockIndex: stockIndex,
+						attr: attrs,
+						color: stroke,
+						graphTool: graphTool,
+						x: x,
+						y: y
+					});
+				}
+				switch (type) {
+					case "triangle":
+						$stock = graphTool.triangle(paper, x, y, r * 1.4);
+						break;
+					case "rhomb":
+						$stock = graphTool.rhomb(paper, x, y, r * 2.4, r * 2.4);
+						break;
+					case "square":
+						$stock = graphTool.square(paper,x, y, r * 2, r * 2);
+						break;
+					default:
+						$stock = paper.circle(x, y, r, attrs);
+						break;
+				}
+				$stock.attr(attrs).attr({cx:x,cy:y}).attr({r:r});
+				return $stock;
+			}
+			return;
 		},
 		//渲染tip
 		renderTip: function() {
@@ -564,39 +606,24 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 				var rects = [];
 				for (var j in self._points[i]) {
 					var w = (self._points[i][j]['r'] || _cfg.points.attr.r) * 2;
-					rects[j] = paper.rect(self._points[i][j].x - w / 2, self._points[i][j].y - w / 2, w, w).attr({
-						"line_index": i,
-						"index": j
-					}).addClass(evtLayoutRectsCls);
+					rects[j] = {
+						x:self._points[i][j].x - w / 2,
+						y:self._points[i][j].y - w / 2,
+						w:w,
+						h:w,
+						groupIndex:i,
+						pointIndex:j
+					};
 				}
 				self._evtEls._rects[i] = rects;
 			}
-
-		},
-		fix2Resize: function() {
-			var self = this,
-				$ctnNode = self._$ctnNode;
-			self._cfg.anim = "";
-			var rerender = S.buffer(function() {
-				self.init();
-			}, 200);
-			!self.__isFix2Resize && self.on("resize", function() {
-				self.__isFix2Resize = 1;
-				rerender();
-			})
 		},
 		/**
 			清除事件代理层节点
 		**/
 		clearEvtLayout: function() {
 			var self = this;
-			if (self._evtEls._rects) {
-				for (var i in self._evtEls._rects) {
-					for (var j in self._evtEls._rects[i]) {
-						self._evtEls._rects[i][j].remove();
-					}
-				}
-			}
+			self._evtEls._rects = [];
 		},
 		/**
 			渲染legend
@@ -667,29 +694,18 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 		**/
 		showPoints: function(index) {
 			var self = this;
-
 			BaseChart.prototype.recoveryData.call(self, index);
-
 			self._clonePoints[index] = self._points[index];
-
 			BaseChart.Common.animateGridsAndLabels.call(null, self);
-
+			for (var i in self._stocks) {
+				self._stocks[i]['points'] = self._points[i];
+			}
 			self.animateSiblingsPoints(index);
-
 			self.diffStocksSize();
-
-			self._stocks[index] = {
-				stocks: self.drawStocks(index)
-			};
-
+			self.drawStocks(index)
 			self.clearEvtLayout();
-
 			self.renderEvtLayout();
-
 			self.bindEvt();
-
-			S.log(self);
-
 		},
 		/**
 			隐藏index组散点
@@ -697,56 +713,54 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 		**/
 		hidePoints: function(index) {
 			var self = this;
-
 			BaseChart.prototype.removeData.call(self, index);
-
 			delete self._clonePoints[index];
-
 			BaseChart.Common.animateGridsAndLabels.call(null, self);
-
 			for (var i in self._stocks[index]['stocks']) {
 				self._stocks[index]['stocks'][i].remove();
 			}
-
+			for (var i in self._stocks) {
+				self._stocks[i]['points'] = self._points[i];
+			}
 			self.animateSiblingsPoints(index);
-
 			self.clearEvtLayout();
-
 			self.renderEvtLayout();
-
 			self.bindEvt();
 		},
 		/**
 			移动除index外的其他点集
-			@param index {number} 索引
+			@param groupIndex {number} 索引
 		**/
-		animateSiblingsPoints: function(index) {
-			var self = this;
-			for (var i in self._stocks)
-				if (index != i) {
-					for (var j in self._stocks[i]['stocks']) {
-						self._points[i] &&
-							self._stocks[i]['stocks'][j].animate({
-								cx: self._points[i][j]['x'],
-								cy: self._points[i][j]['y']
+		animateSiblingsPoints: function(groupIndex) {
+			var self = this,
+				stocks;
+			for (var i in self._stocks){
+				if (groupIndex != i) {
+					stocks = self._stocks[i];
+					for (var j in stocks['stocks']) {
+						self._points[i] && stocks['stocks'][j].animate({
+								transform: "T" + (stocks['points'][j]['x'] - stocks['stocks'][j].attr("cx")) + 
+							           "," + (stocks['points'][j]['y'] - stocks['stocks'][j].attr("cy"))
 							}, 400);
 					}
 				}
+			}
 		},
 		bindEvt: function() {
 			var self = this,
 				evtEls = self._evtEls,
 				hoverAttr = S.clone(self._cfg.points.hoverAttr);
-			Evt.detach($("." + evtLayoutRectsCls, $("." + evtLayoutCls, self._$ctnNode)), "mouseenter");
-			Evt.on($("." + evtLayoutRectsCls, $("." + evtLayoutCls, self._$ctnNode)), "mouseenter", function(e) {
-				var $rect = $(e.currentTarget),
-					rectIndex = $rect.attr("index"),
-					lineIndex = $rect.attr("line_index");
-				if (self._points[lineIndex][rectIndex].dataInfo) {
-					self.stockChange(lineIndex, rectIndex);
-					// 操作tip
-					self._cfg.tip.isShow && self.tipHandler(lineIndex, rectIndex);
-				}
+			Evt.detach(evtEls.paper.$paper, "mousemove");
+			Evt.on(evtEls.paper.$paper, "mousemove",function(e){
+				//mousemove代理
+				self.delegateMouseMove(self.getOffset(e),function(groupIndex,pointIndex){
+					if (self._points[groupIndex][pointIndex].dataInfo) {
+						self.stockChange(groupIndex, pointIndex);
+						// 操作tip
+						self._cfg.tip.isShow && self.tipHandler(groupIndex, pointIndex);
+					}
+
+				});
 			});
 			// 绑定画布mouseleave事件
 			Evt.detach(evtEls.paper.$paper, "mouseleave");
@@ -755,20 +769,34 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 				self.paperLeave();
 			});
 		},
-		stockChange: function(lineIndex, stockIndex) {
+		delegateMouseMove:function(e,cb){
+			var self = this,rect,ctn = self.getInnerContainer();
+			for(var i in self._evtEls._rects){
+				for(var j in self._evtEls._rects[i]){
+					rect = self._evtEls._rects[i][j];
+					if(self.isInSide(e.offsetX + ctn.x, e.offsetY + ctn.y,rect.x,rect.y,rect.w,rect.h) && (self.curGroupIndex !== i || self.curPointIndex != j)){
+						self.curGroupIndex = i;
+						self.curPointIndex = j;
+						cb & cb(rect.groupIndex,rect.pointIndex)
+					}
+				}
+			}
+
+		},
+		stockChange: function(groupIndex, stockIndex) {
 			var self = this,
-				currentStocks = self._stocks[lineIndex],
+				currentStocks = self._stocks[groupIndex],
 				e = {
 					target: currentStocks['stocks'][stockIndex],
 					currentTarget: currentStocks['stocks'][stockIndex],
-					lineIndex: Math.round(lineIndex),
+					groupIndex: Math.round(groupIndex),
 					stockIndex: Math.round(stockIndex)
 				};
 			self.fire("stockChange", e);
 		},
-		tipHandler: function(currentLineIndex, index) {
+		tipHandler: function(groupIndex, index) {
 			var self = this,
-				color = self.color.getColor(currentLineIndex)['DEFAULT'], //获取当前直线的填充色
+				color = self.color.getColor(groupIndex)['DEFAULT'], //获取当前直线的填充色
 				tip = self.tip,
 				_cfg = self._cfg,
 				tpl = _cfg.tip.template,
@@ -777,7 +805,7 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 				curPoint;
 
 			if (!tpl) return;
-			tipData = self._points[currentLineIndex][index].dataInfo;
+			tipData = self._points[groupIndex][index].dataInfo;
 			//支持方法渲染
 			if (S.isFunction(tpl)) {
 				tip.setContent(tpl(tipData));
@@ -785,7 +813,7 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 				tip.renderTemplate(tpl, tipData);
 			}
 
-			curPoint = self._points[currentLineIndex][index];
+			curPoint = self._points[groupIndex][index];
 
 			if (tip.isVisable()) {
 				tip.animateTo(curPoint.x, curPoint.y);
@@ -849,6 +877,7 @@ KISSY.add("gallery/kcharts/1.3/scatterchart/index", function(S, Base, Node, D, E
 		'./theme',
 		'gallery/kcharts/1.3/tools/touch/index',
 		'gallery/kcharts/1.3/tip/index',
-		'./cfg'
+		'./cfg',
+		'gallery/kcharts/1.3/tools/graphtool/index'
 	]
 });

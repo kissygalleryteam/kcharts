@@ -104,7 +104,6 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			BaseChart.Common.drawLabelsY.call(null, this);
 			//画折线
 			self.drawLines(function() {
-
 				self.__drawHoverStocks();
 				//事件层
 				self.renderEvtLayout();
@@ -114,8 +113,6 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				self.renderLegend();
 
 				self.afterRender();
-
-				self.fix2Resize();
 			});
 
 			S.log(self);
@@ -900,18 +897,6 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			self.clearEvtLayout();
 			self.renderEvtLayout();
 			self.bindEvt();
-		},
-		fix2Resize: function() {
-			var self = this,
-				$ctnNode = self._$ctnNode;
-			self._cfg.anim = "";
-			var rerender = S.buffer(function() {
-				self.render();
-			}, 200);
-			!self.__isFix2Resize && self.on("resize", function() {
-				self.__isFix2Resize = 1;
-				rerender();
-			})
 		},
 		paperLeave: function() {
 			var self = this;

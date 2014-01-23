@@ -5,7 +5,8 @@
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
-;KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template, BaseChart,Raphael, Color, HtmlPaper, Legend, Theme, Touch, Tip, Evt,Cfg) {
+;
+KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper, Legend, Theme, Touch, Tip, Evt, Cfg) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -15,16 +16,16 @@
 		evtLayoutBarsCls = evtLayoutCls + "-bars",
 		COLOR_TPL = "{COLOR}",
 		color;
-    var methods = {
-        initializer: function(){
-            this.init();
+	var methods = {
+		initializer: function() {
+			this.init();
 		},
 		init: function() {
-            var self = this;
+			var self = this;
 			self.chartType = "barchart";
 			var defaultCfg = S.clone(Cfg);
 			// KISSY > 1.4 逻辑
-			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true)
+			self._cfg = S.mix(defaultCfg, self.userConfig, undefined, undefined, true)
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		},
@@ -72,25 +73,25 @@
 				clsName: themeCls
 			});
 
-			BaseChart.Common.drawTitle.call(null,this,themeCls);
+			BaseChart.Common.drawTitle.call(null, this, themeCls);
 
-			BaseChart.Common.drawSubTitle.call(null,this,themeCls);
+			BaseChart.Common.drawSubTitle.call(null, this, themeCls);
 			//事件层
 			self.renderEvtLayout();
 			//渲染tip
 			self.renderTip();
 			//画x轴上的平行线
-			BaseChart.Common.drawGridsX.call(null,this);
+			BaseChart.Common.drawGridsX.call(null, this);
 
-			BaseChart.Common.drawGridsY.call(null,this);
+			BaseChart.Common.drawGridsY.call(null, this);
 			//画横轴
-			BaseChart.Common.drawAxisX.call(null,this);
+			BaseChart.Common.drawAxisX.call(null, this);
 
-			BaseChart.Common.drawAxisY.call(null,this);
+			BaseChart.Common.drawAxisY.call(null, this);
 			//画横轴刻度
-			BaseChart.Common.drawLabelsX.call(null,this);
+			BaseChart.Common.drawLabelsX.call(null, this);
 
-			BaseChart.Common.drawLabelsY.call(null,this);
+			BaseChart.Common.drawLabelsY.call(null, this);
 
 			self.renderLegend();
 			//画柱
@@ -110,11 +111,10 @@
 		drawBar: function(groupIndex, barIndex, callback) {
 			var self = this,
 				_cfg = self._cfg,
-				paper = self.paper,
-				cls = canvasCls + "-bars",
+				paper = self.getRaphaelPaper(),
 				ctn = self._innerContainer,
 				color = self.color.getColor(groupIndex)['DEFAULT'],
-				_css = self.processAttr(_cfg.bars.css, color),
+				attr = self.processAttr(_cfg.bars.attr, color),
 				isY = _cfg.zoomType == "x" ? false : true,
 				barPos = self._barsPos[groupIndex][barIndex],
 				x = Math.round(barPos.x - 0),
@@ -122,43 +122,34 @@
 				w = Math.round(barPos.width - 0),
 				h = Math.round(barPos.height - 0),
 				rect;
-            // 确保柱子有高度：数据为大于0的一个小数，产生的高度小于1。在y方向做一点修正 y-=2
-            if(h > 0 && h <= 1){
-              h = 1;
-              y -= 2;
-            }
+			// 确保柱子有高度：数据为大于0的一个小数，产生的高度小于1。在y方向做一点修正 y-=2
+			if (h > 0 && h <= 1) {
+				h = 1;
+				y -= 2;
+			}
 			//允许动画
 			if (_cfg.anim) {
-				var duration = _cfg.anim.duration ? (S.isNumber(_cfg.anim.duration) ? _cfg.anim.duration : 0.5) : 0.5,
+				var duration = _cfg.anim.duration ? (S.isNumber(_cfg.anim.duration) ? _cfg.anim.duration : 500) : 500,
 					easing = _cfg.anim.easing ? _cfg.anim.easing : "easeOut";
 				if (isY) {
 					var zeroX = BaseChart.prototype.data2GrapicData.call(self, 0, true, false);
-					rect = paper.rect(zeroX, y, 0, h).attr({
-						"posx": x,
-						"posy": y
-					}).addClass(cls).css(_css).animate({
+					rect = paper.rect(zeroX, y, 0, h).attr(attr).animate({
 						"width": w,
-						"left": x - ctn.x
+						"x": x
 					}, duration, easing, function() {
 						callback && callback();
 					});
 				} else {
 					var zeroY = BaseChart.prototype.data2GrapicData.call(self, 0, false, true);
-					rect = paper.rect(x, zeroY, w, 0).attr({
-						"posx": x,
-						"posy": y
-					}).addClass(cls).css(_css).animate({
+					rect = paper.rect(x, zeroY, w, 0).attr(attr).animate({
 						"height": h,
-						"top": y - ctn.y
+						"y": y
 					}, duration, easing, function() {
 						callback && callback();
 					});
 				}
 			} else {
-				rect = paper.rect(x, y, w, h).attr({
-					"posx": x,
-					"posy": y
-				}).addClass(cls).css(_css);
+				rect = paper.rect(x, y, w, h).attr(attr);
 				callback && callback();
 			}
 			return rect;
@@ -172,7 +163,6 @@
 			var self = this,
 				zoomType = self._cfg.zoomType,
 				stackable = self._cfg.stackable,
-				ctn = self._innerContainer,
 				isY = zoomType == "y",
 				len = stackable ? 1 : BaseChart.prototype.obj2Array(self._clonePoints).length, //若是堆叠图 则为1
 				barsRatio = self._cfg.bars.barsRatio, //一组柱的占空比
@@ -199,7 +189,6 @@
 						var barPosInfo = {},
 							x = self._points[i][j].x,
 							w = Math.abs(x - zeroX);
-
 						barPosInfo.y = offset + self._points[i][j].y;
 						//是否是堆叠图
 						if (stackable) {
@@ -233,6 +222,13 @@
 					}
 				}
 				offset += barAndSpaceWidth;
+				for(var j in tmpArray){
+					for(k in tmpArray[j]){
+						//取ceil为了去除缝隙
+						tmpArray[j][k] = Math.ceil(tmpArray[j][k]);
+					}
+				}
+
 				self._barsPos[i] = tmpArray;
 			}
 		},
@@ -265,7 +261,8 @@
 				var barObj = {
 					bars: bars,
 					posInfos: posInfos,
-					color: color.getColor(i)
+					color: color.getColor(i),
+					isShow:true
 				};
 				self._bars[i] = barObj;
 			}
@@ -273,7 +270,7 @@
 		},
 		//渲染tip
 		renderTip: function() {
-			if(!this._cfg.tip.isShow) return;
+			if (!this._cfg.tip.isShow) return;
 			var self = this,
 				_cfg = self._cfg,
 				ctn = self._innerContainer,
@@ -324,37 +321,35 @@
 			} else {
 				paper = self._evtEls.paper;
 			}
-
-			for (var i in self._barsPos) {
-				var bars = [];
-				for (var j in self._barsPos[i]) {
-					var barPos = self._barsPos[i][j];
-		            // 确保柱子有高度：有数据即高度大于0，但是小于1
-                    if(barPos.height > 0 && barPos.height < 1){
-                       barPos.height = 1;
-                    }
-					bars[j] = paper.rect(barPos.x, barPos.y, barPos.width, barPos.height).addClass(evtLayoutBarsCls).attr({
-						"barGroup": i,
-						"barIndex": j
-					});
-				}
-				self._evtEls._bars.push(bars);
-			}
+			self._evtEls._bars = self._barsPos;
 			return paper;
 		},
-		clearEvtLayout: function() {
-			var self = this;
-
-			if (self._evtEls._bars) {
-				for (var i in self._evtEls._bars) {
-					for (var j in self._evtEls._bars[i]) {
-						self._evtEls._bars[i][j].remove();
+		//mousemove代理
+		delegateMouseMove: function(e) {
+			var self = this,
+				ctn = self.getInnerContainer(),
+				curBarIndex = self.curBarIndex;
+			for (var i in self._evtEls._bars) {
+				for (var j in self._evtEls._bars[i]) {
+					var bar = self._evtEls._bars[i][j];
+					if (self.isInSide(e.offsetX + ctn.x, e.offsetY + ctn.y, bar['x'], bar['y'], bar['width'], bar['height'])) {
+							if(self.curBarIndex === j && self.curGroupIndex === i) return;
+							self.curBarIndex = j;
+							self.curGroupIndex = i;
+							self.tipHandler(self.curGroupIndex, self.curBarIndex);
+							return;
 					}
 				}
 			}
 		},
+		clearEvtLayout: function() {
+			var self = this;
+			if (self._evtEls._bars && self._evtEls._bars.length) {
+				self._evtEls._bars = [];
+			}
+		},
 		renderLegend: function() {
-			if(!this._cfg.legend.isShow) return;
+			if (!this._cfg.legend.isShow) return;
 			var self = this,
 				legendCfg = self._cfg.legend,
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
@@ -390,7 +385,7 @@
 					top: innerContainer.y
 				},
 				align: cfg.legend.align || "bc",
-				offset: cfg.legend.offset || (/t/g.test(cfg.legend.align) ? [0, 0] : [0,20]),
+				offset: cfg.legend.offset || (/t/g.test(cfg.legend.align) ? [0, 0] : [0, 20]),
 				globalConfig: globalConfig,
 				config: __legendCfg
 			});
@@ -414,42 +409,17 @@
 		},
 		bindEvt: function() {
 			var self = this,
-				_cfg = self._cfg;
-
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter");
-
-			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "mouseenter", function(e) {
-				var $evtBar = $(e.currentTarget),
-					barIndex = $evtBar.attr("barIndex"),
-					barGroup = $evtBar.attr("barGroup");
-				_cfg.tip.isShow && self.tipHandler(barGroup, barIndex);
-
-				self.barChange(barGroup, barIndex);
-
-			});
-
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "click");
-
-			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "click", function(e) {
-				var $evtBar = $(e.currentTarget),
-					barIndex = $evtBar.attr("barIndex"),
-					barGroup = $evtBar.attr("barGroup");
-
-				self.barClick(barGroup, barIndex);
-
-			});
-
-			Evt.detach($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave");
-
-			Evt.on($("." + evtLayoutBarsCls, self._$ctnNode), "mouseleave", function(e) {
-
-				var $evtBar = $(e.currentTarget),
-					barIndex = $evtBar.attr("barIndex"),
-					barGroup = $evtBar.attr("barGroup"),
-					$bar = self._bars[barGroup]['bars'][barIndex];
-				$bar.css({
-					"background": $bar.attr("defaultColor")
-				});
+				_cfg = self._cfg,
+				evtEls = self._evtEls;
+			self.curGroupIndex = self.getFirstVisibleBarGroupIndex();
+			self.curBarIndex = self.getFirstNotEmptyBarIndex(self.curGroupIndex);
+			Evt.detach(evtEls.paper.$paper, "mousemove");
+			// 绑定mousemove事件
+			Evt.on(evtEls.paper.$paper, "mousemove", function(e) {
+				//fix firefox offset bug
+				e = self.getOffset(e);
+				//mousemove代理
+				self.delegateMouseMove(e);
 			});
 
 			Evt.detach(self._evtEls.paper.$paper, "mouseleave");
@@ -457,8 +427,18 @@
 			Evt.on(self._evtEls.paper.$paper, "mouseleave", function(e) {
 				self.tip && self.tip.hide();
 				self.paperLeave();
+				self.curBarIndex = undefined;
 			})
-
+		},
+		/**
+			TODO 判断是否为空数据点
+		**/
+		isEmptyPoint: function(point) {
+			if (point && point['dataInfo']) {
+				return false;
+			} else {
+				return true;
+			}
 		},
 		paperLeave: function() {
 			var self = this;
@@ -473,6 +453,9 @@
 					barGroup: Math.round(barGroup),
 					barIndex: Math.round(barIndex)
 				}, self._points[barGroup][barIndex]);
+
+			self.curBarIndex = barIndex;
+			self.curGroupIndex = barGroup;
 
 			self.fire("barChange", e);
 		},
@@ -496,21 +479,22 @@
 				$bar = self._bars[barGroup]['bars'][barIndex],
 				defaultColor = $bar.attr("defaultColor"),
 				tpl = self._cfg.tip.template,
-				posx = isY ? $bar.attr("posx") - (-$bar.width()) - (-self._innerContainer.x) : $bar.attr("posx"),
-				posy = $bar.attr("posy"),
+				posx = isY ? $bar.attr("x")/1 + $bar.attr("width")/1 : $bar.attr("x"),
+				posy = $bar.attr("y"),
 				tipData = S.merge(self._points[barGroup][barIndex].dataInfo, _cfg.series[barGroup]);
 			//删除data 避免不必要的数据
 			delete tipData.data;
 			self._points[barGroup][barIndex]["dataInfo"],
-
-			$bar.css({
-				"background": $bar.attr("hoverColor")
-			});
+			self.barChange(barGroup,barIndex);
+			// $bar.css({
+			// 	"background": $bar.attr("hoverAttr")
+			// });
+// console.log(posx)
 
 			if (!tpl) return;
 			S.mix(tipData, {
-					groupindex: barGroup,
-					barindex: barIndex
+				groupindex: barGroup,
+				barindex: barIndex
 			});
 			tip.fire("setcontent", {
 				data: tipData
@@ -522,63 +506,74 @@
 			});
 		},
 		processAttr: function(attrs, color) {
-
 			var newAttrs = S.clone(attrs);
-
 			for (var i in newAttrs) {
 				if (newAttrs[i] && typeof newAttrs[i] == "string") {
 					newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
 				}
 			}
-
 			return newAttrs;
 		},
+		getFirstVisibleBarGroupIndex:function(){
+			var self = this;
+			for (var i in self._bars) {
+				if (self._bars[i]['isShow']) {
+					return i;
+				}
+			}
+		},
+		getFirstNotEmptyBarIndex:function(barIndex){
+			var self = this;
+			for (var i in self._points) {
+				if (!self.isEmptyPoint(self._points[i][barIndex]) && self._bars[i]['isShow']) {
+					return i + "";
+				}
+			}
+			return "";
+		},
+		fix2Resize: function() {
+			var self = this,
+				$ctnNode = self._$ctnNode;
+			self._cfg.anim = "";
+			var rerender = S.buffer(function() {
+				self.render();
+			}, 200);
+			!self.__isFix2Resize && self.on("resize", function() {
+				self.__isFix2Resize = 1;
+				rerender();
+			})
+		},
 		showBar: function(barIndex) {
-
 			var self = this,
 				ctn = self._innerContainer;
-
+			self._bars[barIndex]['isShow'] = true;
 			BaseChart.prototype.recoveryData.call(self, barIndex);
-
 			self._clonePoints[barIndex] = self._points[barIndex];
-
-			BaseChart.Common.animateGridsAndLabels.call(null,self);
-
+			BaseChart.Common.animateGridsAndLabels.call(null, self);
 			self.getBarsPos();
 			//柱子动画
 			for (var i in self._bars)
 				if (i != barIndex) {
-
 					for (var j in self._bars[i]['bars']) {
-
 						if (self._barsPos[i]) {
-
 							var barPos = self._barsPos[i][j];
-
 							barPos && self._bars[i]['bars'][j].stop().animate({
 								"height": barPos.height,
 								"width": barPos.width,
-								"top": barPos.y - ctn.y,
-								"left": barPos.x - ctn.x
-							}, 0.4, "easeOut", function() {});
-
+								"y": barPos.y ,
+								"x": barPos.x 
+							}, 400, "easeOut", function() {});
 							self._bars[i]['bars'][j].attr({
 								"posx": barPos.x,
 								"posy": barPos.y
 							});
 						}
-
 					}
-
 				}
-
 			var posInfos = [],
 				bars = [];
-
 			for (var j in self._barsPos[barIndex]) {
-
 				var barPos = self._barsPos[barIndex][j];
-
 				posInfos[j] = barPos;
 				bars[j] = self.drawBar(barIndex, j).attr({
 					"barGroup": barIndex,
@@ -586,41 +581,24 @@
 					"defaultColor": color.getColor(barIndex).DEFAULT,
 					"hoverColor": color.getColor(barIndex).HOVER
 				});
-
 			}
-
 			self._bars[barIndex] = {
 				bars: bars,
 				posInfos: posInfos,
 				color: color.getColor(i)
 			};
-
 			self.clearEvtLayout();
-
 			self.renderEvtLayout();
-
 			self.bindEvt();
-
 			S.log(self);
-		},
-		fix2Resize: function() {
-			var self = this,
-				$ctnNode = self._$ctnNode;
-			self._cfg.anim = "";
-			var rerender = S.buffer(function() {
-				self.init();
-			}, 200);
-			!self.__isFix2Resize && self.on("resize", function() {
-				self.__isFix2Resize = 1;
-				rerender();
-			})
 		},
 		hideBar: function(barIndex) {
 			var self = this,
 				ctn = self._innerContainer;
+			self._bars[barIndex]['isShow'] = false;
 			BaseChart.prototype.removeData.call(self, barIndex);
 			delete self._clonePoints[barIndex];
-			BaseChart.Common.animateGridsAndLabels.call(null,self);
+			BaseChart.Common.animateGridsAndLabels.call(null, self);
 			self.getBarsPos();
 			for (var i in self._bars[barIndex]['bars']) {
 				self._bars[barIndex]['bars'][i].remove();
@@ -633,9 +611,9 @@
 						barPos && self._bars[i]['bars'][j].stop().animate({
 							"height": barPos.height,
 							"width": barPos.width,
-							"top": barPos.y - ctn.y,
-							"left": barPos.x - ctn.x
-						}, 0.4, "easeOut", function() {
+							"y": barPos.y,
+							"x": barPos.x
+						}, 400, "easeOut", function() {
 
 						});
 						self._bars[i]['bars'][j].attr({
@@ -644,13 +622,9 @@
 						});
 					}
 				}
-
 			self.clearEvtLayout();
-
 			self.renderEvtLayout();
-
 			self.bindEvt();
-
 			S.log(self);
 		},
 		afterRender: function() {
@@ -661,14 +635,14 @@
 			TODO get htmlpaper
 			@return {object} HtmlPaper
 		*/
-		getHtmlPaper:function(){
+		getHtmlPaper: function() {
 			return this.paper;
 		},
 		/*
 			TODO get raphael paper
 			@return {object} Raphael
 		*/
-		getRaphaelPaper:function(){
+		getRaphaelPaper: function() {
 			return this.raphaelPaper;
 		},
 		/*
@@ -680,22 +654,22 @@
 	};
 
 	var BarChart;
-    if(Base.extend){
-      BarChart = BaseChart.extend(methods);
-	}else{
-      BarChart = function(cfg) {
-          var self = this;
-          self.userConfig = cfg;
-          self.init();
-      };
-      S.extend(BarChart, BaseChart, methods);
+	if (Base.extend) {
+		BarChart = BaseChart.extend(methods);
+	} else {
+		BarChart = function(cfg) {
+			var self = this;
+			self.userConfig = cfg;
+			self.init();
+		};
+		S.extend(BarChart, BaseChart, methods);
 	}
 	return BarChart;
 
 }, {
 	requires: [
-        'node',
-        'base',
+		'node',
+		'base',
 		'gallery/template/1.0/index',
 		'gallery/kcharts/1.3/basechart/index',
 		'gallery/kcharts/1.3/raphael/index',
@@ -705,7 +679,7 @@
 		'./theme',
 		'gallery/kcharts/1.3/tools/touch/index',
 		'gallery/kcharts/1.3/tip/index',
-        'event',
-        './cfg'
+		'event',
+		'./cfg'
 	]
 });

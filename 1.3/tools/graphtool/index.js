@@ -39,9 +39,21 @@
 		}
 	};
 
+	var square = function(paper,x,y,w,h){
+		var path = [
+			["M",x-w/2,",",y-h/2].join(""),
+			[" L",x/1+w/2,",",y-h/2," v",h," h",-w,'z'].join("")
+		],el;
+		if(paper && paper.path){
+			el = paper.path(path);
+			return el;
+		}
+	}
+
 	graphTool = S.merge(graphTool,{
 		triangle:triangle,
-		rhomb:rhomb
+		rhomb:rhomb,
+		square:square
 	});
 
 	return graphTool;

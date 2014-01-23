@@ -1048,10 +1048,10 @@ gallery/kcharts/1.3/piechart/index
          }
 
          if(bool_left){
-           x3 = x23 - size.width
-           y3 = y23 - size.height/2
+           x3 = x23 - size.width - 3; //左边也修正下，否者线条和文字靠的太近了
+           y3 = y23 - size.height/2;
          }else{
-           x3 = x23;
+           x3 = x23 + 5;  //右边修正下，否者线条和文字靠的太近了
            y3 = y23 - size.height/2;
          }
 

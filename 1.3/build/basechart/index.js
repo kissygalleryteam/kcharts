@@ -555,13 +555,14 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 						},
 						zoomType: "x"
 					}, cfg,undefined,undefined,true);
-					self._$ctnNode = $("<div></div>").css({
-						"position": "absolute",
-						"width": $(cfg.renderTo).width(),
-						"height": $(cfg.renderTo).height(),
+					
+					self._$ctnNode = $(cfg.renderTo);
+
+					self._$ctnNode.css({
+						position:"relative",
 						"-webkit-text-size-adjust": "none", //chrome最小字体限制
 						"-webkit-tap-highlight-color": "rgba(0,0,0,0)" //去除touch时的闪烁背景
-					}).prependTo($(cfg.renderTo));
+					});
 					//构建内部容器
 					self.createContainer();
 
@@ -598,8 +599,6 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 				}
 				
 				self.__setData();
-
-				self.onResize();
 
 				self.__isInited = 1;
 			}
@@ -1224,23 +1223,6 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 		setConfig:function(cfg){
 			this._cfg = S.mix(this._cfg,cfg,undefined,undefined,true);
 			this.__setData();
-		},
-		onResize: function() {
-			var self = this,
-				$ctnNode = self._$ctnNode;
-
-			var cachedWidth = $ctnNode.width(),
-				cachedHeight = $ctnNode.height();
-			//避免重复绑定
-			!self.__isResizeBind && $(window).on("resize", function() {
-				self.__isResizeBind = 1;
-				//监控外容器的大小
-				if ($ctnNode.width() != cachedWidth || $ctnNode.height() != cachedHeight) {
-					cachedWidth = $ctnNode.width();
-					cachedHeight = $ctnNode.height();
-					self.fire("resize");
-				}
-			});
 		}
 	};
 	var BaseChart;

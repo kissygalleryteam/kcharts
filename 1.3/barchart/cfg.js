@@ -79,9 +79,9 @@
 				},
 				bars: {
 					isShow: true,
-					css: {
-						background: COLOR_TPL,
-						"border": "1px solid #fff"
+					attr: {
+						fill: COLOR_TPL,
+						"stroke-width": "0"
 					},
 					barsRatio: 0.6,
 					barRatio: 0.5

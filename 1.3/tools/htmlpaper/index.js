@@ -35,8 +35,8 @@
 					width:_cfg.width || $tgt.width(),
 					height:_cfg.height || $tgt.height(),
 					position:"absolute",
-					top:_cfg.top || 0,
-					left:_cfg.left || 0
+					left:_cfg.left||0,
+					top:_cfg.top||0
 				}).css(_cfg.css);
 			_cfg.prependTo ? $paper.prependTo($tgt) : $paper.appendTo($tgt);
 			return $paper;
