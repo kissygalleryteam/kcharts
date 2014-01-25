@@ -304,7 +304,7 @@ KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template
 		evtLayoutCls = clsPrefix + "evtlayout",
 		evtLayoutAreasCls = evtLayoutCls + "-areas",
 		evtLayoutBarsCls = evtLayoutCls + "-bars",
-		COLOR_TPL = "{COLOR}",
+		COLOR_TPL = /\{COLOR\}/g,
 		color;
 	var methods = {
 		initializer: function() {
