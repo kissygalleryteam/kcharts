@@ -6,10 +6,7 @@
 * 包含全面文档和在线图表生成器
 
 kcharts 首页:  
-
-http://v.idcnc.com.cn
-
-http://charts.kissyui.com
+[http://kcharts.net](http://kcharts.net)
 
 ### 旺旺交流群
 - 818302516

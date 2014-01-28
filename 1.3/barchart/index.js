@@ -123,9 +123,9 @@ KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template
 				h = Math.round(barPos.height - 0),
 				rect;
 			// 确保柱子有高度：数据为大于0的一个小数，产生的高度小于1。在y方向做一点修正 y-=2
-			if (h > 0 && h <= 1) {
+			if (h >= 0 && h <= 1) {
 				h = 1;
-				y -= 2;
+				// y -= 2;
 			}
 			//允许动画
 			if (_cfg.anim) {
@@ -164,6 +164,7 @@ KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template
 				zoomType = self._cfg.zoomType,
 				stackable = self._cfg.stackable,
 				isY = zoomType == "y",
+				ctn = self.getInnerContainer(),
 				len = stackable ? 1 : BaseChart.prototype.obj2Array(self._clonePoints).length, //若是堆叠图 则为1
 				barsRatio = self._cfg.bars.barsRatio, //一组柱的占空比
 				barRatio = self._cfg.bars.barRatio, //单根柱子的占空比
