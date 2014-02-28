@@ -33,7 +33,7 @@ KISSY.use("gallery/kcharts/1.3/linechart/index",function(S,LineChart){
 ```
 
 ##KCharts首页
-- [KCharts 外网](http://charts.kissyui.com)
+- [KCharts 官网](http://kcharts.net)
 - [KCharts 内网](http://kcharts.taobao.net)
 
 
