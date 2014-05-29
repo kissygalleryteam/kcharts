@@ -523,9 +523,7 @@ TODO 坐标运算  画布大小计算
 */
 ;
 KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common) {
-	var $ = S.all,
-		isNagitive = false,
-		isPositive = false;
+	var $ = S.all;
 
 	var methods = {
 		init: function(cfg) {
@@ -896,8 +894,18 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 					num = axis.num || 5,
 					_max = Math.max.apply(null, allDatas),
 					_min = Math.min.apply(null, allDatas);
-				isNagitive = _max <= 0 ? 1 : 0;
-				isPositive = _min >= 0 ? 1 : 0;
+				//全负数
+				self.isNagitive = _max < 0 ? 1 : 0;
+				//全为正数
+				self.isPositive = _min > 0 ? 1 : 0;
+				//全零
+				self.isZero = _max === _min && _max === 0;
+				//处理数据全0的情况
+				if(self.isZero){
+					_max = 5;
+					_min = -5;
+				}
+
 				//纵轴上下各有10%的延展
 				var offset = (_max - _min) * 0.1;
 				//修复最大值最小值的问题  bug
@@ -1025,6 +1033,7 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 			@return {Array}
 		*/
 		getScales: function(cormax, cormin, cornum) {
+
 			var self = this,
 				corstep,
 				tmpstep,
@@ -1105,11 +1114,11 @@ KISSY.add('gallery/kcharts/1.3/basechart/index', function(S, Base, Node, Common)
 				ary.push(parseFloat(i).toFixed(fixlen));
 			}
 			// 过滤数据 如果全部为正 则删除负值 若全部为负 则删除正数
-			if (isNagitive) {
+			if (self.isNagitive) {
 				for (i in ary) {
 					ary[i] > 0 && ary.splice(i, 1)
 				}
-			} else if (isPositive) {
+			} else if (self.isPositive) {
 				for (i in ary) {
 					ary[i] < 0 && ary.splice(i, 1)
 				}

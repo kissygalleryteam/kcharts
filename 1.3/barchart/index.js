@@ -122,6 +122,7 @@ KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template
 				w = Math.round(barPos.width - 0),
 				h = Math.round(barPos.height - 0),
 				rect;
+
 			// 确保柱子有高度：数据为大于0的一个小数，产生的高度小于1。在y方向做一点修正 y-=2
 			if (h >= 0 && h <= 1) {
 				h = 1;
@@ -208,7 +209,6 @@ KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template
 						var barPosInfo = {},
 							y = self._points[i][j].y,
 							h = Math.abs(zeroY - y);
-
 						barPosInfo.x = offset + self._points[i][j].x;
 						//是否是堆叠图
 						if (stackable) {
