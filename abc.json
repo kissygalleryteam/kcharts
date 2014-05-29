@@ -1,11 +1,19 @@
 {
     "name": "kcharts",
+    "comName":"kcharts",
     "version": "1.3",
     "desc": "KISSY图表库",
+    "tag":"图表",
+    "githubName":"huxiaoqi567",
     "cover": "http://img02.taobaocdn.com/tps/i2/T1TQygXEteXXXr6JI6-109-50.png",
     "author": {
         "name": "伯才",
         "email": "382850581@qq.com",
         "page": "http://www.kcharts.net/"
-    }
+    },
+    "flexComboPort":"80",
+	"reserveServerPort":"9000",
+    "type": "kissy-gallery",
+    "type-url": "http://gallery.kissyui.com/guide"
 }
+

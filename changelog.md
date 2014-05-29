@@ -10,3 +10,5 @@
   1. extend的使用方法变了需要做 [兼容性处理](https://gist.github.com/WeweTom/7822062)
   2. 只提供了seed.js，默认是没有DOM，Event模块的，使用需要显示的requires这些模块。
      $.all依赖Node模块，需要显示的requires
+
+- 2014-05-29 修复继承与basechart的数据全零报错的bug by 伯才
