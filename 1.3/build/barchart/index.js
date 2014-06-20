@@ -766,7 +766,6 @@ KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template
 				_cfg = self._cfg,
 				tip = self.tip,
 				isY = _cfg.zoomType == "y" ? true : false,
-				$tip = tip.getInstance(),
 				$bar = self._bars[barGroup]['bars'][barIndex],
 				defaultColor = $bar.attr("defaultColor"),
 				tpl = self._cfg.tip.template,
@@ -777,20 +776,15 @@ KISSY.add('gallery/kcharts/1.3/barchart/index', function(S, Node, Base, Template
 			delete tipData.data;
 			self._points[barGroup][barIndex]["dataInfo"],
 			self.barChange(barGroup,barIndex);
-			// $bar.css({
-			// 	"background": $bar.attr("hoverAttr")
-			// });
-// console.log(posx)
-
 			if (!tpl) return;
 			S.mix(tipData, {
 				groupindex: barGroup,
 				barindex: barIndex
 			});
-			tip.fire("setcontent", {
+			tip && tip.fire("setcontent", {
 				data: tipData
 			})
-			tip.fire("move", {
+			tip && tip.fire("move", {
 				x: posx,
 				y: posy,
 				style: self.processAttr(_cfg.tip.css, defaultColor)

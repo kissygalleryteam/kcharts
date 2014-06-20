@@ -77,7 +77,7 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 			//清空所有节点
 			self._$ctnNode.html("");
 			//获取矢量画布
-			self.paper = Raphael(self._$ctnNode[0], _cfg.width, _cfg.height);
+			self.paper = Raphael(self._$ctnNode[0], _cfg.width||self._$ctnNode.width(), _cfg.height||self._$ctnNode.height());
 			//渲染html画布
 			self.htmlPaper = new HtmlPaper(self._$ctnNode, {
 				clsName: themeCls
@@ -662,7 +662,6 @@ KISSY.add("gallery/kcharts/1.3/linechart/index", function(S, Base, Node, D, Evt,
 				_cfg = self._cfg,
 				series = _cfg.series,
 				tpl = _cfg.tip.template,
-				$tip = tip.getInstance(),
 				currentPoints = self._points[lineIndex],
 				currentStocks = self._stocks[lineIndex],
 				curPoint = currentPoints[stockIndex],
