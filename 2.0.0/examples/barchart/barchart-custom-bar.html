@@ -26,20 +26,16 @@
 </head>
 <body>
 <div id="demo1"></div>
-<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed.js"></script>
-<script type="text/javascript" src="../../basechart/index.js"></script>
-<script type="text/javascript" src="../../barchart/index.js"></script>
-<script type="text/javascript" src="../../barchart/theme.js"></script>
-<script type="text/javascript" src="../../tools/color/index.js"></script>
-<script type="text/javascript" src="../../tools/htmlpaper/index.js"></script>
-<script type="text/javascript" src="../../tools/graphtool/index.js"></script>
-<script type="text/javascript" src="../../tools/touch/index.js"></script>
-<script type="text/javascript" src="../../animate/index.js"></script>
-<script type="text/javascript" src="../../legend/index.js"></script>
-<script type="text/javascript" src="../../tip/index.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
 (function (S) {
-    S.Config.combine = true;
+     S.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
     S.use('kg/kcharts/2.0.0/barchart/index', function (S, BarChart) {
 
         var barChart = new BarChart({
@@ -57,7 +53,7 @@
                 }
             },
             yAxis: {
-                text: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26]
+                text: [0,2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26]
             },
             xAxis: {
                 text: ['']

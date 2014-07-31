@@ -18,8 +18,14 @@
     </div>
     <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
     <script>
-     KISSY.use('node,dom,event',function(S,Node,D,E){
-       S.Config.combine = true;
+    KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+     KISSY.use('node,dom,event,kg/kcharts/2.0.0/scatterchart/index',function(S,Node,D,E,ScatterChart){
        
        var series = [{
          text: 'Female',
@@ -213,7 +219,6 @@
        ];
 
 
-       S.use('kg/kcharts/2.0.0/scatterchart/index',function(S,ScatterChart){
          var scatterchart = new ScatterChart({
            renderTo:"#demo1",
            title:{
@@ -263,7 +268,6 @@
              ,y:-10
            }
          });
-       });
      });
     </script>
   </body>

@@ -625,4 +625,3 @@ KISSY.add('kg/kcharts/2.0.0/realtime/util',function(S){
   // ==================== end util ====================
   return Util;
 });
-

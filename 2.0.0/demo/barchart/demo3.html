@@ -20,9 +20,14 @@
 <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
 <script>
 (function(S){
-	S.Config.combine = true;
+	 S.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
 	S.use('kg/kcharts/2.0.0/barchart/index',function(S,BarChart){
-	
 		var barChart = new BarChart({
 			renderTo:"#demo1",
 			legend:{

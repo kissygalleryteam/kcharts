@@ -223,8 +223,8 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 					}
 				}
 				offset += barAndSpaceWidth;
-				for(var j in tmpArray){
-					for(k in tmpArray[j]){
+				for (var j in tmpArray) {
+					for (k in tmpArray[j]) {
 						//取ceil为了去除缝隙
 						tmpArray[j][k] = Math.ceil(tmpArray[j][k]);
 					}
@@ -263,7 +263,7 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 					bars: bars,
 					posInfos: posInfos,
 					color: color.getColor(i),
-					isShow:true
+					isShow: true
 				};
 				self._bars[i] = barObj;
 			}
@@ -334,11 +334,11 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 				for (var j in self._evtEls._bars[i]) {
 					var bar = self._evtEls._bars[i][j];
 					if (self.isInSide(e.offsetX + ctn.x, e.offsetY + ctn.y, bar['x'], bar['y'], bar['width'], bar['height'])) {
-							if(self.curBarIndex === j && self.curGroupIndex === i) return;
-							self.curBarIndex = j;
-							self.curGroupIndex = i;
-							self.tipHandler(self.curGroupIndex, self.curBarIndex);
-							return;
+						if (self.curBarIndex === j && self.curGroupIndex === i) return;
+						self.curBarIndex = j;
+						self.curGroupIndex = i;
+						self.tipHandler(self.curGroupIndex, self.curBarIndex);
+						return;
 					}
 				}
 			}
@@ -364,7 +364,7 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 				i = i % len;
 				var item = {},
 					color = colors[i]
-					item.text = serie.text;
+				item.text = serie.text;
 				item.DEFAULT = color.DEFAULT;
 				item.HOVER = color.HOVER;
 				return item;
@@ -460,6 +460,19 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 
 			self.fire("barChange", e);
 		},
+		delegateClick: function(e) {
+			var self = this,
+				ctn = self.getInnerContainer();
+			for (var i in self._evtEls._bars) {
+				for (var j in self._evtEls._bars[i]) {
+					var rect = self._evtEls._bars[i][j];
+					if (self.isInSide(e.offsetX + ctn.x, e.offsetY + ctn.y, rect['x'], rect['y'], rect['width'], rect['height'])) {
+						self.barClick(i, j);
+						return;
+					}
+				}
+			}
+		},
 		barClick: function(barGroup, barIndex) {
 			var self = this,
 				currentBars = self._bars[barGroup],
@@ -479,13 +492,13 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 				$bar = self._bars[barGroup]['bars'][barIndex],
 				defaultColor = $bar.attr("defaultColor"),
 				tpl = self._cfg.tip.template,
-				posx = isY ? $bar.attr("x")/1 + $bar.attr("width")/1 : $bar.attr("x"),
+				posx = isY ? $bar.attr("x") / 1 + $bar.attr("width") / 1 : $bar.attr("x"),
 				posy = $bar.attr("y"),
 				tipData = S.merge(self._points[barGroup][barIndex].dataInfo, _cfg.series[barGroup]);
 			//删除data 避免不必要的数据
 			delete tipData.data;
 			self._points[barGroup][barIndex]["dataInfo"],
-			self.barChange(barGroup,barIndex);
+			self.barChange(barGroup, barIndex);
 			if (!tpl) return;
 			S.mix(tipData, {
 				groupindex: barGroup,
@@ -509,7 +522,7 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 			}
 			return newAttrs;
 		},
-		getFirstVisibleBarGroupIndex:function(){
+		getFirstVisibleBarGroupIndex: function() {
 			var self = this;
 			for (var i in self._bars) {
 				if (self._bars[i]['isShow']) {
@@ -517,7 +530,7 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 				}
 			}
 		},
-		getFirstNotEmptyBarIndex:function(barIndex){
+		getFirstNotEmptyBarIndex: function(barIndex) {
 			var self = this;
 			for (var i in self._points) {
 				if (!self.isEmptyPoint(self._points[i][barIndex]) && self._bars[i]['isShow']) {
@@ -555,8 +568,8 @@ KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper
 							barPos && self._bars[i]['bars'][j].stop().animate({
 								"height": barPos.height,
 								"width": barPos.width,
-								"y": barPos.y ,
-								"x": barPos.x 
+								"y": barPos.y,
+								"x": barPos.x
 							}, 400, "easeOut", function() {});
 							self._bars[i]['bars'][j].attr({
 								"posx": barPos.x,

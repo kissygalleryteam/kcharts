@@ -45,6 +45,13 @@
 	<script type="text/javascript" src="../../piechart/index.js"></script>
 	<!-- <script type="text/javascript" src="pie-bs.js"></script> -->
 	<script type="text/javascript">
+    KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
 KISSY.use('kg/kcharts/2.0.0/piechart/index,gallery/kcharts/1.1/tip/index', function (S, Pie, Tip) {
     function pie1() {
         var Raphael = window.Raphael

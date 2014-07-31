@@ -1,2 +1,2 @@
-/*!build time : 2014-07-29 7:39:43 PM*/
+/*!build time : 2014-08-01 1:03:43 AM*/
 KISSY.config("modules",{"kg/kcharts/2.0.0/dashboard/pointer":{requires:["base"]}});

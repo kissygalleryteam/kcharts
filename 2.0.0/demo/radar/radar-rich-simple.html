@@ -13,19 +13,14 @@
   <body>
     <div id="J_Radar" class="radar-con">
     </div>
-	<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed.js"></script>
-	<script type="text/javascript" src="../../icons/index.js"></script>
-    <script type="text/javascript" src="../../legend/index.js"></script>
 	<script type="text/javascript">
-	 KISSY.config({
-	   packages:[{
-		 name:'gallery',
-		 path:'http://a.tbcdn.cn/s/kissy'
-	   }]
-	 });
-	</script>
-	<script type="text/javascript" src="../../radar/index.js"></script>
-	<script type="text/javascript">
+  KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
 	 KISSY.use("kg/kcharts/2.0.0/radar/index",function(S,Radar){
 	   var radar = new Radar({
          renderTo:"#J_Radar",

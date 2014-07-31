@@ -1,4 +1,4 @@
-;KISSY.add("kg/kcharts/2.0.0/realtime/index",function(S,Raphael,Base,Promise,Anim,Util,D,E,ColorLib){
+;KISSY.add(function(S,Raphael,Base,Promise,Anim,Util,D,E,ColorLib){
    //==================== STATIC start ====================
    var COLOR_TPL = "{COLOR}";
    //==================== STATIC end ====================
@@ -2004,5 +2004,5 @@
    }
    return RealTime;
  },{
-   requires:["kg/kcharts/2.0.0/raphael/index","base","promise","kg/kcharts/2.0.0/animate/index","./util","dom","event","kg/kcharts/2.0.0/tools/color/index"]
+   requires:["kg/kcharts/2.0.0/raphael/index","base","promise","kg/kcharts/2.0.0/animate/index","kg/kcharts/2.0.0/realtime/util","dom","event","kg/kcharts/2.0.0/tools/color/index"]
  });

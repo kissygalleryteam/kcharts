@@ -17,7 +17,13 @@
 </div>
 <script src="//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
 <script>
-KISSY.Config.combine = true;
+KISSY.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
 KISSY.use("kg/kcharts/2.0.0/linechart/index", function(S, LineChart) {
   var linechart = new LineChart({
     renderTo: "#demo1",

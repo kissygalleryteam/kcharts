@@ -14,20 +14,16 @@
 <div id="map"></div>
 <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
-KISSY.use("node",function(){
-    (function (S) {
+ KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+KISSY.use("node",function(S,Node,MapChart){
         $ = KISSY.all;
-//        S.config({
-//            packages: [
-//                {
-//                    name: "gallery", // 包名
-//                    tag: "20130323", // 动态加载包内的模块js文件时,
-//                    // 自动加上 ?t=20110323, 用于文件更新
-//                    path: "../../../../../", // 包对应路径, 相对路径指相对于当前页面路径
-//                    charset: "utf8" // 包里模块文件编码格式
-//                }
-//            ]
-//        });
+       
         S.use('kg/kcharts/2.0.0/mapchart/index', function (S, MapChart) {
             var h = screen.availHeight * 0.7;
             $('#map').css("height", h);
@@ -55,7 +51,6 @@ KISSY.use("node",function(){
             });
             map.render();
         });
-    })(KISSY);
 });
 </script>
 </body>

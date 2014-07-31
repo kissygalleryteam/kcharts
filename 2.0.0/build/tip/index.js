@@ -5,7 +5,7 @@ kg/kcharts/2.0.0/tip/index
 
 */
 /**
- * @fileOverview KChart 1.2  tip
+ * @fileOverview KChart  tip
  * @author huxiaoqi567@gmail.com
  */
 ;KISSY.add('kg/kcharts/2.0.0/tip/index', function (S,Node,Base,Anim,Template,_) {

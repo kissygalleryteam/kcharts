@@ -25,22 +25,14 @@
     <div id="J_Pie1" class="pi-con">
     </div>
 		<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
-	  <script type="text/javascript">
-		 /* 如果你使用kissy 1.2，需要下面的包配置
-		 KISSY.config({
-			 packages:[{
-				 name:'gallery',
-				 path:'http://a.tbcdn.cn/s/kissy'
-			 }]
-		 });
-		 */
-		</script>
-	<!-- <script type="text/javascript" src="../../piechart/src/animation.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/src/util.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/src/sector.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/src/label.js"></script> -->
-	<!-- <script type="text/javascript" src="../../piechart/index.js"></script> -->
 	<script type="text/javascript">
+	KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
 		KISSY.use("kg/kcharts/2.0.0/piechart/index",function(S,Pie){
 			function pie1(){
 				var data = [ {label:"Chrome", data:1 },{ label:"FireFox", data:2 },{ label:"IE", data:3 },{ label:"Opera",data:4 },{ label:"Safari", data:5 }];

@@ -14,24 +14,19 @@
 </head>
 <body>
 <div id="demo1"></div>
-<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.4/seed-min.js"></script>
 <script>
 (function(S){
-    KISSY.Config.debug = true;
-KISSY.config({
-  packages:[
-    {
-      name:"gallery",
-      path:"../../../../../",
-      tag:Math.random()
-    }
-  ]
-});
+    S.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
 	S.use('kg/kcharts/2.0.0/barchart/index',function(S,BarChart){
-	
 		var barChart = new BarChart({
 			renderTo:"#demo1",
-            // anim:{},
 			 xAxis: {
 			 		text:[
 			 		'A',

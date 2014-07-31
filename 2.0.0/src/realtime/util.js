@@ -1,4 +1,4 @@
-KISSY.add('kg/kcharts/2.0.0/realtime/util',function(S){
+KISSY.add(function(S){
 
   // ==================== util ====================
   var Util = {};

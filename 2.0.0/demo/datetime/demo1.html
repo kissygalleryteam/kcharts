@@ -18,7 +18,13 @@
     <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed.js"></script>
     <script>
      (function(S){
-
+      KISSY.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
        KISSY.use("kg/kcharts/2.0.0/datetime/index",function(S,DateTime){
          var data = [{ 
                       "text" : "North America" , 

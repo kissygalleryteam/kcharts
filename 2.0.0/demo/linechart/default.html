@@ -17,15 +17,12 @@
 </div>
 <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.2/seed-min.js"></script>
 <script type="text/javascript">
-KISSY.Config.combine = true;
-KISSY.config({
-        packages:[
-            {
-                name:"kg",
-                path:"http://g.assets.daily.taobao.net/kg/",
-                ignorePackageNameInUri:true
-            }
-        ]
+ KISSY.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
     });
 KISSY.use("kg/kcharts/2.0.0/linechart/index",function(S,LineChart){
   var linechart = new LineChart({

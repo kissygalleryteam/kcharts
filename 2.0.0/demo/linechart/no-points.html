@@ -17,6 +17,13 @@
 </div>
 <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
+KISSY.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
 KISSY.use("kg/kcharts/2.0.0/linechart/index",function(S,LineChart){
   function data() {
   var sin = [],
