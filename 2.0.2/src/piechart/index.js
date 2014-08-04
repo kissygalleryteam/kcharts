@@ -164,7 +164,7 @@
            return ret;
          }
 
-         S.use("kg/kcharts/2.0.2/legend/index",function(S,Legend){
+         S.use("kg/kcharts/2.0.0/legend/index",function(S,Legend){
            var parts = buildparts();
            var dft = {
              //legend需要的原始信息
@@ -458,7 +458,7 @@
 	   var self = this;
        var container = self.get("container");
 
-       S.use("kg/kcharts/2.0.2/tip/index",function(S,Tip){
+       S.use("kg/kcharts/2.0.0/tip/index",function(S,Tip){
          var bbox = self.getbbox();
          // 修正bbox字段
          bbox.x = bbox.left;
@@ -572,10 +572,10 @@
   requires:[
     "./util",
     "./sector",
-    "kg/kcharts/2.0.2/animate/index",
+    "kg/kcharts/2.0.0/animate/index",
     "./label",
-    "kg/kcharts/2.0.2/raphael/index",
-    "kg/kcharts/2.0.2/tools/color/index",
+    "kg/kcharts/2.0.0/raphael/index",
+    "kg/kcharts/2.0.0/tools/color/index",
     "base",
     "event",
     "dom"

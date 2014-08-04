@@ -2,7 +2,7 @@
  * @fileOverview KChart  tip
  * @author huxiaoqi567@gmail.com
  */
-;KISSY.add( function (S,Node,Base,Anim,Template,_) {
+;KISSY.add('kg/kcharts/2.0.0/tip/index', function (S,Node,Base,Anim,Template,_) {
     var $ = S.all;
     var methods = {
       initializer:function(){

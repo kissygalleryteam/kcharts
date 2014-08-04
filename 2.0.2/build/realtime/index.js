@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.2/realtime/index
+kg/kcharts/2.0.1/realtime/index
 
 */
-;KISSY.add('kg/kcharts/2.0.2/realtime/index',function(S,Raphael,Base,Promise,Anim,Util,D,E,ColorLib){
+;KISSY.add('kg/kcharts/2.0.1/realtime/index',function(S,Raphael,Base,Promise,Anim,Util,D,E,ColorLib){
    //==================== STATIC start ====================
    var COLOR_TPL = "{COLOR}";
    //==================== STATIC end ====================
@@ -1769,7 +1769,7 @@ kg/kcharts/2.0.2/realtime/index
          if(legend){
            legend.destroy && legend.destroy();
          }
-         S.use("kg/kcharts/2.0.2/legend/index",function(S,Legend){
+         S.use("kg/kcharts/2.0.0/legend/index",function(S,Legend){
            var paper = that.get("paper")
              , $con = that.get("container")
              , padding = that.getPadding()
@@ -1840,7 +1840,7 @@ kg/kcharts/2.0.2/realtime/index
 	   var that = this;
        var container = that.get("container");
 
-       S.use("kg/kcharts/2.0.2/tip/index,kg/kcharts/2.0.2/tip/assets/tip.css",function(S,Tip){
+       S.use("kg/kcharts/2.0.0/tip/index,kg/kcharts/2.0.0/tip/assets/tip.css",function(S,Tip){
          var bbox = that.getBBox();
          // 修正bbox字段
          bbox.x = bbox.left;
@@ -2010,5 +2010,5 @@ kg/kcharts/2.0.2/realtime/index
    }
    return RealTime;
  },{
-   requires:["kg/kcharts/2.0.2/raphael/index","base","promise","kg/kcharts/2.0.2/animate/index","kg/kcharts/2.0.2/realtime/util","dom","event","kg/kcharts/2.0.2/tools/color/index"]
+   requires:["kg/kcharts/2.0.0/raphael/index","base","promise","kg/kcharts/2.0.0/animate/index","kg/kcharts/2.0.0/realtime/util","dom","event","kg/kcharts/2.0.0/tools/color/index"]
  });

@@ -1,11 +1,11 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.2/radar/index
+kg/kcharts/2.0.1/radar/index
 
 */
 // -*- coding: utf-8; -*-
-;KISSY.add('kg/kcharts/2.0.2/radar/index',function(S,Base,Raphael,D,E,Legend){
+;KISSY.add('kg/kcharts/2.0.1/radar/index',function(S,Base,Raphael,D,E,Legend){
   var pi = Math.PI
     , unit = pi/180
 
@@ -479,9 +479,9 @@ kg/kcharts/2.0.2/radar/index
 },{
   requires:[
     "base",
-    "kg/kcharts/2.0.2/raphael/index",
+    "kg/kcharts/2.0.0/raphael/index",
     "dom","event",
-    'kg/kcharts/2.0.2/legend/index'
+    'kg/kcharts/2.0.0/legend/index'
   ]
 });
 /**

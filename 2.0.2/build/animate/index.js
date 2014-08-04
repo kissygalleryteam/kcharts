@@ -1,11 +1,11 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.2/animate/index
+kg/kcharts/2.0.1/animate/index
 
 */
 // -*- coding: utf-8; -*-
-;KISSY.add('kg/kcharts/2.0.2/animate/index',function(S,Anim){
+;KISSY.add('kg/kcharts/2.0.1/animate/index',function(S,Anim){
   var Easing = Anim.Easing
     , requestAnimFrame = window.requestAnimationFrame       ||
                          window.webkitRequestAnimationFrame ||

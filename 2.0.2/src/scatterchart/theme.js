@@ -1,4 +1,4 @@
-;KISSY.add(function(S){
+;KISSY.add("kg/kcharts/2.0.0/scatterchart/theme",function(S){
 
 	var COLOR_TPL = "{COLOR}";
 

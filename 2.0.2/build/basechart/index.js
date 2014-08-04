@@ -1,11 +1,11 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.2/basechart/common
-kg/kcharts/2.0.2/basechart/index
+kg/kcharts/2.0.1/basechart/common
+kg/kcharts/2.0.1/basechart/index
 
 */
-KISSY.add('kg/kcharts/2.0.2/basechart/common',function(S, Template) {
+KISSY.add('kg/kcharts/2.0.1/basechart/common',function(S, Template) {
 
 	function drawTitle(chart, themeCls) {
 		if (!chart._cfg.title.isShow) return;
@@ -522,7 +522,7 @@ KISSY.add('kg/kcharts/2.0.2/basechart/common',function(S, Template) {
 TODO 坐标运算  画布大小计算
 */
 ;
-KISSY.add('kg/kcharts/2.0.2/basechart/index',function(S, Base, Node, Common) {
+KISSY.add('kg/kcharts/2.0.1/basechart/index',function(S, Base, Node, Common) {
 	var $ = S.all;
 
 	var methods = {

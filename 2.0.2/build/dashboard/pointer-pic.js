@@ -1,8 +1,8 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.2/dashboard/pointer
-kg/kcharts/2.0.2/dashboard/pointer-pic
+kg/kcharts/2.0.1/dashboard/pointer
+kg/kcharts/2.0.1/dashboard/pointer-pic
 
 */
 // -*- coding: utf-8; -*-
@@ -10,7 +10,7 @@ kg/kcharts/2.0.2/dashboard/pointer-pic
  * 指针
  * @author cookieu@gmail.com
  * */
-;KISSY.add('kg/kcharts/2.0.2/dashboard/pointer',function(S,Base){
+;KISSY.add('kg/kcharts/2.0.1/dashboard/pointer',function(S,Base){
    var methods = {
      pointTo:function(angle,effect){
        var paper = this.get('paper')
@@ -157,7 +157,7 @@ kg/kcharts/2.0.2/dashboard/pointer-pic
  * 指针
  * @author cookieu@gmail.com
  * */
-;KISSY.add('kg/kcharts/2.0.2/dashboard/pointer-pic',function(S,Pointer){
+;KISSY.add('kg/kcharts/2.0.1/dashboard/pointer-pic',function(S,Pointer){
   function PicturePointer(){
     PicturePointer.superclass.constructor.apply(this,arguments)
     var pointer = this.get('pointer')

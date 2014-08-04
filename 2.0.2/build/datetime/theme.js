@@ -1,11 +1,11 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.2/datetime/theme
+kg/kcharts/2.0.1/datetime/theme
 
 */
 ;
-KISSY.add('kg/kcharts/2.0.2/datetime/theme',function(S) {
+KISSY.add('kg/kcharts/2.0.1/datetime/theme',function(S) {
 
 	var COLOR_TPL = "{COLOR}";
 

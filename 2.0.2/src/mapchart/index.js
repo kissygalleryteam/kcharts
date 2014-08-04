@@ -540,7 +540,7 @@ KISSY.add(function (S, Raphael, Theme, MapData , Node, Event) {
     });
     return MapChart;
 }, {requires: [
-    'kg/kcharts/2.0.2/raphael/index',
+    'kg/kcharts/2.0.0/raphael/index',
     './theme',
     './mapdata',
     'node',

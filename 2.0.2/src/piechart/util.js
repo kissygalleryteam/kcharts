@@ -574,5 +574,5 @@
 
   return util;
 },{
-  requires:["kg/kcharts/2.0.2/piechart/sector","kg/kcharts/2.0.2/tools/color/index","kg/kcharts/2.0.2/raphael/index"]
+  requires:["kg/kcharts/2.0.0/piechart/sector","kg/kcharts/2.0.0/tools/color/index","kg/kcharts/2.0.0/raphael/index"]
 });

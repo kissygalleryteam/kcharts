@@ -1,14 +1,14 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.2/dashboard/dashboard-ticks
+kg/kcharts/2.0.1/dashboard/dashboard-ticks
 
 */
 /**
  * 矢量画刻度
  * @author cookieu@gmail.com
  * */
-;KISSY.add('kg/kcharts/2.0.2/dashboard/dashboard-ticks',function(S,Base){
+;KISSY.add('kg/kcharts/2.0.1/dashboard/dashboard-ticks',function(S,Base){
    var methods = {
      initializer:function(){
        var cfg = this.get('cfg')
