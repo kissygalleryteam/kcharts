@@ -1,17 +1,17 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/piechart/util
-kg/kcharts/2.0.1/piechart/sector
-kg/kcharts/2.0.1/piechart/label
-kg/kcharts/2.0.1/piechart/index
+kg/kcharts/2.0.2/piechart/util
+kg/kcharts/2.0.2/piechart/sector
+kg/kcharts/2.0.2/piechart/label
+kg/kcharts/2.0.2/piechart/index
 
 */
 // -*- coding: utf-8; -*-
 /**
  * sector数据处理
  * */
-;KISSY.add('kg/kcharts/2.0.1/piechart/util',function(S,Sector,Color,Raphael){
+;KISSY.add('kg/kcharts/2.0.2/piechart/util',function(S,Sector,Color,Raphael){
   var isArray = S.isArray
   function flat(a){
     var ret = []
@@ -583,11 +583,11 @@ kg/kcharts/2.0.1/piechart/index
 
   return util;
 },{
-  requires:["kg/kcharts/2.0.0/piechart/sector","kg/kcharts/2.0.0/tools/color/index","kg/kcharts/2.0.0/raphael/index"]
+  requires:["kg/kcharts/2.0.2/piechart/sector","kg/kcharts/2.0.2/tools/color/index","kg/kcharts/2.0.2/raphael/index"]
 });
 
 // -*- coding: utf-8; -*-
-;KISSY.add('kg/kcharts/2.0.1/piechart/sector',function(S,Base){
+;KISSY.add('kg/kcharts/2.0.2/piechart/sector',function(S,Base){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○
@@ -813,7 +813,7 @@ kg/kcharts/2.0.1/piechart/index
   requires:["base"]
 });
 // -*- coding: utf-8; -*-
-;KISSY.add('kg/kcharts/2.0.1/piechart/label',function(S,Node,Base,D){
+;KISSY.add('kg/kcharts/2.0.2/piechart/label',function(S,Node,Base,D){
    // helpers
    function distance(a,b){
      var x1,x2,y1,y2;
@@ -1102,7 +1102,7 @@ kg/kcharts/2.0.1/piechart/index
  })
 
 // -*- coding: utf-8; -*-
-;KISSY.add('kg/kcharts/2.0.1/piechart/index',function(S,Util,Sector,Animate,Labels,Raphael,Color,Base,E,D){
+;KISSY.add('kg/kcharts/2.0.2/piechart/index',function(S,Util,Sector,Animate,Labels,Raphael,Color,Base,E,D){
    var COLOR_TPL = "{COLOR}";
    function render(){
      this.destroy();
@@ -1267,7 +1267,7 @@ kg/kcharts/2.0.1/piechart/index
            return ret;
          }
 
-         S.use("kg/kcharts/2.0.0/legend/index",function(S,Legend){
+         S.use("kg/kcharts/2.0.2/legend/index",function(S,Legend){
            var parts = buildparts();
            var dft = {
              //legend需要的原始信息
@@ -1561,7 +1561,7 @@ kg/kcharts/2.0.1/piechart/index
 	   var self = this;
        var container = self.get("container");
 
-       S.use("kg/kcharts/2.0.0/tip/index",function(S,Tip){
+       S.use("kg/kcharts/2.0.2/tip/index",function(S,Tip){
          var bbox = self.getbbox();
          // 修正bbox字段
          bbox.x = bbox.left;
@@ -1675,10 +1675,10 @@ kg/kcharts/2.0.1/piechart/index
   requires:[
     "./util",
     "./sector",
-    "kg/kcharts/2.0.0/animate/index",
+    "kg/kcharts/2.0.2/animate/index",
     "./label",
-    "kg/kcharts/2.0.0/raphael/index",
-    "kg/kcharts/2.0.0/tools/color/index",
+    "kg/kcharts/2.0.2/raphael/index",
+    "kg/kcharts/2.0.2/tools/color/index",
     "base",
     "event",
     "dom"

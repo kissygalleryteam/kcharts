@@ -1,12 +1,12 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/scatterchart/theme
-kg/kcharts/2.0.1/scatterchart/cfg
-kg/kcharts/2.0.1/scatterchart/index
+kg/kcharts/2.0.2/scatterchart/theme
+kg/kcharts/2.0.2/scatterchart/cfg
+kg/kcharts/2.0.2/scatterchart/index
 
 */
-;KISSY.add("kg/kcharts/2.0.0/scatterchart/theme",function(S){
+;KISSY.add('kg/kcharts/2.0.2/scatterchart/theme',function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
@@ -236,7 +236,7 @@ kg/kcharts/2.0.1/scatterchart/index
 	return themeCfg;
 
 });
-;KISSY.add("kg/kcharts/2.0.0/scatterchart/cfg",function(S){
+;KISSY.add('kg/kcharts/2.0.2/scatterchart/cfg',function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";
@@ -340,11 +340,11 @@ kg/kcharts/2.0.1/scatterchart/index
 			};
 })
 /**
- * @fileOverview KChart 1.3  scatterchart
+'kg/kcharts/2.0.2/scatterchart/index', * @fileOverview KChart 1.3  scatterchart
  * @author huxiaoqi567@gmail.com
  */
 ;
-KISSY.add("kg/kcharts/2.0.0/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg,graphTool) {
+KISSY.add( function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg,graphTool) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -869,15 +869,15 @@ KISSY.add("kg/kcharts/2.0.0/scatterchart/index", function(S, Base, Node, D, Evt,
 		'dom',
 		'event',
 		'gallery/template/1.0/index',
-		'kg/kcharts/2.0.0/basechart/index',
-		'kg/kcharts/2.0.0/raphael/index',
-		'kg/kcharts/2.0.0/tools/color/index',
-		'kg/kcharts/2.0.0/tools/htmlpaper/index',
-		'kg/kcharts/2.0.0/legend/index',
+		'kg/kcharts/2.0.2/basechart/index',
+		'kg/kcharts/2.0.2/raphael/index',
+		'kg/kcharts/2.0.2/tools/color/index',
+		'kg/kcharts/2.0.2/tools/htmlpaper/index',
+		'kg/kcharts/2.0.2/legend/index',
 		'./theme',
-		'kg/kcharts/2.0.0/tools/touch/index',
-		'kg/kcharts/2.0.0/tip/index',
+		'kg/kcharts/2.0.2/tools/touch/index',
+		'kg/kcharts/2.0.2/tip/index',
 		'./cfg',
-		'kg/kcharts/2.0.0/tools/graphtool/index'
+		'kg/kcharts/2.0.2/tools/graphtool/index'
 	]
 });

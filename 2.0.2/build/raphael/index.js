@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/raphael/index
+kg/kcharts/2.0.2/raphael/index
 
 */
-;KISSY.add('kg/kcharts/2.0.1/raphael/index',function(S){
+;KISSY.add('kg/kcharts/2.0.2/raphael/index',function(S){
 
   (function(win){
       // ┌────────────────────────────────────────────────────────────────────┐ \\

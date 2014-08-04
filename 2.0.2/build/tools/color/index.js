@@ -1,7 +1,7 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/tools/color/index
+kg/kcharts/2.0.2/tools/color/index
 
 */
 /**
@@ -9,7 +9,7 @@ kg/kcharts/2.0.1/tools/color/index
  * @author huxiaoqi567@gmail.com
  */
 ;
-KISSY.add('kg/kcharts/2.0.1/tools/color/index',function(S) {
+KISSY.add('kg/kcharts/2.0.2/tools/color/index',function(S) {
 	var Color = function(cfg) {
 		this.init(cfg);
 	};

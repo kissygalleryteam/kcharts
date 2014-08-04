@@ -1,14 +1,14 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/piechart/util
+kg/kcharts/2.0.2/piechart/util
 
 */
 // -*- coding: utf-8; -*-
 /**
  * sector数据处理
  * */
-;KISSY.add('kg/kcharts/2.0.1/piechart/util',function(S,Sector,Color,Raphael){
+;KISSY.add('kg/kcharts/2.0.2/piechart/util',function(S,Sector,Color,Raphael){
   var isArray = S.isArray
   function flat(a){
     var ret = []
@@ -580,6 +580,6 @@ kg/kcharts/2.0.1/piechart/util
 
   return util;
 },{
-  requires:["kg/kcharts/2.0.0/piechart/sector","kg/kcharts/2.0.0/tools/color/index","kg/kcharts/2.0.0/raphael/index"]
+  requires:["kg/kcharts/2.0.2/piechart/sector","kg/kcharts/2.0.2/tools/color/index","kg/kcharts/2.0.2/raphael/index"]
 });
 

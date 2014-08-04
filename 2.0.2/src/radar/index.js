@@ -473,9 +473,9 @@
 },{
   requires:[
     "base",
-    "kg/kcharts/2.0.0/raphael/index",
+    "kg/kcharts/2.0.2/raphael/index",
     "dom","event",
-    'kg/kcharts/2.0.0/legend/index'
+    'kg/kcharts/2.0.2/legend/index'
   ]
 });
 /**

@@ -1,11 +1,11 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/tools/graphtool/index
+kg/kcharts/2.0.2/tools/graphtool/index
 
 */
 //简单图形绘制的工具
-;KISSY.add('kg/kcharts/2.0.1/tools/graphtool/index',function(S,Raphael){
+;KISSY.add('kg/kcharts/2.0.2/tools/graphtool/index',function(S,Raphael){
 
 	var sqrt = Math.sqrt;
 
@@ -63,4 +63,4 @@ kg/kcharts/2.0.1/tools/graphtool/index
 	});
 
 	return graphTool;
-},{requires:['kg/kcharts/2.0.0/raphael/index']});
+},{requires:['kg/kcharts/2.0.2/raphael/index']});

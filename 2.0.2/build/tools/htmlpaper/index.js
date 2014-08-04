@@ -1,13 +1,13 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/tools/htmlpaper/index
+kg/kcharts/2.0.2/tools/htmlpaper/index
 
 */
 /**
 	基于html 画图形
 **/
-;KISSY.add('kg/kcharts/2.0.1/tools/htmlpaper/index',function(S){
+;KISSY.add('kg/kcharts/2.0.2/tools/htmlpaper/index',function(S){
 	var $ = S.all,
 		win = window;
 	var HtmlPaper = function(tgt,cfg){

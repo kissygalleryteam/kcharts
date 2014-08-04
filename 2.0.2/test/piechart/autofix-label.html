@@ -44,7 +44,14 @@
 	<!-- <script type="text/javascript" src="../../piechart/src/label.js"></script> -->
 	<!-- <script type="text/javascript" src="../../piechart/index.js"></script> -->
 	<script type="text/javascript">
-		KISSY.use("gallery/kcharts/1.3/piechart/index",function(S,Pie){
+	KISSY.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.assets.daily.taobao.net/"
+        }]
+    });
+
+		KISSY.use("kg/kcharts/2.0.2/piechart/index",function(S,Pie){
 			function pie1(){
 				var data = [ 
 		      {label:"Chrome", data:1},

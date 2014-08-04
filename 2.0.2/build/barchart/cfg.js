@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.1/barchart/cfg
+kg/kcharts/2.0.2/barchart/cfg
 
 */
-;KISSY.add('kg/kcharts/2.0.1/barchart/cfg',function(S){
+;KISSY.add('kg/kcharts/2.0.2/barchart/cfg',function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";
