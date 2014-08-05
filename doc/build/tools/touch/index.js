@@ -1,14 +1,14 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/tools/touch/index
+kg/kcharts/2.0.2/tools/touch/index
 
 */
 /*
   touch 事件的
   note:change touch event to mouse event
 */
-;KISSY.add('kg/kcharts/2.0.0/tools/touch/index',function(S){
+;KISSY.add('kg/kcharts/2.0.2/tools/touch/index',function(S){
   if(S.UA.ie) return;
   var touchHandled,touchmove=false;
 

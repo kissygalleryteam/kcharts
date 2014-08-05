@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/basechart/common
+kg/kcharts/2.0.2/basechart/common
 
 */
-KISSY.add('kg/kcharts/2.0.0/basechart/common',function(S, Template) {
+KISSY.add('kg/kcharts/2.0.2/basechart/common',function(S, Template) {
 
 	function drawTitle(chart, themeCls) {
 		if (!chart._cfg.title.isShow) return;

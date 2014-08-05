@@ -1,4 +1,4 @@
-;KISSY.add("kg/kcharts/2.0.0/scatterchart/cfg",function(S){
+;KISSY.add(function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";

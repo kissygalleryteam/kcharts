@@ -1,12 +1,12 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/barchart/theme
-kg/kcharts/2.0.0/barchart/cfg
-kg/kcharts/2.0.0/barchart/index
+kg/kcharts/2.0.2/barchart/theme
+kg/kcharts/2.0.2/barchart/cfg
+kg/kcharts/2.0.2/barchart/index
 
 */
-;KISSY.add('kg/kcharts/2.0.0/barchart/theme',function(S){
+;KISSY.add('kg/kcharts/2.0.2/barchart/theme',function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
@@ -176,7 +176,7 @@ kg/kcharts/2.0.0/barchart/index
 	return themeCfg;
 
 });
-;KISSY.add('kg/kcharts/2.0.0/barchart/cfg',function(S){
+;KISSY.add('kg/kcharts/2.0.2/barchart/cfg',function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";
@@ -296,7 +296,7 @@ kg/kcharts/2.0.0/barchart/index
  * 新增barClick事件
  */
 ;
-KISSY.add('kg/kcharts/2.0.0/barchart/index',function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper, Legend, Theme, Touch, Tip, Evt, Cfg) {
+KISSY.add('kg/kcharts/2.0.2/barchart/index',function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper, Legend, Theme, Touch, Tip, Evt, Cfg) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -969,14 +969,14 @@ KISSY.add('kg/kcharts/2.0.0/barchart/index',function(S, Node, Base, Template, Ba
 		'node',
 		'base',
 		'gallery/template/1.0/index',
-		'kg/kcharts/2.0.0/basechart/index',
-		'kg/kcharts/2.0.0/raphael/index',
-		'kg/kcharts/2.0.0/tools/color/index',
-		'kg/kcharts/2.0.0/tools/htmlpaper/index',
-		'kg/kcharts/2.0.0/legend/index',
+		'kg/kcharts/2.0.2/basechart/index',
+		'kg/kcharts/2.0.2/raphael/index',
+		'kg/kcharts/2.0.2/tools/color/index',
+		'kg/kcharts/2.0.2/tools/htmlpaper/index',
+		'kg/kcharts/2.0.2/legend/index',
 		'./theme',
-		'kg/kcharts/2.0.0/tools/touch/index',
-		'kg/kcharts/2.0.0/tip/index',
+		'kg/kcharts/2.0.2/tools/touch/index',
+		'kg/kcharts/2.0.2/tip/index',
 		'event',
 		'./cfg'
 	]

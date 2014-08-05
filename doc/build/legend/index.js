@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/legend/index
+kg/kcharts/2.0.2/legend/index
 
 */
-;KISSY.add('kg/kcharts/2.0.0/legend/index',function(S,Base,Node,D,E,Icons,Animation){
+;KISSY.add('kg/kcharts/2.0.2/legend/index',function(S,Base,Node,D,E,Icons,Animation){
   var merge = S.merge;
 
   var unit = Icons.BASIC[1];
@@ -630,9 +630,9 @@ kg/kcharts/2.0.0/legend/index
     "base",
     "node",
     "dom","event",
-    "kg/kcharts/2.0.0/icons/index",
-    "kg/kcharts/2.0.0/animate/index",
-    "kg/kcharts/2.0.0/raphael/index"
+    "kg/kcharts/2.0.2/icons/index",
+    "kg/kcharts/2.0.2/animate/index",
+    "kg/kcharts/2.0.2/raphael/index"
   ]
 });
 

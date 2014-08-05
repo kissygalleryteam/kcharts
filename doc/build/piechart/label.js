@@ -1,11 +1,11 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/piechart/label
+kg/kcharts/2.0.2/piechart/label
 
 */
 // -*- coding: utf-8; -*-
-;KISSY.add('kg/kcharts/2.0.0/piechart/label',function(S,Node,Base,D){
+;KISSY.add('kg/kcharts/2.0.2/piechart/label',function(S,Node,Base,D){
    // helpers
    function distance(a,b){
      var x1,x2,y1,y2;

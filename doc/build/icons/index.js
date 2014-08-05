@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/icons/index
+kg/kcharts/2.0.2/icons/index
 
 */
-;KISSY.add('kg/kcharts/2.0.0/icons/index',function(S){
+;KISSY.add('kg/kcharts/2.0.2/icons/index',function(S){
   var merge = S.merge
     , isArray = S.isArray
 

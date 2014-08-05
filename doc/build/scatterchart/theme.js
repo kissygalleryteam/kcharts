@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/scatterchart/theme
+kg/kcharts/2.0.2/scatterchart/theme
 
 */
-;KISSY.add("kg/kcharts/2.0.0/scatterchart/theme",function(S){
+;KISSY.add('kg/kcharts/2.0.2/scatterchart/theme',function(S){
 
 	var COLOR_TPL = "{COLOR}";
 

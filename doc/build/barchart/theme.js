@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/barchart/theme
+kg/kcharts/2.0.2/barchart/theme
 
 */
-;KISSY.add('kg/kcharts/2.0.0/barchart/theme',function(S){
+;KISSY.add('kg/kcharts/2.0.2/barchart/theme',function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
