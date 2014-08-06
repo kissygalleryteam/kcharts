@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/datetime/cfg
+kg/kcharts/2.0.2/datetime/cfg
 
 */
-;KISSY.add('kg/kcharts/2.0.0/datetime/cfg',function(S){
+;KISSY.add('kg/kcharts/2.0.2/datetime/cfg',function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";

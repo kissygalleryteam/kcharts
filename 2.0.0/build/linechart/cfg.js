@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/linechart/cfg
+kg/kcharts/2.0.2/linechart/cfg
 
 */
-;KISSY.add('kg/kcharts/2.0.0/linechart/cfg',function(S){
+;KISSY.add('kg/kcharts/2.0.2/linechart/cfg',function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";

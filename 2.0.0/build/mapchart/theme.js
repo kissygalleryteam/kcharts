@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/mapchart/theme
+kg/kcharts/2.0.2/mapchart/theme
 
 */
-KISSY.add('kg/kcharts/2.0.0/mapchart/theme',function (S) {
+KISSY.add('kg/kcharts/2.0.2/mapchart/theme',function (S) {
     var COLOR_TPL = "{COLOR}";
     return{
         "ks-chart-default": {

@@ -1,2 +1,2 @@
-/*!build time : 2014-08-01 1:03:43 AM*/
-KISSY.config("modules",{"kg/kcharts/2.0.0/basechart/index":{requires:["base","node"]}});
+/*!build time : 2014-08-04 1:35:41 PM*/
+KISSY.config("modules",{"kg/kcharts/2.0.2/basechart/index":{requires:["base","node"]}});

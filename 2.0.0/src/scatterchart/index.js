@@ -3,7 +3,7 @@
  * @author huxiaoqi567@gmail.com
  */
 ;
-KISSY.add("kg/kcharts/2.0.0/scatterchart/index", function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg,graphTool) {
+KISSY.add( function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg,graphTool) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -528,15 +528,15 @@ KISSY.add("kg/kcharts/2.0.0/scatterchart/index", function(S, Base, Node, D, Evt,
 		'dom',
 		'event',
 		'gallery/template/1.0/index',
-		'kg/kcharts/2.0.0/basechart/index',
-		'kg/kcharts/2.0.0/raphael/index',
-		'kg/kcharts/2.0.0/tools/color/index',
-		'kg/kcharts/2.0.0/tools/htmlpaper/index',
-		'kg/kcharts/2.0.0/legend/index',
+		'kg/kcharts/2.0.2/basechart/index',
+		'kg/kcharts/2.0.2/raphael/index',
+		'kg/kcharts/2.0.2/tools/color/index',
+		'kg/kcharts/2.0.2/tools/htmlpaper/index',
+		'kg/kcharts/2.0.2/legend/index',
 		'./theme',
-		'kg/kcharts/2.0.0/tools/touch/index',
-		'kg/kcharts/2.0.0/tip/index',
+		'kg/kcharts/2.0.2/tools/touch/index',
+		'kg/kcharts/2.0.2/tip/index',
 		'./cfg',
-		'kg/kcharts/2.0.0/tools/graphtool/index'
+		'kg/kcharts/2.0.2/tools/graphtool/index'
 	]
 });

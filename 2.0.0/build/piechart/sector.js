@@ -1,11 +1,11 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/piechart/sector
+kg/kcharts/2.0.2/piechart/sector
 
 */
 // -*- coding: utf-8; -*-
-;KISSY.add('kg/kcharts/2.0.0/piechart/sector',function(S,Base){
+;KISSY.add('kg/kcharts/2.0.2/piechart/sector',function(S,Base){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○

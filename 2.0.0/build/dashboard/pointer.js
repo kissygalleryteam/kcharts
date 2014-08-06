@@ -1,7 +1,7 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/dashboard/pointer
+kg/kcharts/2.0.2/dashboard/pointer
 
 */
 // -*- coding: utf-8; -*-
@@ -9,7 +9,7 @@ kg/kcharts/2.0.0/dashboard/pointer
  * 指针
  * @author cookieu@gmail.com
  * */
-;KISSY.add('kg/kcharts/2.0.0/dashboard/pointer',function(S,Base){
+;KISSY.add('kg/kcharts/2.0.2/dashboard/pointer',function(S,Base){
    var methods = {
      pointTo:function(angle,effect){
        var paper = this.get('paper')

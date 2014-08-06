@@ -1,10 +1,10 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/raphael/index
+kg/kcharts/2.0.2/raphael/index
 
 */
-;KISSY.add('kg/kcharts/2.0.0/raphael/index',function(S){
+;KISSY.add('kg/kcharts/2.0.2/raphael/index',function(S){
 
   (function(win){
       // ┌────────────────────────────────────────────────────────────────────┐ \\
@@ -395,10 +395,13 @@ kg/kcharts/2.0.0/raphael/index
     eve.toString = function() {
       return "You are running Eve " + version;
     };
-    (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define != "undefined" ? (define("eve", [], function() {
-      return eve;
-    })) : (glob.eve = eve));
+    
+    // (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define != "undefined" ? (define("eve", [], function() {
+    //   return eve;
+    // })) : (glob.eve = eve));
+    glob.eve = eve
   })(this);
+
 
   // ┌─────────────────────────────────────────────────────────────────────┐ \\
   // │ "Raphaël 2.1.0" - JavaScript Vector Library                         │ \\

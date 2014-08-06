@@ -1,14 +1,14 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/raphael/index
-kg/kcharts/2.0.0/dashboard/pointer
-kg/kcharts/2.0.0/dashboard/pointer-pic
-kg/kcharts/2.0.0/dashboard/dashboard-ticks
-kg/kcharts/2.0.0/dashboard/index
+kg/kcharts/2.0.2/raphael/index
+kg/kcharts/2.0.2/dashboard/pointer
+kg/kcharts/2.0.2/dashboard/pointer-pic
+kg/kcharts/2.0.2/dashboard/dashboard-ticks
+kg/kcharts/2.0.2/dashboard/index
 
 */
-;KISSY.add('kg/kcharts/2.0.0/raphael/index',function(S){
+;KISSY.add('kg/kcharts/2.0.2/raphael/index',function(S){
 
   (function(win){
       // ┌────────────────────────────────────────────────────────────────────┐ \\
@@ -399,10 +399,13 @@ kg/kcharts/2.0.0/dashboard/index
     eve.toString = function() {
       return "You are running Eve " + version;
     };
-    (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define != "undefined" ? (define("eve", [], function() {
-      return eve;
-    })) : (glob.eve = eve));
+    
+    // (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define != "undefined" ? (define("eve", [], function() {
+    //   return eve;
+    // })) : (glob.eve = eve));
+    glob.eve = eve
   })(this);
+
 
   // ┌─────────────────────────────────────────────────────────────────────┐ \\
   // │ "Raphaël 2.1.0" - JavaScript Vector Library                         │ \\
@@ -8617,7 +8620,7 @@ kg/kcharts/2.0.0/dashboard/index
  * 指针
  * @author cookieu@gmail.com
  * */
-;KISSY.add('kg/kcharts/2.0.0/dashboard/pointer',function(S,Base){
+;KISSY.add('kg/kcharts/2.0.2/dashboard/pointer',function(S,Base){
    var methods = {
      pointTo:function(angle,effect){
        var paper = this.get('paper')
@@ -8764,7 +8767,7 @@ kg/kcharts/2.0.0/dashboard/index
  * 指针
  * @author cookieu@gmail.com
  * */
-;KISSY.add('kg/kcharts/2.0.0/dashboard/pointer-pic',function(S,Pointer){
+;KISSY.add('kg/kcharts/2.0.2/dashboard/pointer-pic',function(S,Pointer){
   function PicturePointer(){
     PicturePointer.superclass.constructor.apply(this,arguments)
     var pointer = this.get('pointer')
@@ -8802,7 +8805,7 @@ kg/kcharts/2.0.0/dashboard/index
  * 矢量画刻度
  * @author cookieu@gmail.com
  * */
-;KISSY.add('kg/kcharts/2.0.0/dashboard/dashboard-ticks',function(S,Base){
+;KISSY.add('kg/kcharts/2.0.2/dashboard/dashboard-ticks',function(S,Base){
    var methods = {
      initializer:function(){
        var cfg = this.get('cfg')
@@ -8906,7 +8909,7 @@ kg/kcharts/2.0.0/dashboard/index
  * 仪表盘
  * @author cookieu@gmail.com
  */
-;KISSY.add('kg/kcharts/2.0.0/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks,Base,D,E){
+;KISSY.add('kg/kcharts/2.0.2/dashboard/index',function(S,Raphael,Pointer,PicturePointer,Ticks,Base,D,E){
    window.console && window.console.log('asdfaf');
   var R = Raphael;
    var methods = {

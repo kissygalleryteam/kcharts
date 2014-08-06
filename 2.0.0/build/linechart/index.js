@@ -1,12 +1,12 @@
 /*
 combined files : 
 
-kg/kcharts/2.0.0/linechart/theme
-kg/kcharts/2.0.0/linechart/cfg
-kg/kcharts/2.0.0/linechart/index
+kg/kcharts/2.0.2/linechart/theme
+kg/kcharts/2.0.2/linechart/cfg
+kg/kcharts/2.0.2/linechart/index
 
 */
-;KISSY.add('kg/kcharts/2.0.0/linechart/theme',function(S){
+;KISSY.add('kg/kcharts/2.0.2/linechart/theme',function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
@@ -235,7 +235,7 @@ kg/kcharts/2.0.0/linechart/index
 	};
 	return themeCfg;
 });
-;KISSY.add('kg/kcharts/2.0.0/linechart/cfg',function(S){
+;KISSY.add('kg/kcharts/2.0.2/linechart/cfg',function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";
@@ -370,7 +370,7 @@ kg/kcharts/2.0.0/linechart/index
  * @author huxiaoqi567@gmail.com
  */
 ;
-KISSY.add('kg/kcharts/2.0.0/linechart/index',function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, Touch, Tip, Anim, graphTool, Cfg) {
+KISSY.add('kg/kcharts/2.0.2/linechart/index',function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, Touch, Tip, Anim, graphTool, Cfg) {
 	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -1328,16 +1328,16 @@ KISSY.add('kg/kcharts/2.0.0/linechart/index',function(S, Base, Node, D, Evt, Tem
 		'node',
 		'dom', 'event',
 		'gallery/template/1.0/index',
-		'kg/kcharts/2.0.0/raphael/index',
-		'kg/kcharts/2.0.0/basechart/index',
-		'kg/kcharts/2.0.0/tools/color/index',
-		'kg/kcharts/2.0.0/tools/htmlpaper/index',
-		'kg/kcharts/2.0.0/legend/index',
+		'kg/kcharts/2.0.2/raphael/index',
+		'kg/kcharts/2.0.2/basechart/index',
+		'kg/kcharts/2.0.2/tools/color/index',
+		'kg/kcharts/2.0.2/tools/htmlpaper/index',
+		'kg/kcharts/2.0.2/legend/index',
 		'./theme',
-		'kg/kcharts/2.0.0/tools/touch/index',
-		'kg/kcharts/2.0.0/tip/index',
-		'kg/kcharts/2.0.0/animate/index',
-		'kg/kcharts/2.0.0/tools/graphtool/index',
+		'kg/kcharts/2.0.2/tools/touch/index',
+		'kg/kcharts/2.0.2/tip/index',
+		'kg/kcharts/2.0.2/animate/index',
+		'kg/kcharts/2.0.2/tools/graphtool/index',
 		'./cfg'
 	]
 });
