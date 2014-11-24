@@ -401,7 +401,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         "font-weight": 400,
         gradient: 0,
         height: 0,
-        href: "http:
+        href: "http:\/\/raphaeljs.com\/",
         "letter-spacing": 0,
         opacity: 1,
         path: "M0,0",
@@ -509,7 +509,16 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
           return rectPath(bbox.x, bbox.y, bbox.width, bbox.height);
         }
       },
-      
+      /*\
+         * Raphael.mapPath
+         [ method ]
+         **
+         * Transform the path string with given matrix.
+         > Parameters
+         - path (string) path string
+         - matrix (object) see @Matrix
+         = (string) transformed path string
+        \*/
       mapPath = R.mapPath = function(path, matrix) {
         if (!matrix) {
           return path;
@@ -529,8 +538,13 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       };
 
     R._g = g;
-    
-    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ? "SVG" : "VML");
+    /*\
+     * Raphael.type
+     [ property (string) ]
+     **
+     * Can be “SVG”, “VML” or empty, depending on browser support.
+    \*/
+    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http:
     if (R.type == "VML") {
       var d = g.doc.createElement("div"),
         b;
