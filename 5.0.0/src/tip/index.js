@@ -40,6 +40,25 @@ define(function(require,exports,module) {
                   marginTop:0
                 }
               },
+              css:{
+                background: "#fff",
+                filter:"alpha(opacity =90)",
+                "-moz-opacity":0.9 ,
+                "-khtml-opacity": 0.9,
+                opacity: 0.9,
+                "-moz-border-radius":  "10px",
+                "-webkit-border-radius": "10px",
+                "border-radius":"10px",
+                "padding":"10px",
+                color:"#666",
+                "font-family":"Microsoft Yahei",
+                "z-index": 10,
+                "font-size": "12px",
+                "font-weight": "bolder",
+                "-webkit-box-shadow":"2px 2px 2px 2px #ccc",
+                "-moz-box-shadow":"2px 2px 2px 2px #ccc",
+                "box-shadow":"2px 2px 2px 2px #ccc"
+              },
               anim:{
                 easing:"easeOut",
                 duration:0.25
@@ -294,9 +313,7 @@ define(function(require,exports,module) {
         },
 
         _isExist:function () {
-
             return this.$tip && this.$tip[0];
-
         },
 
         render:function () {
@@ -306,10 +323,9 @@ define(function(require,exports,module) {
                 _data = self._data,
                 display = _cfg.isVisable ? "inline-block" : "none",
                 rootNodeOffset = _cfg.rootNode.offset();
-
             if (!_cfg.rootNode.offset()) return false;
-
-            self.$tip = !self._isExist() && $('<span class="' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
+            self.$tip = !self._isExist() && $('<span class="ks-chart-tip ' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
+                .css(_cfg.css)
                 .css({"display":display})
                 .appendTo(_cfg.rootNode);
 
