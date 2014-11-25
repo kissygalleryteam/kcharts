@@ -1,2 +1,0 @@
-KISSY.add("gallery/kcharts/1.1/tools/graphtool/index",function(k,l){var g=Math.sqrt,h={};return h=k.merge(h,{triangle:function(a,b,c,d,e){var f=["M"+[b,c-d].join(),"L"+[b-d*g(3)/2,c-0+1*d/2].join(),[b-0+d*g(3)/2,c-0+1*d/2].join(),"Z"].join(" ");if(a&&a.path)return a=a.path(f).attr({cx:b,cy:c,r:d}),a.rotate(e,b,c),a},rhomb:function(a,b,c,d,e,f){d=["M"+[b,c-e/2].join(),"L"+[b-0+d/2,c].join(),[b,c-0+e/2].join(),[b-d/2,c].join(),"Z"].join(" ");if(a&&a.path)return a=a.path(d).attr({cx:b,cy:c}),a.rotate(f,
-b,c),a}})},{requires:["gallery/kcharts/1.1/raphael/index"]});

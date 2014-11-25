@@ -13,3 +13,4 @@
 
 - 2014-05-29 修复继承与basechart的数据全零报错的bug by 伯才
 - 2014-05-29 修复了父容器display:none导致svg尺寸错误的bug by 伯才
+- 2014-07-29 修复了barClick事件不触发的bug
