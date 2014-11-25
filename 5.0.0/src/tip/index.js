@@ -8,7 +8,7 @@ define(function(require,exports,module) {
     Base = require("base"),
     Template = require("kg/kcharts/5.0.0/tools/template/index");
 
-    require("./assets/tip.css");
+    // require("./assets/tip.css");
 
     var $ = Node.all;
 
