@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style>
+#demo1{
+  width:100%;
+  height:400px;
+  margin:0px auto;
+}
+</style>
+</head>
+<body>
+<div id="demo1">
+
+</div>
+<div id="console"></div>
+<script src="//g.tbcdn.cn/kissy/k/1.4.7/seed-min.js"></script>
+<script type="text/javascript">
+KISSY.Config.debug = true;
+KISSY.use("kg/kcharts/2.0.2/datetime/",function(S,LineChart){
+  var linechart = new LineChart({
+      renderTo:"#demo1",
+      points:{
+        attr:{
+          type:"auto"
+        }
+      },
+      yLabels:{
+        css:{
+          "marginLeft":"-20px",
+          "font-family":"Microsoft Yahei",
+          "font-size":"10px",
+        }
+      },
+      xLabels:{
+        css:{
+          "font-family":"Microsoft Yahei",
+           "font-size":"10px"
+        }
+      },
+      title:{
+              content:"Monthly Average Temperature"
+            },
+            // anim:{},
+            subTitle:{
+              content:"Source: WorldClimate.com"
+            },
+            lineType:"arc",
+       xAxis: {
+          text:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis:{
+              num:8
+            },
+      series:[{
+                text: 'Tokyo',
+                data: [7.0, null, 9.5, 14.5, 18.2, null,null,null,null,null,null,null]
+            }
+            ],
+      legend:{
+        isShow:true,y:-10
+      },
+      tip:{
+      	// isShow:false,
+        offset:{
+                    x:10,
+                    y:10
+                },
+        template:function(e){
+          var html = "";
+          return  e.y ;
+        }
+      }
+  });
+
+linechart.on("stockChange",function(e){
+  // console.log(e)
+})
+
+window.linechart = linechart;
+
+
+
+
+
+});</script>
+</body>
+</html>
