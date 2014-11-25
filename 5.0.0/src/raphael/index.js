@@ -747,7 +747,7 @@ define(function(require,exports,module){
      **
      * Can be “SVG”, “VML” or empty, depending on browser support.
     \*/
-    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ? "SVG" : "VML");
+    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http:\/\/www.w3.org\/TR\/SVG11\/feature#BasicStructure", "1.1") ? "SVG" : "VML");
     if (R.type == "VML") {
       var d = g.doc.createElement("div"),
         b;
@@ -6082,7 +6082,7 @@ define(function(require,exports,module){
         eve = R.eve,
         E = "",
         S = " ";
-      var xlink = "http://www.w3.org/1999/xlink",
+      var xlink = "http:\/\/www.w3.org\/1999\/xlink",
         markers = {
           block: "M5,0 0,2.5 5,5z",
           classic: "M5,0 0,2.5 5,5 3.5,3 3.5,2z",

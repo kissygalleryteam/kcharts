@@ -544,7 +544,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
      **
      * Can be “SVG”, “VML” or empty, depending on browser support.
     \*/
-    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http:
+    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http:\/\/www.w3.org\/TR\/SVG11\/feature#BasicStructure", "1.1") ? "SVG" : "VML");
     if (R.type == "VML") {
       var d = g.doc.createElement("div"),
         b;
@@ -556,15 +556,59 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       d = null;
     }
-    
-    
+    /*\
+     * Raphael.svg
+     [ property (boolean) ]
+     **
+     * `true` if browser supports SVG.
+    \*/
+    /*\
+     * Raphael.vml
+     [ property (boolean) ]
+     **
+     * `true` if browser supports VML.
+    \*/
     R.svg = !(R.vml = R.type == "VML");
     R._Paper = Paper;
-    
+    /*\
+     * Raphael.fn
+     [ property (object) ]
+     **
+     * You can add your own method to the canvas. For example if you want to draw a pie chart,
+     * you can create your own pie chart function and ship it as a Raphaël plugin. To do this
+     * you need to extend the `Raphael.fn` object. You should modify the `fn` object before a
+     * Raphaël instance is created, otherwise it will take no effect. Please note that the
+     * ability for namespaced plugins was removed in Raphael 2.0. It is up to the plugin to
+     * ensure any namespacing ensures proper context.
+     > Usage
+     | Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
+     |     return this.path( ... );
+     | };
+     | // or create namespace
+     | Raphael.fn.mystuff = {
+     |     arrow: function () {…},
+     |     star: function () {…},
+     |     // etc…
+     | };
+     | var paper = Raphael(10, 10, 630, 480);
+     | // then use it
+     | paper.arrow(10, 10, 30, 30, 5).attr({fill: "#f00"});
+     | paper.mystuff.arrow();
+     | paper.mystuff.star();
+    \*/
     R.fn = paperproto = Paper.prototype = R.prototype;
     R._id = 0;
     R._oid = 0;
-    
+    /*\
+     * Raphael.is
+     [ method ]
+     **
+     * Handfull replacement for `typeof` operator.
+     > Parameters
+     - o (…) any object or primitive
+     - type (string) name of the type, i.e. “string”, “function”, “number”, etc.
+     = (boolean) is given value is of given type
+    \*/
     R.is = function(o, type) {
       type = lowerCase.call(type);
       if (type == "finite") {
@@ -592,7 +636,20 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return res;
     }
 
-    
+    /*\
+     * Raphael.angle
+     [ method ]
+     **
+     * Returns angle between two or three points
+     > Parameters
+     - x1 (number) x coord of first point
+     - y1 (number) y coord of first point
+     - x2 (number) x coord of second point
+     - y2 (number) y coord of second point
+     - x3 (number) #optional x coord of third point
+     - y3 (number) #optional y coord of third point
+     = (number) angle in degrees.
+    \*/
     R.angle = function(x1, y1, x2, y2, x3, y3) {
       if (x3 == null) {
         var x = x1 - x2,
@@ -605,15 +662,41 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         return R.angle(x1, y1, x3, y3) - R.angle(x2, y2, x3, y3);
       }
     };
-    
+    /*\
+     * Raphael.rad
+     [ method ]
+     **
+     * Transform angle to radians
+     > Parameters
+     - deg (number) angle in degrees
+     = (number) angle in radians.
+    \*/
     R.rad = function(deg) {
       return deg % 360 * PI / 180;
     };
-    
+    /*\
+     * Raphael.deg
+     [ method ]
+     **
+     * Transform angle to degrees
+     > Parameters
+     - deg (number) angle in radians
+     = (number) angle in degrees.
+    \*/
     R.deg = function(rad) {
       return rad * 180 / PI % 360;
     };
-    
+    /*\
+     * Raphael.snapTo
+     [ method ]
+     **
+     * Snaps given value to given grid.
+     > Parameters
+     - values (array|number) given array of values or step of the grid
+     - value (number) value to adjust
+     - tolerance (number) #optional tolerance for snapping. Default is `10`.
+     = (number) adjusted value.
+    \*/
     R.snapTo = function(values, value, tolerance) {
       tolerance = R.is(tolerance, "finite") ? tolerance : 10;
       if (R.is(values, array)) {
@@ -635,7 +718,12 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return value;
     };
 
-    
+    /*\
+     * Raphael.createUUID
+     [ method ]
+     **
+     * Returns RFC4122, version 4 ID
+    \*/
     var createUUID = R.createUUID = (function(uuidRegEx, uuidReplacer) {
       return function() {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(uuidRegEx, uuidReplacer).toUpperCase();
@@ -646,7 +734,14 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return v.toString(16);
     });
 
-    
+    /*\
+     * Raphael.setWindow
+     [ method ]
+     **
+     * Used when you need to draw in `&lt;iframe>`. Switched window to the iframe one.
+     > Parameters
+     - newwin (window) new window object
+    \*/
     R.setWindow = function(newwin) {
       eve("raphael.setWindow", R, g.win, newwin);
       g.win = newwin;
@@ -657,7 +752,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
     };
     var toHex = function(color) {
       if (R.vml) {
-        
+        // http://dean.edwards.name/weblog/2009/10/convert-any-colour-value-to-hex-in-msie/
         var trim = /^\s+|\s+$/g;
         var bod;
         try {
@@ -735,7 +830,26 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         return rgb;
       };
 
-    
+    /*\
+     * Raphael.color
+     [ method ]
+     **
+     * Parses the color string and returns object with all values for the given color.
+     > Parameters
+     - clr (string) color string in one of the supported formats (see @Raphael.getRGB)
+     = (object) Combined RGB & HSB object in format:
+     o {
+     o     r (number) red,
+     o     g (number) green,
+     o     b (number) blue,
+     o     hex (string) color in HTML/CSS format: #••••••,
+     o     error (boolean) `true` if string can’t be parsed,
+     o     h (number) hue,
+     o     s (number) saturation,
+     o     v (number) value (brightness),
+     o     l (number) lightness
+     o }
+    \*/
     R.color = function(clr) {
       var rgb;
       if (R.is(clr, "object") && "h" in clr && "s" in clr && "b" in clr) {
@@ -771,7 +885,23 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       clr.toString = rgbtoString;
       return clr;
     };
-    
+    /*\
+     * Raphael.hsb2rgb
+     [ method ]
+     **
+     * Converts HSB values to RGB object.
+     > Parameters
+     - h (number) hue
+     - s (number) saturation
+     - v (number) value or brightness
+     = (object) RGB object in format:
+     o {
+     o     r (number) red,
+     o     g (number) green,
+     o     b (number) blue,
+     o     hex (string) color in HTML/CSS format: #••••••
+     o }
+    \*/
     R.hsb2rgb = function(h, s, v, o) {
       if (this.is(h, "object") && "h" in h && "s" in h && "b" in h) {
         v = h.b;
@@ -792,7 +922,23 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       B += [0, 0, X, C, C, X][h];
       return packageRGB(R, G, B, o);
     };
-    
+    /*\
+     * Raphael.hsl2rgb
+     [ method ]
+     **
+     * Converts HSL values to RGB object.
+     > Parameters
+     - h (number) hue
+     - s (number) saturation
+     - l (number) luminosity
+     = (object) RGB object in format:
+     o {
+     o     r (number) red,
+     o     g (number) green,
+     o     b (number) blue,
+     o     hex (string) color in HTML/CSS format: #••••••
+     o }
+    \*/
     R.hsl2rgb = function(h, s, l, o) {
       if (this.is(h, "object") && "h" in h && "s" in h && "l" in h) {
         l = h.l;
@@ -817,7 +963,22 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       B += [0, 0, X, C, C, X][h];
       return packageRGB(R, G, B, o);
     };
-    
+    /*\
+     * Raphael.rgb2hsb
+     [ method ]
+     **
+     * Converts RGB values to HSB object.
+     > Parameters
+     - r (number) red
+     - g (number) green
+     - b (number) blue
+     = (object) HSB object in format:
+     o {
+     o     h (number) hue
+     o     s (number) saturation
+     o     b (number) brightness
+     o }
+    \*/
     R.rgb2hsb = function(r, g, b) {
       b = prepareRGB(r, g, b);
       r = b[0];
@@ -841,7 +1002,22 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         toString: hsbtoString
       };
     };
-    
+    /*\
+     * Raphael.rgb2hsl
+     [ method ]
+     **
+     * Converts RGB values to HSL object.
+     > Parameters
+     - r (number) red
+     - g (number) green
+     - b (number) blue
+     = (object) HSL object in format:
+     o {
+     o     h (number) hue
+     o     s (number) saturation
+     o     l (number) luminosity
+     o }
+    \*/
     R.rgb2hsl = function(r, g, b) {
       b = prepareRGB(r, g, b);
       r = b[0];
@@ -916,7 +1092,33 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return this.hex;
     }
 
-    
+    /*\
+     * Raphael.getRGB
+     [ method ]
+     **
+     * Parses colour string as RGB object
+     > Parameters
+     - colour (string) colour string in one of formats:
+     # <ul>
+     #     <li>Colour name (“<code>red</code>”, “<code>green</code>”, “<code>cornflowerblue</code>”, etc)</li>
+     #     <li>#••• — shortened HTML colour: (“<code>#000</code>”, “<code>#fc0</code>”, etc)</li>
+     #     <li>#•••••• — full length HTML colour: (“<code>#000000</code>”, “<code>#bd2300</code>”)</li>
+     #     <li>rgb(•••, •••, •••) — red, green and blue channels’ values: (“<code>rgb(200,&nbsp;100,&nbsp;0)</code>”)</li>
+     #     <li>rgb(•••%, •••%, •••%) — same as above, but in %: (“<code>rgb(100%,&nbsp;175%,&nbsp;0%)</code>”)</li>
+     #     <li>hsb(•••, •••, •••) — hue, saturation and brightness values: (“<code>hsb(0.5,&nbsp;0.25,&nbsp;1)</code>”)</li>
+     #     <li>hsb(•••%, •••%, •••%) — same as above, but in %</li>
+     #     <li>hsl(•••, •••, •••) — same as hsb</li>
+     #     <li>hsl(•••%, •••%, •••%) — same as hsb</li>
+     # </ul>
+     = (object) RGB object in format:
+     o {
+     o     r (number) red,
+     o     g (number) green,
+     o     b (number) blue
+     o     hex (string) color in HTML/CSS format: #••••••,
+     o     error (boolean) true if string can’t be parsed
+     o }
+    \*/
     R.getRGB = cacher(function(colour) {
       if (!colour || !! ((colour = Str(colour)).indexOf("-") + 1)) {
         return {
@@ -1012,19 +1214,57 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         toString: clrToString
       };
     }, R);
-    
+    /*\
+     * Raphael.hsb
+     [ method ]
+     **
+     * Converts HSB values to hex representation of the colour.
+     > Parameters
+     - h (number) hue
+     - s (number) saturation
+     - b (number) value or brightness
+     = (string) hex representation of the colour.
+    \*/
     R.hsb = cacher(function(h, s, b) {
       return R.hsb2rgb(h, s, b).hex;
     });
-    
+    /*\
+     * Raphael.hsl
+     [ method ]
+     **
+     * Converts HSL values to hex representation of the colour.
+     > Parameters
+     - h (number) hue
+     - s (number) saturation
+     - l (number) luminosity
+     = (string) hex representation of the colour.
+    \*/
     R.hsl = cacher(function(h, s, l) {
       return R.hsl2rgb(h, s, l).hex;
     });
-    
+    /*\
+     * Raphael.rgb
+     [ method ]
+     **
+     * Converts RGB values to hex representation of the colour.
+     > Parameters
+     - r (number) red
+     - g (number) green
+     - b (number) blue
+     = (string) hex representation of the colour.
+    \*/
     R.rgb = cacher(function(r, g, b) {
       return "#" + (16777216 | b | (g << 8) | (r << 16)).toString(16).slice(1);
     });
-    
+    /*\
+     * Raphael.getColor
+     [ method ]
+     **
+     * On each call returns next colour in the spectrum. To reset it back to red call @Raphael.getColor.reset
+     > Parameters
+     - value (number) #optional brightness, default is `0.75`
+     = (string) hex representation of the colour.
+    \*/
     R.getColor = function(value) {
       var start = this.getColor.start = this.getColor.start || {
         h: 0,
@@ -1044,12 +1284,17 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return rgb.hex;
     };
-    
+    /*\
+     * Raphael.getColor.reset
+     [ method ]
+     **
+     * Resets spectrum position for @Raphael.getColor back to red.
+    \*/
     R.getColor.reset = function() {
       delete this.start;
     };
 
-    
+    // http://schepers.cc/getting-to-the-point
 
     function catmullRom2bezier(crp, z) {
       var d = [];
@@ -1106,7 +1351,17 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
 
       return d;
     }
-    
+    /*\
+     * Raphael.parsePathString
+     [ method ]
+     **
+     * Utility method
+     **
+     * Parses given path string into an array of arrays of path segments.
+     > Parameters
+     - pathString (string|array) path string or array of segments (in the last case it will be returned straight away)
+     = (array) array of segments.
+    \*/
     R.parsePathString = function(pathString) {
       if (!pathString) {
         return null;
@@ -1130,7 +1385,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         z: 0
       },
         data = [];
-      if (R.is(pathString, array) && R.is(pathString[0], array)) { 
+      if (R.is(pathString, array) && R.is(pathString[0], array)) { // rough assumption
         data = pathClone(pathString);
       }
       if (!data.length) {
@@ -1160,7 +1415,17 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       pth.arr = pathClone(data);
       return data;
     };
-    
+    /*\
+     * Raphael.parseTransformString
+     [ method ]
+     **
+     * Utility method
+     **
+     * Parses given path string into an array of transformations.
+     > Parameters
+     - TString (string|array) transform string or array of transformations (in the last case it will be returned straight away)
+     = (array) array of transformations.
+    \*/
     R.parseTransformString = cacher(function(TString) {
       if (!TString) {
         return null;
@@ -1172,7 +1437,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         m: 6
       },
         data = [];
-      if (R.is(TString, array) && R.is(TString[0], array)) { 
+      if (R.is(TString, array) && R.is(TString[0], array)) { // rough assumption
         data = pathClone(TString);
       }
       if (!data.length) {
@@ -1188,7 +1453,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       data.toString = R._path2string;
       return data;
     });
-    
+    // PATHS
     var paths = function(ps) {
       var p = paths.ps = paths.ps || {};
       if (p[ps]) {
@@ -1207,7 +1472,46 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       });
       return p[ps];
     };
-    
+    /*\
+     * Raphael.findDotsAtSegment
+     [ method ]
+     **
+     * Utility method
+     **
+     * Find dot coordinates on the given cubic bezier curve at the given t.
+     > Parameters
+     - p1x (number) x of the first point of the curve
+     - p1y (number) y of the first point of the curve
+     - c1x (number) x of the first anchor of the curve
+     - c1y (number) y of the first anchor of the curve
+     - c2x (number) x of the second anchor of the curve
+     - c2y (number) y of the second anchor of the curve
+     - p2x (number) x of the second point of the curve
+     - p2y (number) y of the second point of the curve
+     - t (number) position on the curve (0..1)
+     = (object) point information in format:
+     o {
+     o     x: (number) x coordinate of the point
+     o     y: (number) y coordinate of the point
+     o     m: {
+     o         x: (number) x coordinate of the left anchor
+     o         y: (number) y coordinate of the left anchor
+     o     }
+     o     n: {
+     o         x: (number) x coordinate of the right anchor
+     o         y: (number) y coordinate of the right anchor
+     o     }
+     o     start: {
+     o         x: (number) x coordinate of the start of the curve
+     o         y: (number) y coordinate of the start of the curve
+     o     }
+     o     end: {
+     o         x: (number) x coordinate of the end of the curve
+     o         y: (number) y coordinate of the end of the curve
+     o     }
+     o     alpha: (number) angle of the curve derivative at the point
+     o }
+    \*/
     R.findDotsAtSegment = function(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t) {
       var t1 = 1 - t,
         t13 = pow(t1, 3),
@@ -1248,7 +1552,36 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         alpha: alpha
       };
     };
-    
+    /*\
+     * Raphael.bezierBBox
+     [ method ]
+     **
+     * Utility method
+     **
+     * Return bounding box of a given cubic bezier curve
+     > Parameters
+     - p1x (number) x of the first point of the curve
+     - p1y (number) y of the first point of the curve
+     - c1x (number) x of the first anchor of the curve
+     - c1y (number) y of the first anchor of the curve
+     - c2x (number) x of the second anchor of the curve
+     - c2y (number) y of the second anchor of the curve
+     - p2x (number) x of the second point of the curve
+     - p2y (number) y of the second point of the curve
+     * or
+     - bez (array) array of six points for bezier curve
+     = (object) point information in format:
+     o {
+     o     min: {
+     o         x: (number) x coordinate of the left point
+     o         y: (number) y coordinate of the top point
+     o     }
+     o     max: {
+     o         x: (number) x coordinate of the right point
+     o         y: (number) y coordinate of the bottom point
+     o     }
+     o }
+    \*/
     R.bezierBBox = function(p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y) {
       if (!R.is(p1x, "array")) {
         p1x = [p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y];
@@ -1263,11 +1596,34 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         height: bbox.max.y - bbox.min.y
       };
     };
-    
+    /*\
+     * Raphael.isPointInsideBBox
+     [ method ]
+     **
+     * Utility method
+     **
+     * Returns `true` if given point is inside bounding boxes.
+     > Parameters
+     - bbox (string) bounding box
+     - x (string) x coordinate of the point
+     - y (string) y coordinate of the point
+     = (boolean) `true` if point inside
+    \*/
     R.isPointInsideBBox = function(bbox, x, y) {
       return x >= bbox.x && x <= bbox.x2 && y >= bbox.y && y <= bbox.y2;
     };
-    
+    /*\
+     * Raphael.isBBoxIntersect
+     [ method ]
+     **
+     * Utility method
+     **
+     * Returns `true` if two bounding boxes intersect
+     > Parameters
+     - bbox1 (string) first bounding box
+     - bbox2 (string) second bounding box
+     = (boolean) `true` if they intersect
+    \*/
     R.isBBoxIntersect = function(bbox1, bbox2) {
       var i = R.isPointInsideBBox;
       return i(bbox2, bbox1.x, bbox1.y) || i(bbox2, bbox1.x2, bbox1.y) || i(bbox2, bbox1.x, bbox1.y2) || i(bbox2, bbox1.x2, bbox1.y2) || i(bbox1, bbox2.x, bbox2.y) || i(bbox1, bbox2.x2, bbox2.y) || i(bbox1, bbox2.x, bbox2.y2) || i(bbox1, bbox2.x2, bbox2.y2) || (bbox1.x < bbox2.x2 && bbox1.x > bbox2.x || bbox2.x < bbox1.x2 && bbox2.x > bbox1.x) && (bbox1.y < bbox2.y2 && bbox1.y > bbox2.y || bbox2.y < bbox1.y2 && bbox2.y > bbox1.y);
@@ -1426,7 +1782,30 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return res;
     }
-    
+    /*\
+     * Raphael.pathIntersection
+     [ method ]
+     **
+     * Utility method
+     **
+     * Finds intersections of two paths
+     > Parameters
+     - path1 (string) path string
+     - path2 (string) path string
+     = (array) dots of intersection
+     o [
+     o     {
+     o         x: (number) x coordinate of the point
+     o         y: (number) y coordinate of the point
+     o         t1: (number) t value for segment of path1
+     o         t2: (number) t value for segment of path2
+     o         segment1: (number) order number for segment of path1
+     o         segment2: (number) order number for segment of path2
+     o         bez1: (array) eight coordinates representing beziér curve for the segment of path1
+     o         bez2: (array) eight coordinates representing beziér curve for the segment of path2
+     o     }
+     o ]
+    \*/
     R.pathIntersection = function(path1, path2) {
       return interPathHelper(path1, path2);
     };
@@ -1487,7 +1866,19 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return res;
     }
-    
+    /*\
+     * Raphael.isPointInsidePath
+     [ method ]
+     **
+     * Utility method
+     **
+     * Returns `true` if given point is inside a given closed path.
+     > Parameters
+     - path (string) path string
+     - x (number) x of the point
+     - y (number) y of the point
+     = (boolean) true, if point is inside the path
+    \*/
     R.isPointInsidePath = function(path, x, y) {
       var bbox = R.pathBBox(path);
       return R.isPointInsideBBox(bbox, x, y) &&
@@ -1501,7 +1892,27 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         eve("raphael.log", null, "Rapha\xebl: you are calling to method \u201c" + methodname + "\u201d of removed object", methodname);
       };
     };
-    
+    /*\
+     * Raphael.pathBBox
+     [ method ]
+     **
+     * Utility method
+     **
+     * Return bounding box of a given path
+     > Parameters
+     - path (string) path string
+     = (object) bounding box
+     o {
+     o     x: (number) x coordinate of the left top point of the box
+     o     y: (number) y coordinate of the left top point of the box
+     o     x2: (number) x coordinate of the right bottom point of the box
+     o     y2: (number) y coordinate of the right bottom point of the box
+     o     width: (number) width of the box
+     o     height: (number) height of the box
+     o     cx: (number) x coordinate of the center of the box
+     o     cy: (number) y coordinate of the center of the box
+     o }
+    \*/
     var pathDimensions = R.pathBBox = function(path) {
       var pth = paths(path);
       if (pth.bbox) {
@@ -1567,7 +1978,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         if (pth.rel) {
           return pathClone(pth.rel);
         }
-        if (!R.is(pathArray, array) || !R.is(pathArray && pathArray[0], array)) { 
+        if (!R.is(pathArray, array) || !R.is(pathArray && pathArray[0], array)) { // rough assumption
           pathArray = R.parsePathString(pathArray);
         }
         var res = [],
@@ -1646,7 +2057,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         if (pth.abs) {
           return pathClone(pth.abs);
         }
-        if (!R.is(pathArray, array) || !R.is(pathArray && pathArray[0], array)) { 
+        if (!R.is(pathArray, array) || !R.is(pathArray && pathArray[0], array)) { // rough assumption
           pathArray = R.parsePathString(pathArray);
         }
         if (!pathArray || !pathArray.length) {
@@ -1754,8 +2165,8 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         ];
       },
       a2c = function(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
-        
-        
+        // for more information of where this math came from visit:
+        // http://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
         var _120 = PI * 120 / 180,
           rad = PI / 180 * (+angle || 0),
           res = [],
@@ -1945,20 +2356,20 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
                 path = ["C"][concat](a2c[apply](0, [d.x, d.y][concat](path.slice(1))));
                 break;
               case "S":
-                if (pcom == "C" || pcom == "S") { 
-                  nx = d.x * 2 - d.bx; 
-                  ny = d.y * 2 - d.by; 
-                } else { 
+                if (pcom == "C" || pcom == "S") { // In "S" case we have to take into account, if the previous command is C/S.
+                  nx = d.x * 2 - d.bx; // And reflect the previous
+                  ny = d.y * 2 - d.by; // command's control point relative to the current point.
+                } else { // or some else or nothing
                   nx = d.x;
                   ny = d.y;
                 }
                 path = ["C", nx, ny][concat](path.slice(1));
                 break;
               case "T":
-                if (pcom == "Q" || pcom == "T") { 
-                  d.qx = d.x * 2 - d.qx; 
-                  d.qy = d.y * 2 - d.qy; 
-                } else { 
+                if (pcom == "Q" || pcom == "T") { // In "T" case we have to take into account, if the previous command is Q/T.
+                  d.qx = d.x * 2 - d.qx; // And make a reflection similar
+                  d.qy = d.y * 2 - d.qy; // to case "S".
+                } else { // or something else or nothing
                   d.qx = d.x;
                   d.qy = d.y;
                 }
@@ -1989,8 +2400,8 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
               pp[i].shift();
               var pi = pp[i];
               while (pi.length) {
-                pcoms1[i] = "A"; 
-                p2 && (pcoms2[i] = "A"); 
+                pcoms1[i] = "A"; // if created multiple C:s, their original seg is saved
+                p2 && (pcoms2[i] = "A"); // the same as above
                 pp.splice(i++, 0, ["C"][concat](pi.splice(0, 6)));
               }
               pp.splice(i, 1);
@@ -2007,27 +2418,27 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
               ii = mmax(p.length, p2 && p2.length || 0);
             }
           },
-          pcoms1 = [], 
-          pcoms2 = [], 
-          pfirst = "", 
-          pcom = ""; 
+          pcoms1 = [], // path commands of original path p
+          pcoms2 = [], // path commands of original path p2
+          pfirst = "", // temporary holder for original path command
+          pcom = ""; // holder for previous path command of original path
         for (var i = 0, ii = mmax(p.length, p2 && p2.length || 0); i < ii; i++) {
-          p[i] && (pfirst = p[i][0]); 
+          p[i] && (pfirst = p[i][0]); // save current path command
 
-          if (pfirst != "C") 
+          if (pfirst != "C") // C is not saved yet, because it may be result of conversion
           {
-            pcoms1[i] = pfirst; 
-            i && (pcom = pcoms1[i - 1]); 
+            pcoms1[i] = pfirst; // Save current path command
+            i && (pcom = pcoms1[i - 1]); // Get previous path command pcom
           }
-          p[i] = processPath(p[i], attrs, pcom); 
+          p[i] = processPath(p[i], attrs, pcom); // Previous path command is inputted to processPath
 
-          if (pcoms1[i] != "A" && pfirst == "C") pcoms1[i] = "C"; 
-          
-          
+          if (pcoms1[i] != "A" && pfirst == "C") pcoms1[i] = "C"; // A is the only command
+          // which may produce multiple C:s
+          // so we have to make sure that C is also C in original path
 
-          fixArc(p, i); 
+          fixArc(p, i); // fixArc adds also the right amount of A:s to pcoms1
 
-          if (p2) { 
+          if (p2) { // the same procedures is done to p2
             p2[i] && (pfirst = p2[i][0]);
             if (pfirst != "C") {
               pcoms2[i] = pfirst;
@@ -2138,7 +2549,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         el2.prev = el;
         el.next = el2;
       },
-      
+      /*\
+         * Raphael.toMatrix
+         [ method ]
+         **
+         * Utility method
+         **
+         * Returns matrix of transformations applied to a given path
+         > Parameters
+         - path (string) path string
+         - transform (string|array) transformation string
+         = (object) @Matrix
+        \*/
       toMatrix = R.toMatrix = function(path, transform) {
         var bb = pathDimensions(path),
           el = {
@@ -2152,7 +2574,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         extractTransform(el, transform);
         return el.matrix;
       },
-      
+      /*\
+         * Raphael.transformPath
+         [ method ]
+         **
+         * Utility method
+         **
+         * Returns path transformed by a given transformation
+         > Parameters
+         - path (string) path string
+         - transform (string|array) transformation string
+         = (string) path
+        \*/
       transformPath = R.transformPath = function(path, transform) {
         return mapPath(path, toMatrix(path, transform));
       },
@@ -2232,7 +2665,12 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
           }
         }
 
-        
+        /*\
+             * Element.matrix
+             [ property (object) ]
+             **
+             * Keeps @Matrix object, which represents element transformation
+            \*/
         el.matrix = m;
 
         _.sx = sx;
@@ -2331,12 +2769,47 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         height: h
       };
     };
-    
+    /*\
+     * Raphael.pathToRelative
+     [ method ]
+     **
+     * Utility method
+     **
+     * Converts path to relative form
+     > Parameters
+     - pathString (string|array) path string or array of segments
+     = (array) array of segments.
+    \*/
     R.pathToRelative = pathToRelative;
     R._engine = {};
-    
+    /*\
+     * Raphael.path2curve
+     [ method ]
+     **
+     * Utility method
+     **
+     * Converts path to a new path where all segments are cubic bezier curves.
+     > Parameters
+     - pathString (string|array) path string or array of segments
+     = (array) array of segments.
+    \*/
     R.path2curve = path2curve;
-    
+    /*\
+     * Raphael.matrix
+     [ method ]
+     **
+     * Utility method
+     **
+     * Returns matrix based on given parameters.
+     > Parameters
+     - a (number)
+     - b (number)
+     - c (number)
+     - d (number)
+     - e (number)
+     - f (number)
+     = (object) @Matrix
+    \*/
     R.matrix = function(a, b, c, d, e, f) {
       return new Matrix(a, b, c, d, e, f);
     };
@@ -2359,7 +2832,21 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
     }
     (function(matrixproto) {
-      
+      /*\
+         * Matrix.add
+         [ method ]
+         **
+         * Adds given matrix to existing one.
+         > Parameters
+         - a (number)
+         - b (number)
+         - c (number)
+         - d (number)
+         - e (number)
+         - f (number)
+         or
+         - matrix (object) @Matrix
+        \*/
       matrixproto.add = function(a, b, c, d, e, f) {
         var out = [
           [],
@@ -2402,28 +2889,67 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         this.e = out[0][2];
         this.f = out[1][2];
       };
-      
+      /*\
+         * Matrix.invert
+         [ method ]
+         **
+         * Returns inverted version of the matrix
+         = (object) @Matrix
+        \*/
       matrixproto.invert = function() {
         var me = this,
           x = me.a * me.d - me.b * me.c;
         return new Matrix(me.d / x, -me.b / x, -me.c / x, me.a / x, (me.c * me.f - me.d * me.e) / x, (me.b * me.e - me.a * me.f) / x);
       };
-      
+      /*\
+         * Matrix.clone
+         [ method ]
+         **
+         * Returns copy of the matrix
+         = (object) @Matrix
+        \*/
       matrixproto.clone = function() {
         return new Matrix(this.a, this.b, this.c, this.d, this.e, this.f);
       };
-      
+      /*\
+         * Matrix.translate
+         [ method ]
+         **
+         * Translate the matrix
+         > Parameters
+         - x (number)
+         - y (number)
+        \*/
       matrixproto.translate = function(x, y) {
         this.add(1, 0, 0, 1, x, y);
       };
-      
+      /*\
+         * Matrix.scale
+         [ method ]
+         **
+         * Scales the matrix
+         > Parameters
+         - x (number)
+         - y (number) #optional
+         - cx (number) #optional
+         - cy (number) #optional
+        \*/
       matrixproto.scale = function(x, y, cx, cy) {
         y == null && (y = x);
         (cx || cy) && this.add(1, 0, 0, 1, cx, cy);
         this.add(x, 0, 0, y, 0, 0);
         (cx || cy) && this.add(1, 0, 0, 1, -cx, -cy);
       };
-      
+      /*\
+         * Matrix.rotate
+         [ method ]
+         **
+         * Rotates the matrix
+         > Parameters
+         - a (number)
+         - x (number)
+         - y (number)
+        \*/
       matrixproto.rotate = function(a, x, y) {
         a = R.rad(a);
         x = x || 0;
@@ -2433,11 +2959,29 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         this.add(cos, sin, -sin, cos, x, y);
         this.add(1, 0, 0, 1, -x, -y);
       };
-      
+      /*\
+         * Matrix.x
+         [ method ]
+         **
+         * Return x coordinate for given point after transformation described by the matrix. See also @Matrix.y
+         > Parameters
+         - x (number)
+         - y (number)
+         = (number) x
+        \*/
       matrixproto.x = function(x, y) {
         return x * this.a + y * this.c + this.e;
       };
-      
+      /*\
+         * Matrix.y
+         [ method ]
+         **
+         * Return y coordinate for given point after transformation described by the matrix. See also @Matrix.x
+         > Parameters
+         - x (number)
+         - y (number)
+         = (number) y
+        \*/
       matrixproto.y = function(x, y) {
         return x * this.b + y * this.d + this.f;
       };
@@ -2467,14 +3011,27 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         a[0] && (a[0] /= mag);
         a[1] && (a[1] /= mag);
       }
-      
+      /*\
+         * Matrix.split
+         [ method ]
+         **
+         * Splits matrix into primitive transformations
+         = (object) in format:
+         o dx (number) translation by x
+         o dy (number) translation by y
+         o scalex (number) scale by x
+         o scaley (number) scale by y
+         o shear (number) shear
+         o rotate (number) rotation in deg
+         o isSimple (boolean) could it be represented via simple transformations
+        \*/
       matrixproto.split = function() {
         var out = {};
-        
+        // translation
         out.dx = this.e;
         out.dy = this.f;
 
-        
+        // scale and shear
         var row = [
           [this.a, this.c],
           [this.b, this.d]
@@ -2489,7 +3046,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         normalize(row[1]);
         out.shear /= out.scaley;
 
-        
+        // rotation
         var sin = -row[0][1],
           cos = row[1][1];
         if (cos < 0) {
@@ -2506,7 +3063,13 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         out.noRotation = !+out.shear.toFixed(9) && !out.rotate;
         return out;
       };
-      
+      /*\
+         * Matrix.toTransformString
+         [ method ]
+         **
+         * Return transform string that represents given matrix
+         = (string) transform string
+        \*/
       matrixproto.toTransformString = function(shorter) {
         var s = shorter || this[split]();
         if (s.isSimple) {
@@ -2522,11 +3085,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       };
     })(Matrix.prototype);
 
-    
+    // WebKit rendering bug workaround method
     var version = navigator.userAgent.match(/Version\/(.*?)\s/) || navigator.userAgent.match(/Chrome\/(\d+)/);
     if ((navigator.vendor == "Apple Computer, Inc.") && (version && version[1] < 4 || navigator.platform.slice(0, 2) == "iP") ||
       (navigator.vendor == "Google Inc." && version && version[1] < 8)) {
-      
+      /*\
+         * Paper.safari
+         [ method ]
+         **
+         * There is an inconvenient rendering bug in Safari (WebKit):
+         * sometimes the rendering should be forced.
+         * This method should help with dealing with this bug.
+        \*/
       paperproto.safari = function() {
         var rect = this.rect(-99, -99, this.width + 99, this.height + 99).attr({
           stroke: "none"
@@ -2671,40 +3241,229 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }
         drag = [];
       },
-      
+      /*\
+     * Raphael.el
+     [ property (object) ]
+     **
+     * You can add your own method to elements. This is usefull when you want to hack default functionality or
+     * want to wrap some common transformation or attributes in one method. In difference to canvas methods,
+     * you can redefine element method at any time. Expending element methods wouldn’t affect set.
+     > Usage
+     | Raphael.el.red = function () {
+     |     this.attr({fill: "#f00"});
+     | };
+     | // then use it
+     | paper.circle(100, 100, 20).red();
+    \*/
       elproto = R.el = {};
-    
-    
+    /*\
+     * Element.click
+     [ method ]
+     **
+     * Adds event handler for click for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.unclick
+     [ method ]
+     **
+     * Removes event handler for click for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.dblclick
+     [ method ]
+     **
+     * Adds event handler for double click for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.undblclick
+     [ method ]
+     **
+     * Removes event handler for double click for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.mousedown
+     [ method ]
+     **
+     * Adds event handler for mousedown for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.unmousedown
+     [ method ]
+     **
+     * Removes event handler for mousedown for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.mousemove
+     [ method ]
+     **
+     * Adds event handler for mousemove for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.unmousemove
+     [ method ]
+     **
+     * Removes event handler for mousemove for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.mouseout
+     [ method ]
+     **
+     * Adds event handler for mouseout for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.unmouseout
+     [ method ]
+     **
+     * Removes event handler for mouseout for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.mouseover
+     [ method ]
+     **
+     * Adds event handler for mouseover for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.unmouseover
+     [ method ]
+     **
+     * Removes event handler for mouseover for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.mouseup
+     [ method ]
+     **
+     * Adds event handler for mouseup for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.unmouseup
+     [ method ]
+     **
+     * Removes event handler for mouseup for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.touchstart
+     [ method ]
+     **
+     * Adds event handler for touchstart for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.untouchstart
+     [ method ]
+     **
+     * Removes event handler for touchstart for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.touchmove
+     [ method ]
+     **
+     * Adds event handler for touchmove for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.untouchmove
+     [ method ]
+     **
+     * Removes event handler for touchmove for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.touchend
+     [ method ]
+     **
+     * Adds event handler for touchend for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.untouchend
+     [ method ]
+     **
+     * Removes event handler for touchend for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
 
-    
-    
+    /*\
+     * Element.touchcancel
+     [ method ]
+     **
+     * Adds event handler for touchcancel for the element.
+     > Parameters
+     - handler (function) handler for the event
+     = (object) @Element
+    \*/
+    /*\
+     * Element.untouchcancel
+     [ method ]
+     **
+     * Removes event handler for touchcancel for the element.
+     > Parameters
+     - handler (function) #optional handler for the event
+     = (object) @Element
+    \*/
     for (var i = events.length; i--;) {
       (function(eventName) {
         R[eventName] = elproto[eventName] = function(fn, scope) {
@@ -2733,7 +3492,31 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       })(events[i]);
     }
 
-    
+    /*\
+     * Element.data
+     [ method ]
+     **
+     * Adds or retrieves given value asociated with given key.
+     **
+     * See also @Element.removeData
+     > Parameters
+     - key (string) key to store data
+     - value (any) #optional value to store
+     = (object) @Element
+     * or, if value is not specified:
+     = (any) value
+     * or, if key and value are not specified:
+     = (object) Key/value pairs for all the data associated with the element.
+     > Usage
+     | for (var i = 0, i < 5, i++) {
+     |     paper.circle(10 + 15 * i, 10, 10)
+     |          .attr({fill: "#000"})
+     |          .data("i", i)
+     |          .click(function () {
+     |             alert(this.data("i"));
+     |          });
+     | }
+    \*/
     elproto.data = function(key, value) {
       var data = eldata[this.id] = eldata[this.id] || {};
       if (arguments.length == 0) {
@@ -2754,7 +3537,16 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       eve("raphael.data.set." + this.id, this, value, key);
       return this;
     };
-    
+    /*\
+     * Element.removeData
+     [ method ]
+     **
+     * Removes value associated with an element by given key.
+     * If key is not provided, removes all the data of the element.
+     > Parameters
+     - key (string) #optional key
+     = (object) @Element
+    \*/
     elproto.removeData = function(key) {
       if (key == null) {
         eldata[this.id] = {};
@@ -2763,20 +3555,75 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return this;
     };
-    
+    /*\
+     * Element.getData
+     [ method ]
+     **
+     * Retrieves the element data
+     = (object) data
+    \*/
     elproto.getData = function() {
       return clone(eldata[this.id] || {});
     };
-    
+    /*\
+     * Element.hover
+     [ method ]
+     **
+     * Adds event handlers for hover for the element.
+     > Parameters
+     - f_in (function) handler for hover in
+     - f_out (function) handler for hover out
+     - icontext (object) #optional context for hover in handler
+     - ocontext (object) #optional context for hover out handler
+     = (object) @Element
+    \*/
     elproto.hover = function(f_in, f_out, scope_in, scope_out) {
       return this.mouseover(f_in, scope_in).mouseout(f_out, scope_out || scope_in);
     };
-    
+    /*\
+     * Element.unhover
+     [ method ]
+     **
+     * Removes event handlers for hover for the element.
+     > Parameters
+     - f_in (function) handler for hover in
+     - f_out (function) handler for hover out
+     = (object) @Element
+    \*/
     elproto.unhover = function(f_in, f_out) {
       return this.unmouseover(f_in).unmouseout(f_out);
     };
     var draggable = [];
-    
+    /*\
+     * Element.drag
+     [ method ]
+     **
+     * Adds event handlers for drag of the element.
+     > Parameters
+     - onmove (function) handler for moving
+     - onstart (function) handler for drag start
+     - onend (function) handler for drag end
+     - mcontext (object) #optional context for moving handler
+     - scontext (object) #optional context for drag start handler
+     - econtext (object) #optional context for drag end handler
+     * Additionaly following `drag` events will be triggered: `drag.start.<id>` on start,
+     * `drag.end.<id>` on end and `drag.move.<id>` on every move. When element will be dragged over another element
+     * `drag.over.<id>` will be fired as well.
+     *
+     * Start event and start handler will be called in specified context or in context of the element with following parameters:
+     o x (number) x position of the mouse
+     o y (number) y position of the mouse
+     o event (object) DOM event object
+     * Move event and move handler will be called in specified context or in context of the element with following parameters:
+     o dx (number) shift by x from the start point
+     o dy (number) shift by y from the start point
+     o x (number) x position of the mouse
+     o y (number) y position of the mouse
+     o event (object) DOM event object
+     * End event and end handler will be called in specified context or in context of the element with following parameters:
+     o event (object) DOM event object
+     = (object) @Element
+    \*/
     elproto.drag = function(onmove, onstart, onend, move_scope, start_scope, end_scope) {
       function start(e) {
         (e.originalEvent || e).preventDefault();
@@ -2820,11 +3667,23 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       this.mousedown(start);
       return this;
     };
-    
+    /*\
+     * Element.onDragOver
+     [ method ]
+     **
+     * Shortcut for assigning event handler for `drag.over.<id>` event, where id is id of the element (see @Element.id).
+     > Parameters
+     - f (function) handler for event, first argument would be the element you are dragging over
+    \*/
     elproto.onDragOver = function(f) {
       f ? eve.on("raphael.drag.over." + this.id, f) : eve.unbind("raphael.drag.over." + this.id);
     };
-    
+    /*\
+     * Element.undrag
+     [ method ]
+     **
+     * Removes all drag event handlers from given element.
+    \*/
     elproto.undrag = function() {
       var i = draggable.length;
       while (i--)
@@ -2835,25 +3694,107 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }!draggable.length && R.unmousemove(dragMove).unmouseup(dragUp);
       drag = [];
     };
-    
+    /*\
+     * Paper.circle
+     [ method ]
+     **
+     * Draws a circle.
+     **
+     > Parameters
+     **
+     - x (number) x coordinate of the centre
+     - y (number) y coordinate of the centre
+     - r (number) radius
+     = (object) Raphaël element object with type “circle”
+     **
+     > Usage
+     | var c = paper.circle(50, 50, 40);
+    \*/
     paperproto.circle = function(x, y, r) {
       var out = R._engine.circle(this, x || 0, y || 0, r || 0);
       this.__set__ && this.__set__.push(out);
       return out;
     };
-    
+    /*\
+     * Paper.rect
+     [ method ]
+     *
+     * Draws a rectangle.
+     **
+     > Parameters
+     **
+     - x (number) x coordinate of the top left corner
+     - y (number) y coordinate of the top left corner
+     - width (number) width
+     - height (number) height
+     - r (number) #optional radius for rounded corners, default is 0
+     = (object) Raphaël element object with type “rect”
+     **
+     > Usage
+     | // regular rectangle
+     | var c = paper.rect(10, 10, 50, 50);
+     | // rectangle with rounded corners
+     | var c = paper.rect(40, 40, 50, 50, 10);
+    \*/
     paperproto.rect = function(x, y, w, h, r) {
       var out = R._engine.rect(this, x || 0, y || 0, w || 0, h || 0, r || 0);
       this.__set__ && this.__set__.push(out);
       return out;
     };
-    
+    /*\
+     * Paper.ellipse
+     [ method ]
+     **
+     * Draws an ellipse.
+     **
+     > Parameters
+     **
+     - x (number) x coordinate of the centre
+     - y (number) y coordinate of the centre
+     - rx (number) horizontal radius
+     - ry (number) vertical radius
+     = (object) Raphaël element object with type “ellipse”
+     **
+     > Usage
+     | var c = paper.ellipse(50, 50, 40, 20);
+    \*/
     paperproto.ellipse = function(x, y, rx, ry) {
       var out = R._engine.ellipse(this, x || 0, y || 0, rx || 0, ry || 0);
       this.__set__ && this.__set__.push(out);
       return out;
     };
-    
+    /*\
+     * Paper.path
+     [ method ]
+     **
+     * Creates a path element by given path data string.
+     > Parameters
+     - pathString (string) #optional path string in SVG format.
+     * Path string consists of one-letter commands, followed by comma seprarated arguments in numercal form. Example:
+     | "M10,20L30,40"
+     * Here we can see two commands: “M”, with arguments `(10, 20)` and “L” with arguments `(30, 40)`. Upper case letter mean command is absolute, lower case—relative.
+     *
+     # <p>Here is short list of commands available, for more details see <a href="http:
+     # <table><thead><tr><th>Command</th><th>Name</th><th>Parameters</th></tr></thead><tbody>
+     # <tr><td>M</td><td>moveto</td><td>(x y)+</td></tr>
+     # <tr><td>Z</td><td>closepath</td><td>(none)</td></tr>
+     # <tr><td>L</td><td>lineto</td><td>(x y)+</td></tr>
+     # <tr><td>H</td><td>horizontal lineto</td><td>x+</td></tr>
+     # <tr><td>V</td><td>vertical lineto</td><td>y+</td></tr>
+     # <tr><td>C</td><td>curveto</td><td>(x1 y1 x2 y2 x y)+</td></tr>
+     # <tr><td>S</td><td>smooth curveto</td><td>(x2 y2 x y)+</td></tr>
+     # <tr><td>Q</td><td>quadratic Bézier curveto</td><td>(x1 y1 x y)+</td></tr>
+     # <tr><td>T</td><td>smooth quadratic Bézier curveto</td><td>(x y)+</td></tr>
+     # <tr><td>A</td><td>elliptical arc</td><td>(rx ry x-axis-rotation large-arc-flag sweep-flag x y)+</td></tr>
+     # <tr><td>R</td><td><a href="http://en.wikipedia.org/wiki/Catmull–Rom_spline#Catmull.E2.80.93Rom_spline">Catmull-Rom curveto</a>*</td><td>x1 y1 (x y)+</td></tr></tbody></table>
+     * * “Catmull-Rom curveto” is a not standard SVG command and added in 2.0 to make life easier.
+     * Note: there is a special case when path consist of just three commands: “M10,10R…z”. In this case path will smoothly connects to its beginning.
+     > Usage
+     | var c = paper.path("M10 10L90 90");
+     | 
+     | 
+     * For example of path strings, check out these icons: http:
+    \*/
     paperproto.path = function(pathString) {
       pathString && !R.is(pathString, string) && !R.is(pathString[0], array) && (pathString += E);
       var out = R._engine.path(R.format[apply](R, arguments), this);
@@ -4294,7 +5235,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         eve = R.eve,
         E = "",
         S = " ";
-      var xlink = "http://www.w3.org/1999/xlink",
+      var xlink = "http:\/\/www.w3.org\/1999\/xlink",
         markers = {
           block: "M5,0 0,2.5 5,5z",
           classic: "M5,0 0,2.5 5,5 3.5,3 3.5,2z",
