@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/legend/index',["util","node","base","dom","event-dom","kg/kcharts/2.0.2/icons/index","kg/kcharts/2.0.2/animate/index","kg/kcharts/5.0.0/raphael/index"],function(require, exports, module) {
+define('kg/kcharts/5.0.0/legend/index',["util","node","base","dom","event-dom","kg/kcharts/5.0.0/icons/index","kg/kcharts/5.0.0/animate/index","kg/kcharts/5.0.0/raphael/index"],function(require, exports, module) {
 
 
   var Util = require("util"),
@@ -6,8 +6,8 @@ define('kg/kcharts/5.0.0/legend/index',["util","node","base","dom","event-dom","
     Base = require("base"),
     D = require("dom"),
     E = require("event-dom"),
-    Icons = require("kg/kcharts/2.0.2/icons/index"),
-    Animation = require("kg/kcharts/2.0.2/animate/index"),
+    Icons = require("kg/kcharts/5.0.0/icons/index"),
+    Animation = require("kg/kcharts/5.0.0/animate/index"),
     Raphael = require("kg/kcharts/5.0.0/raphael/index");
 
   var $ = Node.all;
