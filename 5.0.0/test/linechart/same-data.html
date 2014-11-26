@@ -15,20 +15,15 @@
 <div id="demo1">
 
 </div>
-<script src="//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
-<script>
-KISSY.Config.combine = true;
-// KISSY.Config.debug = true;
-// KISSY.config({
-//   packages:[
-//     {
-//       name:"gallery",
-//       path:"../../../../../",
-//       tag:Math.random()
-//     }
-//   ]
-// });
-KISSY.use("kg/kcharts/2.0.0/linechart/index", function(S, LineChart) {
+<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script type="text/javascript">
+require.config({
+  packages:[{
+    name:"kg",
+    path:"http://g.assets.daily.taobao.net/kg/"
+  }]
+})
+require("kg/kcharts/5.0.0/linechart/index",function(LineChart){
   var linechart = new LineChart({
     renderTo: "#demo1",
     themeCls: "ks-chart-rainbow",

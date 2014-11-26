@@ -15,15 +15,13 @@
 <div id="demo1">
 
 </div>
-<script charset="utf-8" src="//g.assets.daily.taobao.net/kissy/k/5.0.1/seed.js"></script>
+<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
 require.config({
-  packages:[
-    {
-      name:"kg",
-      path:"http://g.assets.daily.taobao.net/kg/"
-    }
-  ]
+  packages:[{
+    name:"kg",
+    path:"http://g.assets.daily.taobao.net/kg/"
+  }]
 })
 require("kg/kcharts/5.0.0/linechart/index",function(LineChart){
   var linechart = new LineChart({
@@ -81,9 +79,6 @@ require("kg/kcharts/5.0.0/linechart/index",function(LineChart){
         isShow:true,y:-10
       },
       tip:{
-        css:{
-          
-        },
         offset:{
                     x:10,
                     y:10
