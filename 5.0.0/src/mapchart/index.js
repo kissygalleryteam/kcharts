@@ -5,7 +5,7 @@ define(function(require, exports, module) {
         Util = require('util'),
         Base = require('base'),
         UA = require('ua'),
-        Raphael = require('kg/kcharts/2.0.2/raphael/index'),
+        Raphael = require('kg/kcharts/5.0.0/raphael/index'),
         Theme = require('./theme'),
         MapData = require('./mapdata');
 

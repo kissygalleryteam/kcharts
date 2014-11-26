@@ -4,11 +4,7 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
     Node = require("node"),
     Base = require("base"),
     Template = require("kg/kcharts/5.0.0/tools/template/index");
-
-    
-
     var $ = Node.all;
-
     var methods = {
       initializer:function(){
         this.init();
@@ -38,23 +34,16 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
                 }
               },
               css:{
-                background: "#fff",
-                filter:"alpha(opacity =90)",
-                "-moz-opacity":0.9 ,
-                "-khtml-opacity": 0.9,
-                opacity: 0.9,
-                "-moz-border-radius":  "10px",
-                "-webkit-border-radius": "10px",
-                "border-radius":"10px",
-                "padding":"10px",
-                color:"#666",
+                background: "#000",
+                opacity: 0.6,
+                "-moz-border-radius":  "5px",
+                "-webkit-border-radius": "5px",
+                "border-radius":"5px",
+                "padding":"5px",
+                "color":"#fff",
                 "font-family":"Microsoft Yahei",
                 "z-index": 10,
-                "font-size": "12px",
-                "font-weight": "bolder",
-                "-webkit-box-shadow":"2px 2px 2px 2px #ccc",
-                "-moz-box-shadow":"2px 2px 2px 2px #ccc",
-                "box-shadow":"2px 2px 2px 2px #ccc"
+                "font-size": "12px"
               },
               anim:{
                 easing:"easeOut",
