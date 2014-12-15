@@ -7,11 +7,7 @@ define(function(require,exports,module) {
     Node = require("node"),
     Base = require("base"),
     Template = require("kg/kcharts/5.0.0/tools/template/index");
-
-    // require("./assets/tip.css");
-
     var $ = Node.all;
-
     var methods = {
       initializer:function(){
         this.init();
@@ -39,6 +35,18 @@ define(function(require,exports,module) {
                   marginLeft:0,
                   marginTop:0
                 }
+              },
+              css:{
+                background: "#000",
+                opacity: 0.6,
+                "-moz-border-radius":  "5px",
+                "-webkit-border-radius": "5px",
+                "border-radius":"5px",
+                "padding":"5px",
+                "color":"#fff",
+                "font-family":"Microsoft Yahei",
+                "z-index": 10,
+                "font-size": "12px"
               },
               anim:{
                 easing:"easeOut",
@@ -294,9 +302,7 @@ define(function(require,exports,module) {
         },
 
         _isExist:function () {
-
             return this.$tip && this.$tip[0];
-
         },
 
         render:function () {
@@ -306,10 +312,9 @@ define(function(require,exports,module) {
                 _data = self._data,
                 display = _cfg.isVisable ? "inline-block" : "none",
                 rootNodeOffset = _cfg.rootNode.offset();
-
             if (!_cfg.rootNode.offset()) return false;
-
-            self.$tip = !self._isExist() && $('<span class="' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
+            self.$tip = !self._isExist() && $('<span class="ks-chart-tip ' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
+                .css(_cfg.css)
                 .css({"display":display})
                 .appendTo(_cfg.rootNode);
 

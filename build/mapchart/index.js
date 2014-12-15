@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/mapchart/index',["node","event-dom","util","base","ua","kg/kcharts/2.0.2/raphael/index","./theme","./mapdata"],function(require, exports, module) {
+define('kg/kcharts/5.0.0/mapchart/index',["node","event-dom","util","base","ua","kg/kcharts/5.0.0/raphael/index","./theme","./mapdata"],function(require, exports, module) {
 
 
     var  Node = require('node'),
@@ -6,7 +6,7 @@ define('kg/kcharts/5.0.0/mapchart/index',["node","event-dom","util","base","ua",
         Util = require('util'),
         Base = require('base'),
         UA = require('ua'),
-        Raphael = require('kg/kcharts/2.0.2/raphael/index'),
+        Raphael = require('kg/kcharts/5.0.0/raphael/index'),
         Theme = require('./theme'),
         MapData = require('./mapdata');
 
