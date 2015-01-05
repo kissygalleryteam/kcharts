@@ -16,19 +16,15 @@
 <div id="demo1">
 
 </div>
-<script src="//g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
+<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
-// KISSY.Config.debug = true;
-// KISSY.config({
-//   packages:[
-//     {
-//       name:"gallery",
-//       path:"../../../../../",
-//       tag:Math.random()
-//     }
-//   ]
-// });
-	KISSY.use('kg/kcharts/2.0.0/barchart/index',function(S,BarChart){
+require.config({
+  packages:[{
+    name:"kg",
+    path:"http://g.assets.daily.taobao.net/kg/"
+  }]
+})
+require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
 	
 		var barChart = new BarChart({
 			renderTo:"#demo1",

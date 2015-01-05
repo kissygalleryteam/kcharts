@@ -16,10 +16,15 @@
 
 </div>
 <div id="console"></div>
-<script src="//g.tbcdn.cn/kissy/k/1.4.6/seed-min.js"></script>
+<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
-KISSY.Config.debug = true;
-KISSY.use("kg/kcharts/2.0.2/linechart/,kg/kcharts/2.0.2/raphael/",function(S,LineChart,R){
+require.config({
+  packages:[{
+    name:"kg",
+    path:"http://g.assets.daily.taobao.net/kg/"
+  }]
+})
+require("kg/kcharts/5.0.0/linechart/index,kg/kcharts/5.0.0/raphael/index",function(LineChart,R){
   var linechart = new LineChart({
       renderTo:"#demo1",
       points:{

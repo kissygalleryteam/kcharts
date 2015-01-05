@@ -16,20 +16,15 @@
 <body>
 <div id="demo1"></div>
 <a id="J_update">更新</a>
- <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed.js"></script>
-<script>
-(function(S) {
-    // S.Config.combine = true;
-    S.config({
-      packages:[
-        {
-          name:"gallery",
-          path:"../../../../../",
-          tag:Math.random()
-        }
-      ]
-    });
-    KISSY.use("kg/kcharts/2.0.0/datetime/index", function(S, DateTime) {
+ <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script type="text/javascript">
+require.config({
+  packages:[{
+    name:"kg",
+    path:"http://g.assets.daily.taobao.net/kg/"
+  }]
+})
+require("node,kg/kcharts/5.0.0/datetime/index",function(Node,DateTime){
         var data = [
             0.8446, 0.8445, 0.8444, 0.8451, 0.8418, 0.8264, 0.8258, 0.8232, 0.8233, 0.8258,
             0.8283, 0.8278, 0.8256, 0.8292, 0.8239, 0.8239, 0.8245, 0.8265, 0.8261, 0.8269,
@@ -205,7 +200,7 @@
             }
         });
         datetime.render();
-        S.one('#J_update').on('click', function (e) {
+        Node.one('#J_update').on('click', function (e) {
             var tmp = datetime._cfg.series[0]['data'];
             tmp.shift()
             tmp.push(Math.random());
@@ -220,7 +215,6 @@
 
     });
 
-})(KISSY);
 </script>
 </body>
 </html>
