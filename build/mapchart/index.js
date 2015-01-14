@@ -170,6 +170,7 @@ define('kg/kcharts/5.0.0/mapchart/index',["node","event-dom","util","base","ua",
                 path.customOver = over;
                 path.customMove = move;
                 path.customOut = out;
+                path.customClick = clickFun;
             });
 
             var map = paper.setFinish();
@@ -371,6 +372,7 @@ define('kg/kcharts/5.0.0/mapchart/index',["node","event-dom","util","base","ua",
                 if (bind) {
                     Event.on(el, "mousemove", move);
                     Event.on(el, "mouseleave", out);
+                    Event.on(el, "click", clickFun);
                 }
                 self.areaList[i] = el;
                 list[item.text] = 1;
@@ -386,6 +388,20 @@ define('kg/kcharts/5.0.0/mapchart/index',["node","event-dom","util","base","ua",
                     el.appendTo(textContainer);
                 }
             });
+
+            function clickFun(ev) {
+                var tar = $(this),
+                    index = tar.data("index"),
+                    path = self.pathList[index],
+                    offset = self._container.offset(),
+                    x = offset.left,
+                    y = offset.top;
+
+                self.isInPaper = true;
+                ev.mapX = ev.pageX - x;
+                ev.mapY = ev.pageY - y;
+                path.customClick(ev);
+            }
 
             function move(ev) {
                 var tar = $(this),
