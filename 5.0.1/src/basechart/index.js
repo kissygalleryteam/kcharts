@@ -1,7 +1,7 @@
 /*
 TODO 坐标运算  画布大小计算
 */
-;define(function(require,exports,module){
+define(function(require,exports,module){
 	var Util = require("util"),
 		Node = require("node"),
 		Base = require("base"),

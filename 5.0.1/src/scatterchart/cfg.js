@@ -1,4 +1,4 @@
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";

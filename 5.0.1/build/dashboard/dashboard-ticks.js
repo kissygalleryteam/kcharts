@@ -1,20 +1,16 @@
 define('kg/kcharts/5.0.1/dashboard/dashboard-ticks',["util","base"],function(require, exports, module) {
- /**
- * 矢量画刻度
- * @author cookieu@gmail.com
- * */
-;define(function(require, exports, module) {
+
   var Util = require('util'),
       Base = require('base');
    var methods = {
      initializer:function(){
        var cfg = this.get('cfg')
-       var n          // 圆被分成的份数
-         , m          // 粗线
-         , start      // 始末弧度
+       var n          
+         , m          
+         , start      
          , end
-         , totalAngle //end - start
-         , step       // 步长
+         , totalAngle 
+         , step       
          , r = cfg.r1 || 100
          , r2 = cfg.r2 || 105
          , R = cfg.R || 110
@@ -39,7 +35,7 @@ define('kg/kcharts/5.0.1/dashboard/dashboard-ticks',["util","base"],function(req
        end -= Math.PI
 
        totalAngle = end - start
-       // step = parseFloat((totalAngle / n).toFixed(2))
+       
        step = totalAngle / n
 
        for(var i=0;i<=n;i+=1){
@@ -88,5 +84,3 @@ define('kg/kcharts/5.0.1/dashboard/dashboard-ticks',["util","base"],function(req
    }
    return Base.extend(methods);
  });
-
-});

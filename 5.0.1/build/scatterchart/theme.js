@@ -1,10 +1,10 @@
 define('kg/kcharts/5.0.1/scatterchart/theme',[],function(require, exports, module) {
- ;define(function(require,exports,module) {
+
 
 	var COLOR_TPL = "{COLOR}";
 
 	var themeCfg = {
-		//默认主题
+		
 		"ks-chart-default":{
 			title:{
 		           content:"",
@@ -228,5 +228,4 @@ define('kg/kcharts/5.0.1/scatterchart/theme',[],function(require, exports, modul
 
 	return themeCfg;
 
-});
 });

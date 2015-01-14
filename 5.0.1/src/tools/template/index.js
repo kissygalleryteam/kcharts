@@ -2,7 +2,7 @@
  * @fileOverview KISSY Template Engine
  * @author yyfrankyy@gmail.com
  */
-;define(function (require,exports,module) {
+define(function (require,exports,module) {
 
     var Util = require("util");
 

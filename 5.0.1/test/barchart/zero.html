@@ -24,77 +24,8 @@ require.config({
     path:"http://g.assets.daily.taobao.net/kg/"
   }]
 })
-require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
-	
-		var barChart = new BarChart({
-			renderTo:"#demo1",
-			title:{
-            	content:"Monthly Average Rainfall",
-            	css:{
-            	}
-            },
-            anim:{},
-            subTitle:{
-            	content:"Source: WorldClimate.com",
-            	css:{
-
-            	}
-            },
-            autoRender:false,
-            xLabels:{
-                // isShow:false
-            },
-			 xAxis: {
-                    isShow:false,
-			 		text:[
-			 		'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec']
-            },
-            series:[{
-            text: 'Tokyo',
-            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0]
-
-                    }, {
-                        text: 'New York',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0]
-
-                    }, {
-                        text: 'London',
-                        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0]
-
-                    }],
-            yAxis:{
-                 isShow:false,
-            	min:0
-            },
-            bars:{
-                barsRatio:0.8,
-                barRatio:0.6
-            },
-            legend:{
-                isShow:true,y:-10
-            },
-			tip:{
-				template:"{{text}} {{y}} mm",
-				alignX:"right",
-				css:{"border-color":"{COLOR}"},
-				offset:{
-					y:-10
-				}
-			}
-		});
-    barChart.render()
-    console.log(barChart)
+require("kg/kcharts/5.0.1/barchart/index",function(BarChart){
+	console.log(BarChart)
 	});
 
 </script>

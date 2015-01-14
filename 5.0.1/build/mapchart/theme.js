@@ -1,6 +1,6 @@
 define('kg/kcharts/5.0.1/mapchart/theme',[],function(require, exports, module) {
- ;define(function(require, exports, module) {
-    var COLOR_TPL = "{COLOR}";
+
+   var COLOR_TPL = "{COLOR}";
     return{
         "ks-chart-default": {
             title: {
@@ -86,6 +86,4 @@ define('kg/kcharts/5.0.1/mapchart/theme',[],function(require, exports, module) {
             }
         }
     }
-});
-
 });

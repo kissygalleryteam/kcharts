@@ -1,5 +1,5 @@
 define('kg/kcharts/5.0.1/icons/index',["util","node","base","dom","event-dom"],function(require, exports, module) {
- ;define(function(require,exports,module) {
+
   var Util = require("util"),
     Node = require("node"),
     Base = require("base"),
@@ -124,6 +124,4 @@ define('kg/kcharts/5.0.1/icons/index',["util","node","base","dom","event-dom"],f
   };
   Icons.BASIC = BASIC_SIZE;
   return Icons;
-});
-
 });

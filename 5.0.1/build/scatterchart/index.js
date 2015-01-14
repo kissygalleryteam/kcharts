@@ -1,9 +1,5 @@
 define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","kg/kcharts/5.0.1/tools/template/index","kg/kcharts/5.0.1/raphael/index","kg/kcharts/5.0.1/basechart/index","kg/kcharts/5.0.1/tools/color/index","kg/kcharts/5.0.1/tools/htmlpaper/index","kg/kcharts/5.0.1/legend/index","./theme","kg/kcharts/5.0.1/tools/touch/index","kg/kcharts/5.0.1/tip/index","kg/kcharts/5.0.1/animate/index","kg/kcharts/5.0.1/tools/graphtool/index","./cfg"],function(require, exports, module) {
- /**
- * @fileOverview KChart 1.3  scatterchart
- * @author huxiaoqi567@gmail.com
- */
-;define(function(require,exports,module) {
+
 	var Util = require("util"),
 		Node = require("node"),
 		Base = require("base"),
@@ -42,9 +38,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		},
-		/**
-			渲染
-		**/
+		
 		render: function() {
 			var self = this,
 				_cfg = self._cfg,
@@ -53,11 +47,11 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			if (!self._$ctnNode[0]) return;
 
 			BaseChart.prototype.dataFormat.call(self, self._cfg);
-			//清空所有节点
+			
 			self._$ctnNode.html("");
-			//统计渲染完成的数组
+			
 			self._finished = [];
-			//主题
+			
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
 			self._cfg = Util.mix(Util.clone(Util.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 			self.color = color = new ColorLib({
@@ -69,11 +63,11 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			for (var i in self._cfg.colors) {
 				color.setColor(self._cfg.colors[i]);
 			}
-			//获取矢量画布
+			
 			self.paper = Raphael(self._$ctnNode[0], _cfg.width, _cfg.height, {
 				"position": "absolute"
 			});
-			//渲染html画布
+			
 			self.htmlPaper = new HtmlPaper(self._$ctnNode, {
 				clsName: themeCls
 			});
@@ -83,17 +77,17 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			BaseChart.Common.drawTitle.call(null, this, themeCls);
 
 			BaseChart.Common.drawSubTitle.call(null, this, themeCls);
-			//渲染tip
+			
 			self.renderTip();
-			//画x轴上的平行线
+			
 			BaseChart.Common.drawGridsX.call(null, this);
 
 			BaseChart.Common.drawGridsY.call(null, this);
-			//画横轴
+			
 			BaseChart.Common.drawAxisX.call(null, this);
 
 			BaseChart.Common.drawAxisY.call(null, this);
-			//画横轴刻度
+			
 			BaseChart.Common.drawLabelsX.call(null, this);
 
 			BaseChart.Common.drawLabelsY.call(null, this);
@@ -103,7 +97,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			self.drawAllStocks();
 
 			self.renderLegend();
-			//事件层
+			
 			self.renderEvtLayout();
 
 			self.afterRender();
@@ -120,7 +114,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			}
 			return newAttrs;
 		},
-		//不同大小的圆形计算
+		
 		diffStocksSize: function() {
 			var self = this,
 				r = self._cfg.points['attr']['r'],
@@ -139,8 +133,8 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 				}
 				return;
 			}
-			//归一化之后 混入points 半径 定义最小半径 为 配置的半径 权重为1
-			// min = Math.min.apply(null,allData);
+			
+			
 
 			for (var i in self._points) {
 				var tmp = BaseChart.prototype.getArrayByKey.call(null, datas[i]['data'], 2);
@@ -150,7 +144,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 					}
 			}
 		},
-		//画圆点
+		
 		drawAllStocks: function() {
 			var self = this;
 			self._stocks = {};
@@ -175,7 +169,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			self._stocks[groupIndex]['points'] = self._points[groupIndex];
 			return stocks;
 		},
-		//画单个圆点
+		
 		drawStock: function(groupIndex, stockIndex,attrs) {
 			var self = this,
 				cfg = self._cfg,
@@ -224,7 +218,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			}
 			return;
 		},
-		//渲染tip
+		
 		renderTip: function() {
 			if (!this._cfg.tip.isShow) return;
 			var self = this,
@@ -245,7 +239,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			self.tip = new Tip(tipCfg);
 			return self.tip;
 		},
-		//渲染事件层
+		
 		renderEvtLayout: function() {
 			var self = this,
 				_cfg = self._cfg,
@@ -258,7 +252,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			if (!self._evtEls.paper) {
 				paper = self._evtEls.paper = new HtmlPaper(self._$ctnNode, {
 					clsName: evtLayoutCls,
-					prependTo: false, //appendTo
+					prependTo: false, 
 					width: ctn.width,
 					height: h,
 					left: ctn.tl.x,
@@ -292,16 +286,12 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 				self._evtEls._rects[i] = rects;
 			}
 		},
-		/**
-			清除事件代理层节点
-		**/
+		
 		clearEvtLayout: function() {
 			var self = this;
 			self._evtEls._rects = [];
 		},
-		/**
-			渲染legend
-		**/
+		
 		renderLegend: function() {
 			if (!this._cfg.legend.isShow) return;
 			var self = this,
@@ -309,7 +299,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 				container = (legendCfg.container && $(legendCfg.container)[0]) ? $(legendCfg.container) : self._$ctnNode;
 
 			var innerContainer = self._innerContainer;
-			var colors = self.color._colors, //legend icon 的颜色表，循环
+			var colors = self.color._colors, 
 				len = colors.length,
 				cfg = self._cfg,
 				series = self._cfg.series
@@ -323,11 +313,11 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 				return item;
 			});
 			var globalConfig = Util.merge({
-				// icontype:"circle",
-				// iconsize:10,
-				interval: 20, //legend之间的间隔
-				iconright: 5, //icon后面的空白
-				showicon: true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
+				
+				
+				interval: 20, 
+				iconright: 5, 
+				showicon: true 
 			}, cfg.legend.globalConfig);
 
 			self.legend = new Legend({
@@ -362,10 +352,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			}, this);
 			return self.legend;
 		},
-		/**
-			展示index组散点
-			@param index {number} 索引
-		**/
+		
 		showPoints: function(index) {
 			var self = this;
 			BaseChart.prototype.recoveryData.call(self, index);
@@ -381,10 +368,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			self.renderEvtLayout();
 			self.bindEvt();
 		},
-		/**
-			隐藏index组散点
-			@param index {number} 索引
-		**/
+		
 		hidePoints: function(index) {
 			var self = this;
 			BaseChart.prototype.removeData.call(self, index);
@@ -401,10 +385,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			self.renderEvtLayout();
 			self.bindEvt();
 		},
-		/**
-			移动除index外的其他点集
-			@param groupIndex {number} 索引
-		**/
+		
 		animateSiblingsPoints: function(groupIndex) {
 			var self = this,
 				stocks;
@@ -426,17 +407,17 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 				hoverAttr = Util.clone(self._cfg.points.hoverAttr);
 			Evt.detach(evtEls.paper.$paper, "mousemove");
 			Evt.on(evtEls.paper.$paper, "mousemove",function(e){
-				//mousemove代理
+				
 				self.delegateMouseMove(self.getOffset(e),function(groupIndex,pointIndex){
 					if (self._points[groupIndex][pointIndex].dataInfo) {
 						self.stockChange(groupIndex, pointIndex);
-						// 操作tip
+						
 						self._cfg.tip.isShow && self.tipHandler(groupIndex, pointIndex);
 					}
 
 				});
 			});
-			// 绑定画布mouseleave事件
+			
 			Evt.detach(evtEls.paper.$paper, "mouseleave");
 			Evt.on(evtEls.paper.$paper, "mouseleave", function(e) {
 				self.tip && self.tip.hide();
@@ -470,7 +451,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 		},
 		tipHandler: function(groupIndex, index) {
 			var self = this,
-				color = self.color.getColor(groupIndex)['DEFAULT'], //获取当前直线的填充色
+				color = self.color.getColor(groupIndex)['DEFAULT'], 
 				tip = self.tip,
 				_cfg = self._cfg,
 				tpl = _cfg.tip.template,
@@ -480,7 +461,7 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 
 			if (!tpl) return;
 			tipData = self._points[groupIndex][index].dataInfo;
-			//支持方法渲染
+			
 			if (Util.isFunction(tpl)) {
 				tip.setContent(tpl(tipData));
 			} else {
@@ -504,26 +485,19 @@ define('kg/kcharts/5.0.1/scatterchart/index',["util","node","base","event-dom","
 			var self = this;
 			self.fire("afterRender", self);
 		},
-		/*
-			TODO get htmlpaper
-			@return {object} HtmlPaper
-		*/
+		
 		getHtmlPaper: function() {
 			return this.htmlPaper;
 		},
-		/*
-			TODO get raphael paper
-			@return {object} Raphael
-		*/
+		
 		getRaphaelPaper: function() {
 			return this.paper;
 		},
-		//清空画布上的内容
+		
 		clear: function() {
 			this._$ctnNode.html("");
 		}
 	}
 
 	return BaseChart.extend(methods);
-});
 });

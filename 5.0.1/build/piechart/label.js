@@ -1,10 +1,10 @@
 define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(require, exports, module) {
- ;define(function(require, exports, module) {
+
   var Util = require("util"),
     Base = require("base"),
     Node = require("node"),
     D = require("dom");
-  // helpers
+  
   function distance(a, b) {
     var x1, x2, y1, y2;
     x1 = a[0], y1 = a[1], x2 = b[0], y2 = b[1];
@@ -40,7 +40,7 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
       }
       return iter(l1, l2, []);
     }
-    // end
+    
 
   var $detector
 
@@ -81,7 +81,7 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
       var el = this.get("el");
       var path = this.get("$path");
 
-      // 解绑事件
+      
       el.detach("click");
 
       el.remove();
@@ -89,9 +89,9 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
     }
   };
 
-  if (Base.extend) { // 1.4
+  if (Base.extend) { 
     Label = Base.extend(props)
-  } else { // 1.3
+  } else { 
     Label = function(cfg) {
       this.set(cfg);
       this.userConfig = cfg;
@@ -100,11 +100,7 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
     Util.extend(Label, Base, props);
   }
 
-  /**
-   * 分布策略：
-   * 自然分布
-   * 若空间不足，拓展空间
-   * */
+  
   var Labels;
   var props2 = {
     initializer: function() {
@@ -115,19 +111,19 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
       var paper = pie.get('paper'),
         container = pie.get('container'),
         count = $sectors.length,
-        paperHeight //画布高度
-        , pieHeight //饼图高度
-        , unitHeight //单条label的高度
-        , minLalebelHeight //排布label需要的最小高度
-        , fromY // 画label的上边界
-        , toY // 下边界
+        paperHeight 
+        , pieHeight 
+        , unitHeight 
+        , minLalebelHeight 
+        , fromY 
+        , toY 
         , xys = [],
         xysr = [],
         xysr2 = [],
         cx = pie.get('cx'),
         cy = pie.get('cy'),
         rs = pie.get('rs'),
-        paddingDonutSize1 = pie.get("padding") || 20 // label 和 pie 之间的距离
+        paddingDonutSize1 = pie.get("padding") || 20 
         ,
         paddingDonutSize2 = paddingDonutSize1 + 10,
         R, R1, R2, cos = Math.cos,
@@ -142,14 +138,14 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
 
       if (!$firstSector) return;
 
-      // bugfix:如果没有配置label，那么，"label"字段为空，获取到的unitHeight就为0
-      // 下面的for循环的步长为0,导致死循环
+      
+      
       unitHeight = blockSizeOf($firstSector.get("label")).height
-        // fix it：如果unitHeight为0,则返回
+        
       if (!unitHeight)
         return;
       R = Math.max.apply(Math, rs)
-        // 拓高label的展示区域
+        
       var extraHeight = pie.get("extraLabelHeight") || 0;
       R1 = R + paddingDonutSize1;
       R2 = R + paddingDonutSize2;
@@ -158,8 +154,8 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
       fromY = cy - R2 - extraHeight;
       toY = cy + R2 + extraHeight;
       for (fromY += unitHeight; fromY < toY - unitHeight; fromY += unitHeight) {
-        // x=a+rcosθ y=b+rsinθ
-        // (y-b)/r = sinθ
+        
+        
         var y = fromY;
         var rate = (y - cy) / R2;
         if (rate < -1) {
@@ -171,10 +167,10 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
         var x = cx + R2 * Math.cos(t);
         x = bool_left ? (2 * cx - x) : x;
         xys.push([x, y]);
-        // paper.circle(x,y,4);
-        // paper.circle(2*cx - x,y,4);
+        
+        
       }
-      // 若不足以放下所有的label，剔除比例较小的
+      
 
       if ($sectors.length > xys.length) {
         $sectors = $sectors.sort(function(a, b) {
@@ -188,8 +184,8 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
       $sectors = $sectors.sort(function(a, b) {
         var ay = a.get("middley"),
           by = b.get("middley")
-          // return [a.a, a.b] > [b.a, b.b] ? 1:-1;
-          // return  [ay,ay] < [by,by];
+          
+          
         return ay < by ? 1 : ay > by ? -1 : 0;
       });
 
@@ -198,14 +194,14 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
         var x = $sector.get("middlex"),
           y = $sector.get("middley"),
           theta = $sector.get("middleangle") * rad
-          // paper.circle(x12,y12,3);
+          
         var x12, y12;
         x12 = cx + R1 * Math.cos(-theta);
         y12 = cy + R1 * Math.sin(-theta);
         xysr2.push([x12, y12]);
 
         xysr.push([x, y]);
-        // paper.circle(x,y,2);
+        
       });
 
       xysr = xysr.reverse();
@@ -250,10 +246,10 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
         }
 
         if (bool_left) {
-          x3 = x23 - size.width - 3; //左边也修正下，否者线条和文字靠的太近了
+          x3 = x23 - size.width - 3; 
           y3 = y23 - size.height / 2;
         } else {
-          x3 = x23 + 5; //右边修正下，否者线条和文字靠的太近了
+          x3 = x23 + 5; 
           y3 = y23 - size.height / 2;
         }
 
@@ -271,7 +267,7 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
         var $el = labelInstance.get('el');
 
         var fn = function($el, $sector, labelInstance) {
-          // 往$sector上附加dom元素
+          
           $sector.$label = $el;
 
           $el.on('click', function(e) {
@@ -297,5 +293,4 @@ define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(r
   Labels = Base.extend(props2);
   Labels.getSizeOf = blockSizeOf
   return Labels;
-});
 });

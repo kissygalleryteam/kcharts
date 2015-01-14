@@ -1,7 +1,7 @@
 /**
  * sector数据处理
  * */
- ;define(function(require, exports, module) {
+ define(function(require, exports, module) {
 // Sector,Color,Raphael
   var Util = require("util"),
   Sector = require("kg/kcharts/5.0.1/piechart/sector"),

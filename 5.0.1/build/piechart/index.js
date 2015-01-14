@@ -1,5 +1,5 @@
 define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/animate/index","./label","kg/kcharts/5.0.1/raphael/index","kg/kcharts/5.0.1/tools/color/index","base","event-dom","node","dom","util"],function(require, exports, module) {
- ;define(function(require, exports, module) {
+
   var PieUtil = require("./util"),
     Sector = require("./sector"),
     Animate = require("kg/kcharts/5.0.1/animate/index"),
@@ -25,12 +25,12 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
     this.animate(framedata)
   }
 
-  // 调整cfg
+  
   function setupcfg(cfg) {
     var w = this.get("width"),
       h = this.get("height"),
       min = Math.min(w, h),
-      d, rpadding = cfg.rpadding //留给label
+      d, rpadding = cfg.rpadding 
     if (!cfg.rs) {
       if (!rpadding) {
         rpadding = 40;
@@ -43,7 +43,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
       }
       cfg.rs = [d / 2];
     }
-    //自动找圆心
+    
     if (!Util.isNumber(cfg.cx)) {
       cfg.cx = w / 2;
     }
@@ -51,17 +51,17 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
       cfg.cy = h / 2;
     }
 
-    //设置重绘频率
+    
     if (!Util.isNumber(cfg.repaintRate)) {
       cfg.repaintRate = 200;
     }
 
-    //如果要画面包圈
+    
     if (cfg.donut) {
       if (cfg.rs.length != 2) {
         cfg.donutSize || (cfg.donutSize = 30);
         if (cfg.donutSize > cfg.rs[0]) {
-          //设为半径的一半
+          
           cfg.donutSize = cfg.rs[0] / 2;
         }
         cfg.rs[1] = cfg.rs[0] - cfg.donutSize;
@@ -69,15 +69,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
     }
   }
 
-  /**
-   * @param cfg {Object}
-   * cfg.rpadding 留来画label的距离
-   * cfg.repaintRate {Number} 重绘频率
-   * cfg.donut {Bool} 是否为面包圈图
-   * cfg.donutSize {Number} 若为面包圈图，设置面包圈的尺寸
-   * cfg.initdeg {Number} 画扇形的起始位置，默认为90度
-   * cfg.gradient {Bool} 是否开启渐变，可以手动配置framedata.gradientcolor
-   * */
+  
   var init = function() {
     var container = $(this.get('renderTo'))[0],
       width = D.width(container),
@@ -97,7 +89,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
     })
 
     var cfg = this.userConfig;
-    // 若没有cx|cy|r，则算一个默认的出来
+    
     this._setupcfg(cfg);
 
     if (!Util.isArray(cfg.rs)) {
@@ -108,21 +100,21 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
 
     this.set(cfg);
 
-    // adjust animation cfg
+    
     this.adjustCfg();
-    // adjustData
+    
     this.adjustData();
-    // 有标题则显示标题
+    
     this.drawTitle();
     if (cfg.autoRender != false) {
       var that = this;
-      // 延迟渲染
+      
       setTimeout(function() {
         that.render();
       }, 0);
     }
 
-    // 渲染tip
+    
     var tipconfig = this.get("tip");
     if (tipconfig && tipconfig != false) {
       this.renderTip();
@@ -151,7 +143,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
     },
     _setupcfg: setupcfg,
     onafterrender: function() {
-      //只执行一次
+      
       if (this.legendrendered) return;
       this.legendrendered = true;
       var that = this,
@@ -188,16 +180,16 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
         S.use("kg/kcharts/5.0.1/legend/index", function(S, Legend) {
           var parts = buildparts();
           var dft = {
-            //legend需要的原始信息
+            
             paper: paper,
             container: container,
-            bbox: bbox, //图表主体的信息
-            iconAttrHook: function(index) { //每次绘制icon的时调用，返回icon的属性信息
+            bbox: bbox, 
+            iconAttrHook: function(index) { 
               return {
                 fill: parts[index].color
               }
             },
-            spanAttrHook: function(index) { //每次绘制“文本描述”的时候调用，返回span的样式
+            spanAttrHook: function(index) { 
               var color = Raphael.getRGB(parts[index].color);
               return {
                 color: color.hex
@@ -207,8 +199,8 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
           }
           config.globalConfig = S.merge({
             shape: "square",
-            interval: 20, //legend之间的间隔
-            iconright: 5 //icon后面的空白
+            interval: 20, 
+            iconright: 5 
           }, config.globalConfig);
           var legend = new Legend(S.merge(dft, config));
           that.set("legend", legend);
@@ -216,13 +208,13 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
         });
       }
     },
-    //调整动画的配置
+    
     adjustCfg: function() {
       var anim = this.get('anim'),
         that = this,
         _end = Util.isFunction(anim.endframe) && anim.endframe,
         lablecfg = that.get("label")
-        //若无动画配置则duration设置为0
+        
       anim || (anim = {
         duration: 0
       });
@@ -234,9 +226,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
         that.fire('afterRender');
       }
     },
-    /**
-     * 过滤函数
-     * */
+    
     adjustData: function() {
       var fn = this.get('filterfn')
       if (fn && Util.isFunction(fn)) {
@@ -261,14 +251,12 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
       var framedata = this.get('framedata')
       this.animate(framedata)
 
-      // 第一次绘制完成后，后面属性更改会重绘：避免一次一次批量属性修改造成多次重绘
+      
       var bufferedDraw = Util.buffer(render, this.get("repaintRate"), this);
       this.render = bufferedDraw;
       this.bindEvent();
     },
-    /**
-     * 调整饼图：隐藏部分扇形
-     * */
+    
     adjust: function() {
       var that = this,
         groups = this.get("groups").slice(0),
@@ -283,9 +271,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
       });
       this.animate(framedata);
     },
-    /**
-     * 自动调整r,cx,cy
-     * */
+    
     autoResize: function() {
       var con = this.get("container"),
         w = D.width(con),
@@ -298,7 +284,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
 
       cx1 = w / 2, cy1 = h / 2;
 
-      //考虑title带来的影响
+      
       var titlebbox = this.get("titlebbox")
       if (titlebbox) {
         cy1 += titlebbox.height;
@@ -327,7 +313,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
         d -= titlebbox.height;
       }
 
-      //如果要画面包圈
+      
       var drawDonut = this.get("donut"),
         donutSize = this.get("donutSize"),
         r0, r1
@@ -374,7 +360,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
           left = 0;
         } else if (align == "right") {
           left = w - size.width;
-        } else { //center
+        } else { 
           left = (w - size.width) / 2 + offset[0]
         }
         top = offset[1];
@@ -394,11 +380,9 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
         $title.appendTo(container);
       }
     },
-    /**
-     * 绘制外层label
-     * */
+    
     drawLabel: function() {
-      var leftSectors = [] // 最外层的
+      var leftSectors = [] 
         ,
         rightSectors = [],
         $sectors = this.get('$sectors'),
@@ -410,7 +394,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
           groupIndex = $sector.get("groupIndex"),
           isright = PieUtil.isRightAngel(ma),
           framedata = $sector.get("framedata")
-          //如果隐藏了，那么也不展示对应的label
+          
         if (!framedata.hide) {
           if (Util.indexOf(groupLength - 1, groupIndex) > -1) {
             if (isright) {
@@ -444,9 +428,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
 
       this.set("$labels", [].concat($leftLables, $rightLables));
     },
-    /**
-     * 绘制内部label，需配置
-     * */
+    
     drawSetLabel: function() {},
     getbbox: function() {
       var bbox;
@@ -469,11 +451,9 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
       };
       return bbox;
     },
-    /**
-     * afterRender事件后渲染
-     * */
+    
     renderTip: function(tipconfig) {
-      // 渲染过后就不再重复渲染
+      
       if (this.tip)
         return
 
@@ -481,19 +461,19 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
       if (!tipconfig)
         return;
 
-      // {
-      //   x: ctn.tl.x,
-      //   y: ctn.tl.y,
-      //   width: ctn.width,
-      //   height: ctn.height
-      // }
+      
+      
+      
+      
+      
+      
 
       var self = this;
       var container = self.get("container");
 
       S.use("kg/kcharts/5.0.1/tip/index", function(S, Tip) {
         var bbox = self.getbbox();
-        // 修正bbox字段
+        
         bbox.x = bbox.left;
         bbox.y = bbox.top;
 
@@ -509,11 +489,11 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
         var tip = new Tip(tipCfg);
         self.tip = tip;
         self.on("mouseover", function(e) {
-          // 移动tip
+          
           var sector = e.sector;
           var x = sector.get("middlex"),
             y = sector.get("middley"),
-            data = sector.get("framedata"), // 即配置的数据
+            data = sector.get("framedata"), 
             label = data.label,
             groupIndex = sector.get("groupIndex"),
             donutIndex = sector.get("donutIndex"),
@@ -521,7 +501,7 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
 
           var color = sector.get("color");
 
-          var size = Labels.getSizeOf(label); // label的尺寸
+          var size = Labels.getSizeOf(label); 
 
           percent = (percent * 100).toFixed(2) + "%";
           if (Util.isFunction(tipconfig.template)) {
@@ -571,12 +551,12 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
     getConfig: function(name) {
       return name && this.get(name);
     },
-    // 添加和line/bar统一更新数据/配置的机制
+    
     setConfig: function(o) {
       if (o) {
-        // 兼容以前的写法
+        
         if (o.series) {
-          // this.set("series",o.data);
+          
           this.set("data", o.series);
           delete o.series;
         }
@@ -599,5 +579,4 @@ define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/
   var Pie = Base.extend(methods);
   Pie.getSizeOf = Labels.getSizeOf
   return Pie;
-});
 });

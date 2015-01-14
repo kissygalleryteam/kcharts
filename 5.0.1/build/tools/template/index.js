@@ -1,30 +1,26 @@
 define('kg/kcharts/5.0.1/tools/template/index',["util"],function(require, exports, module) {
- /**
- * @fileOverview KISSY Template Engine
- * @author yyfrankyy@gmail.com
- */
-;define(function (require,exports,module) {
+
 
     var Util = require("util");
 
-    var // Template Cache
+    var 
         templateCache = {},
 
-    // start/end tag mark
+    
         tagStartEnd = {
             '#': 'start',
             '@': 'start',
             '/': 'end'
         },
 
-    // static string
+    
         KS_TEMPL_STAT_PARAM = 'KS_TEMPL_STAT_PARAM',
         KS_TEMPL_STAT_PARAM_REG = new RegExp(KS_TEMPL_STAT_PARAM, "g"),
         KS_TEMPL = 'KS_TEMPL',
         KS_DATA = 'KS_DATA_',
         KS_AS = 'as',
 
-    // note : double quote for generated code
+    
         PREFIX = '");',
         SUFFIX = KS_TEMPL + '.push("',
 
@@ -40,12 +36,12 @@ define('kg/kcharts/5.0.1/tools/template/index',["util"],function(require, export
             PARSER_RENDER_ERROR + '" + e.message]}};return ' +
             KS_TEMPL + '.join("");',
 
-    // restore double quote in logic template variable
+    
         restoreQuote = function (str) {
             return str.replace(/\\"/g, '"');
         },
 
-    // escape double quote in template
+    
         escapeQuote = function (str) {
             return str.replace(/"/g, '\\"');
         },
@@ -222,4 +218,3 @@ define('kg/kcharts/5.0.1/tools/template/index',["util"],function(require, export
  *      - fix escape by escape
  *      - expect(T('{{#if a=="a"}}{{b}}\\"{{/if}}').render({a:"a",b:"b"})).toBe('b\\"');
  */
-});

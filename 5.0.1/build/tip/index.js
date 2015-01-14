@@ -1,9 +1,5 @@
 define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tools/template/index"],function(require, exports, module) {
- /**
- * @fileOverview KChart  tip
- * @author huxiaoqi567@gmail.com
- */
-;define(function(require,exports,module) {
+
   var Util = require("util"),
     Node = require("node"),
     Base = require("base"),
@@ -20,7 +16,7 @@ define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tool
               clsName:"ks-chart-default",
               autoRender:true,
               isVisable:false,
-              boundry:{        //tip的移动区域
+              boundry:{        
                 x:0,
                 y:0,
                 width:0,
@@ -57,8 +53,8 @@ define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tool
                 x:0,
                 y:0
               },
-              alignX:"left", //left center right
-              alignY:"top"    //top middle bottom
+              alignX:"left", 
+              alignY:"top"    
             };
 
         self._events = {
@@ -165,9 +161,9 @@ define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tool
                 anim = _cfg.anim,
                 now = new Date().getTime();
             if(self._prevtime){
-                // S.log(now - self._prevtime)
+                
                if(now - self._prevtime < 100){
-                    //迅速移动
+                    
                     self.animateFast(x,y,callback);
                }
             }
@@ -192,7 +188,7 @@ define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tool
                     callback && callback();
                 });
         },
-        //快速移动
+        
         animateFast:function(x,y,callback){
             var self = this,
                 px = self.get("x"),
@@ -286,7 +282,7 @@ define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tool
                     by = boundry.y || 0,
                     w = boundry.width,
                     h = boundry.height;
-                //躲闪
+                
                 if(marginTop < by){
                     marginTop = y -(-Math.abs(offset.y));
                 }else if(marginTop > by + h - height){
@@ -333,6 +329,4 @@ define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tool
     };
 
     return Base.extend(methods);
-});
-
 });

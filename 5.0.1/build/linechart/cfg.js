@@ -1,5 +1,5 @@
 define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
- ;define(function(require,exports,module) {
+
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";
@@ -25,7 +25,7 @@ define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 					},
 					isShow: true
 				},
-				//圆形的点 r 为半径
+				
 				points: {
 					isShow:true,
 					attr: {
@@ -49,7 +49,7 @@ define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 						"color": "#666",
 						"font-size": "12px",
 						"white-space": "nowrap",
-						"position": "absolute" //修复ie7被遮住的Bug
+						"position": "absolute" 
 					}
 				},
 				yLabels: {
@@ -58,17 +58,17 @@ define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 						"color": "#666",
 						"font-size": "12px",
 						"white-space": "nowrap",
-						"position": "absolute" //修复ie7被遮住的Bug
+						"position": "absolute" 
 					}
 				},
-				//横轴
+				
 				xAxis: {
 					isShow: true,
 					css: {
 						zIndex: 10
 					}
 				},
-				//纵轴
+				
 				yAxis: {
 					isShow: true,
 					css: {
@@ -76,17 +76,17 @@ define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 					},
 					num: 5
 				},
-				//x轴上纵向网格
+				
 				xGrids: {
 					isShow: true,
 					css: {}
 				},
-				//y轴上横向网格
+				
 				yGrids: {
 					isShow: true,
 					css: {}
 				},
-				//背景区域
+				
 				areas: {
 					isShow:false,
 					attr: {
@@ -95,7 +95,7 @@ define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 						"opacity": 0.5
 					}
 				},
-				//折线
+				
 				line: {
 					isShow: true,
 					attr: {
@@ -105,7 +105,7 @@ define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 						"stroke-width": "4px"
 					}
 				},
-				//点的对齐线
+				
 				pointLine: {
 					isShow: false,
 					css: {}
@@ -128,5 +128,4 @@ define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 				}
 
 			};
-});
 });

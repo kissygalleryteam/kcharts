@@ -1,5 +1,5 @@
 // steel from http://svenbieder.com/thermometer-gauge/
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
   var Base = require('base'),
       Node = require('node'),
       Util = require('util'),

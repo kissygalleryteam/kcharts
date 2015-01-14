@@ -2,7 +2,7 @@
  * 仪表盘
  * @author cookieu@gmail.com
  */
-;define(function(require, exports, module) {
+define(function(require, exports, module) {
   var Raphael = require('../raphael/index'),
     Pointer = require('./pointer'),
     PicturePointer = require('./pointer-pic'),

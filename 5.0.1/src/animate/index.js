@@ -1,5 +1,5 @@
 // -*- coding: utf-8; -*-
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
   var Anim = require("anim"),
       Util = require("util"),
       Easing = require("./easing");

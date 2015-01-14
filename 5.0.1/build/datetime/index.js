@@ -1,9 +1,5 @@
 define('kg/kcharts/5.0.1/datetime/index',["util","node","base","event-dom","kg/kcharts/5.0.1/tools/template/index","kg/kcharts/5.0.1/raphael/index","kg/kcharts/5.0.1/basechart/index","kg/kcharts/5.0.1/linechart/index","kg/kcharts/5.0.1/tools/color/index","kg/kcharts/5.0.1/tools/htmlpaper/index","kg/kcharts/5.0.1/legend/index","./theme","kg/kcharts/5.0.1/tools/touch/index","kg/kcharts/5.0.1/tip/index","kg/kcharts/5.0.1/animate/index","kg/kcharts/5.0.1/tools/graphtool/index","./cfg"],function(require, exports, module) {
- /**
- * @fileOverview KChart 1.3  datetime
- * @author huxiaoqi567@gmail.com
- */
- ;define(function(require,exports,module) {
+
 	var Util = require("util"),
 		Node = require("node"),
 		Base = require("base"),
@@ -29,7 +25,7 @@ define('kg/kcharts/5.0.1/datetime/index',["util","node","base","event-dom","kg/k
 		evtLayoutAreasCls = evtLayoutCls + "-areas",
 		evtLayoutRectsCls = evtLayoutCls + "-rects",
 		COLOR_TPL = "{COLOR}",
-		//点的类型集合
+		
 		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"],
 		color;
 
@@ -46,5 +42,4 @@ define('kg/kcharts/5.0.1/datetime/index',["util","node","base","event-dom","kg/k
 	}
 
 	return LineChart.extend(methods);
-});
 });

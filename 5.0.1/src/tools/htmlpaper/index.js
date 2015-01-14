@@ -1,7 +1,7 @@
 /**
 	基于html 画图形
 **/
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
 
 	var Util = require("util"),
 		Node = require("node");

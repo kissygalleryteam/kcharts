@@ -1,4 +1,4 @@
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
 	var Util = require("util"),
 		Template = require("kg/kcharts/5.0.1/tools/template/index");
 

@@ -1,4 +1,4 @@
-;define(function(require, exports, module) {
+define(function(require, exports, module) {
   var PieUtil = require("./util"),
     Sector = require("./sector"),
     Animate = require("kg/kcharts/5.0.1/animate/index"),

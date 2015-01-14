@@ -2,7 +2,7 @@
  * 矢量画刻度
  * @author cookieu@gmail.com
  * */
-;define(function(require, exports, module) {
+define(function(require, exports, module) {
   var Util = require('util'),
       Base = require('base');
    var methods = {

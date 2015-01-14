@@ -1,6 +1,5 @@
 define('kg/kcharts/5.0.1/animate/index',["anim","util","./easing"],function(require, exports, module) {
- // -*- coding: utf-8; -*-
-;define(function(require,exports,module) {
+
   var Anim = require("anim"),
       Util = require("util"),
       Easing = require("./easing");
@@ -35,19 +34,19 @@ define('kg/kcharts/5.0.1/animate/index',["anim","util","./easing"],function(requ
       , fx = Easing[opts.easing]
       , frame = opts.frame || S.noop
       , props = {}
-      , ended = false // 动画是否已经结束
+      , ended = false 
       , run
       , _duration = opts.duration
       , timer
 
-    // 用于resume的数据
-    // |---a----|_b__|--c--|
+    
+    
     var a = 0
       , b = 0
       , stopTime
       , resumeable = false;
 
-    // do some clean
+    
     for(var x in fromProps){
       if(!toProps[x] && toProps[x] != 0){
         delete fromProps[x]
@@ -162,5 +161,4 @@ define('kg/kcharts/5.0.1/animate/index',["anim","util","./easing"],function(requ
     return anim;
   }
   return Animate;
-});
 });

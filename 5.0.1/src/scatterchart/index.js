@@ -2,7 +2,7 @@
  * @fileOverview KChart 1.3  scatterchart
  * @author huxiaoqi567@gmail.com
  */
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
 	var Util = require("util"),
 		Node = require("node"),
 		Base = require("base"),

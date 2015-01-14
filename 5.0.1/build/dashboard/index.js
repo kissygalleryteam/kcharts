@@ -1,9 +1,5 @@
 define('kg/kcharts/5.0.1/dashboard/index',["../raphael/index","./pointer","./pointer-pic","./dashboard-ticks","util","base","dom","node","event-dom"],function(require, exports, module) {
- /**
- * 仪表盘
- * @author cookieu@gmail.com
- */
-;define(function(require, exports, module) {
+
   var Raphael = require('../raphael/index'),
     Pointer = require('./pointer'),
     PicturePointer = require('./pointer-pic'),
@@ -91,10 +87,10 @@ define('kg/kcharts/5.0.1/dashboard/index',["../raphael/index","./pointer","./poi
       this.background = background
     },
     drawPicturePointer: function(cfg) {
-      var cx // 表盘中心x
-        , cy // 表盘中心y
-        , x0 // 指针的中心点x
-        , y0 // 指针的中心点y
+      var cx 
+        , cy 
+        , x0 
+        , y0 
 
       cx = this.get('cx')
       cy = this.get('cy')
@@ -141,5 +137,4 @@ define('kg/kcharts/5.0.1/dashboard/index',["../raphael/index","./pointer","./poi
   }
 
   return Base.extend(methods);
-});
 });

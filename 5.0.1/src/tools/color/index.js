@@ -2,7 +2,7 @@
  * @fileOverview KCharts  通用颜色库
  * @author huxiaoqi567@gmail.com
  */
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
 
 	var Util = require("util");
 

@@ -1,9 +1,5 @@
 define('kg/kcharts/5.0.1/tools/color/index',["util"],function(require, exports, module) {
- /**
- * @fileOverview KCharts  通用颜色库
- * @author huxiaoqi567@gmail.com
- */
-;define(function(require,exports,module) {
+
 
 	var Util = require("util");
 
@@ -11,7 +7,7 @@ define('kg/kcharts/5.0.1/tools/color/index',["util"],function(require, exports, 
 		this.init(cfg);
 	};
 
-	//see http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color
+	
 	function shadeColor(color, porcent) {
 		var R = parseInt(color.substring(1, 3), 16)
 		var G = parseInt(color.substring(3, 5), 16)
@@ -138,7 +134,7 @@ define('kg/kcharts/5.0.1/tools/color/index',["util"],function(require, exports, 
 		getColor: function(index) {
 			return this._colors[index % this._colors['length']];
 		},
-		//获取一个区间的色组
+		
 		getColors: function() {
 			var start = 0,
 				self = this,
@@ -159,5 +155,4 @@ define('kg/kcharts/5.0.1/tools/color/index',["util"],function(require, exports, 
 
 	return Color;
 
-});
 });

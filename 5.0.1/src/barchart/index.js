@@ -5,7 +5,7 @@
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
 
 	var Util = require("util"),
 		Node = require("node"),

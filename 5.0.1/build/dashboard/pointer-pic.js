@@ -1,9 +1,5 @@
 define('kg/kcharts/5.0.1/dashboard/pointer-pic',["util","./pointer"],function(require, exports, module) {
- /**
- * 指针
- * @author cookieu@gmail.com
- * */
-;define(function(require, exports, module) {
+
 
   var Util = require('util'),
     Pointer = require('./pointer');
@@ -37,6 +33,4 @@ define('kg/kcharts/5.0.1/dashboard/pointer-pic',["util","./pointer"],function(re
     }
   })
   return PicturePointer
-});
-
 });

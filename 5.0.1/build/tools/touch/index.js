@@ -1,9 +1,5 @@
 define('kg/kcharts/5.0.1/tools/touch/index',["ua"],function(require, exports, module) {
- /*
-  touch 事件的
-  note:change touch event to mouse event
-*/
-;define(function(require,exports,module) {
+
   var UA = require("ua");
   if(UA.ie) return;
   var touchHandled,touchmove=false;
@@ -16,14 +12,14 @@ define('kg/kcharts/5.0.1/tools/touch/index',["ua"],function(require, exports, mo
           first = touches[0],
           simulatedEvent = document.createEvent('MouseEvent');
 
-      //event.initMouseEvent(type, canBubble, cancelable, view,
-      //               detail, screenX, screenY, clientX, clientY,
-      //               ctrlKey, altKey, shiftKey, metaKey,
-      //               button, relatedTarget);
+      
+      
+      
+      
       simulatedEvent.initMouseEvent(type, true, true, window, 1,
                                 first.screenX, first.screenY,
                                 first.clientX, first.clientY, false,
-                                false, false, false, 0/*left*/, null);
+                                false, false, false, 0, null);
 
       event.target.dispatchEvent(simulatedEvent);
 
@@ -73,5 +69,4 @@ define('kg/kcharts/5.0.1/tools/touch/index',["ua"],function(require, exports, mo
    document.addEventListener("touchstart", _touchstart, true);
    document.addEventListener("touchmove", _touchmove, true);
    document.addEventListener("touchend", _touchend, true);
-});
 });

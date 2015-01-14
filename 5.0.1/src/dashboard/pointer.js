@@ -3,7 +3,7 @@
  * 指针
  * @author cookieu@gmail.com
  * */
-;define(function(require, exports, module) {
+define(function(require, exports, module) {
   var Base = require('base'),
       Util = require('util');
    var methods = {

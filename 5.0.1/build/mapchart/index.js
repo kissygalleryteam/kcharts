@@ -1,5 +1,5 @@
 define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua","kg/kcharts/5.0.1/raphael/index","./theme","./mapdata"],function(require, exports, module) {
- ;define(function(require, exports, module) {
+
 
     var  Node = require('node'),
         Event = require('event-dom'),
@@ -72,7 +72,7 @@ define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua",
         render: function() {
             var self = this,
                 userConfig = self.userConfig;
-            //初始化paper等
+            
             self.initContainer();
             self.initPaper();
             self.proceedSeries();
@@ -218,7 +218,7 @@ define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua",
                     mapscale = MapData.mapScale;
 
                 !Util.isEmptyObject(self.areaList) && self.areaList[index].css(userConfig.areaText.css);
-                // transform bug
+                
                 var attr = path.def,
                     defAr = path.attr();
                 for (var i in attr) {
@@ -274,7 +274,7 @@ define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua",
                 current = index;
             }
 
-            // 有其他参数
+            
             function move(ev) {
                 self.isInPaper = true;
                 var index = this.index,
@@ -304,7 +304,7 @@ define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua",
                 self.isInPaper = next && (typeof next.className == 'string') && (next.className.indexOf(index) != -1);
                 if (!self.isInPaper) {
                     !Util.isEmptyObject(self.areaList) && self.areaList[index].css(userConfig.areaText.css);
-                    // transform bug
+                    
                     var attr = this.def,
                         defAr = this.attr();
                     for (var i in attr) {
@@ -455,7 +455,7 @@ define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua",
                     x: x + innerWidth,
                     y: y + height
                 };
-            //内部容器的信息
+            
             self._innerContainer = {
                 x: x,
                 y: y,
@@ -488,7 +488,7 @@ define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua",
                 };
             });
 
-            //省会城市
+            
             Util.each(o.city, function(item, i) {
                 var x = parseInt(item.x * w),
                     y = parseInt(item.y * h);
@@ -611,5 +611,4 @@ define('kg/kcharts/5.0.1/mapchart/index',["node","event-dom","util","base","ua",
         }
     });
     return MapChart;
-});
 });

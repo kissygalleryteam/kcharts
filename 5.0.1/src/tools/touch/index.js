@@ -2,7 +2,7 @@
   touch 事件的
   note:change touch event to mouse event
 */
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
   var UA = require("ua");
   if(UA.ie) return;
   var touchHandled,touchmove=false;

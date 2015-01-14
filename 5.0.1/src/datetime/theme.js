@@ -1,4 +1,4 @@
-;define(function(require,exports,module) {
+define(function(require,exports,module) {
 	var COLOR_TPL = "{COLOR}";
 
 	var themeCfg = {

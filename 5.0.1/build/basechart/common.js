@@ -1,5 +1,5 @@
 define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/template/index"],function(require, exports, module) {
- ;define(function(require,exports,module) {
+
 	var Util = require("util"),
 		Template = require("kg/kcharts/5.0.1/tools/template/index");
 
@@ -9,7 +9,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 			cls = themeCls + "-title",
 			_cfg = chart._cfg,
 			ctn = chart.getInnerContainer(),
-			//高度占 60%
+			
 			h = ctn.y * 0.6;
 		chart._title = paper.rect(ctn.x, 0, ctn.width, h).addClass(cls).css(Util.mix({
 			"line-height": h + "px"
@@ -22,7 +22,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 			cls = themeCls + "-subtitle",
 			_cfg = chart._cfg,
 			ctn = chart.getInnerContainer(),
-			//高度占 40%
+			
 			h = ctn.y * 0.4;
 		chart._subTitle = paper.rect(ctn.x, ctn.y * 0.6, ctn.width, h).addClass(cls).css(Util.mix({
 			"line-height": h + "px"
@@ -201,7 +201,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 
 	function drawLabelsX(chart) {
 		if (!chart._cfg.xLabels.isShow) return;
-		//画x轴刻度线
+		
 		for (var i in chart._pointsX) {
 			chart._labelX[i] = {
 				0: drawLabelX(chart, i, chart._pointsX[i].number),
@@ -211,7 +211,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 			};
 		}
 	}
-	//横轴标注
+	
 	function drawLabelX(chart, index, text) {
 		if (!chart._cfg.xLabels.isShow) return;
 		var paper = chart.htmlPaper,
@@ -236,7 +236,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 			return lbl;
 		}
 	}
-	//纵轴标注
+	
 	function drawLabelY(chart, index, text) {
 		if (!chart._cfg.yLabels.isShow || !text) return;
 		var paper = chart.htmlPaper,
@@ -258,12 +258,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 		}
 		return lbl;
 	}
-	/*
-			网格和label的动画
-			1.将刻度值相同的进行动画
-			2.新产生刻度的渐入
-			3.旧刻度的渐出
-		*/
+	
 	function animateGridsAndLabels(chart) {
 		var cfg = chart._cfg,
 			zoomType = cfg.zoomType,
@@ -272,15 +267,15 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 			ctn = chart.getInnerContainer(),
 			duration = 0.5,
 			easing = "easeout",
-			//存放动画过了的刻度
+			
 			animatedCoordsY = [],
 			animatedCoordsX = [],
 			destroyedNodesY = [],
 			destroyedNodesX = [],
-			//创建 刻度数组
+			
 			coordsY = [],
 			coordsX = [];
-		//通过刻度找点位置
+		
 		var getPointByNum = function(num, points, animatedCoords) {
 			for (var i in points) {
 				if (num === points[i]['number']) {
@@ -289,15 +284,15 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 				}
 			}
 		}
-		//判断上下移动的方向 返回位置
+		
 		var judgeDirect2Move = function(point) {
 			if (!point) return;
 			var spacing = Math.min.apply(null, [cfg.canvasAttr.x, cfg.canvasAttr.y]) / 2;
-			//垂直中点
+			
 			var middle = ctn.y + ctn.height / 2;
-			//水平重点
+			
 			var center = ctn.x + ctn.width / 2;
-			//判断zoomType
+			
 			switch (zoomType) {
 				case "x":
 					return {
@@ -359,7 +354,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 					destroyedNodes[i].remove();
 				}
 			}
-			//动画
+			
 			for (var i = 0; i < len; i++) {
 				(function(i) {
 					var num = chart[_label][i] ? chart[_label][i]['num'] : chart[_grids][i]['num'];
@@ -376,7 +371,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 							grid: chart[_grids][i] && chart[_grids][i][0] && chart[_grids][i][0].stop().animate(animAttrs, duration, easing)
 						});
 					} else {
-						//渐隐（两侧）
+						
 						var animAttrs = zoomName == "Y" ? {
 							top: chart[_label][i] && judgeDirect2Move(chart[_label][i])['y'] + "px",
 							opacity: 0
@@ -390,7 +385,7 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 				})(i)
 			}
 
-			//两侧移入
+			
 			for (var i in points) {
 				if (!isInArray(points[i]['number'], animatedCoords)) {
 					var margin = zoomName == "Y" ? judgeDirect2Move(points[i])['y'] + "px" : judgeDirect2Move(points[i])['x'] + "px";
@@ -429,14 +424,14 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 
 				}
 			}
-			//排序
+			
 			Array.prototype.sort.call(coords, function(a, b) {
 				return a.num - b.num
 			});
 			callback();
 		}
 	}
-	//获取有效的点数目
+	
 	function getRealPointsNum(points) {
 		var j = 0;
 		for (var i in points) {
@@ -447,15 +442,13 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 		return j;
 	}
 
-	/**
-			TODO 获取直线的路径
-		**/
+	
 	function getLinePath(chart, points) {
 		var path = "",
 			ctnY = chart._innerContainer.bl.y,
 			len = getRealPointsNum(points),
 			start = 0;
-		//找出起始点
+		
 		if (!points) return "";
 
 		start = (function() {
@@ -467,12 +460,12 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 		})();
 
 		path += "M" + points[start]['x'] + "," + points[start]['y'];
-		//当只有2个点的时候 则用直线绘制
+		
 		if (chart._cfg.lineType == "arc" && len > 2) {
 			path += " R";
 			for (var i = start + 1, len = points.length; i < len; i++)
 				if (points[i]['x'] && points[i]['y']) {
-					//贝塞尔曲线
+					
 					path += points[i]['x'] + "," + points[i]['y'] + " ";
 				}
 		} else {
@@ -511,5 +504,4 @@ define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/templ
 		getLinePath: getLinePath,
 		isInArray: isInArray
 	};
-});
 });

@@ -1,5 +1,5 @@
 define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","kg/kcharts/5.0.1/raphael/index","kg/kcharts/5.0.1/legend/index"],function(require, exports, module) {
- ;define(function(require,exports,module){
+
 
   var Util = require("util"),
       Base = require("base"),
@@ -17,11 +17,11 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
       filter = Util.filter,
       merge = Util.merge
 
-  // Gets a position on a radar line.
+  
   function lined_on( origin, base, bias){
     return origin + (base - origin) * bias;
   };
-  // Gets SVG path string for a group of scores.
+  
   function path_string( center, points, scores){
     var vertex = [];
     for( var i = 0; i < points.length; i++){
@@ -68,7 +68,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
     });
   }
 
-   //==================== tools end ====================
+   
 
   var anim = {
     easing:"linear",
@@ -99,19 +99,19 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
        this.render(cfg)
      },
      dochk:function(cfg){
-      //设置多边形的边
+      
       var size = cfg.labels.length;
       var w = D.width(this.get("container"));
       var h = D.height(this.get("container"));
       this.set("sides",size)
-      //如果没有甚至cx,cy，自动设置
+      
       if(cfg.cx == undefined){
         cfg.cx = w/2;
       }
       if(cfg.cy == undefined){
         cfg.cy = h/2;
       }
-      //没有设置max，自动寻找
+      
       var groups = this.get("scoreGroups");
       if(groups[0] && groups[0].scores){
         var nums = [] ;
@@ -121,10 +121,10 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
         var max = Math.max.apply(Math,nums);
         cfg.max = max;
       }
-      //没有r，自动设定一个
+      
       if(cfg.r == undefined){
         var min = Math.min.apply(Math,[w,h]);
-        cfg.r = min/2 - 30;//预留给label的
+        cfg.r = min/2 - 30;
         if(cfg.r < 0){
           cfg.r = min/2;
         }
@@ -135,7 +135,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
       var pathstring = polygon(points);
       return paper.path(pathstring);
     },
-    //多边形框架
+    
     drawFrame:function(points){
       var path = this.drawPolygon(points).attr({"stroke":"#777"});
       this.set("framepath",path);
@@ -158,7 +158,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
       };
       return merge(default_draw_options,option);
     },
-    //绘制多边形对比曲线
+    
     drawGroup:function(scores,points,opts){
       var config = this.get("config")
         , x,y
@@ -195,7 +195,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
         this.set("pts",circles);
       }
     },
-    //获取多边形的顶点
+    
     getPoints:function(){
       var sides = this.get("sides")
         , config = this.get("config")
@@ -216,7 +216,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
       }
       return points;
     },
-    //获取radar的主体
+    
     getBBox:function(){
       var r = this.get("r"),
           w = r*2,
@@ -231,16 +231,16 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
         top:cy - h/2
       }
     },
-    // legend
+    
     drawLegend:function(lineprops){
       var con = this.get("container")
         , bbox = this.getBBox()
         , legend = this.get("legend") || {}
 
       var globalConfig = merge({
-        interval:20,//legend之间的间隔
-        iconright:5,//icon后面的空白
-        showicon:true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
+        interval:20,
+        iconright:5,
+        showicon:true 
       },legend.globalConfig)
 
       delete legend.globalConfig;
@@ -275,23 +275,23 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
       },this);
 
       this.set("legend",$legend);
-      // old legend
-      // return;
-      // var paper = this.get("paper")
-      //   , config = this.get("config")
-      //   , cx = config.cx
-      //   , cy = config.cy
-      //   , r = config.r
-      //   , y0 = cy + r
+      
+      
+      
+      
+      
+      
+      
+      
 
-      // var x1 = cx - 50
-      //   , y1 = y0 + 30 + 20*i;
-      // var x2 = cx
-      //   , y2 = y1;
+      
+      
+      
+      
 
-      // var line = paper.path("M " + x1 + " " + y1 + " L " + x2 + " " + y2).attr(opts['lines']);
-      // var point = paper.circle(x1,y1,opts['points']['size']).attr(opts['points']);
-      // var text = paper.text( x2+10, y2, title).attr(opts['text']);
+      
+      
+      
     },
     hideLine:function(i){
       var lines = this.get("lines")
@@ -329,7 +329,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
         var text = paper.text( x, y, label).attr(merge(opts['text'],{'text-anchor': anchor }));
       }
     },
-    //中心发散的刻度尺
+    
     drawMeasureAndRuler:function(points){
       var paper = this.get("paper")
         , config = this.get("config")
@@ -338,7 +338,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
         , x,y
         , x1,y1
         , x2,y2
-      // Draws measures of the chart
+      
       var measures=[], rulers=[];
       for (var i = 0; i < points.length; i++) {
         x = points[i].x, y = points[i].y;
@@ -364,22 +364,8 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
         for (var j=0; j<group.scores.length; j++)
           scores.push(group.scores[j] / max_score);
       }
-      //  移除对下面这种配置方式的支持
-      /*
-	  scoreGroups:[
-        { title: "Real Madrid C.F.",
-          offense: 8,
-          defense: 9,
-          technique: 7,
-          strategy: 9,
-          physicality: 7,
-          mentality: 6,
-          draw_options: {
-            lines: {'stroke-width':'2', 'stroke':'#39b549','stroke-dasharray':'- '},
-            points: {'fill':'#39b549','stroke-width':'0',size:5}
-          }
-        }]
-       */
+      
+      
       else {
         for(var j=0; j<labels.length; j++) {
           var value = group[labels[j]] || group[labels[j].toLowerCase().replace(" ","_")];
@@ -410,7 +396,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
       this.drawMeasureAndRuler(points);
       this.drawFrame(points);
 
-      //绘制过了
+      
       if(this.get("lines")){
         var pathstring = "";
         var pss = [];
@@ -447,7 +433,7 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
         });
       }else{
         var legendprops = [];
-        // group and legend
+        
         for (var i=0; i<score_groups.length; i++){
           var scores = this.getScoreFromGroup(score_groups[i]);
           var title = score_groups[i].title;
@@ -466,11 +452,4 @@ define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","k
   }
 
   return Base.extend(methods);
-});
-/**
- * refs:
- * https://github.com/jsoma/raphael-radar.git
- * TODO:
- * 配置不要放在config对象中
- * */
 });
