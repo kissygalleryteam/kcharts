@@ -3,7 +3,7 @@ define(function(require,exports,module) {
   var Base = require('base'),
       Node = require('node'),
       Util = require('util'),
-      Raphael = require("kg/kcharts/5.0.0/raphael/index");
+      Raphael = require("kg/kcharts/5.0.1/raphael/index");
   var Thermometer  = Base.extend({
     initializer:function(){
     var cfg = this.userConfig;

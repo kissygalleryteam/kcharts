@@ -29,17 +29,17 @@ define(function(require,exports,module) {
 					isShow:true,
 					attr: {
 						type: "circle",
-						stroke: "#fff",
+						fill: "#fff",
 						"r": 4,
 						"stroke-width": 1.5,
-						"fill": COLOR_TPL
+						stroke: COLOR_TPL
 					},
 					hoverAttr: {
 						type: "circle",
-						stroke: "#fff",
+						fill: "#fff",
 						"r": 5,
-						"fill": COLOR_TPL,
-						"stroke-width": 0
+						stroke: COLOR_TPL,
+						"stroke-width": 1
 					}
 				},
 				xLabels: {
@@ -127,4 +127,4 @@ define(function(require,exports,module) {
 				}
 
 			};
-})
+});

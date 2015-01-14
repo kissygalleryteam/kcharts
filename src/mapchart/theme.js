@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    var COLOR_TPL = "{COLOR}";
+   var COLOR_TPL = "{COLOR}";
     return{
         "ks-chart-default": {
             title: {

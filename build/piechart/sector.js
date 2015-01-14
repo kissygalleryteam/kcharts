@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/piechart/sector',["base","util"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/piechart/sector',["base","util"],function(require, exports, module) {
 
   var Base = require('base');
   var Util = require('util');

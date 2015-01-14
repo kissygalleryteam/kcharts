@@ -161,4 +161,4 @@ define(function(require,exports,module) {
     return anim;
   }
   return Animate;
-})
+});

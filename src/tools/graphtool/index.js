@@ -1,7 +1,7 @@
 //简单图形绘制的工具
 define(function(require,exports,module) {
 	var Util = require("util"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index");
+		Raphael = require("kg/kcharts/5.0.1/raphael/index");
 	var sqrt = Math.sqrt;
 	var graphTool = {};
 	//等边三角形

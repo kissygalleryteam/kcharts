@@ -9,36 +9,101 @@
 </head>
 <body>
 <style type="text/css">
+   #map{
+    width: 480px;
+     margin: 0px auto;
+   }
+    .ks-chart-area-text {
+        font-family: Microsoft Yahei;
+    }
 
+    .ks-chart-city-text {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .node-tip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: none;
+        padding: 5px 10px;
+        background: #fff;
+        border: 1px solid #ccc6ae;
+        font-size: 12px;
+        border-radius: 5px;
+    }
+
+    .city-st {
+        background-image: url('http://img01.taobaocdn.com/tps/i1/T1eJhCFj0gXXc9v57_-10-10.png');
+        height: 10px;
+        width: 10px;
+        display: inline-block;
+        position: absolute;
+        background-repeat: no-repeat;
+    }
 </style>
-<div id="map" style="width: 600px;height: 920px;"></div>
+<div id="map" ></div>
+<div class="node-tip"></div>
 <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script charset="utf-8" src="/build/mapchart/index.js"></script>
-<script charset="utf-8" src="/build/mapchart/mapdata.js"></script>
 <script type="text/javascript">
+    var all = {"北京": {"x": "0.6930", "y": "0.3950", "num": 10}, "天津": {"x": "0.7056", "y": "0.4203", "num": 3}, "石家庄": {"x": "0.6611", "y": "0.4385", "num": 3}, "唐山": {"x": "0.7206", "y": "0.3953", "num": 1}, "秦皇岛": {"x": "0.7434", "y": "0.3865", "num": 1}, "太原": {"x": "0.6298", "y": "0.4426", "num": 4}, "呼和浩特": {"x": "0.6152", "y": "0.3624", "num": 1}, "沈阳": {"x": "0.8045", "y": "0.3352", "num": 3}, "长春": {"x": "0.8363", "y": "0.2786", "num": 2}, "哈尔滨": {"x": "0.8568", "y": "0.2266", "num": 2}, "上海": {"x": "0.7737", "y": "0.6258", "num": 9}, "南京": {"x": "0.7305", "y": "0.6022", "num": 1}, "无锡": {"x": "0.7547", "y": "0.6162", "num": 1}, "徐州": {"x": "0.7045", "y": "0.5423", "num": 2}, "常州": {"x": "0.7492", "y": "0.6104", "num": 1}, "苏州": {"x": "0.7594", "y": "0.6236", "num": 2}, "扬州": {"x": "0.7410", "y": "0.5923", "num": 2}, "镇江": {"x": "0.7410", "y": "0.5986", "num": 1}, "杭州": {"x": "0.7526", "y": "0.6525", "num": 7}, "宁波": {"x": "0.7748", "y": "0.6629", "num": 1}, "温州": {"x": "0.7603", "y": "0.7143", "num": 2}, "嘉兴": {"x": "0.7619", "y": "0.6387", "num": 4}, "湖州": {"x": "0.7515", "y": "0.6357", "num": 1}, "金华": {"x": "0.7442", "y": "0.6841", "num": 1}, "合肥": {"x": "0.7060", "y": "0.6082", "num": 1}, "福州": {"x": "0.7385", "y": "0.7673", "num": 5}, "厦门": {"x": "0.7190", "y": "0.8118", "num": 2}, "南昌": {"x": "0.6844", "y": "0.6992", "num": 3}, "上饶": {"x": "0.7161", "y": "0.7027", "num": 1}, "济南": {"x": "0.7010", "y": "0.4766", "num": 3}, "青岛": {"x": "0.7555", "y": "0.4923", "num": 5}, "郑州": {"x": "0.6476", "y": "0.5286", "num": 1}, "洛阳": {"x": "0.6268", "y": "0.5420", "num": 1}, "焦作": {"x": "0.6395", "y": "0.5154", "num": 2}, "武汉": {"x": "0.6576", "y": "0.6437", "num": 2}, "黄石": {"x": "0.6710", "y": "0.6536", "num": 2}, "宜昌": {"x": "0.6094", "y": "0.6401", "num": 1}, "长沙": {"x": "0.6366", "y": "0.7091", "num": 4}, "广州": {"x": "0.6413", "y": "0.8486", "num": 5}, "深圳": {"x": "0.6548", "y": "0.8643", "num": 2}, "珠海": {"x": "0.6461", "y": "0.8717", "num": 2}, "汕头": {"x": "0.6963", "y": "0.8420", "num": 2}, "东莞": {"x": "0.6489", "y": "0.8505", "num": 5}, "南宁": {"x": "0.5615", "y": "0.8571", "num": 2}, "重庆": {"x": "0.5326", "y": "0.6720", "num": 3}, "成都": {"x": "0.4931", "y": "0.6412", "num": 6}, "昆明": {"x": "0.4710", "y": "0.7953", "num": 2}, "西安": {"x": "0.5706", "y": "0.5423", "num": 2}, "兰州": {"x": "0.4879", "y": "0.4929", "num": 1}, "香港": {"x": "0.6613", "y": "0.8791", "num": 1}};
+require('node,util,kg/kcharts/5.0.0/mapchart/index', function (Node, Util,MapChart) {
+  var $ = Node.all;
 
-    require('node,kg/kcharts/5.0.0/mapchart/index', function (Node, MapChart) {
-        var h = screen.availHeight * 0.7;
-        var $ = Node.all;
-        $('#map').css("height", h);
-        var map = new MapChart({
-            renderTo: '#map',
-            themeCls: "ks-chart-default",
-            autoRender: false,
-            areaText: {
-                isShow: false //默认不展示省市名称
-            },
-            tip: {
-                isShow: false
-            },
-            cssGroup: {"shanghai": {"attr": {"fill": "#75D175", "stroke-width": 0}, "hoverAttr": {"fill": "#75D175"}}, "sichuan": {"attr": {"fill": "#3FB23F", "stroke-width": 0}, "hoverAttr": {"fill": "#3FB23F"}}, "guangxi": {"attr": {"fill": "#9BDD9B", "stroke-width": 0}, "hoverAttr": {"fill": "#9BDD9B"}}, "hainan": {"attr": {"fill": "#ACE5AC", "stroke-width": 0}, "hoverAttr": {"fill": "#ACE5AC"}}, "taiwan": {"attr": {"fill": "#9BDD9B", "stroke-width": 0}, "hoverAttr": {"fill": "#9BDD9B"}}, "jiangsu": {"attr": {"fill": "#A5E1A5", "stroke-width": 0}, "hoverAttr": {"fill": "#A5E1A5"}}, "shandong": {"attr": {"fill": "#9BDD9B", "stroke-width": 0}, "hoverAttr": {"fill": "#9BDD9B"}}, "liaoning": {"attr": {"fill": "#91D891", "stroke-width": 0}, "hoverAttr": {"fill": "#91D891"}}, "jilin": {"attr": {"fill": "#49B749", "stroke-width": 0}, "hoverAttr": {"fill": "#49B749"}}, "shanxi": {"attr": {"fill": "#60C460", "stroke-width": 0}, "hoverAttr": {"fill": "#60C460"}}, "henan": {"attr": {"fill": "#53BC53", "stroke-width": 0}, "hoverAttr": {"fill": "#53BC53"}}, "anhui": {"attr": {"fill": "#60C460", "stroke-width": 0}, "hoverAttr": {"fill": "#60C460"}}, "jiangxi": {"attr": {"fill": "#53BC53", "stroke-width": 0}, "hoverAttr": {"fill": "#53BC53"}}, "hubei": {"attr": {"fill": "#379137", "stroke-width": 0}, "hoverAttr": {"fill": "#379137"}}, "ningxia": {"attr": {"fill": "#D3AC9C", "stroke-width": 0}, "hoverAttr": {"fill": "#D3AC9C"}}, "gansu": {"attr": {"fill": "#DBC5A7", "stroke-width": 0}, "hoverAttr": {"fill": "#DBC5A7"}}, "chongqing": {"attr": {"fill": "#3D993D", "stroke-width": 0}, "hoverAttr": {"fill": "#3D993D"}}, "hunan": {"attr": {"fill": "#75D175", "stroke-width": 0}, "hoverAttr": {"fill": "#75D175"}}, "guizhou": {"attr": {"fill": "#60C460", "stroke-width": 0}, "hoverAttr": {"fill": "#60C460"}}, "qinghai": {"attr": {"fill": "#E0C9A6", "stroke-width": 0}, "hoverAttr": {"fill": "#E0C9A6"}}, "xizang": {"attr": {"fill": "#DBDB9C", "stroke-width": 0}, "hoverAttr": {"fill": "#DBDB9C"}}, "xinjiang": {"attr": {"fill": "#DDD0A6", "stroke-width": 0}, "hoverAttr": {"fill": "#DDD0A6"}}, "heilongjiang": {"attr": {"fill": "#265E26", "stroke-width": 0}, "hoverAttr": {"fill": "#265E26"}}, "hebei": {"attr": {"fill": "#3FB23F", "stroke-width": 0}, "hoverAttr": {"fill": "#3FB23F"}}, "fujian": {"attr": {"fill": "#9BDD9B", "stroke-width": 0}, "hoverAttr": {"fill": "#9BDD9B"}}, "beijing": {"attr": {"fill": "#379137", "stroke-width": 0}, "hoverAttr": {"fill": "#379137"}}, "yunnan": {"attr": {"fill": "#53BC53", "stroke-width": 0}, "hoverAttr": {"fill": "#53BC53"}}, "guangdong": {"attr": {"fill": "#ACE5AC", "stroke-width": 0}, "hoverAttr": {"fill": "#ACE5AC"}}, "zhejiang": {"attr": {"fill": "#91D891", "stroke-width": 0}, "hoverAttr": {"fill": "#91D891"}}, "tianjin": {"attr": {"fill": "#9ADBB4", "stroke-width": 0}, "hoverAttr": {"fill": "#9ADBB4"}}, "shaanxi": {"attr": {"fill": "#CEBB89", "stroke-width": 0}, "hoverAttr": {"fill": "#CEBB89"}}, "neimongol": {"attr": {"fill": "#379137", "stroke-width": 0}, "hoverAttr": {"fill": "#379137"}}},
-            series: {
-                "shanghai": {"groupKey": "shanghai"}, "sichuan": {"groupKey": "sichuan"}, "guangxi": {"groupKey": "guangxi"}, "hainan": {"groupKey": "hainan"}, "taiwan": {"groupKey": "taiwan"}, "jiangsu": {"groupKey": "jiangsu"}, "shandong": {"groupKey": "shandong"}, "liaoning": {"groupKey": "liaoning"}, "jilin": {"groupKey": "jilin"}, "shanxi": {"groupKey": "shanxi"}, "henan": {"groupKey": "henan"}, "anhui": {"groupKey": "anhui"}, "jiangxi": {"groupKey": "jiangxi"}, "hubei": {"groupKey": "hubei"}, "ningxia": {"groupKey": "ningxia"}, "gansu": {"groupKey": "gansu"}, "chongqing": {"groupKey": "chongqing"}, "hunan": {"groupKey": "hunan"}, "guizhou": {"groupKey": "guizhou"}, "qinghai": {"groupKey": "qinghai"}, "xizang": {"groupKey": "xizang"}, "xinjiang": {"groupKey": "xinjiang"}, "heilongjiang": {"groupKey": "heilongjiang"}, "hebei": {"groupKey": "hebei"}, "fujian": {"groupKey": "fujian"}, "beijing": {"groupKey": "beijing"}, "yunnan": {"groupKey": "yunnan"}, "guangdong": {"groupKey": "guangdong"}, "zhejiang": {"groupKey": "zhejiang"}, "tianjin": {"groupKey": "tianjin"}, "shaanxi": {"groupKey": "shaanxi"}, "neimongol": {"groupKey": "neimongol"}}
-        });
-        map.on("click", function (e) {
-            console.log(e.data);
-        });
-        map.render();
+    var h = screen.availHeight * 0.7;
+    $('#map').css("height", h);
+    var map = new MapChart( {
+      renderTo:'#map',
+      themeCls: "ks-chart-default",
+      autoRender: false,
+      area: {
+        hoverAttr: {
+          "fill": "#f0efeb"
+        }
+      }
     });
+    map.on("over", function (e) {
+      //                console.log("over");
+      //                console.log(e);
+    });
+    map.on("out", function (e) {
+      //                console.log("out");
+      //                console.log(e);
+    });
+    map.on('afterRender', function () {
+      var cs = 'city-st',
+          self = this,
+          timer,
+          span = '<span></span>',
+          tip = $('.node-tip'),
+          container = '.ks-chart-area-text';
+
+      Util.each(all, function (item, index) {
+        var style = self.converPix(item.x, item.y), num = item.num;
+        // ie9以下不支持background size
+        style = Util.merge(style, {
+          "backgroundSize": [Math.sqrt(num) * 3, "px ", Math.sqrt(num) * 3, "px"].join('')
+        });
+        $(span).attr('title', index).addClass(cs).css(style).appendTo(container).on('mouseenter',function (e) {
+          var tar = this, offset = $(tar).offset();
+          timer && clearTimeout(timer);
+          tip.text([index, '有', num, '个CDN节点'].join('')).show().stop().animate({
+            left: offset.left + 10,
+            top: offset.top
+          }, {
+            duration: 0.2,
+            easing: 'swing'
+          });
+        }).on('mouseleave', function () {
+          timer = setTimeout(function () {
+                    tip.hide();
+                  }, 1000);
+        })
+      })
+    })
+    map.render();
+})
 </script>
 </body>

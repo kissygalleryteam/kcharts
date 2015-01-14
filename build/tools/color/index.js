@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/tools/color/index',["util"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/tools/color/index',["util"],function(require, exports, module) {
 
 
 	var Util = require("util");

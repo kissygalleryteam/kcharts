@@ -5,7 +5,7 @@ define(function(require, exports, module) {
         Util = require('util'),
         Base = require('base'),
         UA = require('ua'),
-        Raphael = require('kg/kcharts/5.0.0/raphael/index'),
+        Raphael = require('kg/kcharts/5.0.1/raphael/index'),
         Theme = require('./theme'),
         MapData = require('./mapdata');
 
@@ -318,16 +318,6 @@ define(function(require, exports, module) {
                 }
             }
 
-            function clickFun(ev) {
-                var index = this.index,
-                    mapscale = MapData.mapScale;
-
-                self.fire('click', {
-                    data: [index, mapscale[index].text]
-                });
-            }
-
-            map.click(clickFun);
             map.mouseover(over);
             map.mousemove(move);
             map.mouseout(out);

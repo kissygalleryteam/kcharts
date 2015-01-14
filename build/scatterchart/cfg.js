@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/scatterchart/cfg',[],function(require, exports, module) {
+define('kg/kcharts/5.0.1/scatterchart/cfg',[],function(require, exports, module) {
 
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -101,4 +101,4 @@ define('kg/kcharts/5.0.0/scatterchart/cfg',[],function(require, exports, module)
 					boundryDetect: true
 				}
 			};
-})
+});

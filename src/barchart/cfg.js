@@ -109,4 +109,4 @@ define(function(require,exports,module) {
 					alignY: "bottom"
 				}
 			};
-})
+});

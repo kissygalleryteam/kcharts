@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/radar/index',["util","base","dom","node","event-dom","kg/kcharts/5.0.0/raphael/index","kg/kcharts/5.0.0/legend/index"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/radar/index',["util","base","dom","node","event-dom","kg/kcharts/5.0.1/raphael/index","kg/kcharts/5.0.1/legend/index"],function(require, exports, module) {
 
 
   var Util = require("util"),
@@ -6,8 +6,8 @@ define('kg/kcharts/5.0.0/radar/index',["util","base","dom","node","event-dom","k
       D = require("dom"),
       Node = require("node"),
       E = require("event-dom"),
-      Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-      Legend = require("kg/kcharts/5.0.0/legend/index");
+      Raphael = require("kg/kcharts/5.0.1/raphael/index"),
+      Legend = require("kg/kcharts/5.0.1/legend/index");
 
   var pi = Math.PI
     , unit = pi/180

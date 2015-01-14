@@ -140,4 +140,4 @@ define(function(require, exports, module) {
   }
 
   return Base.extend(methods);
-})
+});
