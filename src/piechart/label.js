@@ -296,4 +296,4 @@ define(function(require, exports, module) {
   Labels = Base.extend(props2);
   Labels.getSizeOf = blockSizeOf
   return Labels;
-})
+});

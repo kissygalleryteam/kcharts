@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/dashboard/dashboard-ticks',["util","base"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/dashboard/dashboard-ticks',["util","base"],function(require, exports, module) {
 
   var Util = require('util'),
       Base = require('base');
@@ -83,4 +83,4 @@ define('kg/kcharts/5.0.0/dashboard/dashboard-ticks',["util","base"],function(req
      }
    }
    return Base.extend(methods);
- })
+ });

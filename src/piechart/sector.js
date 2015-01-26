@@ -1,4 +1,3 @@
-// -*- coding: utf-8; -*-
 define(function(require, exports, module) {
   var Base = require('base');
   var Util = require('util');

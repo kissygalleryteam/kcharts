@@ -5,11 +5,8 @@
     <title>自定义文字/图片</title>
     <style type="text/css" media="screen">
      .pi-con{
-       border:1px solid #999;width:750px;height:300px;margin:10px 0 0 10px;
-       float:left;
-     }
-     .clear-both{
-       clear:both;
+       width:750px;height:300px;
+       margin:auto;
      }
 
      .kcharts-label{
@@ -50,12 +47,6 @@
          };
          var pie = new Pie(cfg);
          pie.on("beforeRender",custombg);
-
-         /* pie.on('mouseover',enter);
-         function enter(e){
-         var $sector = e.sector;
-         var framedata = $sector.get('framedata');
-         } */
 
          //自定义文字/背景
          function custombg(){

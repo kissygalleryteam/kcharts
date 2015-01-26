@@ -5,9 +5,9 @@ define(function(require,exports,module) {
     Base = require("base"),
     D = require("dom"),
     E = require("event-dom"),
-    Icons = require("kg/kcharts/5.0.0/icons/index"),
-    Animation = require("kg/kcharts/5.0.0/animate/index"),
-    Raphael = require("kg/kcharts/5.0.0/raphael/index");
+    Icons = require("kg/kcharts/5.0.1/icons/index"),
+    Animation = require("kg/kcharts/5.0.1/animate/index"),
+    Raphael = require("kg/kcharts/5.0.1/raphael/index");
 
   var $ = Node.all;
 

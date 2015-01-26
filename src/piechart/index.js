@@ -1,10 +1,10 @@
 define(function(require, exports, module) {
   var PieUtil = require("./util"),
     Sector = require("./sector"),
-    Animate = require("kg/kcharts/5.0.0/animate/index"),
+    Animate = require("kg/kcharts/5.0.1/animate/index"),
     Labels = require("./label"),
-    Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-    Color = require("kg/kcharts/5.0.0/tools/color/index"),
+    Raphael = require("kg/kcharts/5.0.1/raphael/index"),
+    Color = require("kg/kcharts/5.0.1/tools/color/index"),
     Base = require("base"),
     E = require("event-dom"),
     Node = require("node");
@@ -184,7 +184,7 @@ define(function(require, exports, module) {
           return ret;
         }
 
-        S.use("kg/kcharts/5.0.0/legend/index", function(S, Legend) {
+        S.use("kg/kcharts/5.0.1/legend/index", function(S, Legend) {
           var parts = buildparts();
           var dft = {
             //legend需要的原始信息
@@ -490,7 +490,7 @@ define(function(require, exports, module) {
       var self = this;
       var container = self.get("container");
 
-      S.use("kg/kcharts/5.0.0/tip/index", function(S, Tip) {
+      S.use("kg/kcharts/5.0.1/tip/index", function(S, Tip) {
         var bbox = self.getbbox();
         // 修正bbox字段
         bbox.x = bbox.left;

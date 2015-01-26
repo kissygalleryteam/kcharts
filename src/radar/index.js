@@ -5,8 +5,8 @@ define(function(require,exports,module){
       D = require("dom"),
       Node = require("node"),
       E = require("event-dom"),
-      Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-      Legend = require("kg/kcharts/5.0.0/legend/index");
+      Raphael = require("kg/kcharts/5.0.1/raphael/index"),
+      Legend = require("kg/kcharts/5.0.1/legend/index");
 
   var pi = Math.PI
     , unit = pi/180

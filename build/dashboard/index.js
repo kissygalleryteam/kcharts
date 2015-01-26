@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/dashboard/index',["../raphael/index","./pointer","./pointer-pic","./dashboard-ticks","util","base","dom","node","event-dom"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/dashboard/index',["../raphael/index","./pointer","./pointer-pic","./dashboard-ticks","util","base","dom","node","event-dom"],function(require, exports, module) {
 
   var Raphael = require('../raphael/index'),
     Pointer = require('./pointer'),
@@ -137,4 +137,4 @@ define('kg/kcharts/5.0.0/dashboard/index',["../raphael/index","./pointer","./poi
   }
 
   return Base.extend(methods);
-})
+});

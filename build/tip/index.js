@@ -1,9 +1,9 @@
-define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tools/template/index"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/tip/index',["util","node","base","kg/kcharts/5.0.1/tools/template/index"],function(require, exports, module) {
 
   var Util = require("util"),
     Node = require("node"),
     Base = require("base"),
-    Template = require("kg/kcharts/5.0.0/tools/template/index");
+    Template = require("kg/kcharts/5.0.1/tools/template/index");
     var $ = Node.all;
     var methods = {
       initializer:function(){

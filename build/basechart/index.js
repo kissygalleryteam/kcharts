@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/basechart/index',["util","node","base","dom","./common"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/basechart/index',["util","node","base","dom","./common"],function(require, exports, module) {
 
 	var Util = require("util"),
 		Node = require("node"),

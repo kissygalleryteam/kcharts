@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/dashboard/pointer-pic',["util","./pointer"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/dashboard/pointer-pic',["util","./pointer"],function(require, exports, module) {
 
 
   var Util = require('util'),

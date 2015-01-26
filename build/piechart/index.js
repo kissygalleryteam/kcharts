@@ -1,11 +1,11 @@
-define('kg/kcharts/5.0.0/piechart/index',["./util","./sector","kg/kcharts/5.0.0/animate/index","./label","kg/kcharts/5.0.0/raphael/index","kg/kcharts/5.0.0/tools/color/index","base","event-dom","node","dom","util"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/piechart/index',["./util","./sector","kg/kcharts/5.0.1/animate/index","./label","kg/kcharts/5.0.1/raphael/index","kg/kcharts/5.0.1/tools/color/index","base","event-dom","node","dom","util"],function(require, exports, module) {
 
   var PieUtil = require("./util"),
     Sector = require("./sector"),
-    Animate = require("kg/kcharts/5.0.0/animate/index"),
+    Animate = require("kg/kcharts/5.0.1/animate/index"),
     Labels = require("./label"),
-    Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-    Color = require("kg/kcharts/5.0.0/tools/color/index"),
+    Raphael = require("kg/kcharts/5.0.1/raphael/index"),
+    Color = require("kg/kcharts/5.0.1/tools/color/index"),
     Base = require("base"),
     E = require("event-dom"),
     Node = require("node");
@@ -177,7 +177,7 @@ define('kg/kcharts/5.0.0/piechart/index',["./util","./sector","kg/kcharts/5.0.0/
           return ret;
         }
 
-        S.use("kg/kcharts/5.0.0/legend/index", function(S, Legend) {
+        S.use("kg/kcharts/5.0.1/legend/index", function(S, Legend) {
           var parts = buildparts();
           var dft = {
             
@@ -471,7 +471,7 @@ define('kg/kcharts/5.0.0/piechart/index',["./util","./sector","kg/kcharts/5.0.0/
       var self = this;
       var container = self.get("container");
 
-      S.use("kg/kcharts/5.0.0/tip/index", function(S, Tip) {
+      S.use("kg/kcharts/5.0.1/tip/index", function(S, Tip) {
         var bbox = self.getbbox();
         
         bbox.x = bbox.left;

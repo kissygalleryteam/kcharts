@@ -12,35 +12,33 @@
 
 </style>
 <div id="map"></div>
-<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+ <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
-
-    require('node,kg/kcharts/5.0.0/mapchart/index', function (Node, MapChart) {
-        var h = screen.availHeight * 0.7;
-        var $ = Node.all;
-        $('#map').css("height", h);
-        var map = new MapChart({
-            renderTo: '#map',
-            themeCls: "ks-chart-default",
-            autoRender: false,
-            areaText: {
-                isShow: false //默认不展示省市名称
-            },
-            tip: {
-                template: "Lv.{areaName}{rate}"
-            },
-            cssGroup: {style1: {attr: {"fill": "#8cc63e", "stroke": "#ffffff", 'stroke-width': 3}, hoverAttr: {"fill": "#066839"}}, style2: {attr: {"fill": "#00adef"}, hoverAttr: {"fill": "#1176ba"}}, style3: {attr: {"fill": "#bf1e2d", "stroke": "#ffffff", 'stroke-width': 3}, hoverAttr: {"fill": "#ec1d23"}}, defaultCls: "style1"},
-            series: {
-                "西藏": {groupKey: 'style2', rate: 4}, "guizhou": {rate: 4}, "fujian": {groupKey: 'style3', rate: 6}, "重庆": {rate: 4}, "sichuan": {groupKey: 'style3', rate: 6}, "shanghai": {groupKey: 'style2', rate: 4}, "江苏": {rate: 4}, "zhejiang": {rate: 4}, "shanxi": {rate: 3}, "neimongol": {groupKey: 'style2', rate: 6}, "tianjin": {groupKey: 'style3', rate: 6}, "hebei": {rate: 3}, "beijing": {groupKey: 'style2'}, "anhui": {rate: 3}, "yunnan": {rate: 4}, "jiangxi": {rate: 3}, "shandong": {groupKey: 'style2'}, "henan": {rate: 2}, "hunan": {rate: 3}, "guangxi": {groupKey: 'style3,rate:6'}, "guangdong": {rate: 2}, "hainan": {groupKey: 'style3', rate: 6}, "xinjiang": {groupKey: 'style2', rate: 6}, "ningxia": {rate: 3}, "qinghai": {rate: 6}, "gansu": {rate: 3}, "shaanxi": {rate: 3}, "heilongjiang": {rate: 3}, "jilin": {rate: 3}, "liaoning": {rate: 3}, "hubei": {rate: 3}
-            }
+       
+        require('node,kg/kcharts/5.0.0/mapchart/index', function (Node, MapChart) {
+            var h = screen.availHeight * 0.7;
+            var $ = Node.all;
+            $('#map').css("height", h);
+            var map = new MapChart( {
+                renderTo:'#map',
+                themeCls: "ks-chart-default",
+                autoRender: false,
+                areaText: {
+                    isShow: false //默认不展示省市名称
+                },
+                tip: {
+                    template: "Lv.{areaName}{rate}"
+                },
+                cssGroup: {style1: {attr: {"fill": "#8cc63e", "stroke": "#ffffff", 'stroke-width': 3}, hoverAttr: {"fill": "#066839"}}, style2: {attr: {"fill": "#00adef"}, hoverAttr: {"fill": "#1176ba"}}, style3: {attr: {"fill": "#bf1e2d", "stroke": "#ffffff", 'stroke-width': 3}, hoverAttr: {"fill": "#ec1d23"}}, defaultCls: "style1"},
+                series: {
+                    "西藏": {groupKey: 'style2', rate: 4}, "guizhou": {rate: 4}, "fujian": {groupKey: 'style3', rate: 6}, "重庆": {rate: 4}, "sichuan": {groupKey: 'style3', rate: 6}, "shanghai": {groupKey: 'style2', rate: 4}, "江苏": {rate: 4}, "zhejiang": {rate: 4}, "shanxi": {rate: 3}, "neimongol": {groupKey: 'style2', rate: 6}, "tianjin": {groupKey: 'style3', rate: 6}, "hebei": {rate: 3}, "beijing": {groupKey: 'style2'}, "anhui": {rate: 3}, "yunnan": {rate: 4}, "jiangxi": {rate: 3}, "shandong": {groupKey: 'style2'}, "henan": {rate: 2}, "hunan": {rate: 3}, "guangxi": {groupKey: 'style3,rate:6'}, "guangdong": {rate: 2}, "hainan": {groupKey: 'style3', rate: 6}, "xinjiang": {groupKey: 'style2', rate: 6}, "ningxia": {rate: 3}, "qinghai": {rate: 6}, "gansu": {rate: 3}, "shaanxi": {rate: 3}, "heilongjiang": {rate: 3}, "jilin": {rate: 3}, "liaoning": {rate: 3}, "hubei": {rate: 3}
+                }
+            });
+            map.on("over", function (e) {
+            });
+            map.on("out", function (e) {
+            });
+            map.render();
         });
-        map.on("over", function (e) {
-        });
-        map.on("out", function (e) {
-        });
-        map.on("click", function (e) {
-        });
-        map.render();
-    });
 </script>
 </body>

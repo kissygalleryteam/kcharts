@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/animate/easing',[],function(require, exports, module) {
+define('kg/kcharts/5.0.1/animate/easing',[],function(require, exports, module) {
 
 
     var PI = Math.PI,

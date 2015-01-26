@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/piechart/label',["util","base","node","dom"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/piechart/label',["util","base","node","dom"],function(require, exports, module) {
 
   var Util = require("util"),
     Base = require("base"),
@@ -293,4 +293,4 @@ define('kg/kcharts/5.0.0/piechart/label',["util","base","node","dom"],function(r
   Labels = Base.extend(props2);
   Labels.getSizeOf = blockSizeOf
   return Labels;
-})
+});

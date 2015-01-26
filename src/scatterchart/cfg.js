@@ -100,4 +100,4 @@ define(function(require,exports,module) {
 					boundryDetect: true
 				}
 			};
-})
+});

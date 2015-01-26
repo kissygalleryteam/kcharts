@@ -1,9 +1,9 @@
-define('kg/kcharts/5.0.0/thermometer/index',["base","node","util","kg/kcharts/5.0.0/raphael/index"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/thermometer/index',["base","node","util","kg/kcharts/5.0.1/raphael/index"],function(require, exports, module) {
 
   var Base = require('base'),
       Node = require('node'),
       Util = require('util'),
-      Raphael = require("kg/kcharts/5.0.0/raphael/index");
+      Raphael = require("kg/kcharts/5.0.1/raphael/index");
   var Thermometer  = Base.extend({
     initializer:function(){
     var cfg = this.userConfig;

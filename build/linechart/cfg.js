@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/linechart/cfg',[],function(require, exports, module) {
+define('kg/kcharts/5.0.1/linechart/cfg',[],function(require, exports, module) {
 
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -30,17 +30,17 @@ define('kg/kcharts/5.0.0/linechart/cfg',[],function(require, exports, module) {
 					isShow:true,
 					attr: {
 						type: "circle",
-						stroke: "#fff",
+						fill: "#fff",
 						"r": 4,
 						"stroke-width": 1.5,
-						"fill": COLOR_TPL
+						stroke: COLOR_TPL
 					},
 					hoverAttr: {
 						type: "circle",
-						stroke: "#fff",
+						fill: "#fff",
 						"r": 5,
-						"fill": COLOR_TPL,
-						"stroke-width": 0
+						stroke: COLOR_TPL,
+						"stroke-width": 1
 					}
 				},
 				xLabels: {
@@ -128,4 +128,4 @@ define('kg/kcharts/5.0.0/linechart/cfg',[],function(require, exports, module) {
 				}
 
 			};
-})
+});
