@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>A ScatterChart Test</title>
+<title>常规气泡图</title>
 <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
 <style type="text/css">
 #demo1{
@@ -14,49 +15,37 @@
 </head>
 <body>
 <div class="wrapper">
-	<div id="demo1"></div>
+    <div id="demo1"></div>
 </div>
- <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-
+<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script>
 require("kg/kcharts/5.0.0/scatterchart/index",function(ScatterChart){
-       
-var series = [{
-                text: 'Female',
-                data: [[161.2, 51.6,1],[176.5, 71.8,2],[170.0, 59.0,3], [159.1, 47.6,3], [166.0, 69.8,3], [176.2, 66.8,3], [160.2, 75.2,3]]
-            }
-            , {
-                text: 'Male',
-                data: [[174.0, 65.6,2], [175.3, 71.8,2], [193.5, 80.7,1], [186.5, 72.6,4], [187.2, 78.8,7]]
-            }
-            ];
+var seriesText = ["数据一","数据二","数据三","数据四"]
+var series = (function(){
+    var tmp = [];
+    for(var i =0;i<4;i++){
+        var data = [];
+        for(var j=0;j<100;j++){
+            data.push([Math.random()*(i+1),Math.random()*(i+1),Math.random()*(i+1)/2]);
+        }
+        tmp.push({
+            data:data,
+            text:seriesText[i]
+        })
+    }
+    return tmp;
 
+})()
 
             var scatterchart = new ScatterChart({
+              title:{
+                content:"气泡图"
+              },
             renderTo:"#demo1",
-            title:{
-                content:"气泡图",
-                css:{
-
-                }
-
-            },
-            subTitle:{
-                content:"bubblechart",
-                css:{
-                }
-            },
-            xGrids:{
-                isShow:false
-            },
-            legend:{
-                isShow:true
-                ,y:-10
-            },
             xAxis: {
-                num:14
+                num:10
              },
-              xLabels:{
+             xLabels:{
                css:{
                     "padding-top":"5px"
                }
@@ -66,23 +55,32 @@ var series = [{
                     "text-indent":"-5px"
                }
              },
-             yAxis:{
-                    num:10
-             },
             series: series,
+            points:{
+               attr:{
+                    // "type":"circle",
+                  "stroke-width":"1px",
+                  "stroke":"#000"
+               }
+            },
             tip:{
                 template:function(data){
-                    return data.y[0]+","+data.y[1];
+                    return "x: "+data.y[0].toFixed(2)+"<br/> y: "+data.y[1].toFixed(2);
                 },
+                alignX:"right",
                 alignY:"bottom",
                 offset:{
                     x:-10,
                     y:-10
                 },
                 boundryDetect:true
+            },
+            legend:{
+                        isShow:true
+                        ,y:-10
             }
         });
-});
+    });
 </script>
 </body>
 </html>

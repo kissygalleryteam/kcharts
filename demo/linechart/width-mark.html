@@ -29,7 +29,7 @@
 <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
 
-require("kg/kcharts/2.0.0/linechart/index",function(LineChart){
+require("kg/kcharts/5.0.0/linechart/index", function( LineChart) {
   var linechart = new LineChart({
       renderTo:"#demo1",
       points:{
@@ -51,12 +51,9 @@ require("kg/kcharts/2.0.0/linechart/index",function(LineChart){
         }
       },
       title:{
-              content:"Monthly Average Temperature"
+              content:"带标注的线图"
             },
             anim:{},
-            subTitle:{
-              content:"Source: WorldClimate.com"
-            },
             lineType:"arc",
        xAxis: {
           text:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -89,13 +86,11 @@ require("kg/kcharts/2.0.0/linechart/index",function(LineChart){
       }
   });
 
-linechart.on("afterRender",function(){
   var points = linechart._points[0];
-  var htmlPaper = linechart.getHtmlPaper();
+  var paper = linechart.getRaphaelPaper();
   for(var i in points){
-    htmlPaper.text(points[i]['x'],points[i]['y']-8,points[i]['dataInfo']['y'],"conter","bottom");
+    paper.text(points[i]['x'],points[i]['y']-50,points[i]['dataInfo']['y']).attr({opacity:0}).animate({opacity:1,transform:"T0,40"},500,"ease-out");
   }
-})
   
 
 });</script>

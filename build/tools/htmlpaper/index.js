@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/tools/htmlpaper/index',["util","node"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/tools/htmlpaper/index',["util","node"],function(require, exports, module) {
 
 
 	var Util = require("util"),

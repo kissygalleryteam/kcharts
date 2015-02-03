@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
+define('kg/kcharts/5.0.1/raphael/index',[],function(require, exports, module) {
 
 
   (function(win){
@@ -7757,4 +7757,4 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
 
   module.exports =  window.Raphael;
 
-})
+});

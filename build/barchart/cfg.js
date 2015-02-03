@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/barchart/cfg',[],function(require, exports, module) {
+define('kg/kcharts/5.0.1/barchart/cfg',[],function(require, exports, module) {
 
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -110,4 +110,4 @@ define('kg/kcharts/5.0.0/barchart/cfg',[],function(require, exports, module) {
 					alignY: "bottom"
 				}
 			};
-})
+});

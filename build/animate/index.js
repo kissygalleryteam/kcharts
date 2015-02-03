@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/animate/index',["anim","util","./easing"],function(require, exports, module) {
 
   var Anim = require("anim"),
       Util = require("util"),
@@ -161,4 +161,4 @@ define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(requ
     return anim;
   }
   return Animate;
-})
+});

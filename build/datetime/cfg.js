@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/datetime/cfg',[],function(require, exports, module) {
+define('kg/kcharts/5.0.1/datetime/cfg',[],function(require, exports, module) {
 
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
@@ -128,4 +128,4 @@ define('kg/kcharts/5.0.0/datetime/cfg',[],function(require, exports, module) {
 				}
 
 			};
-})
+});

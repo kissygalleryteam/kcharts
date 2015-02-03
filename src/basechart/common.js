@@ -1,6 +1,6 @@
 define(function(require,exports,module) {
 	var Util = require("util"),
-		Template = require("kg/kcharts/5.0.0/tools/template/index");
+		Template = require("kg/kcharts/5.0.1/tools/template/index");
 
 	function drawTitle(chart, themeCls) {
 		if (!chart._cfg.title.isShow) return;
@@ -510,4 +510,4 @@ define(function(require,exports,module) {
 		getLinePath: getLinePath,
 		isInArray: isInArray
 	};
-})
+});

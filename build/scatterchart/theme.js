@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/scatterchart/theme',[],function(require, exports, module) {
+define('kg/kcharts/5.0.1/scatterchart/theme',[],function(require, exports, module) {
 
 
 	var COLOR_TPL = "{COLOR}";

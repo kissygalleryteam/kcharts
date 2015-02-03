@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,9 +7,9 @@
 <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
 <style type="text/css">
 #demo1{
-	width:750px;
-	height:300px;
-	margin:0px auto;
+    width:750px;
+    height:300px;
+    margin:0px auto;
 }
 #demo1 .kcharts-legend-item{
     display: inline;
@@ -20,11 +21,11 @@
 <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
 require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
-		var barChart = new BarChart({
-			renderTo:"#demo1",
-			legend:{
-				isShow:true   
-			},
+        var barChart = new BarChart({
+            renderTo:"#demo1",
+            legend:{
+                isShow:true   
+            },
             canvasAttr:{
                 x:60,
                 y:60,
@@ -32,16 +33,13 @@ require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
                 height:190
             },
             zoomType:"y",
-			title:{
-            	content:"Stacked Barchart"
+            title:{
+                content:"横向堆叠柱形图"
             },
             anim:{},
-            subTitle:{
-                content:"a simple stackable barchart"
-            },
             stackable:true,
-			 yAxis: {
-			 		text:['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+             yAxis: {
+                    text:['周一', '周二', '周三', '周四', '周五']
             },
             xAxis:{
                 min:0
@@ -52,33 +50,31 @@ require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
                 }
             },
             bars:{
-            	css:{
+                css:{
                     "border":"1px solid #fff"
-            	}
+                }
             },
-			series:[{
-                text: 'John',
+            series:[{
+                text: '数据一',
                 data: [5, 3, 4, 7, 2]
             }, {
-                text: 'Jane',
+                text: '数据二',
                 data: [2, 2, 3, 2, 1]
             }, {
-                text: 'Joe',
+                text: '数据三',
                 data: [3, 4, 4, 2, 5]
             }],
-			tip:{
-				template:"{{text}} {{y}} mm",
-				alignX:"right",
-				css:{"border-color":"{COLOR}"},
-				offset:{
-					y:-10
-				}
-			}
-		});
+            tip:{
+                template:"{{text}} {{y}} mm",
+                alignX:"right",
+                css:{"border-color":"{COLOR}"},
+                offset:{
+                    y:-10
+                }
+            }
+        });
 
-
-
-	});
+    });
 
 </script>
 </body>

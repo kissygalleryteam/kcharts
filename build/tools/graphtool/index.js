@@ -1,7 +1,7 @@
-define('kg/kcharts/5.0.0/tools/graphtool/index',["util","kg/kcharts/5.0.0/raphael/index"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/tools/graphtool/index',["util","kg/kcharts/5.0.1/raphael/index"],function(require, exports, module) {
 
 	var Util = require("util"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index");
+		Raphael = require("kg/kcharts/5.0.1/raphael/index");
 	var sqrt = Math.sqrt;
 	var graphTool = {};
 	

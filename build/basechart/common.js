@@ -1,7 +1,7 @@
-define('kg/kcharts/5.0.0/basechart/common',["util","kg/kcharts/5.0.0/tools/template/index"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/basechart/common',["util","kg/kcharts/5.0.1/tools/template/index"],function(require, exports, module) {
 
 	var Util = require("util"),
-		Template = require("kg/kcharts/5.0.0/tools/template/index");
+		Template = require("kg/kcharts/5.0.1/tools/template/index");
 
 	function drawTitle(chart, themeCls) {
 		if (!chart._cfg.title.isShow) return;
@@ -504,4 +504,4 @@ define('kg/kcharts/5.0.0/basechart/common',["util","kg/kcharts/5.0.0/tools/templ
 		getLinePath: getLinePath,
 		isInArray: isInArray
 	};
-})
+});

@@ -4,9 +4,9 @@
  define(function(require, exports, module) {
 // Sector,Color,Raphael
   var Util = require("util"),
-  Sector = require("kg/kcharts/5.0.0/piechart/sector"),
-  Color = require("kg/kcharts/5.0.0/tools/color/index"),
-  Raphael = require("kg/kcharts/5.0.0/raphael/index");
+  Sector = require("kg/kcharts/5.0.1/piechart/sector"),
+  Color = require("kg/kcharts/5.0.1/tools/color/index"),
+  Raphael = require("kg/kcharts/5.0.1/raphael/index");
 
   var isArray = Util.isArray
   function flat(a){

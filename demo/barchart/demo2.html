@@ -1,14 +1,15 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>A Simple Barchart</title>
+<title>带有倾斜标注的柱状图</title>
 <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
 <style type="text/css">
 #demo1{
-	width:750px;
-	height:300px;
-	margin:0px auto;
+    width:750px;
+    height:300px;
+    margin:0px auto;
 }
 </style>
 </head>
@@ -17,70 +18,92 @@
 <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
 require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
-		var barChart = new BarChart({
-			renderTo:"#demo1",
-			legend:{
-				isShow:true,y:-10
-			},
-			title:{
-            	content:"Monthly Average Rainfall"
-            },
-            anim:{},
-            subTitle:{
-            	content:"Source: WorldClimate.com"
-            },
-            yLabels:{
+        var barChart = new BarChart({
+            renderTo:"#demo1",
+            title:{
+                content:"带有倾斜标注的柱状图",
                 css:{
-                    "text-indent":"-4px"
                 }
             },
-            stackable:true,
-			 xAxis: {
-			 		text:[
-			 		'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec']
+            anim:{},
+             xLabels:{isShow:false},
+             yLabels:{isShow:false},
+             xAxis: {
+                    text:[
+                    '20131016',
+                    '20131017',
+                    '20131018',
+                    '20131019',
+                    '20131020',
+                    '20131021',
+                    '20131022',
+                    '20131023',
+                    '20131024',
+                    '20131025',
+                    '20131026'
+                    ]
             },
             yAxis:{
-            	min:0
+                min:0
             },
             bars:{
-            	css:{
-                    "border":"1px solid #fff"
-            	}
+                barsRatio:0.8,
+                barRatio:0.6
             },
-			series:[{
-                text: 'Tokyo',
+            series:[{
+                text: '数据一',
                 data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
     
             }, {
-                text: 'New York',
+                text: '数据二',
                 data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
     
             }, {
-                text: 'London',
+                text: '数据三',
                 data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
     
-            }],
-			tip:{
-				template:"{{text}} {{y}} mm",
-				alignX:"right",
-				css:{"border-color":"{COLOR}"},
-				offset:{
-					y:-10
-				}
-			}
-		});
-	});
+            }
+            ],
+            legend:{
+                isShow:false,y:-10
+            },
+            tip:{
+                template:"{{text}} {{y}} mm",
+                alignX:"right",
+                css:{"border-color":"{COLOR}"},
+                offset:{
+                    y:-10
+                }
+            }
+        });
+     
+     //旋转逻辑
+       paper = barChart.getRaphaelPaper();
+       for(var i in barChart._pointsX){
+         var pt = barChart._pointsX[i];
+         var txt = paper.text(pt.x,pt.y,pt.number);
+         txt.attr({
+           "text-anchor":"end",
+           "font-size":"10px",
+           "transform":"t0,5r-45"+","+pt.x+","+pt.y,
+           "font-family":"yahei",
+           "font-weight":"bold",
+           "fill":"#666"
+         });
+       }
+        for(var i in barChart._pointsY){
+         var pt = barChart._pointsY[i];
+         var txt = paper.text(pt.x,pt.y,pt.number);
+         txt.attr({
+           "text-anchor":"end",
+           "font-size":"10px",
+           "font-family":"yahei",
+           "font-weight":"bold",
+           "fill":"#666"
+         }).transform("T-10,0R45");
+       }
+    });
+
 </script>
 </body>
 </html>

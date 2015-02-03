@@ -1,6 +1,6 @@
 {
   "name": "kcharts",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "private": true,
   "devDependencies": {
     "gulp": "^3.8.8",

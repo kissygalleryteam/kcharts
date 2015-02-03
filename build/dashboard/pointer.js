@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/dashboard/pointer',["base","util"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/dashboard/pointer',["base","util"],function(require, exports, module) {
 
   var Base = require('base'),
       Util = require('util');
@@ -123,4 +123,4 @@ define('kg/kcharts/5.0.0/dashboard/pointer',["base","util"],function(require, ex
   }
 
   return Pointer
-})
+});

@@ -1,20 +1,20 @@
-define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/kcharts/5.0.0/tools/template/index","kg/kcharts/5.0.0/raphael/index","kg/kcharts/5.0.0/basechart/index","kg/kcharts/5.0.0/tools/color/index","kg/kcharts/5.0.0/tools/htmlpaper/index","kg/kcharts/5.0.0/legend/index","./theme","kg/kcharts/5.0.0/tools/touch/index","kg/kcharts/5.0.0/tip/index","kg/kcharts/5.0.0/animate/index","kg/kcharts/5.0.0/tools/graphtool/index","./cfg"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/linechart/index',["util","node","base","event-dom","kg/kcharts/5.0.1/tools/template/index","kg/kcharts/5.0.1/raphael/index","kg/kcharts/5.0.1/basechart/index","kg/kcharts/5.0.1/tools/color/index","kg/kcharts/5.0.1/tools/htmlpaper/index","kg/kcharts/5.0.1/legend/index","./theme","kg/kcharts/5.0.1/tools/touch/index","kg/kcharts/5.0.1/tip/index","kg/kcharts/5.0.1/animate/index","kg/kcharts/5.0.1/tools/graphtool/index","./cfg"],function(require, exports, module) {
 
 	var Util = require("util"),
 		Node = require("node"),
 		Base = require("base"),
 		Evt = require('event-dom'),
-		Template = require("kg/kcharts/5.0.0/tools/template/index"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-		BaseChart = require("kg/kcharts/5.0.0/basechart/index"),
-		ColorLib = require("kg/kcharts/5.0.0/tools/color/index"),
-		HtmlPaper = require("kg/kcharts/5.0.0/tools/htmlpaper/index"),
-		Legend = require("kg/kcharts/5.0.0/legend/index"),
+		Template = require("kg/kcharts/5.0.1/tools/template/index"),
+		Raphael = require("kg/kcharts/5.0.1/raphael/index"),
+		BaseChart = require("kg/kcharts/5.0.1/basechart/index"),
+		ColorLib = require("kg/kcharts/5.0.1/tools/color/index"),
+		HtmlPaper = require("kg/kcharts/5.0.1/tools/htmlpaper/index"),
+		Legend = require("kg/kcharts/5.0.1/legend/index"),
 		Theme = require("./theme"),
-		Touch = require("kg/kcharts/5.0.0/tools/touch/index"),
-		Tip = require("kg/kcharts/5.0.0/tip/index"),
-		Anim = require("kg/kcharts/5.0.0/animate/index"),
-		graphTool = require("kg/kcharts/5.0.0/tools/graphtool/index"),
+		Touch = require("kg/kcharts/5.0.1/tools/touch/index"),
+		Tip = require("kg/kcharts/5.0.1/tip/index"),
+		Anim = require("kg/kcharts/5.0.1/animate/index"),
+		graphTool = require("kg/kcharts/5.0.1/tools/graphtool/index"),
 		Cfg = require("./cfg");
 
 	var $ = Node.all,

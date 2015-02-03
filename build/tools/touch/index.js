@@ -1,4 +1,4 @@
-define('kg/kcharts/5.0.0/tools/touch/index',["ua"],function(require, exports, module) {
+define('kg/kcharts/5.0.1/tools/touch/index',["ua"],function(require, exports, module) {
 
   var UA = require("ua");
   if(UA.ie) return;

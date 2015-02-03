@@ -4,28 +4,36 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
-    <title>饼图重绘的机制</title>
+    <title>饼图重绘</title>
     <style type="text/css" media="screen">
      .pi-con{
-       border:1px solid #999;width:750px;height:300px;margin:10px 0 0 10px;
-       float:left;
+       width:750px;height:300px;margin:auto;
      }
-     .clear-both{
-       clear:both;
-     }
-
      .kcharts-label{
        color:#0579C6;
        cursor:pointer;
+     }
+     #J_Redraw{
+      display: block;
+      width: 150px;
+      height: 40px;
+      background: #f60;
+      color:#fff;
+      text-align: center;
+      line-height: 40px;
+      margin:10px auto;
+      font-size: 16px;
+      font-weight: bold;
+      font-family: Microsoft Yahei;
      }
     </style>       
   </head>
   <body>
     <div id="J_Pie1" class="pi-con">
     </div>
-    <button id="J_Redraw" style="margin-left:50px;margin-top:50px;">
-        重绘
-    </button>
+    <a href="javascript:void(0);" id="J_Redraw" >
+        Click To Render!
+    </a>
    <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
 <script type="text/javascript">
 
