@@ -1,11 +1,13 @@
-define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(require, exports, module) {
+/*
+combined files : 
 
-  var Anim = require("anim"),
-      Util = require("util"),
-      Easing = require("./easing");
+kg/kcharts/6.0.0/animate/index
 
-
-    var requestAnimFrame = window.requestAnimationFrame       ||
+*/
+// -*- coding: utf-8; -*-
+;KISSY.add('kg/kcharts/6.0.0/animate/index',function(S,Anim){
+  var Easing = Anim.Easing
+    , requestAnimFrame = window.requestAnimationFrame       ||
                          window.webkitRequestAnimationFrame ||
                          window.mozRequestAnimationFrame    ||
                          window.oRequestAnimationFrame      ||
@@ -13,7 +15,7 @@ define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(requ
                          function (callback) {
                            return setTimeout(callback, 16);
                          }
-    var cancelAnimationFrame = window.cancelAnimationFrame       ||
+    , cancelAnimationFrame = window.cancelAnimationFrame       ||
                              window.webkitCancelAnimationFrame ||
                              window.mozCancelAnimationFrame    ||
                              window.oCancelAnimationFrame      ||
@@ -26,7 +28,7 @@ define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(requ
   }
   function Animate(fromProps,toProps,opts){
     opts || (opts = {});
-    opts = Util.merge(dft,opts);
+    opts = S.merge(dft,opts);
     var begin = +new Date
       , end = begin + opts.duration
       , now = begin
@@ -34,19 +36,19 @@ define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(requ
       , fx = Easing[opts.easing]
       , frame = opts.frame || S.noop
       , props = {}
-      , ended = false 
+      , ended = false // 动画是否已经结束
       , run
       , _duration = opts.duration
       , timer
 
-    
-    
+    // 用于resume的数据
+    // |---a----|_b__|--c--|
     var a = 0
       , b = 0
       , stopTime
       , resumeable = false;
 
-    
+    // do some clean
     for(var x in fromProps){
       if(!toProps[x] && toProps[x] != 0){
         delete fromProps[x]
@@ -59,7 +61,7 @@ define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(requ
       var s,t;
       t = a/diff
       s = fx(t)
-      if(Util.isArray(fromProps)){
+      if(S.isArray(fromProps)){
         for(var i=0,len=fromProps.length;i<len;i++){
           props[i] = fromProps[i] + (toProps[i] - fromProps[i])*s;
         }
@@ -122,7 +124,7 @@ define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(requ
     var from = {}
       , to = {}
       , len = props.length
-    Util.each(props,function(p,index){
+    S.each(props,function(p,index){
       var f = p.from
         , t = p.to
         , key
@@ -161,4 +163,6 @@ define('kg/kcharts/5.0.0/animate/index',["anim","util","./easing"],function(requ
     return anim;
   }
   return Animate;
+},{
+  requires:['anim']
 })

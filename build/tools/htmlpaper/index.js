@@ -1,9 +1,14 @@
-define('kg/kcharts/5.0.0/tools/htmlpaper/index',["util","node"],function(require, exports, module) {
+/*
+combined files : 
 
+kg/kcharts/6.0.0/tools/htmlpaper/index
 
-	var Util = require("util"),
-		Node = require("node");
-	var $ = Node.all,
+*/
+/**
+	基于html 画图形
+**/
+;KISSY.add('kg/kcharts/6.0.0/tools/htmlpaper/index',function(S){
+	var $ = S.all,
 		win = window;
 	var HtmlPaper = function(tgt,cfg){
 		var self = this;
@@ -12,10 +17,10 @@ define('kg/kcharts/5.0.0/tools/htmlpaper/index',["util","node"],function(require
 		return self._init(cfg);
 	};
 
-	Util.augment(HtmlPaper,{
+	S.augment(HtmlPaper,{
 		_init:function(cfg){
 			var self = this;
-			self._cfg = Util.mix({
+			self._cfg = S.mix({
 				clsName:"ks-charts-container",
 				prependTo:true,
 				width:undefined,
@@ -42,7 +47,11 @@ define('kg/kcharts/5.0.0/tools/htmlpaper/index',["util","node"],function(require
 			_cfg.prependTo ? $paper.prependTo($tgt) : $paper.appendTo($tgt);
 			return $paper;
 		},
-		
+		/*
+			文本
+			@param h_align  {String} "left","right","center"
+            @param v_align  {String} "top","middle","bottom"
+		*/
 		text:function(x,y,str,h_align,v_align){
 			var self = this,
 				offsetX = 0,
@@ -56,7 +65,7 @@ define('kg/kcharts/5.0.0/tools/htmlpaper/index',["util","node"],function(require
 				display:"block",
 				position:"absolute"
 			});
-			
+			//先渲染 再计算
 			$text.appendTo(self.$paper);
 
 			width = $text.outerWidth();

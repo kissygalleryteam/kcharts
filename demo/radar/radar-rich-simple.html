@@ -13,10 +13,15 @@
   <body>
     <div id="J_Radar" class="radar-con">
     </div>
-     <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-
-	 require("kg/kcharts/5.0.0/radar/index",function(Radar){
+	<script type="text/javascript">
+  KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+	 KISSY.use("kg/kcharts/6.0.0/radar/index",function(S,Radar){
 	   var radar = new Radar({
          renderTo:"#J_Radar",
          width:300, // 画布尺寸

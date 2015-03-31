@@ -16,15 +16,19 @@
 
 </div>
 <div id="console"></div>
-<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script src="//g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
-require.config({
-  packages:[{
-    name:"kg",
-    path:"http://g.assets.daily.taobao.net/kg/"
-  }]
-})
-require("kg/kcharts/5.0.0/linechart/index,kg/kcharts/5.0.0/raphael/index",function(LineChart,R){
+KISSY.Config.debug = true;
+KISSY.config({
+  packages:[
+    {
+      name:"gallery",
+      path:"../../../../../",
+      tag:Math.random()*10000
+    }
+  ]
+});
+KISSY.use("kg/kcharts/6.0.0/linechart/",function(S,LineChart){
   var linechart = new LineChart({
       renderTo:"#demo1",
       points:{
@@ -87,15 +91,8 @@ require("kg/kcharts/5.0.0/linechart/index,kg/kcharts/5.0.0/raphael/index",functi
         }
       }
   });
-   var paper = linechart.getRaphaelPaper();
-  //从实际数值转画布值  获取值为20的交点
-  var y = linechart.data2GrapicData(20,false,true);
-  var ctn =linechart.getInnerContainer(); 
-  var path2 = "M"+ctn.x+","+y+"H"+ctn.width
-  paper.path(path2).attr({stroke:"red"});
-  var path = linechart._lines[0].path;
-  var point = R.pathIntersection(path,path2)[0];
-  paper.circle(point.x,point.y,10).attr({fill:"red"});
+
+
 });</script>
 </body>
 </html>

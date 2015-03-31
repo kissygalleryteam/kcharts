@@ -1,4 +1,4 @@
-define(function(require,exports,module) {
+;KISSY.add(function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";

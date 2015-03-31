@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html>
 <head>
@@ -26,16 +27,11 @@
 
 </div>
 <a id="add">点我加增加一条线</a>
-<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
 <script type="text/javascript">
-require.config({
-  packages:[{
-    name:"kg",
-    path:"http://g.assets.daily.taobao.net/kg/"
-  }]
-})
-require("node,kg/kcharts/5.0.0/linechart/index",function(Node,LineChart){
-  var $ = Node.all;
+// KISSY.Config.combine = true;
+KISSY.use("kg/kcharts/6.0.0/linechart/index,node,event",function(S,LineChart){
+  var $ = KISSY.all;
   var linechart = new LineChart({
       renderTo:"#demo1",
       autoRender:false,

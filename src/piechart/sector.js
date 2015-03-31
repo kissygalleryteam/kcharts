@@ -1,7 +1,5 @@
 // -*- coding: utf-8; -*-
-define(function(require, exports, module) {
-  var Base = require('base');
-  var Util = require('util');
+;KISSY.add(function(S,Base){
   // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
     // 避免画不成一个○
@@ -152,11 +150,11 @@ define(function(require, exports, module) {
         , sectorcfg = (framedata && framedata.sectorcfg) || {}
         , $path = paper.path();
 
-      pathcfg = Util.merge({
+      pathcfg = S.merge({
         stroke:"#fff"
       },pathcfg)
       if(sectorcfg){
-        pathcfg = Util.merge(pathcfg,{
+        pathcfg = S.merge(pathcfg,{
           stroke:sectorcfg.stroke,
           "stroke-width":sectorcfg.strokeWidth
         })
@@ -164,7 +162,7 @@ define(function(require, exports, module) {
       $path.attr(pathcfg);
       this.set('$path',$path)
 
-      if(Util.isArray(r) && r.length == 2){
+      if(S.isArray(r) && r.length == 2){
         this._drawDonut();
       }else{
         this._drawSector();
@@ -211,5 +209,18 @@ define(function(require, exports, module) {
     }
   };
 
-  return Base.extend(methods);
+   var Sector;
+   if(Base.extend){
+     Sector = Base.extend(methods)
+   }else{
+     Sector = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Sector,S.Base,methods)
+   }
+  return Sector;
+},{
+  requires:["base"]
 });

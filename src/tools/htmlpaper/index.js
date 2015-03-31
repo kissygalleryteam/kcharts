@@ -1,11 +1,8 @@
 /**
 	基于html 画图形
 **/
-define(function(require,exports,module) {
-
-	var Util = require("util"),
-		Node = require("node");
-	var $ = Node.all,
+;KISSY.add(function(S){
+	var $ = S.all,
 		win = window;
 	var HtmlPaper = function(tgt,cfg){
 		var self = this;
@@ -14,10 +11,10 @@ define(function(require,exports,module) {
 		return self._init(cfg);
 	};
 
-	Util.augment(HtmlPaper,{
+	S.augment(HtmlPaper,{
 		_init:function(cfg){
 			var self = this;
-			self._cfg = Util.mix({
+			self._cfg = S.mix({
 				clsName:"ks-charts-container",
 				prependTo:true,
 				width:undefined,

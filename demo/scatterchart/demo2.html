@@ -16,11 +16,17 @@
 <div class="wrapper">
 	<div id="demo1"></div>
 </div>
- <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-
-require("kg/kcharts/5.0.0/scatterchart/index",function(ScatterChart){
-       
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
+<script>
+KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+KISSY.use('node,event,kg/kcharts/6.0.0/scatterchart/',function(S,N,Evt,ScatterChart){
+    var $ = S.all;
 var series = [{
                 text: 'Female',
                 data: [[161.2, 51.6,1],[176.5, 71.8,2],[170.0, 59.0,3], [159.1, 47.6,3], [166.0, 69.8,3], [176.2, 66.8,3], [160.2, 75.2,3]]

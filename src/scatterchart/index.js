@@ -2,24 +2,9 @@
  * @fileOverview KChart 1.3  scatterchart
  * @author huxiaoqi567@gmail.com
  */
-define(function(require,exports,module) {
-	var Util = require("util"),
-		Node = require("node"),
-		Base = require("base"),
-		Evt = require('event-dom'),
-		Template = require("kg/kcharts/5.0.0/tools/template/index"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-		BaseChart = require("kg/kcharts/5.0.0/basechart/index"),
-		ColorLib = require("kg/kcharts/5.0.0/tools/color/index"),
-		HtmlPaper = require("kg/kcharts/5.0.0/tools/htmlpaper/index"),
-		Legend = require("kg/kcharts/5.0.0/legend/index"),
-		Theme = require("./theme"),
-		Touch = require("kg/kcharts/5.0.0/tools/touch/index"),
-		Tip = require("kg/kcharts/5.0.0/tip/index"),
-		Anim = require("kg/kcharts/5.0.0/animate/index"),
-		graphTool = require("kg/kcharts/5.0.0/tools/graphtool/index"),
-		Cfg = require("./cfg");
-	var $ = Node.all,
+;
+KISSY.add( function(S, Base, Node, D, Evt, Template, BaseChart, Raphael, ColorLib, HtmlPaper, Legend, Theme, touch, Tip, Cfg,graphTool) {
+	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
@@ -35,8 +20,8 @@ define(function(require,exports,module) {
 			var self = this,
 				points;
 			self.chartType = "scatterchart";
-			var defaultCfg = Util.clone(Cfg);
-			self._cfg = Util.mix(defaultCfg, self.userConfig,undefined,undefined,true);
+			var defaultCfg = S.clone(Cfg);
+			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true);
 			self._cfg.zoomType = "xy";
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
@@ -58,7 +43,7 @@ define(function(require,exports,module) {
 			self._finished = [];
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
-			self._cfg = Util.mix(Util.clone(Util.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 			self.color = color = new ColorLib({
 				themeCls: themeCls
 			});
@@ -109,9 +94,10 @@ define(function(require,exports,module) {
 
 			self.bindEvt();
 
+			S.log(self);
 		},
 		processAttr: function(attrs, color) {
-			var newAttrs = Util.clone(attrs);
+			var newAttrs = S.clone(attrs);
 			for (var i in newAttrs) {
 				if (newAttrs[i] && typeof newAttrs[i] == "string") {
 					newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
@@ -192,7 +178,7 @@ define(function(require,exports,module) {
 				$stock;
 
 			if (x !== undefined && y !== undefined) {
-				if (Util.isFunction(template)) {
+				if (S.isFunction(template)) {
 					return template({
 						paper: paper,
 						groupIndex: groupIndex,
@@ -235,7 +221,7 @@ define(function(require,exports,module) {
 					width: ctn.width,
 					height: ctn.height
 				} : {},
-				tipCfg = Util.mix(_cfg.tip, {
+				tipCfg = S.mix(_cfg.tip, {
 					rootNode: self._$ctnNode,
 					clsName: _cfg.themeCls,
 					boundry: boundryCfg
@@ -312,7 +298,7 @@ define(function(require,exports,module) {
 				len = colors.length,
 				cfg = self._cfg,
 				series = self._cfg.series
-			var barconfig = Util.map(series, function(serie, i) {
+			var barconfig = S.map(series, function(serie, i) {
 				i = i % len;
 				var item = {},
 					color = colors[i]
@@ -321,7 +307,7 @@ define(function(require,exports,module) {
 				item.HOVER = color.HOVER;
 				return item;
 			});
-			var globalConfig = Util.merge({
+			var globalConfig = S.merge({
 				// icontype:"circle",
 				// iconsize:10,
 				interval: 20, //legend之间的间隔
@@ -422,7 +408,7 @@ define(function(require,exports,module) {
 		bindEvt: function() {
 			var self = this,
 				evtEls = self._evtEls,
-				hoverAttr = Util.clone(self._cfg.points.hoverAttr);
+				hoverAttr = S.clone(self._cfg.points.hoverAttr);
 			Evt.detach(evtEls.paper.$paper, "mousemove");
 			Evt.on(evtEls.paper.$paper, "mousemove",function(e){
 				//mousemove代理
@@ -480,7 +466,7 @@ define(function(require,exports,module) {
 			if (!tpl) return;
 			tipData = self._points[groupIndex][index].dataInfo;
 			//支持方法渲染
-			if (Util.isFunction(tpl)) {
+			if (S.isFunction(tpl)) {
 				tip.setContent(tpl(tipData));
 			} else {
 				tip.renderTemplate(tpl, tipData);
@@ -522,6 +508,35 @@ define(function(require,exports,module) {
 			this._$ctnNode.html("");
 		}
 	}
+	var ScatterChart;
 
-	return BaseChart.extend(methods);
+	if (Base.extend) {
+		ScatterChart = BaseChart.extend(methods);
+	} else {
+		ScatterChart = function(cfg) {
+			var self = this;
+			self.userConfig = cfg;
+			this.init();
+		}
+		S.extend(ScatterChart, BaseChart, methods);
+	}
+	return ScatterChart;
+}, {
+	requires: [
+		'base',
+		'node',
+		'dom',
+		'event',
+		'gallery/template/1.0/index',
+		'kg/kcharts/6.0.0/basechart/index',
+		'kg/kcharts/6.0.0/raphael/index',
+		'kg/kcharts/6.0.0/tools/color/index',
+		'kg/kcharts/6.0.0/tools/htmlpaper/index',
+		'kg/kcharts/6.0.0/legend/index',
+		'./theme',
+		'kg/kcharts/6.0.0/tools/touch/index',
+		'kg/kcharts/6.0.0/tip/index',
+		'./cfg',
+		'kg/kcharts/6.0.0/tools/graphtool/index'
+	]
 });

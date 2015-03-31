@@ -5,26 +5,9 @@
  * 支持两级柱图 柱形图默认刻度最小值0
  * 新增barClick事件
  */
-define(function(require,exports,module) {
-
-	var Util = require("util"),
-		Node = require("node"),
-		Base = require("base"),
-		Evt = require('event-dom'),
-		Template = require("kg/kcharts/5.0.0/tools/template/index"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-		BaseChart = require("kg/kcharts/5.0.0/basechart/index"),
-		ColorLib = require("kg/kcharts/5.0.0/tools/color/index"),
-		HtmlPaper = require("kg/kcharts/5.0.0/tools/htmlpaper/index"),
-		Legend = require("kg/kcharts/5.0.0/legend/index"),
-		Theme = require("./theme"),
-		Touch = require("kg/kcharts/5.0.0/tools/touch/index"),
-		Tip = require("kg/kcharts/5.0.0/tip/index"),
-		Anim = require("kg/kcharts/5.0.0/animate/index"),
-		graphTool = require("kg/kcharts/5.0.0/tools/graphtool/index"),
-		Cfg = require("./cfg");
-
-	var $ = Node.all,
+;
+KISSY.add(function(S, Node, Base, Template, BaseChart, Raphael, Color, HtmlPaper, Legend, Theme, Touch, Tip, Evt, Cfg) {
+	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		canvasCls = themeCls + "-canvas",
@@ -40,9 +23,9 @@ define(function(require,exports,module) {
 		init: function() {
 			var self = this;
 			self.chartType = "barchart";
-			var defaultCfg = Util.clone(Cfg);
+			var defaultCfg = S.clone(Cfg);
 			// KISSY > 1.4 逻辑
-			self._cfg = Util.mix(defaultCfg, self.userConfig, undefined, undefined, true)
+			self._cfg = S.mix(defaultCfg, self.userConfig, undefined, undefined, true)
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		},
@@ -62,8 +45,8 @@ define(function(require,exports,module) {
 			self._finished = [];
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
-			self._cfg = Util.mix(Util.clone(Util.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
-			self.color = color = new ColorLib({
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
+			self.color = color = new Color({
 				themeCls: themeCls
 			});
 			if (self._cfg.colors.length > 0) {
@@ -121,6 +104,8 @@ define(function(require,exports,module) {
 
 			self.bindEvt();
 
+			S.log(self);
+
 		},
 		//画柱
 		drawBar: function(groupIndex, barIndex, callback) {
@@ -145,7 +130,7 @@ define(function(require,exports,module) {
 			}
 			//允许动画
 			if (_cfg.anim) {
-				var duration = _cfg.anim.duration ? (Util.isNumber(_cfg.anim.duration) ? _cfg.anim.duration : 500) : 500,
+				var duration = _cfg.anim.duration ? (S.isNumber(_cfg.anim.duration) ? _cfg.anim.duration : 500) : 500,
 					easing = _cfg.anim.easing ? _cfg.anim.easing : "easeOut";
 				if (isY) {
 					var zeroX = BaseChart.prototype.data2GrapicData.call(self, 0, true, false);
@@ -296,7 +281,7 @@ define(function(require,exports,module) {
 					width: ctn.width,
 					height: ctn.height
 				} : {},
-				tipCfg = Util.mix(_cfg.tip, {
+				tipCfg = S.mix(_cfg.tip, {
 					rootNode: self._$ctnNode,
 					clsName: _cfg.themeCls,
 					boundry: boundryCfg
@@ -375,7 +360,7 @@ define(function(require,exports,module) {
 				len = colors.length,
 				cfg = self._cfg,
 				series = self._cfg.series
-			var __legendCfg = Util.map(series, function(serie, i) {
+			var __legendCfg = S.map(series, function(serie, i) {
 				i = i % len;
 				var item = {},
 					color = colors[i]
@@ -384,7 +369,7 @@ define(function(require,exports,module) {
 				item.HOVER = color.HOVER;
 				return item;
 			});
-			var globalConfig = Util.merge({
+			var globalConfig = S.merge({
 				// icontype:"circle",
 				// iconsize:10,
 				interval: 20, //legend之间的间隔
@@ -463,7 +448,7 @@ define(function(require,exports,module) {
 		barChange: function(barGroup, barIndex) {
 			var self = this,
 				currentBars = self._bars[barGroup],
-				e = Util.mix({
+				e = S.mix({
 					target: currentBars['bars'][barIndex],
 					currentTarget: currentBars['bars'][barIndex],
 					barGroup: Math.round(barGroup),
@@ -491,7 +476,7 @@ define(function(require,exports,module) {
 		barClick: function(barGroup, barIndex) {
 			var self = this,
 				currentBars = self._bars[barGroup],
-				e = Util.mix({
+				e = S.mix({
 					target: currentBars['bars'][barIndex],
 					currentTarget: currentBars['bars'][barIndex],
 					barGroup: Math.round(barGroup),
@@ -509,13 +494,13 @@ define(function(require,exports,module) {
 				tpl = self._cfg.tip.template,
 				posx = isY ? $bar.attr("x") / 1 + $bar.attr("width") / 1 : $bar.attr("x"),
 				posy = $bar.attr("y"),
-				tipData = Util.merge(self._points[barGroup][barIndex].dataInfo, _cfg.series[barGroup]);
+				tipData = S.merge(self._points[barGroup][barIndex].dataInfo, _cfg.series[barGroup]);
 			//删除data 避免不必要的数据
 			delete tipData.data;
 			self._points[barGroup][barIndex]["dataInfo"],
 			self.barChange(barGroup, barIndex);
 			if (!tpl) return;
-			Util.mix(tipData, {
+			S.mix(tipData, {
 				groupindex: barGroup,
 				barindex: barIndex
 			});
@@ -529,7 +514,7 @@ define(function(require,exports,module) {
 			});
 		},
 		processAttr: function(attrs, color) {
-			var newAttrs = Util.clone(attrs);
+			var newAttrs = S.clone(attrs);
 			for (var i in newAttrs) {
 				if (newAttrs[i] && typeof newAttrs[i] == "string") {
 					newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
@@ -558,7 +543,7 @@ define(function(require,exports,module) {
 			var self = this,
 				$ctnNode = self._$ctnNode;
 			self._cfg.anim = "";
-			var rerender = Util.buffer(function() {
+			var rerender = S.buffer(function() {
 				self.render();
 			}, 200);
 			!self.__isFix2Resize && self.on("resize", function() {
@@ -613,6 +598,7 @@ define(function(require,exports,module) {
 			self.clearEvtLayout();
 			self.renderEvtLayout();
 			self.bindEvt();
+			S.log(self);
 		},
 		hideBar: function(barIndex) {
 			var self = this,
@@ -647,6 +633,7 @@ define(function(require,exports,module) {
 			self.clearEvtLayout();
 			self.renderEvtLayout();
 			self.bindEvt();
+			S.log(self);
 		},
 		afterRender: function() {
 			var self = this;
@@ -674,6 +661,33 @@ define(function(require,exports,module) {
 		}
 	};
 
-	return BaseChart.extend(methods);
+	var BarChart;
+	if (Base.extend) {
+		BarChart = BaseChart.extend(methods);
+	} else {
+		BarChart = function(cfg) {
+			var self = this;
+			self.userConfig = cfg;
+			self.init();
+		};
+		S.extend(BarChart, BaseChart, methods);
+	}
+	return BarChart;
 
+}, {
+	requires: [
+		'node',
+		'base',
+		'gallery/template/1.0/index',
+		'kg/kcharts/6.0.0/basechart/index',
+		'kg/kcharts/6.0.0/raphael/index',
+		'kg/kcharts/6.0.0/tools/color/index',
+		'kg/kcharts/6.0.0/tools/htmlpaper/index',
+		'kg/kcharts/6.0.0/legend/index',
+		'./theme',
+		'kg/kcharts/6.0.0/tools/touch/index',
+		'kg/kcharts/6.0.0/tip/index',
+		'event',
+		'./cfg'
+	]
 });

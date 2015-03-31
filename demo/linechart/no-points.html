@@ -15,10 +15,16 @@
 <div id="demo1">
 
 </div>
-<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
-
-require("kg/kcharts/2.0.0/linechart/index",function(LineChart){
+KISSY.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
+KISSY.use("kg/kcharts/6.0.0/linechart/index",function(S,LineChart){
   function data() {
   var sin = [],
       cos = [];

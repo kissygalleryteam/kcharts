@@ -14,16 +14,16 @@
     }
 </style>
 <div id="map"></div>
-<script src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
 <script type="text/javascript">
-require('node,util,kg/kcharts/5.0.0/mapchart/index', function (Node, Util,MapChart) {
-var $ = Node.all;
+KISSY.use('node',function(S,Node){
+        var $ = KISSY.all;
+        S.use('kg/kcharts/6.0.0/mapchart/index', function (S, MapChart) {
             var h = screen.availHeight * 0.7;
 
             $('#map').css("height", h);
 
-            var map = new MapChart( {
-                renderTo:'#map',
+            var map = new MapChart('#map', {
                 themeCls: "ks-chart-default",
                 autoRender: false,
                 areaText: {
@@ -37,7 +37,7 @@ var $ = Node.all;
                 }
             });
             map.on("over", function (d) {
-               window.console &&  console.log("over", d.data);
+                console.log("over", d.data);
             });
             map.render();
             var stars = [], eve = Raphael.eve, last;
@@ -62,6 +62,7 @@ var $ = Node.all;
             }
 
             blink();
+        });
 
 });
 </script>

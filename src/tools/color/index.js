@@ -2,10 +2,8 @@
  * @fileOverview KCharts  通用颜色库
  * @author huxiaoqi567@gmail.com
  */
-define(function(require,exports,module) {
-
-	var Util = require("util");
-
+;
+KISSY.add(function(S) {
 	var Color = function(cfg) {
 		this.init(cfg);
 	};
@@ -27,7 +25,7 @@ define(function(require,exports,module) {
 		return "#" + RR + GG + BB;
 	}
 
-	Util.augment(Color, {
+	S.augment(Color, {
 		init: function(cfg) {
 			var themeCls = cfg && cfg.themeCls || "ks-chart-default";
 			this._colors = this.colorCfg[themeCls] || this.colorCfg["ks-chart-default"];

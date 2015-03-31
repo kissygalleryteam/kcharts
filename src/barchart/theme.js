@@ -1,4 +1,4 @@
-define(function(require,exports,module) {
+;KISSY.add(function(S){
 
 	var COLOR_TPL = "{COLOR}";
 

@@ -2,9 +2,7 @@
  * 矢量画刻度
  * @author cookieu@gmail.com
  * */
-define(function(require, exports, module) {
-  var Util = require('util'),
-      Base = require('base');
+;KISSY.add(function(S,Base){
    var methods = {
      initializer:function(){
        var cfg = this.get('cfg')
@@ -61,7 +59,7 @@ define(function(require, exports, module) {
          , style4thin = {
 
          }
-       Util.mix(style4thin,cfg.thinStyle,true,['stroke-width','stroke'])
+       S.mix(style4thin,cfg.thinStyle,true,['stroke-width','stroke'])
        thinTick.attr(style4thin)
        if(m){
          var patharray4thick = []
@@ -80,10 +78,25 @@ define(function(require, exports, module) {
            , style4thick = {
              'stroke-width':2
            }
-         Util.mix(style4thick,cfg.thickStyle,true,['stroke-width','stroke'])
+         S.mix(style4thick,cfg.thickStyle,true,['stroke-width','stroke'])
          thick.attr(style4thick)
        }
      }
    }
-   return Base.extend(methods);
- })
+
+   var Ticks;
+
+   if(Base.extend){
+     Ticks = Base.extend(methods);
+   }else{
+     Ticks = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Ticks,Base,methods);
+   }
+   return Ticks
+ },{
+   requires:["base"]
+})

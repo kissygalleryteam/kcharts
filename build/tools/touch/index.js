@@ -1,7 +1,15 @@
-define('kg/kcharts/5.0.0/tools/touch/index',["ua"],function(require, exports, module) {
+/*
+combined files : 
 
-  var UA = require("ua");
-  if(UA.ie) return;
+kg/kcharts/6.0.0/tools/touch/index
+
+*/
+/*
+  touch 事件的
+  note:change touch event to mouse event
+*/
+;KISSY.add('kg/kcharts/6.0.0/tools/touch/index',function(S){
+  if(S.UA.ie) return;
   var touchHandled,touchmove=false;
 
   function simulateMouseEvent(event,type){
@@ -12,14 +20,14 @@ define('kg/kcharts/5.0.0/tools/touch/index',["ua"],function(require, exports, mo
           first = touches[0],
           simulatedEvent = document.createEvent('MouseEvent');
 
-      
-      
-      
-      
+      //event.initMouseEvent(type, canBubble, cancelable, view,
+      //               detail, screenX, screenY, clientX, clientY,
+      //               ctrlKey, altKey, shiftKey, metaKey,
+      //               button, relatedTarget);
       simulatedEvent.initMouseEvent(type, true, true, window, 1,
                                 first.screenX, first.screenY,
                                 first.clientX, first.clientY, false,
-                                false, false, false, 0, null);
+                                false, false, false, 0/*left*/, null);
 
       event.target.dispatchEvent(simulatedEvent);
 

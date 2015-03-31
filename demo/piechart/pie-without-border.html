@@ -24,11 +24,16 @@
   <body>
     <div id="J_Pie1" class="pi-con">
     </div>
-		<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-
-		require("kg/kcharts/5.0.0/piechart/index",function(Pie){
-			var Util = require("util");
+		<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+	<script type="text/javascript">
+	KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+			 KISSY.use("kg/kcharts/6.0.0/piechart/index",function(S,Pie){
 				 function pie1(){
 					 var data = [
 						 {label:"Chrome", data:1},
@@ -85,7 +90,7 @@
 					 //画没有border的扇形
 					 pie.on("beforeRender",function(){
 						 var $sectors = this.get("$sectors")
-						 Util.each($sectors,function($sector){
+						 S.each($sectors,function($sector){
 							 var $path = $sector.get("$path");
 							 $path.attr("stroke-width",0);
 						 })

@@ -13,7 +13,7 @@ KISSY.config({
     ]
 });
 //载入ratiochart
-KISSY.use('kg/kcharts/2.0.0/ratiochart/index', function(S, Ratio){
+KISSY.use('kg/kcharts/6.0.0/ratiochart/index', function(S, Ratio){
   new Ratio({
     container: '#J_column1',
     type: 1,

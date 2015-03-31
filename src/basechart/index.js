@@ -1,14 +1,9 @@
 /*
 TODO 坐标运算  画布大小计算
 */
-define(function(require,exports,module){
-	var Util = require("util"),
-		Node = require("node"),
-		Base = require("base"),
-		DOM = require("dom"),
-		Common = require("./common");
-
-	var $ = Node.all;
+;
+KISSY.add(function(S, Base, Node, Common) {
+	var $ = S.all;
 
 	var methods = {
 		init: function(cfg) {
@@ -17,7 +12,7 @@ define(function(require,exports,module){
 				_cfg = self._cfg;
 			if (cfg && cfg.renderTo) {
 				if (!self.__isInited) {
-					_cfg = self._cfg = Util.mix({
+					_cfg = self._cfg = S.mix({
 						autoRender:true,
 						zIndex: 0,
 						yAxis: {
@@ -49,7 +44,7 @@ define(function(require,exports,module){
 					//构建内部容器
 					self.createContainer();
 
-					Util.mix(self, {
+					S.mix(self, {
 						_datas: {
 							cur: {},
 							total: {}
@@ -334,7 +329,7 @@ define(function(require,exports,module){
 			if (_cfg.stackable) {
 				//堆叠图 需要叠加多组数据 进行计算
 				for (var i in self._datas['cur']) {
-					if (Util.isArray(self._datas['cur'][i]['data'])) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
 						numbers = self._datas['cur'][i]['data'];
 					}
 					for (var j in numbers) {
@@ -344,7 +339,7 @@ define(function(require,exports,module){
 				}
 			} else {
 				for (var i in self._datas['cur']) {
-					if (Util.isArray(self._datas['cur'][i]['data'])) {
+					if (S.isArray(self._datas['cur'][i]['data'])) {
 						if (zoomType == "xy") {
 							numbers = self.getArrayByKey(self._datas['cur'][i]['data'], arg)
 						} else {
@@ -360,9 +355,9 @@ define(function(require,exports,module){
 			var self = this;
 			if (!self._datas['total'][0] || !self._datas['total'][0]['data']) return;
 			for (var i in self._datas['total'][0]['data']) {
-				if (Util.isPlainObject(self._datas['total'][0]['data'][i])) {
+				if (S.isPlainObject(self._datas['total'][0]['data'][i])) {
 					return "object";
-				} else if (Util.isNumber(self._datas['total'][0]['data'][i] - 0)) {
+				} else if (S.isNumber(self._datas['total'][0]['data'][i] - 0)) {
 					return "number";
 				}
 			}
@@ -371,7 +366,7 @@ define(function(require,exports,module){
 		_getScales: function(allDatas, axis) {
 			var self = this;
 			//若直接配置了text 则按照text返回
-			if (axis.text && Util.isArray(axis.text)) {
+			if (axis.text && S.isArray(axis.text)) {
 				return axis.text;
 			} else {
 				var cmax = axis.max / 1,
@@ -431,7 +426,7 @@ define(function(require,exports,module){
 					break;
 			}
 			//如果是数组
-			if (Util.isArray(data)) {
+			if (S.isArray(data)) {
 				for (var i in data) {
 					tmp.push(self.data2Grapic(data[i], max, min, dist, margin, nagitive));
 				}
@@ -641,7 +636,7 @@ define(function(require,exports,module){
 		getArrayByKey: function(array, key) {
 			var tmp = [];
 			for (var i in array) {
-				if (array[i][key] || Util.isNumber(array[i][key])) {
+				if (array[i][key] || S.isNumber(array[i][key])) {
 					tmp.push(array[i][key]);
 				}
 			}
@@ -704,7 +699,7 @@ define(function(require,exports,module){
 					offsetY: e.offsetY
 				}
 			} else {
-				var offset = DOM.offset(target);
+				var offset = S.DOM.offset(target);
 				return {
 					offsetX: (e.offsetX || e.clientX - offset.left),
 					offsetY: (e.offsetY || e.clientY - offset.top)
@@ -715,11 +710,19 @@ define(function(require,exports,module){
 			return this._cfg;
 		},
 		setConfig:function(cfg){
-			this._cfg = Util.mix(this._cfg,cfg,undefined,undefined,true);
+			this._cfg = S.mix(this._cfg,cfg,undefined,undefined,true);
 			this.__setData();
 		}
 	};
-	var BaseChart = Base.extend(methods);
+	var BaseChart;
+	if (Base.extend) {
+		BaseChart = Base.extend(methods);
+	} else {
+		BaseChart = function() {};
+		S.extend(BaseChart, Base, methods);
+	}
 	BaseChart.Common = Common;
 	return BaseChart;
+}, {
+	requires: ['base', 'node', './common']
 });

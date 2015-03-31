@@ -1,33 +1,38 @@
-define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
+/*
+combined files : 
 
+kg/kcharts/6.0.0/raphael/index
+
+*/
+;KISSY.add('kg/kcharts/6.0.0/raphael/index',function(S){
 
   (function(win){
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      // ┌────────────────────────────────────────────────────────────────────┐ \\
+// │ Raphaël 2.1.1 - JavaScript Vector Library                          │ \\
+// ├────────────────────────────────────────────────────────────────────┤ \\
+// │ Copyright © 2008-2012 Dmitry Baranovskiy (http://raphaeljs.com)    │ \\
+// │ Copyright © 2008-2012 Sencha Labs (http://sencha.com)              │ \\
+// ├────────────────────────────────────────────────────────────────────┤ \\
+// │ Licensed under the MIT (http://raphaeljs.com/license.html) license.│ \\
+// └────────────────────────────────────────────────────────────────────┘ \\
+// Copyright (c) 2013 Adobe Systems Incorporated. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+// ┌────────────────────────────────────────────────────────────┐ \\
+// │ Eve 0.4.2 - JavaScript Events Library                      │ \\
+// ├────────────────────────────────────────────────────────────┤ \\
+// │ Author Dmitry Baranovskiy (http://dmitry.baranovskiy.com/) │ \\
+// └────────────────────────────────────────────────────────────┘ \\
 
   (function(glob) {
     var version = "0.4.2",
@@ -43,7 +48,20 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       events = {
         n: {}
       },
-      
+      /*\
+     * eve
+      [ method ]
+
+     * Fires event with given `name`, given scope and other parameters.
+
+      > Arguments
+
+      - name (string) name of the *event*, dot (`.`) or slash (`/`) separated
+      - scope (object) context for the event handlers
+      - varargs (...) the rest of arguments will be sent to event handlers
+
+      = (object) array of returned values from the listeners
+    \*/
       eve = function(name, scope) {
         name = String(name);
         var e = events,
@@ -106,9 +124,20 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         current_event = ce;
         return out.length ? out : null;
       };
-    
+    // Undocumented. Debug only.
     eve._events = events;
-    
+    /*\
+    * eve.listeners
+   [ method ]
+
+    * Internal method which gives you array of all event handlers that will be triggered by the given `name`.
+
+                                                                                              > Arguments
+
+ - name (string) name of the event, dot (`.`) or slash (`/`) separated
+
+                                                    = (array) array of event handlers
+\*/
     eve.listeners = function(name) {
       var names = name.split(separator),
         e = events,
@@ -141,7 +170,30 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return out;
     };
 
-    
+    /*\
+ * eve.on
+[ method ]
+      **
+      * Binds given event handler with a given name. You can use wildcards “`*`” for the names:
+            | eve.on("*.under.*", f);
+     | eve("mouse.under.floor"); // triggers f
+      * Use @eve to trigger the listener.
+      **
+     > Arguments
+      **
+     - name (string) name of the event, dot (`.`) or slash (`/`) separated, with optional wildcards
+     - f (function) event handler function
+      **
+     = (function) returned function accepts a single numeric parameter that represents z-index of the handler. It is an optional feature and only used when you need to ensure that some subset of handlers will be invoked in a given order, despite of the order of assignment.
+     > Example:
+     | eve.on("mouse", eatIt)(2);
+     | eve.on("mouse", scream);
+     | eve.on("mouse", catchIt)(1);
+      * This will ensure that `catchIt()` function will be called before `eatIt()`.
+    *
+      * If you want to put your handler before non-indexed handlers, specify a negative value.
+      * Note: I assume most of the time you don’t need to worry about z-index, but it’s nice to have this feature “just in case”.
+     \*/
     eve.on = function(name, f) {
       name = String(name);
       if (typeof f != "function") {
@@ -167,30 +219,87 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }
       };
     };
-    
+    /*\
+     * eve.f
+    [ method ]
+    **
+    * Returns function that will fire given event with optional arguments.
+                                                                       * Arguments that will be passed to the result function will be also
+                                                                                                               * concated to the list of final arguments.
+                                                                                                              | el.onclick = eve.f("click", 1, 2);
+                                                                                                              | eve.on("click", function (a, b, c) {
+                                                                                                              |     console.log(a, b, c); // 1, 2, [event object]
+ | });
+> Arguments
+   - event (string) event name
+          - varargs (…) and any other arguments
+                         = (function) possible event handler function
+                           \*/
     eve.f = function(event) {
       var attrs = [].slice.call(arguments, 1);
       return function() {
         eve.apply(null, [event, null].concat(attrs).concat([].slice.call(arguments, 0)));
       };
     };
-    
+    /*\
+     * eve.stop
+    [ method ]
+     **
+     * Is used inside an event handler to stop the event, preventing any subsequent listeners from firing.
+    \*/
     eve.stop = function() {
       stop = 1;
     };
-    
+    /*\
+    * eve.nt
+[ method ]
+          **
+             * Could be used inside event handler to figure out actual name of the event.
+ **
+> Arguments
+         **
+         - subname (string) #optional subname of the event
+                                        **
+                                       = (string) name of the event, if `subname` is not specified
+                                        * or
+  = (boolean) `true`, if current event’s name contains `subname`
+                                                               \*/
     eve.nt = function(subname) {
       if (subname) {
         return new RegExp("(?:\\.|\\/|^)" + subname + "(?:\\.|\\/|$)").test(current_event);
       }
       return current_event;
     };
-    
+    /*\
+                           * eve.nts
+ [ method ]
+                **
+                * Could be used inside event handler to figure out actual name of the event.
+    **
+      **
+    = (array) names of the event
+                               \*/
     eve.nts = function() {
       return current_event.split(separator);
     };
-    
-    
+    /*\
+  * eve.off
+  [ method ]
+  **
+           * Removes given function from the list of event listeners assigned to given name.
+                                                                      * If no arguments specified all the events will be cleared.
+ **
+   > Arguments
+                                                                                                           **
+           - name (string) name of the event, dot (`.`) or slash (`/`) separated, with optional wildcards
+                                                                                                       - f (function) event handler function
+                                                                                                                                          \*/
+    /*\
+                                                                                                                                   * eve.unbind
+                                                                                                   [ method ]
+                                                                                             **
+                                                                                                    * See @eve.off
+                                                                                                      \*/
     eve.off = eve.unbind = function(name, f) {
       if (!name) {
         eve._events = events = {
@@ -252,7 +361,23 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }
       }
     };
-    
+    /*\
+     * eve.once
+     [ method ]
+     **
+     * Binds given event handler with a given name to only run once then unbind itself.
+     | eve.once("login", f);
+     | eve("login"); // triggers f
+     | eve("login"); // no listeners
+     * Use @eve to trigger the listener.
+     **
+     > Arguments
+     **
+     - name (string) name of the event, dot (`.`) or slash (`/`) separated, with optional wildcards
+     - f (function) event handler function
+     **
+     = (function) same return function as @eve.on
+    \*/
     eve.once = function(name, f) {
       var f2 = function() {
         eve.unbind(name, f2);
@@ -260,41 +385,95 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       };
       return eve.on(name, f2);
     };
-    
+    /*\
+     * eve.version
+     [ property (string) ]
+     **
+     * Current version of the library.
+    \*/
     eve.version = version;
     eve.toString = function() {
       return "You are running Eve " + version;
     };
     
-    
-    
-    
+    // (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define != "undefined" ? (define("eve", [], function() {
+    //   return eve;
+    // })) : (glob.eve = eve));
     glob.eve = eve
   })(this);
 
 
-  
-  
-  
-  
-  
-  
-  
+  // ┌─────────────────────────────────────────────────────────────────────┐ \\
+  // │ "Raphaël 2.1.0" - JavaScript Vector Library                         │ \\
+  // ├─────────────────────────────────────────────────────────────────────┤ \\
+  // │ Copyright (c) 2008-2011 Dmitry Baranovskiy (http://raphaeljs.com)   │ \\
+  // │ Copyright (c) 2008-2011 Sencha Labs (http://sencha.com)             │ \\
+  // │ Licensed under the MIT (http://raphaeljs.com/license.html) license. │ \\
+  // └─────────────────────────────────────────────────────────────────────┘ \\
 
   (function(glob, factory) {
-    
+    // AMD support
     if (typeof define === "function" && define.amd) {
-      
+      // Define as an anonymous module
       define(["eve"], function(eve) {
         return factory(glob, eve);
       });
     } else {
-      
-      
+      // Browser globals (glob is window)
+      // Raphael adds itself to window
       factory(glob, glob.eve);
     }
   }(this, function(window, eve) {
-    
+    /*\
+     * Raphael
+     [ method ]
+     **
+     * Creates a canvas object on which to draw.
+     * You must do this first, as all future calls to drawing methods
+     * from this instance will be bound to this canvas.
+     > Parameters
+     **
+     - container (HTMLElement|string) DOM element or its ID which is going to be a parent for drawing surface
+     - width (number)
+     - height (number)
+     - callback (function) #optional callback function which is going to be executed in the context of newly created paper
+     * or
+     - x (number)
+     - y (number)
+     - width (number)
+     - height (number)
+     - callback (function) #optional callback function which is going to be executed in the context of newly created paper
+     * or
+     - all (array) (first 3 or 4 elements in the array are equal to [containerID, width, height] or [x, y, width, height]. The rest are element descriptions in format {type: type, <attributes>}). See @Paper.add.
+     - callback (function) #optional callback function which is going to be executed in the context of newly created paper
+     * or
+     - onReadyCallback (function) function that is going to be called on DOM ready event. You can also subscribe to this event via Eve’s “DOMLoad” event. In this case method returns `undefined`.
+     = (object) @Paper
+     > Usage
+     | // Each of the following examples create a canvas
+     | // that is 320px wide by 200px high.
+     | // Canvas is created at the viewport’s 10,50 coordinate.
+     | var paper = Raphael(10, 50, 320, 200);
+     | // Canvas is created at the top left corner of the #notepad element
+     | // (or its top right corner in dir="rtl" elements)
+     | var paper = Raphael(document.getElementById("notepad"), 320, 200);
+     | // Same as above
+     | var paper = Raphael("notepad", 320, 200);
+     | // Image dump
+     | var set = Raphael(["notepad", 320, 200, {
+     |     type: "rect",
+     |     x: 10,
+     |     y: 10,
+     |     width: 25,
+     |     height: 25,
+     |     stroke: "#f00"
+     | }, {
+     |     type: "text",
+     |     x: 30,
+     |     y: 40,
+     |     text: "Dump"
+     | }]);
+    \*/
 
     function R(first) {
       if (R.is(first, "function")) {
@@ -337,15 +516,45 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         is: g.win.Raphael
       },
       Paper = function() {
-        
-        
+        /*\
+             * Paper.ca
+             [ property (object) ]
+             **
+             * Shortcut for @Paper.customAttributes
+            \*/
+        /*\
+             * Paper.customAttributes
+             [ property (object) ]
+             **
+             * If you have a set of attributes that you would like to represent
+             * as a function of some number you can do it easily with custom attributes:
+             > Usage
+             | paper.customAttributes.hue = function (num) {
+             |     num = num % 1;
+             |     return {fill: "hsb(" + num + ", 0.75, 1)"};
+             | };
+             | // Custom attribute “hue” will change fill
+             | // to be given hue with fixed saturation and brightness.
+             | // Now you can use it like this:
+             | var c = paper.circle(10, 10, 10).attr({hue: .45});
+             | // or even like this:
+             | c.animate({hue: 1}, 1e3);
+             |
+             | // You could also create custom attribute
+             | // with multiple parameters:
+             | paper.customAttributes.hsb = function (h, s, b) {
+             |     return {fill: "hsb(" + [h, s, b].join(",") + ")"};
+             | };
+             | c.attr({hsb: "0.5 .8 1"});
+             | c.animate({hsb: [1, 0, 0.5]}, 1e3);
+            \*/
         this.ca = this.customAttributes = {};
       },
       paperproto,
       appendChild = "appendChild",
       apply = "apply",
       concat = "concat",
-      supportsTouch = ('ontouchstart' in g.win) || g.win.DocumentTouch && g.doc instanceof DocumentTouch, 
+      supportsTouch = ('ontouchstart' in g.win) || g.win.DocumentTouch && g.doc instanceof DocumentTouch, //taken from Modernizr touch test
       E = "",
       S = " ",
       Str = String,
@@ -401,7 +610,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         "font-weight": 400,
         gradient: 0,
         height: 0,
-        href: "http:\/\/raphaeljs.com\/",
+        href: "http://raphaeljs.com/",
         "letter-spacing": 0,
         opacity: 1,
         path: "M0,0",
@@ -544,7 +753,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
      **
      * Can be “SVG”, “VML” or empty, depending on browser support.
     \*/
-    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http:\/\/www.w3.org\/TR\/SVG11\/feature#BasicStructure", "1.1") ? "SVG" : "VML");
+    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ? "SVG" : "VML");
     if (R.type == "VML") {
       var d = g.doc.createElement("div"),
         b;
@@ -3774,7 +3983,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
      | "M10,20L30,40"
      * Here we can see two commands: “M”, with arguments `(10, 20)` and “L” with arguments `(30, 40)`. Upper case letter mean command is absolute, lower case—relative.
      *
-     # <p>Here is short list of commands available, for more details see <a href="http:
+     # <p>Here is short list of commands available, for more details see <a href="http://www.w3.org/TR/SVG/paths.html#PathData" title="Details of a path's data attribute's format are described in the SVG specification.">SVG path string format</a>.</p>
      # <table><thead><tr><th>Command</th><th>Name</th><th>Parameters</th></tr></thead><tbody>
      # <tr><td>M</td><td>moveto</td><td>(x y)+</td></tr>
      # <tr><td>Z</td><td>closepath</td><td>(none)</td></tr>
@@ -3791,9 +4000,9 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
      * Note: there is a special case when path consist of just three commands: “M10,10R…z”. In this case path will smoothly connects to its beginning.
      > Usage
      | var c = paper.path("M10 10L90 90");
-     | 
-     | 
-     * For example of path strings, check out these icons: http:
+     | // draw a diagonal line:
+     | // move to 10,10, line to 90,90
+     * For example of path strings, check out these icons: http://raphaeljs.com/icons/
     \*/
     paperproto.path = function(pathString) {
       pathString && !R.is(pathString, string) && !R.is(pathString[0], array) && (pathString += E);
@@ -3801,19 +4010,67 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       this.__set__ && this.__set__.push(out);
       return out;
     };
-    
+    /*\
+     * Paper.image
+     [ method ]
+     **
+     * Embeds an image into the surface.
+     **
+     > Parameters
+     **
+     - src (string) URI of the source image
+     - x (number) x coordinate position
+     - y (number) y coordinate position
+     - width (number) width of the image
+     - height (number) height of the image
+     = (object) Raphaël element object with type “image”
+     **
+     > Usage
+     | var c = paper.image("apple.png", 10, 10, 80, 80);
+    \*/
     paperproto.image = function(src, x, y, w, h) {
       var out = R._engine.image(this, src || "about:blank", x || 0, y || 0, w || 0, h || 0);
       this.__set__ && this.__set__.push(out);
       return out;
     };
-    
+    /*\
+     * Paper.text
+     [ method ]
+     **
+     * Draws a text string. If you need line breaks, put “\n” in the string.
+     **
+     > Parameters
+     **
+     - x (number) x coordinate position
+     - y (number) y coordinate position
+     - text (string) The text string to draw
+     = (object) Raphaël element object with type “text”
+     **
+     > Usage
+     | var t = paper.text(50, 50, "Raphaël\nkicks\nbutt!");
+    \*/
     paperproto.text = function(x, y, text) {
       var out = R._engine.text(this, x || 0, y || 0, Str(text));
       this.__set__ && this.__set__.push(out);
       return out;
     };
-    
+    /*\
+     * Paper.set
+     [ method ]
+     **
+     * Creates array-like object to keep and operate several elements at once.
+     * Warning: it doesn’t create any elements for itself in the page, it just groups existing elements.
+     * Sets act as pseudo elements — all methods available to an element can be used on a set.
+     = (object) array-like object that represents set of elements
+     **
+     > Usage
+     | var st = paper.set();
+     | st.push(
+     |     paper.circle(10, 10, 5),
+     |     paper.circle(30, 10, 5)
+     | );
+     | st.attr({fill: "red"}); // changes the fill of both circles
+    \*/
     paperproto.set = function(itemsArray) {
       !R.is(itemsArray, "array") && (itemsArray = Array.prototype.splice.call(arguments, 0, arguments.length));
       var out = new Set(itemsArray);
@@ -3822,28 +4079,87 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       out["type"] = "set";
       return out;
     };
-    
+    /*\
+     * Paper.setStart
+     [ method ]
+     **
+     * Creates @Paper.set. All elements that will be created after calling this method and before calling
+     * @Paper.setFinish will be added to the set.
+     **
+     > Usage
+     | paper.setStart();
+     | paper.circle(10, 10, 5),
+     | paper.circle(30, 10, 5)
+     | var st = paper.setFinish();
+     | st.attr({fill: "red"}); // changes the fill of both circles
+    \*/
     paperproto.setStart = function(set) {
       this.__set__ = set || this.set();
     };
-    
+    /*\
+     * Paper.setFinish
+     [ method ]
+     **
+     * See @Paper.setStart. This method finishes catching and returns resulting set.
+     **
+     = (object) set
+    \*/
     paperproto.setFinish = function(set) {
       var out = this.__set__;
       delete this.__set__;
       return out;
     };
-    
+    /*\
+     * Paper.setSize
+     [ method ]
+     **
+     * If you need to change dimensions of the canvas call this method
+     **
+     > Parameters
+     **
+     - width (number) new width of the canvas
+     - height (number) new height of the canvas
+    \*/
     paperproto.setSize = function(width, height) {
       return R._engine.setSize.call(this, width, height);
     };
-    
+    /*\
+     * Paper.setViewBox
+     [ method ]
+     **
+     * Sets the view box of the paper. Practically it gives you ability to zoom and pan whole paper surface by
+     * specifying new boundaries.
+     **
+     > Parameters
+     **
+     - x (number) new x position, default is `0`
+     - y (number) new y position, default is `0`
+     - w (number) new width of the canvas
+     - h (number) new height of the canvas
+     - fit (boolean) `true` if you want graphics to fit into new boundary box
+    \*/
     paperproto.setViewBox = function(x, y, w, h, fit) {
       return R._engine.setViewBox.call(this, x, y, w, h, fit);
     };
-    
-    
+    /*\
+     * Paper.top
+     [ property ]
+     **
+     * Points to the topmost element on the paper
+    \*/
+    /*\
+     * Paper.bottom
+     [ property ]
+     **
+     * Points to the bottom element on the paper
+    \*/
     paperproto.top = paperproto.bottom = null;
-    
+    /*\
+     * Paper.raphael
+     [ property ]
+     **
+     * Points to the @Raphael object/function
+    \*/
     paperproto.raphael = R;
     var getOffset = function(elem) {
       var box = elem.getBoundingClientRect(),
@@ -3859,7 +4175,20 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         x: left
       };
     };
-    
+    /*\
+     * Paper.getElementByPoint
+     [ method ]
+     **
+     * Returns you topmost element under given point.
+     **
+     = (object) Raphaël element object
+     > Parameters
+     **
+     - x (number) x coordinate from the top left corner of the window
+     - y (number) y coordinate from the top left corner of the window
+     > Usage
+     | paper.getElementByPoint(mouseX, mouseY).attr({stroke: "#f00"});
+    \*/
     paperproto.getElementByPoint = function(x, y) {
       var paper = this,
         svg = paper.canvas,
@@ -3886,7 +4215,17 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return target;
     };
 
-    
+    /*\
+     * Paper.getElementsByBBox
+     [ method ]
+     **
+     * Returns set of elements that have an intersecting bounding box
+     **
+     > Parameters
+     **
+     - bbox (object) bbox to check with
+     = (object) @Set
+     \*/
     paperproto.getElementsByBBox = function(bbox) {
       var set = this.set();
       this.forEach(function(el) {
@@ -3897,7 +4236,17 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return set;
     };
 
-    
+    /*\
+     * Paper.getById
+     [ method ]
+     **
+     * Returns you element by its internal ID.
+     **
+     > Parameters
+     **
+     - id (number) id
+     = (object) Raphaël element object
+    \*/
     paperproto.getById = function(id) {
       var bot = this.bottom;
       while (bot) {
@@ -3908,7 +4257,24 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return null;
     };
-    
+    /*\
+     * Paper.forEach
+     [ method ]
+     **
+     * Executes given function for each element on the paper
+     *
+     * If callback function returns `false` it will stop loop running.
+     **
+     > Parameters
+     **
+     - callback (function) function to run
+     - thisArg (object) context object for the callback
+     = (object) Paper object
+     > Usage
+     | paper.forEach(function (el) {
+     |     el.attr({ stroke: "blue" });
+     | });
+    \*/
     paperproto.forEach = function(callback, thisArg) {
       var bot = this.bottom;
       while (bot) {
@@ -3919,7 +4285,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return this;
     };
-    
+    /*\
+     * Paper.getElementsByPoint
+     [ method ]
+     **
+     * Returns set of elements that have common point inside
+     **
+     > Parameters
+     **
+     - x (number) x coordinate of the point
+     - y (number) y coordinate of the point
+     = (object) @Set
+    \*/
     paperproto.getElementsByPoint = function(x, y) {
       var set = this.set();
       this.forEach(function(el) {
@@ -3937,7 +4314,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
     function x_y_w_h() {
       return this.x + S + this.y + S + this.width + " \xd7 " + this.height;
     }
-    
+    /*\
+     * Element.isPointInside
+     [ method ]
+     **
+     * Determine if given point is inside this element’s shape
+     **
+     > Parameters
+     **
+     - x (number) x coordinate of the point
+     - y (number) y coordinate of the point
+     = (boolean) `true` if point inside the shape
+    \*/
     elproto.isPointInside = function(x, y) {
       var rp = this.realPath = getPath[this.type](this);
       if (this.attr('transform') && this.attr('transform').length) {
@@ -3945,7 +4333,25 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return R.isPointInsidePath(rp, x, y);
     };
-    
+    /*\
+     * Element.getBBox
+     [ method ]
+     **
+     * Return bounding box for a given element
+     **
+     > Parameters
+     **
+     - isWithoutTransform (boolean) flag, `true` if you want to have bounding box before transformations. Default is `false`.
+     = (object) Bounding box object:
+     o {
+     o     x: (number) top left corner x
+     o     y: (number) top left corner y
+     o     x2: (number) bottom right corner x
+     o     y2: (number) bottom right corner y
+     o     width: (number) width
+     o     height: (number) height
+     o }
+    \*/
     elproto.getBBox = function(isWithoutTransform) {
       if (this.removed) {
         return {};
@@ -3971,7 +4377,13 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return _.bbox;
     };
-    
+    /*\
+     * Element.clone
+     [ method ]
+     **
+     = (object) clone of a given element
+     **
+    \*/
     elproto.clone = function() {
       if (this.removed) {
         return null;
@@ -3980,7 +4392,27 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       this.__set__ && this.__set__.push(out);
       return out;
     };
-    
+    /*\
+     * Element.glow
+     [ method ]
+     **
+     * Return set of elements that create glow-like effect around given element. See @Paper.set.
+     *
+     * Note: Glow is not connected to the element. If you change element attributes it won’t adjust itself.
+     **
+     > Parameters
+     **
+     - glow (object) #optional parameters object with all properties optional:
+     o {
+     o     width (number) size of the glow, default is `10`
+     o     fill (boolean) will it be filled, default is `false`
+     o     opacity (number) opacity, default is `0.5`
+     o     offsetx (number) horizontal offset, default is `0`
+     o     offsety (number) vertical offset, default is `0`
+     o     color (string) glow colour, default is `black`
+     o }
+     = (object) @Paper.set of elements that represents glow
+    \*/
     elproto.glow = function(glow) {
       if (this.type == "text") {
         return null;
@@ -4074,11 +4506,52 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
     var getTotalLength = getLengthFactory(1),
       getPointAtLength = getLengthFactory(),
       getSubpathsAtLength = getLengthFactory(0, 1);
-    
+    /*\
+     * Raphael.getTotalLength
+     [ method ]
+     **
+     * Returns length of the given path in pixels.
+     **
+     > Parameters
+     **
+     - path (string) SVG path string.
+     **
+     = (number) length.
+    \*/
     R.getTotalLength = getTotalLength;
-    
+    /*\
+     * Raphael.getPointAtLength
+     [ method ]
+     **
+     * Return coordinates of the point located at the given length on the given path.
+     **
+     > Parameters
+     **
+     - path (string) SVG path string
+     - length (number)
+     **
+     = (object) representation of the point:
+     o {
+     o     x: (number) x coordinate
+     o     y: (number) y coordinate
+     o     alpha: (number) angle of derivative
+     o }
+    \*/
     R.getPointAtLength = getPointAtLength;
-    
+    /*\
+     * Raphael.getSubpath
+     [ method ]
+     **
+     * Return subpath of a given path from given length to given length.
+     **
+     > Parameters
+     **
+     - path (string) SVG path string
+     - from (number) position of the start of the segment
+     - to (number) position of the end of the segment
+     **
+     = (string) pathstring for the segment
+    \*/
     R.getSubpath = function(path, from, to) {
       if (this.getTotalLength(path) - to < 1e-6) {
         return getSubpathsAtLength(path, from).end;
@@ -4086,7 +4559,13 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       var a = getSubpathsAtLength(path, to, 1);
       return from ? getSubpathsAtLength(a, from).end : a;
     };
-    
+    /*\
+     * Element.getTotalLength
+     [ method ]
+     **
+     * Returns length of the path in pixels. Only works for element of “path” type.
+     = (number) length.
+    \*/
     elproto.getTotalLength = function() {
       var path = this.getPath();
       if (!path) {
@@ -4099,7 +4578,23 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
 
       return getTotalLength(path);
     };
-    
+    /*\
+     * Element.getPointAtLength
+     [ method ]
+     **
+     * Return coordinates of the point located at the given length on the given path. Only works for element of “path” type.
+     **
+     > Parameters
+     **
+     - length (number)
+     **
+     = (object) representation of the point:
+     o {
+     o     x: (number) x coordinate
+     o     y: (number) y coordinate
+     o     alpha: (number) angle of derivative
+     o }
+    \*/
     elproto.getPointAtLength = function(length) {
       var path = this.getPath();
       if (!path) {
@@ -4108,7 +4603,14 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
 
       return getPointAtLength(path, length);
     };
-    
+    /*\
+     * Element.getPath
+     [ method ]
+     **
+     * Returns path of the element. Only works for elements of “path” type and simple elements like circle.
+     = (object) path
+     **
+    \*/
     elproto.getPath = function() {
       var path,
         getPath = R._getPath[this.type];
@@ -4123,7 +4625,19 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
 
       return path;
     };
-    
+    /*\
+     * Element.getSubpath
+     [ method ]
+     **
+     * Return subpath of a given element from given length to given length. Only works for element of “path” type.
+     **
+     > Parameters
+     **
+     - from (number) position of the start of the segment
+     - to (number) position of the end of the segment
+     **
+     = (string) pathstring for the segment
+    \*/
     elproto.getSubpath = function(from, to) {
       var path = this.getPath();
       if (!path) {
@@ -4132,7 +4646,23 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
 
       return R.getSubpath(path, from, to);
     };
-    
+    /*\
+     * Raphael.easing_formulas
+     [ property ]
+     **
+     * Object that contains easing formulas for animation. You could extend it with your own. By default it has following list of easing:
+     # <ul>
+     #     <li>“linear”</li>
+     #     <li>“&lt;” or “easeIn” or “ease-in”</li>
+     #     <li>“>” or “easeOut” or “ease-out”</li>
+     #     <li>“&lt;>” or “easeInOut” or “ease-in-out”</li>
+     #     <li>“backIn” or “back-in”</li>
+     #     <li>“backOut” or “back-out”</li>
+     #     <li>“elastic”</li>
+     #     <li>“bounce”</li>
+     # </ul>
+     # <p>See also <a href="http://raphaeljs.com/easing.html">Easing demo</a>.</p>
+    \*/
     var ef = R.easing_formulas = {
       linear: function(n) {
         return n;
@@ -4276,7 +4806,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
                       var get = function(i) {
                         return +from[attr][i] + pos * ms * diff[attr][i];
                       };
-                      
+                      // now = [["r", get(2), 0, 0], ["t", get(3), get(4)], ["s", get(0), get(1), 0, 0]];
                       now = [
                         ["m", get(0), get(1), get(2), get(3), get(4), get(5)]
                       ];
@@ -4337,7 +4867,27 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       upto255 = function(color) {
         return color > 255 ? 255 : color < 0 ? 0 : color;
       };
-    
+    /*\
+     * Element.animateWith
+     [ method ]
+     **
+     * Acts similar to @Element.animate, but ensure that given animation runs in sync with another given element.
+     **
+     > Parameters
+     **
+     - el (object) element to sync with
+     - anim (object) animation to sync with
+     - params (object) #optional final attributes for the element, see also @Element.attr
+     - ms (number) #optional number of milliseconds for animation to run
+     - easing (string) #optional easing type. Accept on of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
+     - callback (function) #optional callback function. Will be called at the end of animation.
+     * or
+     - element (object) element to sync with
+     - anim (object) animation to sync with
+     - animation (object) #optional animation object, see @Raphael.animation
+     **
+     = (object) original element
+    \*/
     elproto.animateWith = function(el, anim, params, ms, easing, callback) {
       var element = this;
       if (element.removed) {
@@ -4354,11 +4904,11 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }
       }
       return element;
-      
-      
-      
-      
-      
+      //
+      //
+      // var a = params ? R.animation(params, ms, easing, callback) : anim,
+      //     status = element.status(anim);
+      // return this.animate(a).status(a, status * anim.ms / a.ms);
     };
 
     function CubicBezierAtTime(t, p1x, p1y, p2x, p2y, duration) {
@@ -4438,14 +4988,39 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       this.top = percents[percents.length - 1];
       this.percents = percents;
     }
-    
+    /*\
+     * Animation.delay
+     [ method ]
+     **
+     * Creates a copy of existing animation object with given delay.
+     **
+     > Parameters
+     **
+     - delay (number) number of ms to pass between animation start and actual animation
+     **
+     = (object) new altered Animation object
+     | var anim = Raphael.animation({cx: 10, cy: 20}, 2e3);
+     | circle1.animate(anim); // run the given animation immediately
+     | circle2.animate(anim.delay(500)); // run the given animation after 500 ms
+    \*/
     Animation.prototype.delay = function(delay) {
       var a = new Animation(this.anim, this.ms);
       a.times = this.times;
       a.del = +delay || 0;
       return a;
     };
-    
+    /*\
+     * Animation.repeat
+     [ method ]
+     **
+     * Creates a copy of existing animation object with given repetition.
+     **
+     > Parameters
+     **
+     - repeat (number) number iterations of animation. For infinite animation pass `Infinity`
+     **
+     = (object) new altered Animation object
+    \*/
     Animation.prototype.repeat = function(times) {
       var a = new Animation(this.anim, this.ms);
       a.del = this.del;
@@ -4481,7 +5056,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
           }
         }
       } else {
-        status = +to; 
+        status = +to; // NaN
       }
       for (var i = 0, ii = anim.percents.length; i < ii; i++) {
         if (anim.percents[i] == percent || anim.percents[i] > status * anim.top) {
@@ -4567,16 +5142,16 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
                     diff[attr] = [
                       (to2.matrix.a - m.a) / ms, (to2.matrix.b - m.b) / ms, (to2.matrix.c - m.c) / ms, (to2.matrix.d - m.d) / ms, (to2.matrix.e - m.e) / ms, (to2.matrix.f - m.f) / ms
                     ];
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+                    // from[attr] = [_.sx, _.sy, _.deg, _.dx, _.dy];
+                    // var to2 = {_:{}, getBBox: function () { return element.getBBox(); }};
+                    // extractTransform(to2, to[attr]);
+                    // diff[attr] = [
+                    //     (to2._.sx - _.sx) / ms,
+                    //     (to2._.sy - _.sy) / ms,
+                    //     (to2._.deg - _.deg) / ms,
+                    //     (to2._.dx - _.dx) / ms,
+                    //     (to2._.dy - _.dy) / ms
+                    // ];
                   }
                   break;
                 case "csv":
@@ -4657,7 +5232,22 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       eve("raphael.anim.start." + element.id, element, anim);
     }
-    
+    /*\
+     * Raphael.animation
+     [ method ]
+     **
+     * Creates an animation object that can be passed to the @Element.animate or @Element.animateWith methods.
+     * See also @Animation.delay and @Animation.repeat methods.
+     **
+     > Parameters
+     **
+     - params (object) final attributes for the element, see also @Element.attr
+     - ms (number) number of milliseconds for animation to run
+     - easing (string) #optional easing type. Accept one of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
+     - callback (function) #optional callback function. Will be called at the end of animation.
+     **
+     = (object) @Animation
+    \*/
     R.animation = function(params, ms, easing, callback) {
       if (params instanceof Animation) {
         return params;
@@ -4686,7 +5276,23 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }, ms);
       }
     };
-    
+    /*\
+     * Element.animate
+     [ method ]
+     **
+     * Creates and starts animation for given element.
+     **
+     > Parameters
+     **
+     - params (object) final attributes for the element, see also @Element.attr
+     - ms (number) number of milliseconds for animation to run
+     - easing (string) #optional easing type. Accept one of @Raphael.easing_formulas or CSS format: `cubic&#x2010;bezier(XX,&#160;XX,&#160;XX,&#160;XX)`
+     - callback (function) #optional callback function. Will be called at the end of animation.
+     * or
+     - animation (object) animation object, see @Raphael.animation
+     **
+     = (object) original element
+    \*/
     elproto.animate = function(params, ms, easing, callback) {
       var element = this;
       if (element.removed) {
@@ -4697,14 +5303,49 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       runAnimation(anim, element, anim.percents[0], null, element.attr());
       return element;
     };
-    
+    /*\
+     * Element.setTime
+     [ method ]
+     **
+     * Sets the status of animation of the element in milliseconds. Similar to @Element.status method.
+     **
+     > Parameters
+     **
+     - anim (object) animation object
+     - value (number) number of milliseconds from the beginning of the animation
+     **
+     = (object) original element if `value` is specified
+     * Note, that during animation following events are triggered:
+     *
+     * On each animation frame event `anim.frame.<id>`, on start `anim.start.<id>` and on end `anim.finish.<id>`.
+    \*/
     elproto.setTime = function(anim, value) {
       if (anim && value != null) {
         this.status(anim, mmin(value, anim.ms) / anim.ms);
       }
       return this;
     };
-    
+    /*\
+     * Element.status
+     [ method ]
+     **
+     * Gets or sets the status of animation of the element.
+     **
+     > Parameters
+     **
+     - anim (object) #optional animation object
+     - value (number) #optional 0 – 1. If specified, method works like a setter and sets the status of a given animation to the value. This will cause animation to jump to the given position.
+     **
+     = (number) status
+     * or
+     = (array) status if `anim` is not specified. Array of objects in format:
+     o {
+     o     anim: (object) animation object
+     o     status: (number) status
+     o }
+     * or
+     = (object) original element if `value` is specified
+    \*/
     elproto.status = function(anim, value) {
       var out = [],
         i = 0,
@@ -4733,7 +5374,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         return out;
       }
     };
-    
+    /*\
+     * Element.pause
+     [ method ]
+     **
+     * Stops animation of the element with ability to resume it later on.
+     **
+     > Parameters
+     **
+     - anim (object) #optional animation object
+     **
+     = (object) original element
+    \*/
     elproto.pause = function(anim) {
       for (var i = 0; i < animationElements.length; i++)
         if (animationElements[i].el.id == this.id && (!anim || animationElements[i].anim == anim)) {
@@ -4743,7 +5395,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }
       return this;
     };
-    
+    /*\
+     * Element.resume
+     [ method ]
+     **
+     * Resumes animation if it was paused with @Element.pause method.
+     **
+     > Parameters
+     **
+     - anim (object) #optional animation object
+     **
+     = (object) original element
+    \*/
     elproto.resume = function(anim) {
       for (var i = 0; i < animationElements.length; i++)
         if (animationElements[i].el.id == this.id && (!anim || animationElements[i].anim == anim)) {
@@ -4755,7 +5418,18 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         }
       return this;
     };
-    
+    /*\
+     * Element.stop
+     [ method ]
+     **
+     * Stops animation of the element.
+     **
+     > Parameters
+     **
+     - anim (object) #optional animation object
+     **
+     = (object) original element
+    \*/
     elproto.stop = function(anim) {
       for (var i = 0; i < animationElements.length; i++)
         if (animationElements[i].el.id == this.id && (!anim || animationElements[i].anim == anim)) {
@@ -4778,7 +5452,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return "Rapha\xebl\u2019s object";
     };
 
-    
+    // Set
     var Set = function(items) {
       this.items = [];
       this.length = 0;
@@ -4793,7 +5467,13 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
     },
       setproto = Set.prototype;
-    
+    /*\
+     * Set.push
+     [ method ]
+     **
+     * Adds each argument to the current set.
+     = (object) original element
+    \*/
     setproto.push = function() {
       var item,
         len;
@@ -4807,12 +5487,31 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return this;
     };
-    
+    /*\
+     * Set.pop
+     [ method ]
+     **
+     * Removes last element and returns it.
+     = (object) element
+    \*/
     setproto.pop = function() {
       this.length && delete this[this.length--];
       return this.items.pop();
     };
-    
+    /*\
+     * Set.forEach
+     [ method ]
+     **
+     * Executes given function for each element in the set.
+     *
+     * If function returns `false` it will stop loop running.
+     **
+     > Parameters
+     **
+     - callback (function) function to run
+     - thisArg (object) context object for the callback
+     = (object) Set object
+    \*/
     setproto.forEach = function(callback, thisArg) {
       for (var i = 0, ii = this.items.length; i < ii; i++) {
         if (callback.call(thisArg, this.items[i], i) === false) {
@@ -4844,13 +5543,30 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return this;
     };
-    
+    /*\
+     * Set.clear
+     [ method ]
+     **
+     * Removeds all elements from the set
+    \*/
     setproto.clear = function() {
       while (this.length) {
         this.pop();
       }
     };
-    
+    /*\
+     * Set.splice
+     [ method ]
+     **
+     * Removes given element from the set
+     **
+     > Parameters
+     **
+     - index (number) position of the deletion
+     - count (number) number of element to remove
+     - insertion… (object) #optional elements to insert
+     = (object) set elements that were deleted
+    \*/
     setproto.splice = function(index, count, insertion) {
       index = index < 0 ? mmax(this.length + index, 0) : index;
       count = mmax(0, mmin(this.length - index, count));
@@ -4877,7 +5593,17 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return new Set(todel);
     };
-    
+    /*\
+     * Set.exclude
+     [ method ]
+     **
+     * Removes given element from the set
+     **
+     > Parameters
+     **
+     - element (object) element to remove
+     = (boolean) `true` if object was found & removed from the set
+    \*/
     setproto.exclude = function(el) {
       for (var i = 0, ii = this.length; i < ii; i++)
         if (this[i] == el) {
@@ -4965,19 +5691,44 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
     };
 
 
-    
+    /*\
+     * Set.isPointInside
+     [ method ]
+     **
+     * Determine if given point is inside this set’s elements
+     **
+     > Parameters
+     **
+     - x (number) x coordinate of the point
+     - y (number) y coordinate of the point
+     = (boolean) `true` if point is inside any of the set's elements
+     \*/
     setproto.isPointInside = function(x, y) {
       var isPointInside = false;
       this.forEach(function(el) {
         if (el.isPointInside(x, y)) {
           isPointInside = true;
-          return false; 
+          return false; // stop loop
         }
       });
       return isPointInside;
     };
 
-    
+    /*\
+     * Raphael.registerFont
+     [ method ]
+     **
+     * Adds given font to the registered set of fonts for Raphaël. Should be used as an internal call from within Cufón’s font file.
+     * Returns original parameter, so it could be used with chaining.
+     # <a href="http://wiki.github.com/sorccu/cufon/about">More about Cufón and how to convert your font form TTF, OTF, etc to JavaScript file.</a>
+     **
+     > Parameters
+     **
+     - font (object) the font to register
+     = (object) the font you passed in
+     > Usage
+     | Cufon.registerFont(Raphael.registerFont({…}));
+    \*/
     R.registerFont = function(font) {
       if (!font.face) {
         return font;
@@ -5027,7 +5778,22 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return font;
     };
-    
+    /*\
+     * Paper.getFont
+     [ method ]
+     **
+     * Finds font object in the registered fonts by given parameters. You could specify only one word from the font name, like “Myriad” for “Myriad Pro”.
+     **
+     > Parameters
+     **
+     - family (string) font family name or any word from it
+     - weight (string) #optional font weight
+     - style (string) #optional font style
+     - stretch (string) #optional font stretch
+     = (object) the font object
+     > Usage
+     | paper.print(100, 100, "Test string", paper.getFont("Times", 800), 30);
+    \*/
     paperproto.getFont = function(family, weight, style, stretch) {
       stretch = stretch || "normal";
       style = style || "normal";
@@ -5062,9 +5828,29 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }
       return thefont;
     };
-    
+    /*\
+     * Paper.print
+     [ method ]
+     **
+     * Creates path that represent given text written using given font at given position with given size.
+     * Result of the method is path element that contains whole text as a separate path.
+     **
+     > Parameters
+     **
+     - x (number) x position of the text
+     - y (number) y position of the text
+     - string (string) text to print
+     - font (object) font object, see @Paper.getFont
+     - size (number) #optional size of the font, default is `16`
+     - origin (string) #optional could be `"baseline"` or `"middle"`, default is `"middle"`
+     - letter_spacing (number) #optional number in range `-1..1`, default is `0`
+     - line_spacing (number) #optional number in range `1..3`, default is `1`
+     = (object) resulting path element, which consist of all letters
+     > Usage
+     | var txt = r.print(10, 50, "print", r.getFont("Museo"), 30).attr({fill: "#fff"});
+    \*/
     paperproto.print = function(x, y, string, font, size, origin, letter_spacing, line_spacing) {
-      origin = origin || "middle"; 
+      origin = origin || "middle"; // baseline|middle
       letter_spacing = mmax(mmin(letter_spacing || 0, 1), -1);
       line_spacing = mmax(mmin(line_spacing || 1, 3), 1);
       var letters = Str(string)[split](E),
@@ -5103,7 +5889,34 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       });
     };
 
-    
+    /*\
+     * Paper.add
+     [ method ]
+     **
+     * Imports elements in JSON array in format `{type: type, <attributes>}`
+     **
+     > Parameters
+     **
+     - json (array)
+     = (object) resulting set of imported elements
+     > Usage
+     | paper.add([
+     |     {
+     |         type: "circle",
+     |         cx: 10,
+     |         cy: 10,
+     |         r: 5
+     |     },
+     |     {
+     |         type: "rect",
+     |         x: 10,
+     |         y: 10,
+     |         width: 10,
+     |         height: 10,
+     |         fill: "#fc0"
+     |     }
+     | ]);
+    \*/
     paperproto.add = function(json) {
       if (R.is(json, "array")) {
         var res = this.set(),
@@ -5118,7 +5931,25 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       return res;
     };
 
-    
+    /*\
+     * Raphael.format
+     [ method ]
+     **
+     * Simple format function. Replaces construction of type “`{<number>}`” to the corresponding argument.
+     **
+     > Parameters
+     **
+     - token (string) string to format
+     - … (string) rest of arguments will be treated as parameters for replacement
+     = (string) formated string
+     > Usage
+     | var x = 10,
+     |     y = 20,
+     |     width = 40,
+     |     height = 50;
+     | // this will draw a rectangular shape equivalent to "M10,20h40v50h-40z"
+     | paper.path(Raphael.format("M{0},{1}h{2}v{3}h{4}z", x, y, width, height, -width));
+    \*/
     R.format = function(token, params) {
       var args = R.is(params, array) ? [0][concat](params) : arguments;
       token && R.is(token, string) && args.length - 1 && (token = token.replace(formatrg, function(str, i) {
@@ -5126,7 +5957,29 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
       }));
       return token || E;
     };
-    
+    /*\
+     * Raphael.fullfill
+     [ method ]
+     **
+     * A little bit more advanced format function than @Raphael.format. Replaces construction of type “`{<name>}`” to the corresponding argument.
+     **
+     > Parameters
+     **
+     - token (string) string to format
+     - json (object) object which properties will be used as a replacement
+     = (string) formated string
+     > Usage
+     | // this will draw a rectangular shape equivalent to "M10,20h40v50h-40z"
+     | paper.path(Raphael.fullfill("M{x},{y}h{dim.width}v{dim.height}h{dim['negative width']}z", {
+     |     x: 10,
+     |     y: 20,
+     |     dim: {
+     |         width: 40,
+     |         height: 50,
+     |         "negative width": -40
+     |     }
+     | }));
+    \*/
     R.fullfill = (function() {
       var tokenRegex = /\{([^\}]+)\}/g,
         objNotationRegex = /(?:(?:^|\.)(.+?)(?=\[|\.|$|\()|\[('|")(.+?)\2\])(\(\))?/g, // matches .xxxxx or ["xxxxx"] to run over object properties
@@ -5235,7 +6088,7 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
         eve = R.eve,
         E = "",
         S = " ";
-      var xlink = "http:\/\/www.w3.org\/1999\/xlink",
+      var xlink = "http://www.w3.org/1999/xlink",
         markers = {
           block: "M5,0 0,2.5 5,5z",
           classic: "M5,0 0,2.5 5,5 3.5,3 3.5,2z",
@@ -7755,6 +8608,6 @@ define('kg/kcharts/5.0.0/raphael/index',[],function(require, exports, module) {
 
   })(window);
 
-  module.exports =  window.Raphael;
+  return window.Raphael;
 
 })

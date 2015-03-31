@@ -26,10 +26,16 @@
     <button id="J_Redraw" style="margin-left:50px;margin-top:50px;">
         重绘
     </button>
-   <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-
-    require("node,kg/kcharts/5.0.0/piechart/index",function(Node,Pie){
+    <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+    <script type="text/javascript">
+    KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+     KISSY.use("kg/kcharts/6.0.0/piechart/index",function(S,Pie){
        function pie1(){
          var data = [ {label:"Chrome", data:1 },{ label:"FireFox", data:2 },{ label:"IE", data:3 },{ label:"Opera",data:4 },{ label:"Safari", data:5 }];
 
@@ -63,7 +69,7 @@
            pie.render();
          };
          
-         Node.one("#J_Redraw").on("click",redrawPie);
+         S.one("#J_Redraw").on("click",redrawPie);
        }
        pie1();
        

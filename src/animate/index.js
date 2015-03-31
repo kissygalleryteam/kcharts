@@ -1,11 +1,7 @@
 // -*- coding: utf-8; -*-
-define(function(require,exports,module) {
-  var Anim = require("anim"),
-      Util = require("util"),
-      Easing = require("./easing");
-
-
-    var requestAnimFrame = window.requestAnimationFrame       ||
+;KISSY.add(function(S,Anim){
+  var Easing = Anim.Easing
+    , requestAnimFrame = window.requestAnimationFrame       ||
                          window.webkitRequestAnimationFrame ||
                          window.mozRequestAnimationFrame    ||
                          window.oRequestAnimationFrame      ||
@@ -13,7 +9,7 @@ define(function(require,exports,module) {
                          function (callback) {
                            return setTimeout(callback, 16);
                          }
-    var cancelAnimationFrame = window.cancelAnimationFrame       ||
+    , cancelAnimationFrame = window.cancelAnimationFrame       ||
                              window.webkitCancelAnimationFrame ||
                              window.mozCancelAnimationFrame    ||
                              window.oCancelAnimationFrame      ||
@@ -26,7 +22,7 @@ define(function(require,exports,module) {
   }
   function Animate(fromProps,toProps,opts){
     opts || (opts = {});
-    opts = Util.merge(dft,opts);
+    opts = S.merge(dft,opts);
     var begin = +new Date
       , end = begin + opts.duration
       , now = begin
@@ -59,7 +55,7 @@ define(function(require,exports,module) {
       var s,t;
       t = a/diff
       s = fx(t)
-      if(Util.isArray(fromProps)){
+      if(S.isArray(fromProps)){
         for(var i=0,len=fromProps.length;i<len;i++){
           props[i] = fromProps[i] + (toProps[i] - fromProps[i])*s;
         }
@@ -122,7 +118,7 @@ define(function(require,exports,module) {
     var from = {}
       , to = {}
       , len = props.length
-    Util.each(props,function(p,index){
+    S.each(props,function(p,index){
       var f = p.from
         , t = p.to
         , key
@@ -161,4 +157,6 @@ define(function(require,exports,module) {
     return anim;
   }
   return Animate;
+},{
+  requires:['anim']
 })

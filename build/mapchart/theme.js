@@ -1,5 +1,10 @@
-define('kg/kcharts/5.0.0/mapchart/theme',[],function(require, exports, module) {
+/*
+combined files : 
 
+kg/kcharts/6.0.0/mapchart/theme
+
+*/
+KISSY.add('kg/kcharts/6.0.0/mapchart/theme',function (S) {
     var COLOR_TPL = "{COLOR}";
     return{
         "ks-chart-default": {
@@ -87,3 +92,4 @@ define('kg/kcharts/5.0.0/mapchart/theme',[],function(require, exports, module) {
         }
     }
 });
+

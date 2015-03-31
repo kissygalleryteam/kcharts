@@ -1,12 +1,9 @@
+// -*- coding: utf-8; -*-
 /**
  * 指针
  * @author cookieu@gmail.com
  * */
-define(function(require, exports, module) {
-
-  var Util = require('util'),
-    Pointer = require('./pointer');
-
+;KISSY.add(function(S,Pointer){
   function PicturePointer(){
     PicturePointer.superclass.constructor.apply(this,arguments)
     var pointer = this.get('pointer')
@@ -24,7 +21,7 @@ define(function(require, exports, module) {
     this.paperCy = cy
   }
 
-  Util.extend(PicturePointer,Pointer,{
+  S.extend(PicturePointer,Pointer,{
     pointTo:function(angle,effect){
       var t = ['r',angle,this.paperCx,this.paperCy].join(',')
       if(effect){
@@ -36,4 +33,6 @@ define(function(require, exports, module) {
     }
   })
   return PicturePointer
-});
+},{
+  requires:['./pointer']
+})

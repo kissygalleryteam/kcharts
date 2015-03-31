@@ -1,12 +1,6 @@
-require.config({
-  packages:[{
-    name:"kg",
-    path:"http://g.assets.daily.taobao.net/kg/"
-  }]
-})
-require("util,kg/kcharts/5.0.0/datetime/index,base,node,event-dom,dd,dd/plugin/constrain", function(Util,DateTime, Base, Node, Event, DD, Constrain) {
+KISSY.use("kg/kcharts/6.0.0/datetime/index,base,node,event,dd,dd/plugin/constrain", function(S, DateTime, Base, Node, Event, DD, Constrain) {
 
-	var $ = Node.all;
+	var $ = S.all;
 	var RangeChart = Base.extend({
 		initializer: function() {
 			this._cfg = this.userConfig;
@@ -54,7 +48,7 @@ require("util,kg/kcharts/5.0.0/datetime/index,base,node,event-dom,dd,dd/plugin/c
 				series: self.get("series")
 
 			};
-			var mixedCfg = Util.mix(defaultCfg, cfg, undefined, undefined, true)
+			var mixedCfg = S.mix(defaultCfg, cfg, undefined, undefined, true)
 			mixedCfg.renderTo = "#J_Range";
 			var range = new DateTime(mixedCfg);
 			range.render();

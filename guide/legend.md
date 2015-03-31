@@ -40,7 +40,7 @@
     <script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
     <script type="text/javascript">
 
-KISSY.use("kg/kcharts/2.0.0/raphael/index,kg/kcharts/2.0.0/legend/index,dom,event",function(S,Raphael,Legend,D,E){
+KISSY.use("kg/kcharts/6.0.0/raphael/index,kg/kcharts/6.0.0/legend/index,dom,event",function(S,Raphael,Legend,D,E){
   var $con = S.one("#J_Con")
     , $box = S.one("#J_Box")
     , paper = Raphael($con[0],500,500)

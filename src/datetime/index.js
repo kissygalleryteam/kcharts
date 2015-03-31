@@ -2,27 +2,9 @@
  * @fileOverview KChart 1.3  datetime
  * @author huxiaoqi567@gmail.com
  */
- define(function(require,exports,module) {
 ;
-	var Util = require("util"),
-		Node = require("node"),
-		Base = require("base"),
-		Evt = require('event-dom'),
-		Template = require("kg/kcharts/5.0.0/tools/template/index"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-		BaseChart = require("kg/kcharts/5.0.0/basechart/index"),
-		LineChart = require("kg/kcharts/5.0.0/linechart/index"),
-		ColorLib = require("kg/kcharts/5.0.0/tools/color/index"),
-		HtmlPaper = require("kg/kcharts/5.0.0/tools/htmlpaper/index"),
-		Legend = require("kg/kcharts/5.0.0/legend/index"),
-		Theme = require("./theme"),
-		Touch = require("kg/kcharts/5.0.0/tools/touch/index"),
-		Tip = require("kg/kcharts/5.0.0/tip/index"),
-		Anim = require("kg/kcharts/5.0.0/animate/index"),
-		graphTool = require("kg/kcharts/5.0.0/tools/graphtool/index"),
-		Cfg = require("./cfg");
-
-	var $ = Node.all,
+KISSY.add(function(S, D, Evt, Node, Base, Template, LineChart, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, Touch, Tip, Anim, graphTool, Cfg) {
+	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
@@ -38,12 +20,44 @@
 			var self = this,
 				points;
 			self.chartType = "datetime";
-			var defaultCfg = Util.clone(Cfg);
-			self._cfg = Util.mix(defaultCfg, self.userConfig,undefined,undefined,true);
+			var defaultCfg = S.clone(Cfg);
+			// KISSY > 1.4 逻辑
+			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true);
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		}
 	}
 
-	return LineChart.extend(methods);
+	var DateTime;
+	if (Base.extend) {
+		DateTime = LineChart.extend(methods);
+	} else {
+		DateTime = function(cfg) {
+			var self = this;
+			self.userConfig = cfg;
+			self.init();
+		};
+		S.extend(DateTime, LineChart, methods);
+	}
+	return DateTime;
+}, {
+	requires: [
+		'dom',
+		'event',
+		'node',
+		'base',
+		'gallery/template/1.0/index',
+		'kg/kcharts/6.0.0/linechart/index',
+		'kg/kcharts/6.0.0/raphael/index',
+		'kg/kcharts/6.0.0/basechart/index',
+		'kg/kcharts/6.0.0/tools/color/index',
+		'kg/kcharts/6.0.0/tools/htmlpaper/index',
+		'kg/kcharts/6.0.0/legend/index',
+		'./theme',
+		'kg/kcharts/6.0.0/tools/touch/index',
+		'kg/kcharts/6.0.0/tip/index',
+		'kg/kcharts/6.0.0/animate/index',
+		'kg/kcharts/6.0.0/tools/graphtool/index',
+		'./cfg'
+	]
 });

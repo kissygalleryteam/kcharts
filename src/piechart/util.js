@@ -1,14 +1,9 @@
+// -*- coding: utf-8; -*-
 /**
  * sector数据处理
  * */
- define(function(require, exports, module) {
-// Sector,Color,Raphael
-  var Util = require("util"),
-  Sector = require("kg/kcharts/5.0.0/piechart/sector"),
-  Color = require("kg/kcharts/5.0.0/tools/color/index"),
-  Raphael = require("kg/kcharts/5.0.0/raphael/index");
-
-  var isArray = Util.isArray
+;KISSY.add(function(S,Sector,Color,Raphael){
+  var isArray = S.isArray
   function flat(a){
     var ret = []
       , ts = Object.prototype.toString
@@ -30,7 +25,7 @@
     var ret = []
     function rec(groups,depth){
       for(var i=0,l=groups.length;i<l;i++){
-        if(Util.isArray(groups[i])){
+        if(S.isArray(groups[i])){
           rec(groups[i],depth++);
         }else{
           if(fn(groups[i])){
@@ -56,7 +51,7 @@
       , sum = sumObject2(data)
     function rec(data,container){
       for(var i=0,l=data.length;i<l;i++){
-        if(Util.isArray(data[i].data)){
+        if(S.isArray(data[i].data)){
           var index = container.push(S.mix({},data[i],true,["label"]));
           container[index].data = [];
           rec(data[i].data,container[index].data);
@@ -147,7 +142,7 @@
   // 对sumObject的一个简单的包装
   function sumObject1(oo){
     return sumObject(oo,function(o){
-             if(o.value && Util.isNumber(o.value)){
+             if(o.value && S.isNumber(o.value)){
                return o.value
              }else{
                return 0;
@@ -158,7 +153,7 @@
   function sumObject2(o){
     var s = 0
     for(var i=0,l=o.length;i<l;i++){
-      if(Util.isArray(o[i].data)){
+      if(S.isArray(o[i].data)){
         s = s+sumObject2(o[i].data)
       }else{
         s = s+o[i].data
@@ -503,7 +498,7 @@
     for(var i=0,l=groups.length;i<l;i++){
       var group = groups[i]
         , s = sumObject(group,function(o){
-                if(o.value && !o.hide && Util.isNumber(o.value)){
+                if(o.value && !o.hide && S.isNumber(o.value)){
                   return o.value
                 }else{
                   return 0;
@@ -578,4 +573,6 @@
   }
 
   return util;
+},{
+  requires:["kg/kcharts/6.0.0/piechart/sector","kg/kcharts/6.0.0/tools/color/index","kg/kcharts/6.0.0/raphael/index"]
 });

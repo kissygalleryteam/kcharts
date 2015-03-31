@@ -11,7 +11,7 @@ Demo
 ```
 
 //载入Funnel
-KISSY.use('kg/kcharts/2.0.0/pyramid/index',function(S,Triangle){
+KISSY.use('kg/kcharts/6.0.0/pyramid/index',function(S,Triangle){
         //数据格式
         var data=[
             {
