@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+          id="viewport"
+          name="viewport"/>
+</head>
+<body>
+<style type="text/css">
+    .p {
+        height: 2px;
+        width: 2px;
+        display: inline-block;
+        position: absolute;
+        background: darkred;
+    }
+</style>
+<div id="map"></div>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
+<script type="text/javascript" src="./location.js"></script>
+<script type="text/javascript">
+KISSY.use('node',function(S,Node){
+        var $ = KISSY.all;
+//        S.config({
+//            packages: [
+//                {
+//                    name: "gallery", // 包名
+//                    tag: "20130323", // 动态加载包内的模块js文件时,
+//                    // 自动加上 ?t=20110323, 用于文件更新
+//                    path: "../../../../../", // 包对应路径, 相对路径指相对于当前页面路径
+//                    charset: "utf8" // 包里模块文件编码格式
+//                }
+//            ]
+//        });
+        S.use('kg/kcharts/6.0.0/mapchart/index', function (S, MapChart) {
+            var h = screen.availHeight * 0.7;
+            $('#map').css("height", h);
+            var map = new MapChart('#map', {
+                themeCls: "ks-chart-default",
+                autoRender: false,
+                areaText: {
+                    isShow: false
+                },
+                area: {
+                    hoverAttr: {
+                        "fill": "#f0efeb"
+                    }
+                },
+                tip: {
+                    isShow: false
+                }
+            });
+            map.on('afterRender', function () {
+                var cs = 'p',
+                        self = this,
+                        span = '<span></span>',
+                        container = '.ks-chart-area-text';
+
+                S.each(china, function (item, index) {
+                    var style = self.converPix(item.x, item.y), num = item.num;
+                    // ie9以下不支持background size
+                    style = S.merge(style, {
+                        "backgroundSize": [Math.sqrt(num) * 3, "px ", Math.sqrt(num) * 3, "px"].join('')
+                    });
+                    $(span).attr('title', index).addClass(cs).css(style).appendTo(container)
+                });
+            })
+            map.render();
+        });
+});
+</script>
+</body>

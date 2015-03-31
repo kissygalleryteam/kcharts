@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style>
+#demo1{
+  width:750px;
+  height:300px;
+  margin:0px auto;
+}
+</style>
+</head>
+<body>
+<div id="demo1">
+
+</div>
+<script src="//g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
+<script type="text/javascript">
+KISSY.Config.combine = true;
+
+
+// KISSY.config({
+//   packages:[
+//     {
+//       name:"gallery",
+//       path:"../../../../../",
+//       tag:Math.random()
+//     }
+//   ]
+// });
+KISSY.use("kg/kcharts/6.0.0/linechart/index",function(S,LineChart){
+
+
+  var data = (function(){
+    var a =[]
+    for(var i = 0;i<90;i++){
+      a[i] = Math.random() * 100
+    }
+    return [{data:a,text:"data"}]
+
+  })()
+
+  var xAxis = (function(){
+    var a =[]
+    for(var i = 0;i<90;i++){
+      a[i] = Math.random() * 100
+    }
+    return {text:a}
+
+  })()
+
+  var linechart = new LineChart({
+      renderTo:"#demo1",
+      themeCls:"ks-chart-rainbow",
+      areas:{
+        isShow:true
+      },
+      points:{
+        template:function(e){
+          return e.stockIndex % 20 == 10?  e.paper.circle(e.x,e.y,e.attr.r).attr(e.attr):e.paper.circle(e.x,e.y,0).attr(e.attr).attr({r:2,fill:"#f60"})
+          
+        }
+      },
+      yLabels:{
+        css:{
+          "marginLeft":"-4px",
+          "font-family":"Microsoft Yahei",
+          "font-size":"10px"
+        }
+      },
+      xLabels:{
+        isShow:false,
+        template:function(i,text){
+          return i % 20 == 10 ? text:"" 
+        },
+        css:{
+          "font-family":"Microsoft Yahei",
+           "font-size":"10px"
+        }
+      },
+      yGrids:{
+        isShow:false
+      },
+      xGrids:{
+        isShow:false
+      },
+      title:{
+              content:"Monthly Average Temperature"
+            },
+            // anim:{},
+            subTitle:{
+              content:"Source: WorldClimate.com"
+            },
+            lineType:"arc",
+       xAxis: xAxis,
+            yAxis:{
+              num:7
+            },
+          comparable:true,
+      series:data,
+      legend:{
+        isShow:true,y:-10
+      },
+      tip:{
+        offset:{
+                    x:10,
+                    y:10
+                },
+        template:function(e){
+          var html = "";
+          for(var i in e.datas){
+            html +="<span style='font-size:10px;color:"+e.datas[i]['color']+"'>"+e.datas[i]['text'] +" "+e.datas[i]['y']+" \u2103</span><br/>"
+          }
+          return html;
+        }
+      }
+  });
+
+var paper = linechart.getHtmlPaper();
+var ctn = linechart.getInnerContainer();
+var y = linechart.data2GrapicData(40,false,true);
+var raphael = linechart.getRaphaelPaper();
+
+paper.text(0,0,"xxxxxx").css({color:"red"})
+//横线
+paper.lineX(ctn.x,y,ctn.width).css({borderTop:"1px solid red"})
+
+for(var i in linechart._pointsX)if(i % 20 == 10){
+  raphael.text(linechart._pointsX[i]['x'],linechart._pointsX[i]['y'],'2012-12-12').transform("t0,40r45")
+}
+
+linechart.on("stockClick",function(e){
+  S.log(e)
+})
+
+});</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>A Simple BarChart</title>
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style type="text/css">
+#demo1{
+    width:750px;
+    height:300px;
+    margin:0px auto;
+}
+</style>
+</head>
+<body>
+<div id="demo1">
+
+</div>
+<script src="http://g.tbcdn.cn/kissy/k/1.4.0/seed-min.js"></script>
+<script type="text/javascript">
+// KISSY.Config.debug = true;
+// KISSY.config({
+//   packages:[
+//     {
+//       name:"gallery",
+//       path:"../../../../../",
+//       tag:Math.random()
+//     }
+//   ]
+// });
+    KISSY.use('kg/kcharts/6.0.0/barchart/index',function(S,BarChart){
+    
+        var barChart = new BarChart({
+            renderTo:"#demo1",
+           colors:[{"DEFAULT":"#b9c4cb","HOVER":"#b9c4cb"}],
+          line:{
+	        attr:{
+	          "stroke-width":2
+	        },
+	        hoverAttr:{
+	          "stroke-width":2
+	        }
+	      },
+	      points:{
+       		isShow:true
+      	  },
+	      xLabels:{
+	        css:{
+	          "marginLeft":"90px",
+	          "font-family":"宋体",
+	           "font-size":"12px",
+	           "color":"#666666",
+	        },
+	        template:function(i,txt){
+	         	return txt;
+	        },
+	        isShow: false
+	      },
+	      yLabels:{
+	        css:{
+	          "marginLeft":"180px",
+	          "font-family":"宋体",
+	          "font-size":"12px",
+	          "color":"#8899a8",
+	          "text-align":"right"
+	        },
+	        template:function(i,txt){
+	         	return txt/10000;
+	        },
+	        isShow: false,
+	      },
+	       anim:{},
+	       lineType:"arc",
+	       xAxis: {
+	      	 text:["201311","201312","201401","201402","201403"],
+	      	 css:{
+	      		 "color":"#CDCDCD"
+	      	 }
+	       },
+           yAxis:{
+             num:5,
+	      	 css:{
+	      		 "color":"#CDCDCD"
+	      	 },
+	      	 isShow:false
+           },
+			"xGrids" :
+			{
+				"isShow" : false
+			},
+			"yGrids" :
+			{
+				"isShow" : true
+			},
+			canvasAttr:{
+				x:5,
+				y:5,
+				width:180,
+				height:80
+			},
+			bars:{
+                barsRatio:0.4,
+                barRatio:0.4
+            },
+	       comparable:true,
+	       series:[
+	       {
+	        "data":[866817590,881216909,789066175,767670120,893526149]	        ,"text":"交易额"
+	        }
+	            ],
+	      tip:{
+		      template : function(e){
+	    			var html = e.y+'元';
+	    			return html;
+	    		},
+	    		css :
+	    		{
+	    			'border-color' : "COLOR",
+	    			'color' : "#444",
+	    			'font-weight' : "normal"
+	    		}
+
+	      }
+        });
+  //   barChart.on("barClick",function(e){
+  //       S.log(e)
+  //   })
+    });
+
+</script>
+</body>
+</html>

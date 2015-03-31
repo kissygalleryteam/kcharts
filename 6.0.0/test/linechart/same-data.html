@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+<style>
+#demo1{
+  width:750px;
+  height:300px;
+  margin:0px auto;
+}
+</style>
+</head>
+<body>
+<div id="demo1">
+
+</div>
+<script src="//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+<script>
+KISSY.Config.combine = true;
+// KISSY.Config.debug = true;
+// KISSY.config({
+//   packages:[
+//     {
+//       name:"gallery",
+//       path:"../../../../../",
+//       tag:Math.random()
+//     }
+//   ]
+// });
+KISSY.use("kg/kcharts/6.0.0/linechart/index", function(S, LineChart) {
+  var linechart = new LineChart({
+    renderTo: "#demo1",
+    themeCls: "ks-chart-rainbow",
+    yLabels: {
+      css: {
+        "marginLeft": "20px",
+        "font-family": "Microsoft Yahei",
+        "font-size": "10px"
+      }
+    },
+    xLabels: {
+      css: {
+        "font-family": "Microsoft Yahei",
+        "font-size": "10px"
+      }
+    },
+    xGrids: {
+      isShow:false
+    },
+    areas: {
+      isShow: true
+    },
+    lineType: "arc",
+    xAxis: {
+      spacing: {
+        left: -28,
+        right: -28
+      },
+      text: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ]
+    },
+    yAxis: {
+      num: 7
+    },
+    series: [{
+      text: 'Tokyo',
+      data: [-7,-7,-7,-7,-7,-7,-7,-7,-7,-7,-7,-7]
+    }],
+    legend: {
+      isShow: true,
+      y: -10
+    },
+    tip: {
+      offset: {
+        x: 10,
+        y: 10
+      },
+      template: function(e) {
+        return e.y
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
