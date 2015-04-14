@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+    <title>日期的格式化输出</title>
+    <style type="text/css" media="screen">
+     .con{
+       border:1px solid #999;width:700px;height:350px;margin:10px 0 0 10px;
+     }
+     .clear-both{
+       clear:both;
+     }
+     .buttons{
+       padding:20px;
+     }
+    </style>
+  </head>
+  <body>
+    <div id="J_Realtime" class="con">
+    </div>
+    <p class="buttons">
+      <button id="J_Update">
+        更新line
+      </button>
+    </p>
+    <script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+    <script type="text/javascript" src="../../realtime/util.js"></script>
+    <script type="text/javascript" src="../../realtime/index.js"></script>
+    <script type="text/javascript">
+     KISSY.use("kg/kcharts/6.0.1/realtime/index,kg/kcharts/6.0.1/realtime/util,dom,event",function(S,RealTime,Util,D,E){
+         var stock = new RealTime({
+           renderTo:"#J_Realtime",
+           title:{
+             text:"AAPL Stock Price"
+           },
+           lineType:'arc',
+           paddingx:100,
+           paddingy:100,
+           tip:{
+             template:"index: {{index}},原始x值：{{xvalue}},原始y值：{{yvalue}}"
+           },
+           xAxis:{
+           },
+           yAxis:{
+             num:10
+           },
+           xLabel:{
+             rotate:true
+           },
+           legend:{
+             
+           },
+           point:{
+             isShow:false // 大数据，可选是否绘制出点
+           },
+           dateformat:"MM-dd h:mm:ss", // 提供x轴的label的格式化输出
+           series:[
+             {
+			   name : '内存使用情况',
+			   data : [
+                 [1147996800000,64.51],
+                 [1148256000000,63.38],
+                 [1148342400000,63.15],
+                 [1148428800000,40],
+                 [1148515200000,50]
+               ]
+		     }
+           ]
+         });
+     })
+    </script>
+  </body>
+</html>

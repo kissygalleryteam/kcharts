@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+    <title>日期的格式化输出-内存使用随时间变化（线图）</title>
+    <style type="text/css" media="screen">
+     .con{
+       border:1px solid #999;width:700px;height:350px;margin:10px 0 0 10px;
+     }
+     .clear-both{
+       clear:both;
+     }
+     .buttons{
+       padding:20px;
+     }
+    </style>
+  </head>
+  <body>
+    <div id="J_Realtime" class="con">
+    </div>
+    <p class="buttons">
+      <button id="J_Update">
+        更新line
+      </button>
+    </p>
+    <script charset="utf-8" src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js"></script>
+    <script type="text/javascript" src="../../realtime/util.js"></script>
+    <script type="text/javascript" src="../../realtime/index.js"></script>
+    <script type="text/javascript">
+     KISSY.use("kg/kcharts/6.0.1/realtime/index,kg/kcharts/6.0.1/realtime/util,dom,event",function(S,RealTime,Util,D,E){
+         var stock = new RealTime({
+           renderTo:"#J_Realtime",
+           title:{
+             text:"AAPL Stock Price"
+           },
+           lineType:'arc',
+           paddingx:100,
+           paddingy:100,
+           tip:{
+             template:"index: {{index}},原始x值：{{xvalue}},原始y值：{{yvalue}}"
+           },
+           yRuller:{isShow:false},  // y刻度尺不显示
+           xAxis:{
+             arrow:true  // 是否显示箭头样式
+           },
+           yAxis:{
+             num:10,
+             arrow:true  // 是否显示箭头样式
+           },
+           xLabel:{
+             rotate:true
+           },
+           legend:{
+             align:"bc",
+             offset:[0,65]
+           },
+           point:{
+             isShow:false // 大数据，可选是否绘制出点
+           },
+           dateformat:"MM-dd h:mm:ss", // 提供x轴的label的格式化输出
+           series:[
+             {
+			   name : '线图内存使用情况',
+			   data : [
+               [1389081242000, 37220],
+               [1389081578000, 64880],
+               [1389081679000, 65204],
+               [1389082043000, 70976],
+               [1389082379000, 86724],
+               [1389082632000, 98360],
+               [1389082792000, 68876],
+               [1389083013000, 72776],
+               [1389083438000, 72748],
+               [1389084837000, 79040],
+               [1389085471000, 81088],
+               [1389086195000, 82196],
+               [1389086755000, 83272],
+               [1389087329000, 87064],
+               [1389088537000, 91532],
+               [1389088959000, 92424],
+               [1389093696000, 103480]
+               ]
+		     }
+           ]
+         });
+     })
+    </script>
+  </body>
+</html>

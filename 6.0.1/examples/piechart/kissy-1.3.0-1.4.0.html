@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>chart test</title>
+    <style type="text/css" media="screen">
+     .pi-con{
+       border:1px solid #999;width:750px;height:300px;margin:10px 0 0 10px;
+       float:left;
+     }
+     .clear-both{
+       clear:both;
+     }
+
+     .kcharts-label{
+       color:#0579C6;
+       cursor:pointer;
+     }
+    </style>        
+  </head>
+  <body>
+    <div id="J_Pie1" class="pi-con">
+    </div>
+    <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.8/seed.js"></script>
+
+    <script type="text/javascript" src="../../animate/index.js"></script>
+    <script type="text/javascript" src="../../piechart/util.js"></script>
+    <script type="text/javascript" src="../../piechart/sector.js"></script>
+    <script type="text/javascript" src="../../piechart/label.js"></script>
+    <script type="text/javascript" src="../../piechart/index.js"></script> 
+    <script type="text/javascript">
+     KISSY.use("kg/kcharts/6.0.1/piechart/index",function(S,Pie){
+       function pie1(){
+         var data = [ 
+                     {label:"Chrome", data:2 },
+                     { label:"FireFox", data:2 },
+                     { label:"IE", data:3 },
+                     { label:"Opera",data:4 },
+                     { label:"Safari", data:3 }];
+
+         var cfg = {
+           data:data,
+           color:{
+             initial:"#f00"
+           },
+           renderTo:"#J_Pie1",
+           cx:350,cy:150,
+           rs:[60,100],
+           donut:true,
+           interval:5,
+           anim:{
+             easing:'swing',
+             duration:800
+           }
+         };
+         var pie = new Pie(cfg);
+         pie.on("beforeRender",custombg);
+         pie.on('mouseover',enter);
+         function enter(e){
+           console.log(e);
+           var $sector = e.sector;
+           console.log($sector.get('groupIndex'));
+           console.log($sector.get('donutIndex'));
+           var framedata = $sector.get('framedata');
+           console.log(framedata);
+           console.log(framedata.label);
+         }
+         //自定义背景
+         function custombg(){
+           var paper = pie.get("paper"),
+           cx , cy;
+           cx = pie.get("cx");
+           cy = pie.get("cy");
+           var i = paper.image("pie-donut-bg.jpeg",cx - 97/2 , cy - 97/2 , 97 , 97);
+           i.toBack();
+         }
+       }
+       pie1();
+     })
+    </script>
+  </body>
+</html>

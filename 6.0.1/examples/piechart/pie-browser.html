@@ -1,0 +1,298 @@
+<!-- -*- coding: utf-8; -*- -->
+<!doctype html>
+<html>
+  <head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<link rel="stylesheet" href="http://a.tbcdn.cn/p/global/1.0/global-min.css" />
+		<title>chart test</title>
+<style type="text/css" media="screen">
+	.pi-con{
+			border:1px solid #999;width:800px;height:800px;margin:10px 0 0 10px;
+			float:left;
+	}
+	.clear-both{
+			clear:both;
+	}
+
+	.kcharts-label{
+			color:#0579C6;
+			cursor:pointer;
+	}
+	.ks-chart-default-tip span.ks-chart-percent,.kcharts-donut-percent{
+	   margin-left:10px;
+	   font-weight:bold;
+	}
+	.kcharts-donut-percent{color:#333;}
+</style>		
+  </head>
+  <body>
+    <div id="J_Pie1" class="pi-con">
+    </div>
+
+		<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.8/seed.js"></script>
+	<script type="text/javascript" src="../../animate/index.js"></script>
+	<script type="text/javascript" src="../../piechart/util.js"></script>
+	<script type="text/javascript" src="../../piechart/sector.js"></script>
+	<script type="text/javascript" src="../../piechart/label.js"></script>
+	<script type="text/javascript" src="../../piechart/index.js"></script>
+	<script type="text/javascript">
+	 KISSY.use('kg/kcharts/6.0.1/piechart/index,gallery/kcharts/1.1/tip/index',function(S,Pie,Tip){
+		 function pie1(){
+			 var Raphael = window.Raphael
+
+			 function darker(el,times) {
+				 times = times || 2;
+
+				 var fs = [el.attr("fill"), el.attr("stroke")];
+
+				 this.fs = this.fs || [fs[0], fs[1]];
+
+				 fs[0] = Raphael.rgb2hsb(Raphael.getRGB(fs[0]).hex);
+				 // fs[1] = Raphael.rgb2hsb(Raphael.getRGB(fs[1]).hex);
+
+				 fs[0].s = Math.min(fs[0].s * times, 1);
+				 fs[0].b = fs[0].b / times;
+				 // fs[1].s = Math.min(fs[1].s * times, 1);
+				 // fs[1].b = fs[1].b / times;
+
+				 el.attr({fill: "hsb(" + [fs[0].h, fs[0].s, fs[0].b] + ")"});
+
+				 return this;
+			 }
+
+			 var tip
+			 function getTip(){
+				 if(!tip){
+					 tip = new Tip({rootNode:S.one('#J_Pie1')});
+				 }
+				 return tip;
+			 }
+
+			 var data = [
+					 {
+						 color:"#78a5da",
+						 label:"Trident",
+						 data:[
+							 {
+								 data:2,
+								 label:"IE6"
+							 },{
+								 data:2,
+								 label:"IE7"
+							 },{
+								 data:2,
+								 label:"IE8"
+							 },{
+								 data:2,
+								 label:"IE9"
+							 },{
+								 data:2,
+								 label:"IE10"
+							 }
+						 ]
+					 },{
+						 color:"#d26e6b",
+						 label:"Webket",
+						 data:[
+							 {
+								 data:1,
+								 label:"Chrome 16"
+							 },{
+								 data:1,
+								 label:"Chrome 17"
+							 },{
+								 data:3,
+								 label:"Chrome 21"
+							 }
+						 ]
+					 },{
+						 color:"#ffa2a2",
+						 label:"Getko",
+						 data:[
+							 {
+								 data:1,
+								 label:"FireFox10"
+							 },{
+								 data:1,
+								 label:"FireFox12"
+							 },{
+								 data:.3,
+								 label:"FireFox3.5"
+							 }
+						 ]
+					 }]
+
+			 var cfg = {
+				 data:data,
+				 renderTo:"#J_Pie1",
+				 cx:400,cy:400,
+				 rs:[150,200],
+				 labelfn:function(txt,sector,pie){
+					 var framedata = sector.get("framedata")
+						 , percent = (framedata.percent*100).toFixed(2)+"%"
+	 console.log(txt);
+					 return txt+":<span class='kcharts-donut-percent'>"+percent+"</span>";
+				 },
+				 sizefn:function(size,sector,pie){
+					 return {
+						 width:size.width+10,
+						 height:size.height
+					 }
+				 },
+				 interval:5,
+				 padding:50,//label和pie之间的距离
+				 anim:{
+					 easing:'swing',
+					 duration:800
+				 }
+			 }
+
+			 var pie = new Pie(cfg)
+				 , ms = 200
+
+			 var prevset
+				 , prevsector
+			 function onclick(e){
+				 if(this.isRunning()){
+					 return;
+				 }
+				 var sector = e.sector
+					 , $path = sector.get("$path")
+					 , groupindex = sector.get('groupIndex')
+					 , donutindex = sector.get('donutIndex')
+					 , donut = S.indexOf(0,groupindex) == -1
+					 , set = sector.get('set')
+
+					 , middleangle = sector.get('middleangle')
+					 , angel = middleangle*Math.PI/180
+					 , unit = 30
+					 , x = unit*Math.cos(angel)
+					 , y = -unit*Math.sin(angel)
+
+				 if(donut){
+					 if(prevset){
+						 if(prevset == set){
+							 prevset.animate({transform:""},ms,function(){
+								 if(prevsector && prevsector == $path){
+									 $path.animate({transform:""},ms);
+									 prevsector = null;
+								 }else{
+									 $path.animate({transform:'t'+x+' '+ y},ms);
+									 prevsector = $path;
+								 }
+							 });
+						 }else{
+							 prevset.animate({transform:""},ms);
+							 prevset = null;
+							 if(prevsector && prevsector == $path){
+								 $path.animate({transform:""},ms);
+								 prevsector = null;
+							 }else{
+								 $path.animate({transform:'t'+x+' '+ y},ms);
+								 prevsector = $path;
+							 }
+						 }
+					 }else{
+						 if(prevsector){
+							 if(prevsector == $path){
+								 $path.animate({transform:''},ms);
+								 prevsector = null;
+							 }else{
+								 prevsector.animate({transform:''},ms);
+								 $path.animate({transform:'t'+x+' '+ y},ms);
+								 prevsector = $path;
+							 }
+						 }else{
+							 $path.animate({transform:'t'+x+' '+ y},ms);
+							 prevsector = $path;
+						 }
+					 }
+				 }else{
+					 if(prevsector){
+						 if(prevsector == $path){
+							 prevsector.animate({transform:""},ms);
+							 prevsector = null;
+						 }else{
+							 prevsector.animate({transform:""},ms);
+							 prevsector = $path
+						 }
+					 }
+					 if(prevset){
+						 if(prevset == set){
+							 prevset.animate({transform:""},ms);
+							 prevset = null;
+						 }else{
+							 prevset.animate({transform:""},ms);
+							 set.animate({transform:'t'+x+' '+ y},ms);
+							 prevset = set;
+						 }
+					 }else{
+						 set.animate({transform:'t'+x+' '+ y},ms);
+						 prevset = set;
+					 }
+				 }
+			 }
+			 pie.on("click",onclick);
+
+			 pie.on("labelclick",function(e){
+				 var sector = e.sector
+				 sector.fire("click");
+			 });
+
+			 pie.on("mouseover",function(e){
+				 var sector = e.sector
+					 , $path = sector.get("$path")
+					 , middlex = sector.get("middlex")
+					 , middley = sector.get("middley")
+					 , isleft = sector.get("isleft")
+					 , data = sector.get("framedata")
+					 , label = data.label
+					 , size = Pie.getSizeOf(label)
+					 , tip = getTip()
+					 , $tip = tip.getInstance()
+					 , groupindex = sector.get('groupIndex')
+					 , donutindex = sector.get('donutIndex')
+					 , donut = S.indexOf(0,groupindex) == -1
+					 , x
+					 , y
+					 , framedata = sector.get("framedata")
+					 , pec = (framedata.percent*100).toFixed(2)+'%'
+
+				 if(!donut){
+					 tip.renderTemplate('{{label}}:<span class="ks-chart-percent">{{percent}}</span>',{label:label,percent:pec});
+					 if(isleft){
+						 x = middlex - size.width - 10
+					 }else{
+						 x = middlex;
+					 }
+					 y=middley;
+					 tip.fire('move',{x:x,y:y});
+				 }
+				 sector.set("_fill",$path.attr("fill"));
+
+				 darker($path,1.5);
+			 });
+			 pie.on("mouseout",function(e){
+				 var sector = e.sector
+					 , $path = sector.get("$path")
+					 , fill = sector.get("_fill")
+				 $path.attr("fill",fill);
+			 });
+
+			 pie.on("mouseleave",function(){
+				 tip && tip.hide();
+				 prevset && prevset.animate({"transform":""},ms);
+				 prevsector && prevsector.animate({"transform":""},ms);
+				 prevset = null;
+				 prevsector = null;
+			 });
+
+			 pie.on("afterRender",function(){
+			 });
+		 }
+		 pie1();
+	 })
+	</script>
+  </body>
+</html>
