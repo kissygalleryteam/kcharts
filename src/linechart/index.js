@@ -2,25 +2,9 @@
  * @fileOverview KChart 1.3  linechart
  * @author huxiaoqi567@gmail.com
  */
-define(function(require,exports,module) {
-	var Util = require("util"),
-		Node = require("node"),
-		Base = require("base"),
-		Evt = require('event-dom'),
-		Template = require("kg/kcharts/5.0.0/tools/template/index"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-		BaseChart = require("kg/kcharts/5.0.0/basechart/index"),
-		ColorLib = require("kg/kcharts/5.0.0/tools/color/index"),
-		HtmlPaper = require("kg/kcharts/5.0.0/tools/htmlpaper/index"),
-		Legend = require("kg/kcharts/5.0.0/legend/index"),
-		Theme = require("./theme"),
-		Touch = require("kg/kcharts/5.0.0/tools/touch/index"),
-		Tip = require("kg/kcharts/5.0.0/tip/index"),
-		Anim = require("kg/kcharts/5.0.0/animate/index"),
-		graphTool = require("kg/kcharts/5.0.0/tools/graphtool/index"),
-		Cfg = require("./cfg");
-
-	var $ = Node.all,
+;
+KISSY.add(function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, Touch, Tip, Anim, graphTool, Cfg) {
+	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
@@ -37,9 +21,9 @@ define(function(require,exports,module) {
 			var self = this,
 				points;
 			self.chartType = "linechart";
-			var defaultCfg = Util.clone(Cfg);
+			var defaultCfg = S.clone(Cfg);
 			// KISSY > 1.4 逻辑
-			self._cfg = Util.mix(defaultCfg, self.userConfig,undefined,undefined,true);
+			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true);
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		},
@@ -67,7 +51,7 @@ define(function(require,exports,module) {
 			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
-			self._cfg = Util.mix(Util.clone(Util.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 
 			color = self.color = new ColorLib({
 				themeCls: themeCls
@@ -131,17 +115,18 @@ define(function(require,exports,module) {
 				self.afterRender();
 			});
 
+			S.log(self);
 		},
 		//获取属性
 		cloneSeriesConfig: function(wl) {
 			var self = this,
 				cfgs = {},
 				cfg;
-			var cloneCfg = Util.clone(self._cfg);
+			var cloneCfg = S.clone(self._cfg);
 			if (!wl) return;
 			for (var i in wl) {
 				for (var j in self._cfg.series) {
-					cfg = self._cfg.series[j][wl[i]] ? Util.mix(cloneCfg[wl[i]], self._cfg.series[j][wl[i]], undefined, undefined, true) : self._cfg[wl[i]];
+					cfg = self._cfg.series[j][wl[i]] ? S.mix(cloneCfg[wl[i]], self._cfg.series[j][wl[i]], undefined, undefined, true) : self._cfg[wl[i]];
 					if (cfg) {
 						if (!cfgs[wl[i]]) {
 							cfgs[wl[i]] = [];
@@ -318,7 +303,7 @@ define(function(require,exports,module) {
 					path: path,
 					points: self._points[i],
 					color: curColor,
-					attr: Util.mix({
+					attr: S.mix({
 						stroke: curColor.DEFAULT
 					}, self._cfg.line.attr),
 					isShow: true
@@ -333,7 +318,7 @@ define(function(require,exports,module) {
 		},
 		//处理颜色模版
 		processAttr: function(attrs, color) {
-			var newAttrs = Util.clone(attrs);
+			var newAttrs = S.clone(attrs);
 			for (var i in newAttrs) {
 				if (newAttrs[i] && typeof newAttrs[i] == "string") {
 					newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
@@ -370,7 +355,7 @@ define(function(require,exports,module) {
 				$stock;
 
 			if (x !== undefined && y !== undefined) {
-				if (Util.isFunction(template)) {
+				if (S.isFunction(template)) {
 					return template({
 						paper: paper,
 						lineIndex: lineIndex,
@@ -425,7 +410,7 @@ define(function(require,exports,module) {
 					width: ctn.width,
 					height: ctn.height
 				} : {},
-				tipCfg = Util.mix(_cfg.tip, {
+				tipCfg = S.mix(_cfg.tip, {
 					rootNode: self._$ctnNode,
 					clsName: _cfg.themeCls,
 					boundry: boundryCfg
@@ -514,7 +499,7 @@ define(function(require,exports,module) {
 				len = colors.length,
 				cfg = self._cfg,
 				series = self._cfg.series
-			var __legendCfg = Util.map(series, function(serie, i) {
+			var __legendCfg = S.map(series, function(serie, i) {
 				i = i % len;
 				var item = {},
 					color = colors[i]
@@ -527,7 +512,7 @@ define(function(require,exports,module) {
 				return item;
 			});
 
-			var globalConfig = Util.merge({
+			var globalConfig = S.merge({
 				interval: 20, //legend之间的间隔
 				iconright: 5, //icon后面的空白
 				showicon: true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
@@ -691,7 +676,7 @@ define(function(require,exports,module) {
 					if (self._stocks[i]['stocks']) {
 						if (self._points[i][stockIndex].dataInfo) {
 							self._points[i][stockIndex].dataInfo.color = self._stocks[i]['color']['DEFAULT']
-							var tmp = Util.merge(self._points[i][stockIndex].dataInfo, series[i]);
+							var tmp = S.merge(self._points[i][stockIndex].dataInfo, series[i]);
 							delete tmp.data;
 							tipAllDatas.datas[i] = tmp;
 						}
@@ -702,7 +687,7 @@ define(function(require,exports,module) {
 				tipAllDatas.datas = BaseChart.prototype.arraySort(tmpArray, true, "y");
 				tipData = tipAllDatas;
 			} else {
-				tipData = Util.merge(self._points[lineIndex][stockIndex].dataInfo, series[lineIndex]);
+				tipData = S.merge(self._points[lineIndex][stockIndex].dataInfo, series[lineIndex]);
 				delete tipData['data'];
 			}
 			self.stockChange(lineIndex,stockIndex);
@@ -741,7 +726,7 @@ define(function(require,exports,module) {
 				}
 			}
 			if (self._points[lineIndex][stockIndex].dataInfo && self._lines[lineIndex]['isShow']) {
-				var e = Util.mix({
+				var e = S.mix({
 					target: tgt,
 					currentTarget: tgt,
 					lineIndex: Math.round(lineIndex),
@@ -886,6 +871,7 @@ define(function(require,exports,module) {
 			self.clearEvtLayout();
 			self.renderEvtLayout();
 			self.bindEvt();
+			S.log(self)
 		},
 		/**
 			TODO 显示单条直线
@@ -919,7 +905,7 @@ define(function(require,exports,module) {
 			var self = this,
 				currentStocks = self._stocks[lineIndex],
 				tgt = currentStocks['stocks'] && currentStocks['stocks'][stockIndex];
-			var e = Util.mix({
+			var e = S.mix({
 				target: tgt,
 				currentTarget: tgt,
 				lineIndex: Math.round(lineIndex),
@@ -957,5 +943,34 @@ define(function(require,exports,module) {
 		}
 	};
 
-	return BaseChart.extend(methods);
+	var LineChart;
+	if (Base.extend) {
+		LineChart = BaseChart.extend(methods);
+	} else {
+		LineChart = function(cfg) {
+			var self = this;
+			self.userConfig = cfg;
+			self.init();
+		};
+		S.extend(LineChart, BaseChart, methods);
+	}
+	return LineChart;
+}, {
+	requires: [
+		'base',
+		'node',
+		'dom', 'event',
+		'kg/kcharts/6.0.1/template/index',
+		'kg/kcharts/6.0.1/raphael/index',
+		'kg/kcharts/6.0.1/basechart/index',
+		'kg/kcharts/6.0.1/tools/color/index',
+		'kg/kcharts/6.0.1/tools/htmlpaper/index',
+		'kg/kcharts/6.0.1/legend/index',
+		'./theme',
+		'kg/kcharts/6.0.1/tools/touch/index',
+		'kg/kcharts/6.0.1/tip/index',
+		'kg/kcharts/6.0.1/animate/index',
+		'kg/kcharts/6.0.1/tools/graphtool/index',
+		'./cfg'
+	]
 });

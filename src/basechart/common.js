@@ -1,6 +1,4 @@
-define(function(require,exports,module) {
-	var Util = require("util"),
-		Template = require("kg/kcharts/5.0.0/tools/template/index");
+KISSY.add(function(S, Template) {
 
 	function drawTitle(chart, themeCls) {
 		if (!chart._cfg.title.isShow) return;
@@ -10,7 +8,7 @@ define(function(require,exports,module) {
 			ctn = chart.getInnerContainer(),
 			//高度占 60%
 			h = ctn.y * 0.6;
-		chart._title = paper.rect(ctn.x, 0, ctn.width, h).addClass(cls).css(Util.mix({
+		chart._title = paper.rect(ctn.x, 0, ctn.width, h).addClass(cls).css(S.mix({
 			"line-height": h + "px"
 		}, _cfg.title.css)).html(_cfg.title.content);
 	}
@@ -23,7 +21,7 @@ define(function(require,exports,module) {
 			ctn = chart.getInnerContainer(),
 			//高度占 40%
 			h = ctn.y * 0.4;
-		chart._subTitle = paper.rect(ctn.x, ctn.y * 0.6, ctn.width, h).addClass(cls).css(Util.mix({
+		chart._subTitle = paper.rect(ctn.x, ctn.y * 0.6, ctn.width, h).addClass(cls).css(S.mix({
 			"line-height": h + "px"
 		}, _cfg.subTitle.css)).html(_cfg.subTitle.content);
 	}
@@ -146,7 +144,7 @@ define(function(require,exports,module) {
 		if (!tpl) {
 			return paper.lineY(point.x, ctn.tl.y, ctn.height).addClass(cls).css(css);
 		}
-		if (Util.isFunction(tpl)) {
+		if (S.isFunction(tpl)) {
 			return tpl(params);
 		} else {
 			return Template(tpl).render({
@@ -175,7 +173,7 @@ define(function(require,exports,module) {
 		if (!tpl) {
 			return paper.lineX(ctn.x, point.y, ctn.width).addClass(cls).css(css);
 		}
-		if (Util.isFunction(tpl)) {
+		if (S.isFunction(tpl)) {
 			return tpl(params);
 		} else {
 			return Template(tpl).render({
@@ -221,7 +219,7 @@ define(function(require,exports,module) {
 			content = "";
 		if (index < len) {
 			tpl = chart._cfg.xLabels.template || tpl;
-			if (Util.isFunction(tpl)) {
+			if (S.isFunction(tpl)) {
 				content = tpl(index, text);
 			} else {
 				content = Template(tpl).render({
@@ -244,7 +242,7 @@ define(function(require,exports,module) {
 			content = "",
 			lbl;
 		tpl = chart._cfg.yLabels.template || tpl;
-		if (Util.isFunction(tpl)) {
+		if (S.isFunction(tpl)) {
 			content = tpl(index, text);
 		} else {
 			content = Template(tpl).render({
@@ -510,4 +508,6 @@ define(function(require,exports,module) {
 		getLinePath: getLinePath,
 		isInArray: isInArray
 	};
+}, {
+	requires: ['kg/kcharts/6.0.1/template/index']
 })

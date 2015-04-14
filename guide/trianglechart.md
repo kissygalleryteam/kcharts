@@ -10,7 +10,7 @@ Demo
 ---
 ```
 //载入trianglechart
-KISSY.use('kg/kcharts/2.0.0/trianglechart/index',function(S,Trianglechart){
+KISSY.use('kg/kcharts/6.0.1/trianglechart/index',function(S,Trianglechart){
   var trianglechart = new Trianglechart({
         renderTo:"#demo1",
         xAxis: {

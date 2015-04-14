@@ -18,15 +18,15 @@
     }
 </style>
 <div id="map"></div>
-<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.8/seed-min.js"></script>
 <script type="text/javascript" src="./location.js"></script>
 <script type="text/javascript">
-require('node,util,kg/kcharts/5.0.0/mapchart/index', function (Node, Util,MapChart) {
-            var $ = Node.all;
+KISSY.use('node',function(S,Node){
+        var $ = KISSY.all;
+        S.use('kg/kcharts/6.0.1/mapchart/index', function (S, MapChart) {
             var h = screen.availHeight * 0.7;
             $('#map').css("height", h);
-            var map = new MapChart( {
-                renderTo:'#map',
+            var map = new MapChart('#map', {
                 themeCls: "ks-chart-default",
                 autoRender: false,
                 areaText: {
@@ -47,10 +47,10 @@ require('node,util,kg/kcharts/5.0.0/mapchart/index', function (Node, Util,MapCha
                         span = '<span></span>',
                         container = '.ks-chart-area-text';
 
-                Util.each(china, function (item, index) {
+                S.each(china, function (item, index) {
                     var style = self.converPix(item.x, item.y), num = item.num;
                     // ie9以下不支持background size
-                    style = Util.merge(style, {
+                    style = S.merge(style, {
                         "backgroundSize": [Math.sqrt(num) * 3, "px ", Math.sqrt(num) * 3, "px"].join('')
                     });
                     $(span).attr('title', index).addClass(cs).css(style).appendTo(container)
@@ -58,5 +58,6 @@ require('node,util,kg/kcharts/5.0.0/mapchart/index', function (Node, Util,MapCha
             })
             map.render();
         });
+});
 </script>
 </body>

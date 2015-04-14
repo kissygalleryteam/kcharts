@@ -1,8 +1,8 @@
 //简单图形绘制的工具
-define(function(require,exports,module) {
-	var Util = require("util"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index");
+;KISSY.add(function(S,Raphael){
+
 	var sqrt = Math.sqrt;
+
 	var graphTool = {};
 	//等边三角形
 	var triangle = function(paper,x,y,r,deg){
@@ -50,11 +50,11 @@ define(function(require,exports,module) {
 		}
 	}
 
-	graphTool = Util.merge(graphTool,{
+	graphTool = S.merge(graphTool,{
 		triangle:triangle,
 		rhomb:rhomb,
 		square:square
 	});
 
 	return graphTool;
-});
+},{requires:['kg/kcharts/6.0.1/raphael/index']});

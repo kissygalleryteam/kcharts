@@ -1,10 +1,15 @@
-define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tools/template/index"],function(require, exports, module) {
+/*
+combined files : 
 
-  var Util = require("util"),
-    Node = require("node"),
-    Base = require("base"),
-    Template = require("kg/kcharts/5.0.0/tools/template/index");
-    var $ = Node.all;
+kg/kcharts/6.0.1/tip/index
+
+*/
+/**
+ * @fileOverview KChart  tip
+ * @author huxiaoqi567@gmail.com
+ */
+;KISSY.add('kg/kcharts/6.0.1/tip/index',function (S,Node,Base,Anim,Template,_) {
+    var $ = S.all;
     var methods = {
       initializer:function(){
         this.init();
@@ -16,7 +21,7 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
               clsName:"ks-chart-default",
               autoRender:true,
               isVisable:false,
-              boundry:{        
+              boundry:{        //tip的移动区域
                 x:0,
                 y:0,
                 width:0,
@@ -33,18 +38,6 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
                   marginTop:0
                 }
               },
-              css:{
-                background: "#000",
-                opacity: 0.6,
-                "-moz-border-radius":  "5px",
-                "-webkit-border-radius": "5px",
-                "border-radius":"5px",
-                "padding":"5px",
-                "color":"#fff",
-                "font-family":"Microsoft Yahei",
-                "z-index": 10,
-                "font-size": "12px"
-              },
               anim:{
                 easing:"easeOut",
                 duration:0.25
@@ -53,8 +46,8 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
                 x:0,
                 y:0
               },
-              alignX:"left", 
-              alignY:"top"    
+              alignX:"left", //left center right
+              alignY:"top"    //top middle bottom
             };
 
         self._events = {
@@ -63,7 +56,8 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
           HIDE:"hide"
         }
 
-        self._cfg = Util.mix(defaultCfg, cfg, undefined, undefined, true);
+        // 这里用mix不合适，S.mix会改变defaultCfg
+        self._cfg = S.mix(defaultCfg, cfg, undefined, undefined, true);
 
         self._cfg.rootNode = $(self._cfg.rootNode);
 
@@ -93,7 +87,7 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
             );
 
             self.on(_events.SETCONT, function (ev) {
-                if (Util.isFunction(tpl)) {
+                if (S.isFunction(tpl)) {
                     self.setContent(tpl(ev.data));
                 } else {
                     self.renderTemplate(tpl, ev.data);
@@ -161,9 +155,9 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
                 anim = _cfg.anim,
                 now = new Date().getTime();
             if(self._prevtime){
-                
+                // S.log(now - self._prevtime)
                if(now - self._prevtime < 100){
-                    
+                    //迅速移动
                     self.animateFast(x,y,callback);
                }
             }
@@ -188,7 +182,7 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
                     callback && callback();
                 });
         },
-        
+        //快速移动
         animateFast:function(x,y,callback){
             var self = this,
                 px = self.get("x"),
@@ -282,7 +276,7 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
                     by = boundry.y || 0,
                     w = boundry.width,
                     h = boundry.height;
-                
+                //躲闪
                 if(marginTop < by){
                     marginTop = y -(-Math.abs(offset.y));
                 }else if(marginTop > by + h - height){
@@ -299,7 +293,9 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
         },
 
         _isExist:function () {
+
             return this.$tip && this.$tip[0];
+
         },
 
         render:function () {
@@ -309,9 +305,10 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
                 _data = self._data,
                 display = _cfg.isVisable ? "inline-block" : "none",
                 rootNodeOffset = _cfg.rootNode.offset();
+
             if (!_cfg.rootNode.offset()) return false;
-            self.$tip = !self._isExist() && $('<span class="ks-chart-tip ' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
-                .css(_cfg.css)
+
+            self.$tip = !self._isExist() && $('<span class="' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
                 .css({"display":display})
                 .appendTo(_cfg.rootNode);
 
@@ -328,5 +325,17 @@ define('kg/kcharts/5.0.0/tip/index',["util","node","base","kg/kcharts/5.0.0/tool
         }
     };
 
-    return Base.extend(methods);
-});
+   var Tip;
+   if(Base.extend){
+     Tip = Base.extend(methods);
+   }else{
+     Tip = function (cfg) {
+       if(!cfg) return;
+       this.userConfig = cfg;
+       this.init();
+     }
+     S.extend(Tip, Base, methods);
+    }
+    return Tip;
+}, {requires:['node','base','anim','kg/kcharts/6.0.1/template/index', './assets/tip.css']});
+

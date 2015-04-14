@@ -18,9 +18,9 @@
         </button>
       </div>
     </div>
-     <script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
+    <script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.8/seed-min.js"></script>
     <script type="text/javascript">
-     require('node,util,kg/kcharts/5.0.0/dashboard/index',function(Node,Util,DashBoard){
+     KISSY.use('node,kg/kcharts/6.0.1/dashboard/index',function(S,Node,DashBoard){
        function helperRand(a,b){
          return Math.floor(Math.random()*(b-a+1)+a);
 
@@ -49,12 +49,12 @@
        var effect = {
          easing:'elastic',
          ms:1000,
-         callback:Util.noop
+         callback:S.noop
        }
 
        dashboard.pointTo(20,effect)
 
-       Node.one('#change').on('click',function(){
+       S.one('#change').on('click',function(){
          dashboard.pointTo(helperRand(-90,120),effect)
        })
 

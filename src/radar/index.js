@@ -1,20 +1,12 @@
-define(function(require,exports,module){
-
-  var Util = require("util"),
-      Base = require("base"),
-      D = require("dom"),
-      Node = require("node"),
-      E = require("event-dom"),
-      Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-      Legend = require("kg/kcharts/5.0.0/legend/index");
-
+// -*- coding: utf-8; -*-
+;KISSY.add(function(S,Base,Raphael,D,E,Legend){
   var pi = Math.PI
     , unit = pi/180
 
-  var each = Util.each,
-      map = Util.map,
-      filter = Util.filter,
-      merge = Util.merge
+  var each = S.each,
+      map = S.map,
+      filter = S.filter,
+      merge = S.merge
 
   // Gets a position on a radar line.
   function lined_on( origin, base, bias){
@@ -76,9 +68,11 @@ define(function(require,exports,module){
 
    var methods = {
 	 initializer:function(cfg){
-       cfg = this.userConfig;
-       var container = Node.all(cfg.renderTo)[0];
-       cfg.anim = merge(anim,cfg.anim);
+       // 兼容1.3以下
+       cfg || (cfg = this.userConfig);
+
+       var container = S.get(cfg.renderTo);
+       cfg.anim = S.merge(anim,cfg.anim);
 
        this.set("container",container);
        this.set(cfg);
@@ -155,7 +149,7 @@ define(function(require,exports,module){
         text: {'fill':"#222",'text-anchor':'start'},
         lines: {'stroke-width':'1' }
       };
-      return merge(default_draw_options,option);
+      return S.merge(default_draw_options,option);
     },
     //绘制多边形对比曲线
     drawGroup:function(scores,points,opts){
@@ -325,7 +319,7 @@ define(function(require,exports,module){
 
         var label = labels[i];
         if (label.length > opts['text']['max-chars']) label = label.replace(" ", "\n");
-        var text = paper.text( x, y, label).attr(merge(opts['text'],{'text-anchor': anchor }));
+        var text = paper.text( x, y, label).attr(S.merge(opts['text'],{'text-anchor': anchor }));
       }
     },
     //中心发散的刻度尺
@@ -403,7 +397,7 @@ define(function(require,exports,module){
         , anim = this.get("anim")
         , that = this
 
-      var global_draw_options = merge(global_draw_defaults, user_draw_options);
+      var global_draw_options = S.merge(global_draw_defaults, user_draw_options);
       var points = this.getPoints();
 
       this.drawMeasureAndRuler(points);
@@ -464,7 +458,25 @@ define(function(require,exports,module){
     }
   }
 
-  return Base.extend(methods);
+   var Radar;
+   if(Base.extend){
+     Radar = Base.extend(methods);
+   }else{
+     Radar = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Radar,Base,methods);
+  }
+  return Radar;
+},{
+  requires:[
+    "base",
+    "kg/kcharts/6.0.1/raphael/index",
+    "dom","event",
+    'kg/kcharts/6.0.1/legend/index'
+  ]
 });
 /**
  * refs:

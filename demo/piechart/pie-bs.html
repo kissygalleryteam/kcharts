@@ -29,10 +29,30 @@
     <div id="J_Pie1" class="pi-con">
     </div>
 
-		<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-
-        require("util,node,kg/kcharts/5.0.0/piechart/index,kg/kcharts/5.0.0/tip/index",function(Util,Node,Pie,Tip){
+		<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+	  <script type="text/javascript">
+			KISSY.config({
+				packages:[{
+					name:'gallery',
+					path:'http://a.tbcdn.cn/s/kissy'
+				}]
+			});
+		</script>
+	<script type="text/javascript" src="../../animate/index.js"></script>
+	<script type="text/javascript" src="../../piechart/util.js"></script>
+	<script type="text/javascript" src="../../piechart/sector.js"></script>
+	<script type="text/javascript" src="../../piechart/label.js"></script>
+	<script type="text/javascript" src="../../piechart/index.js"></script>
+	<!-- <script type="text/javascript" src="pie-bs.js"></script> -->
+	<script type="text/javascript">
+    KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+KISSY.use('kg/kcharts/6.0.1/piechart/index,gallery/kcharts/1.1/tip/index', function (S, Pie, Tip) {
     function pie1() {
         var Raphael = window.Raphael
         //使元素el的颜色变深
@@ -55,7 +75,7 @@
             function getTip() {
                 if (!tip) {
                     tip = new Tip({
-                        rootNode: Node.one('#J_Pie1')
+                        rootNode: S.one('#J_Pie1')
                     });
                 }
                 return tip;
@@ -145,7 +165,7 @@
                 ,
                 donutindex = sector.get('donutIndex') //面包圈的索引
                 ,
-                donut = Util.indexOf(0, groupindex) == -1 //是否为外层的环形
+                donut = S.indexOf(0, groupindex) == -1 //是否为外层的环形
                 ,
                 set = sector.get('set') //包含最内层的扇形以及外层donut的集合
 
@@ -271,7 +291,7 @@
                 $tip = tip.getInstance(),
                 groupindex = sector.get('groupIndex'),
                 donutindex = sector.get('donutIndex'),
-                donut = Util.indexOf(0, groupindex) == -1,
+                donut = S.indexOf(0, groupindex) == -1,
                 x, y, framedata = sector.get("framedata"),
                 pec = (framedata.percent * 100).toFixed(2) + '%'
 
@@ -327,12 +347,12 @@
                 r = rs[0]
 
                 //只标注内部的扇形部分
-                sectors = Util.filter(sectors, function (sector) {
+                sectors = S.filter(sectors, function (sector) {
                     var i = sector.get("groupIndex");
                     return i && i[0] == 0;
                 });
 
-            Util.each(sectors, function (sector) {
+            S.each(sectors, function (sector) {
                 var mx = sector.get("middlex"),
                     my = sector.get("middley"),
                     deg = sector.get("middleangle"),
@@ -348,7 +368,7 @@
 
                 if (label && percent > .05) { //大于10%的扇形才添加标注
                     //label = (100 * percent).toFixed(2)+"%";
-                    size = Pie.getSizeOf(Node("<div>" + label + "</div>")) //获取标注的尺寸
+                    size = Pie.getSizeOf(S.Node("<div>" + label + "</div>")) //获取标注的尺寸
                     // 计算标注的实际的标注位置
                     if (!isleft) {
                         px = x - size.width / 2
@@ -357,7 +377,7 @@
                         px = x;
                         py = y;
                     }
-                    var $label =Node("<div>" + label + "</div>")
+                    var $label = S.Node("<div>" + label + "</div>")
                     $label.css({
                         "position": "absolute",
                         "left": px + 'px',

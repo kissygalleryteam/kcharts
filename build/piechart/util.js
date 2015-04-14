@@ -1,12 +1,15 @@
-define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/sector","kg/kcharts/5.0.0/tools/color/index","kg/kcharts/5.0.0/raphael/index"],function(require, exports, module) {
+/*
+combined files : 
 
+kg/kcharts/6.0.1/piechart/util
 
-  var Util = require("util"),
-  Sector = require("kg/kcharts/5.0.0/piechart/sector"),
-  Color = require("kg/kcharts/5.0.0/tools/color/index"),
-  Raphael = require("kg/kcharts/5.0.0/raphael/index");
-
-  var isArray = Util.isArray
+*/
+// -*- coding: utf-8; -*-
+/**
+ * sector数据处理
+ * */
+;KISSY.add('kg/kcharts/6.0.1/piechart/util',function(S,Sector,Color,Raphael){
+  var isArray = S.isArray
   function flat(a){
     var ret = []
       , ts = Object.prototype.toString
@@ -23,12 +26,12 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     rec(a);
     return ret;
   }
-  
+  // 扁平的filter
   function flatFilter(groups,fn){
     var ret = []
     function rec(groups,depth){
       for(var i=0,l=groups.length;i<l;i++){
-        if(Util.isArray(groups[i])){
+        if(S.isArray(groups[i])){
           rec(groups[i],depth++);
         }else{
           if(fn(groups[i])){
@@ -41,7 +44,12 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     rec(groups,0);
     return ret;
   }
-  
+  /**
+   * filter 原始数据并返回其它
+   * @param fn 过滤函数
+   * @param combine 是否合并小数据
+   * @param otherText "其它"的文案
+   * */
   function filterdata(data,fn,combine,otherText){
     var ret = []
       , other = 0
@@ -49,15 +57,15 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
       , sum = sumObject2(data)
     function rec(data,container){
       for(var i=0,l=data.length;i<l;i++){
-        if(Util.isArray(data[i].data)){
+        if(S.isArray(data[i].data)){
           var index = container.push(S.mix({},data[i],true,["label"]));
           container[index].data = [];
           rec(data[i].data,container[index].data);
         }else{
           var d = data[i].data , percent = d/sum
           if(fn(d,percent)){
-            
-            
+            // ret[depth] || (ret[depth] = []);
+            // ret[depth].push(data[i]);
             container.push(data[i]);
           }else{
             other+=data[i].data;
@@ -66,13 +74,15 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
       }
     }
     rec(data,ret);
-    
+    // 如果合并产生一个数据组，“其它”
     if(combine === true){
       ret.push({label:otherText,data:other});
     }
     return ret;
   }
-  
+  /**
+   * 计算对象深度，可以是Array数组和Object对象
+   * */
   function depth(o){
     var basictype = Object.prototype.toString.call(o)
     function len(o){
@@ -119,7 +129,12 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     }
     return s;
   }
-  
+  /**
+   * 计算一组对象中某个字段的值的和，比如：
+   * @param [{value:1},{value:2}]
+   * @return 3
+   * 缓存计算结果，避免重复计算
+   * */
   function sumObject(o,fn){
     var s = 0
     for(var i=0,l=o.length;i<l;i++){
@@ -130,21 +145,21 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     }
     return s
   }
-  
+  // 对sumObject的一个简单的包装
   function sumObject1(oo){
     return sumObject(oo,function(o){
-             if(o.value && Util.isNumber(o.value)){
+             if(o.value && S.isNumber(o.value)){
                return o.value
              }else{
                return 0;
              }
            })
   }
-  
+  // 计算树状data的和
   function sumObject2(o){
     var s = 0
     for(var i=0,l=o.length;i<l;i++){
-      if(Util.isArray(o[i].data)){
+      if(S.isArray(o[i].data)){
         s = s+sumObject2(o[i].data)
       }else{
         s = s+o[i].data
@@ -153,7 +168,15 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     return s;
   }
   function traverse(o){
-    
+    /**
+     * groups:
+     * 用于统计各个圆饼用于计算百分比
+     * 二维数组
+     * 饼图由里面向外面辐射的数据
+     *
+     * set:
+     * 分组用于动画一起动
+     * */
     var groups = []
       , set = []
       , ret = {}
@@ -205,7 +228,9 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     ret.set = set;
     return ret;
   }
-  
+  /**
+   * 每帧的操作
+   * */
   function onframe(attrname,value,props,index,len,opts){
     var start = this.el.get("start")
       , end
@@ -219,9 +244,19 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     this.el.set("start",start);
     this.el.set("end",end);
   }
-  
+  /**
+   * 计算group中各个分部的百分比
+   * 将这个百分比换算成360度的占比
+   * 根据占比度数画出path
+   * @param data {Object}
+   * [{"value":1},{"value":2}]
+   * 处理后成为
+   * [{"value":1,"percent":.33},{"value":2,"percent":.66}]
+   * @return sector array
+   * note : 利用了函数的副作用，group本身被改变了
+   * */
   function buildPropsArray(groups,pie){
-    var rs = pie.get('rs')  
+    var rs = pie.get('rs')  // 多层饼图的梯度半径，必须由小到大
       , $sectors = []
       , interval = pie.get('interval')  || 2
       , paper = pie.get('paper')
@@ -241,18 +276,18 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
         , degsum = 0
       for(var j=0,ll=groups[i].length;j<ll;j++){
         var d = groups[i]
-          , f = d[j] 
+          , f = d[j] // frame data
           , r
           , cross = typeof f.crossdepth == 'number'
-          , $path  
+          , $path  // 扇形路径
 
-        
+        // 如果是跨group的扇形，并且没有到最外层，跳过
         if(cross && i<l-1){
           continue;
         }
-        
+        // 外层不是画扇形，而是画面包圈
         if(i){
-          
+          // 如果i>0，且为跨group的
           if(cross){
             if(f.crossdepth == 0){
               r = [rs[i]]
@@ -263,11 +298,11 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
             r = [rs[i-1]+interval,rs[i]]
           }
         }else{
-          
+          // 如果i==0,且为跨group的
           r = rs[i];
         }
 
-        
+        // 面包圈只对一维数据有效
         if(donut && l==1){
           r = [rs[0],rs[1]]
         }
@@ -276,14 +311,14 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
 
         $path = f.el.get("$path")
 
-        
+        //
         group.push($path);
 
         f.el.set('group',group);
         f.el.set('groupLength',l);
         f.el.set("framedata",f);
 
-        
+        // 设置groupindex属性
         var groupindex = []
         if(cross){
           var jj = f.crossdepth
@@ -294,13 +329,13 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
         }else{
           groupindex.push(i);
         }
-        
+        //end
 
         f.el.set('groupIndex',groupindex);
         f.el.set('donutIndex',j);
         f.el.set('label',f.label || '');
         $sectors.push(f.el);
-        
+        // f.el.addTarget(pie);
         (function(el){
           f.el.on('mouseout',function(e){
             pie.fire('mouseout',{
@@ -332,7 +367,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
           f.to.deg = f.percent*360
         }
         degsum = degsum + f.percent*360
-        
+        // 记录前后
         if(j>0){
           f.prev = d[j-1]
         }else{
@@ -347,7 +382,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     }
     return $sectors;
   }
-  
+  // 产生set
   function buildPropsArray2(set,pie){
     var paper = pie.get('paper')
     for(var i=0,l=set.length;i<l;i++){
@@ -397,7 +432,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     }
     return ret;
   }
-  
+  // 自动计算颜色hsb
   function buildPropsArray3(set,pie,len){
     var paper = pie.get('paper')
       , color = pie.get('color')
@@ -417,8 +452,8 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
         , llen = set[i].length
         , setcolor = new degrade(iniColor,llen)
       for(var j=0,ll=set[i].length;j<ll;j++){
-        var setij = set[i][j]   
-          , setij$el = setij.el 
+        var setij = set[i][j]   //
+          , setij$el = setij.el // 对应的sector
           , framedata = setij$el.get("framedata")
           , $path = setij$el.get('$path')
           , ss
@@ -435,17 +470,17 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
             if(sscolor){
               c = sscolor
             }else{
-              
+              // theme color
               c = themeColor.getColor(i+j)['DEFAULT'];
             }
           }
         }
 
-        
+        // 用于tip
         setij$el.set("fill",c);
 
         $path.attr("fill",c);
-        
+        //渐变色
         var gradientColor = framedata.gradientcolor || prevColor;
         gradienton && $path.attr("gradient",(degsum+framedata.to.deg/2)+"-"+gradientColor+"-"+c);
         degsum += framedata.to.deg
@@ -454,7 +489,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     }
     return;
   }
-  
+  // 重新计算百分比
   function buildPropsArray4(groups,pie){
     groups = flatFilter(groups,function(g){
                var $path = g.el.get("$path");
@@ -469,7 +504,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
     for(var i=0,l=groups.length;i<l;i++){
       var group = groups[i]
         , s = sumObject(group,function(o){
-                if(o.value && !o.hide && Util.isNumber(o.value)){
+                if(o.value && !o.hide && S.isNumber(o.value)){
                   return o.value
                 }else{
                   return 0;
@@ -487,7 +522,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
           frame.to.deg = frame.percent*360
         }
         degsum = degsum + frame.percent*360
-        
+        // 记录前后
         if(j>0){
           frame.prev = group[j-1]
         }else{
@@ -501,7 +536,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
       }
     }
   }
-  
+  // utility
   function isRightAngel(deg){
     deg = deg%360;
     while(deg<0){
@@ -528,7 +563,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
       framedata:flatdata
     }
   }
-  
+  //判断a，b的误差是否小于c
   function closeto(a,b,c){
     c || (c = 5);
     return Math.abs(a-b) < c;
@@ -544,4 +579,7 @@ define('kg/kcharts/5.0.0/piechart/util',["util","kg/kcharts/5.0.0/piechart/secto
   }
 
   return util;
+},{
+  requires:["kg/kcharts/6.0.1/piechart/sector","kg/kcharts/6.0.1/tools/color/index","kg/kcharts/6.0.1/raphael/index"]
 });
+

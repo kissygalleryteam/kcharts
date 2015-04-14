@@ -1,5 +1,10 @@
-define('kg/kcharts/5.0.0/scatterchart/cfg',[],function(require, exports, module) {
+/*
+combined files : 
 
+kg/kcharts/6.0.1/scatterchart/cfg
+
+*/
+;KISSY.add('kg/kcharts/6.0.1/scatterchart/cfg',function(S){
 	var clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		COLOR_TPL = "{COLOR}";
@@ -23,7 +28,7 @@ define('kg/kcharts/5.0.0/scatterchart/cfg',[],function(require, exports, module)
 					},
 					isShow: true
 				},
-				
+				//圆形的点 r 为半径
 				points: {
 					attr: {
 						"stroke": "#fff",
@@ -49,7 +54,7 @@ define('kg/kcharts/5.0.0/scatterchart/cfg',[],function(require, exports, module)
 						"color": "#666",
 						"font-size": "12px",
 						"white-space": "nowrap",
-						"position": "absolute" 
+						"position": "absolute" //修复ie7被遮住的Bug
 					}
 				},
 				yLabels: {
@@ -58,17 +63,17 @@ define('kg/kcharts/5.0.0/scatterchart/cfg',[],function(require, exports, module)
 						"color": "#666",
 						"font-size": "12px",
 						"white-space": "nowrap",
-						"position": "absolute" 
+						"position": "absolute" //修复ie7被遮住的Bug
 					}
 				},
-				
+				//横轴
 				xAxis: {
 					isShow: true,
 					css: {
 						zIndex: 10
 					}
 				},
-				
+				//纵轴
 				yAxis: {
 					isShow: true,
 					css: {
@@ -77,12 +82,12 @@ define('kg/kcharts/5.0.0/scatterchart/cfg',[],function(require, exports, module)
 					num: 5
 				},
 
-				
+				//x轴上纵向网格
 				xGrids: {
 					isShow: true,
 					css: {}
 				},
-				
+				//y轴上横向网格
 				yGrids: {
 					isShow: true,
 					css: {}

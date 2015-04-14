@@ -7,4 +7,4 @@ KISSY.add(function (S, Node,Demo) {
         })
     });
 
-},{requires:['node','kg/kcharts/2.0.0//']});
+},{requires:['node','kg/kcharts/6.0.1//']});

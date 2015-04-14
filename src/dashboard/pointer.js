@@ -3,9 +3,7 @@
  * 指针
  * @author cookieu@gmail.com
  * */
-define(function(require, exports, module) {
-  var Base = require('base'),
-      Util = require('util');
+;KISSY.add(function(S,Base){
    var methods = {
      pointTo:function(angle,effect){
        var paper = this.get('paper')
@@ -45,7 +43,16 @@ define(function(require, exports, module) {
    };
 
    //==================== extend ====================
-  var Pointer = Base.extend(methods);
+  var Pointer;
+   if(Base.extend){
+     Pointer = Base.extend(methods);
+   }else{
+     Pointer = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+     }
+     S.extend(Pointer,Base,methods)
+   }
 
    //==================== extend end ====================
 
@@ -68,7 +75,7 @@ define(function(require, exports, module) {
       , y3
       , theta = Math.asin(r/R)
 
-    cfg = Util.mix({
+    cfg = S.mix({
       fill:'#000',
       stroke:'#000'
     },cfg,true,['stroke','stroke-width','fill'])
@@ -134,4 +141,6 @@ define(function(require, exports, module) {
   }
 
   return Pointer
+},{
+   requires:["base"]
 })

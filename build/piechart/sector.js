@@ -1,17 +1,21 @@
-define('kg/kcharts/5.0.0/piechart/sector',["base","util"],function(require, exports, module) {
+/*
+combined files : 
 
-  var Base = require('base');
-  var Util = require('util');
-  
+kg/kcharts/6.0.1/piechart/sector
+
+*/
+// -*- coding: utf-8; -*-
+;KISSY.add('kg/kcharts/6.0.1/piechart/sector',function(S,Base){
+  // 顺时针的sector
   function sector(cx, cy, r, startAngle, endAngle) {
-    
+    // 避免画不成一个○
     if(Math.abs(startAngle-endAngle)>=360){
       endAngle += .01;
     }
     if(startAngle == endAngle){
       endAngle = endAngle-.1;
     }
-    
+    // startAngle 肯定是 大于 endAngle
     var rad = Math.PI / 180,
         angel= (startAngle + endAngle)/ 2,
         middlex = cx + r * Math.cos(-angel * rad),
@@ -28,27 +32,27 @@ define('kg/kcharts/5.0.0/piechart/sector',["base","util"],function(require, expo
     ret = [
       "M", cx, cy,
       "L", x1, y1,
-      
-      
+      // "A", r, r, 0, +(Math.abs(endAngle - startAngle) > 180), 1, x2, y2,
+      // (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+
       "A", r, r, 0, largeArcFlag, sweepFlag, x2, y2,
       "z"
     ]
-    
+    // ret.middle = {from:from,to:to,angel:angel,x:x,y:y};
     ret.middleangle = angel;
-    ret.middlex = middlex; 
-    ret.middley = middley; 
-    ret.cx = scx;          
-    ret.cy = scy;          
-    ret.A = [x1,y1];       
-    ret.B = [x2,y2];       
+    ret.middlex = middlex; //扇形平分线x
+    ret.middley = middley; //扇形平分线y
+    ret.cx = scx;          //中点x
+    ret.cy = scy;          //中点y
+    ret.A = [x1,y1];       //顺时针的第一个点
+    ret.B = [x2,y2];       //顺时针的第二个点
     return ret;
   }
   function donut(cx, cy, r1, r2, startAngle, endAngle){
-    
+    // 避免画不成一个○
     if(Math.abs(startAngle-endAngle)>=360){
       endAngle += .01;
     }
-    
+    // 避免sector画不出来
     if(startAngle == endAngle){
       endAngle = endAngle-.1;
     }
@@ -152,11 +156,11 @@ define('kg/kcharts/5.0.0/piechart/sector',["base","util"],function(require, expo
         , sectorcfg = (framedata && framedata.sectorcfg) || {}
         , $path = paper.path();
 
-      pathcfg = Util.merge({
+      pathcfg = S.merge({
         stroke:"#fff"
       },pathcfg)
       if(sectorcfg){
-        pathcfg = Util.merge(pathcfg,{
+        pathcfg = S.merge(pathcfg,{
           stroke:sectorcfg.stroke,
           "stroke-width":sectorcfg.strokeWidth
         })
@@ -164,7 +168,7 @@ define('kg/kcharts/5.0.0/piechart/sector',["base","util"],function(require, expo
       $path.attr(pathcfg);
       this.set('$path',$path)
 
-      if(Util.isArray(r) && r.length == 2){
+      if(S.isArray(r) && r.length == 2){
         this._drawDonut();
       }else{
         this._drawSector();
@@ -211,5 +215,18 @@ define('kg/kcharts/5.0.0/piechart/sector',["base","util"],function(require, expo
     }
   };
 
-  return Base.extend(methods);
+   var Sector;
+   if(Base.extend){
+     Sector = Base.extend(methods)
+   }else{
+     Sector = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Sector,S.Base,methods)
+   }
+  return Sector;
+},{
+  requires:["base"]
 });

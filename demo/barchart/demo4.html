@@ -26,9 +26,17 @@
 </head>
 <body>
 <div id="demo1"></div>
-<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
+<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+<script>
+(function(S){
+	 S.config({
+        packages:[{
+            name:"kg",
+            path:"http://g.tbcdn.cn/",
+            combine:true
+        }]
+    });
+	S.use('kg/kcharts/6.0.1/barchart/index',function(S,BarChart){
 	
 		var barChart = new BarChart({
 			renderTo:"#demo1",
@@ -92,6 +100,7 @@ require("kg/kcharts/5.0.0/barchart/index",function(BarChart){
 
 	});
 
+})(KISSY);
 </script>
 </body>
 </html>

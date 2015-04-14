@@ -1,15 +1,11 @@
 // steel from http://svenbieder.com/thermometer-gauge/
-define(function(require,exports,module) {
-  var Base = require('base'),
-      Node = require('node'),
-      Util = require('util'),
-      Raphael = require("kg/kcharts/5.0.0/raphael/index");
-  var Thermometer  = Base.extend({
-    initializer:function(){
-    var cfg = this.userConfig;
-    var paper,renderTo = Node.all(cfg.renderTo)[0];
-    if(cfg.renderTo && renderTo){
-      paper = Raphael(renderTo,cfg.width,cfg.height)
+;KISSY.add(function(S,Raphael){
+  function Thermometer(cfg){
+    this.set(cfg);
+    var container = S.get(cfg.renderTo);
+    var paper;
+    if(container){
+      paper = Raphael(container,cfg.width,cfg.height)
     }else{
       throw Error("容器不能为空");
     }
@@ -42,6 +38,8 @@ define(function(require,exports,module) {
       var text = paper.text(65, ycoord, i / 1.5);
     }
   }
-  })
+  S.extend(Thermometer,S.Base);
   return Thermometer;
+},{
+  requires:["kg/kcharts/6.0.1/raphael/index"]
 });

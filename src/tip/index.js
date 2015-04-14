@@ -2,12 +2,8 @@
  * @fileOverview KChart  tip
  * @author huxiaoqi567@gmail.com
  */
-define(function(require,exports,module) {
-  var Util = require("util"),
-    Node = require("node"),
-    Base = require("base"),
-    Template = require("kg/kcharts/5.0.0/tools/template/index");
-    var $ = Node.all;
+;KISSY.add(function (S,Node,Base,Anim,Template,_) {
+    var $ = S.all;
     var methods = {
       initializer:function(){
         this.init();
@@ -36,18 +32,6 @@ define(function(require,exports,module) {
                   marginTop:0
                 }
               },
-              css:{
-                background: "#000",
-                opacity: 0.6,
-                "-moz-border-radius":  "5px",
-                "-webkit-border-radius": "5px",
-                "border-radius":"5px",
-                "padding":"5px",
-                "color":"#fff",
-                "font-family":"Microsoft Yahei",
-                "z-index": 10,
-                "font-size": "12px"
-              },
               anim:{
                 easing:"easeOut",
                 duration:0.25
@@ -66,7 +50,8 @@ define(function(require,exports,module) {
           HIDE:"hide"
         }
 
-        self._cfg = Util.mix(defaultCfg, cfg, undefined, undefined, true);
+        // 这里用mix不合适，S.mix会改变defaultCfg
+        self._cfg = S.mix(defaultCfg, cfg, undefined, undefined, true);
 
         self._cfg.rootNode = $(self._cfg.rootNode);
 
@@ -96,7 +81,7 @@ define(function(require,exports,module) {
             );
 
             self.on(_events.SETCONT, function (ev) {
-                if (Util.isFunction(tpl)) {
+                if (S.isFunction(tpl)) {
                     self.setContent(tpl(ev.data));
                 } else {
                     self.renderTemplate(tpl, ev.data);
@@ -302,7 +287,9 @@ define(function(require,exports,module) {
         },
 
         _isExist:function () {
+
             return this.$tip && this.$tip[0];
+
         },
 
         render:function () {
@@ -312,9 +299,10 @@ define(function(require,exports,module) {
                 _data = self._data,
                 display = _cfg.isVisable ? "inline-block" : "none",
                 rootNodeOffset = _cfg.rootNode.offset();
+
             if (!_cfg.rootNode.offset()) return false;
-            self.$tip = !self._isExist() && $('<span class="ks-chart-tip ' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
-                .css(_cfg.css)
+
+            self.$tip = !self._isExist() && $('<span class="' + _cfg.clsName + '-tip" style="*zoom:1;"><span class="' + _cfg.clsName + '-tip-content"></span></span>')
                 .css({"display":display})
                 .appendTo(_cfg.rootNode);
 
@@ -331,5 +319,16 @@ define(function(require,exports,module) {
         }
     };
 
-    return Base.extend(methods);
-});
+   var Tip;
+   if(Base.extend){
+     Tip = Base.extend(methods);
+   }else{
+     Tip = function (cfg) {
+       if(!cfg) return;
+       this.userConfig = cfg;
+       this.init();
+     }
+     S.extend(Tip, Base, methods);
+    }
+    return Tip;
+}, {requires:['node','base','anim','kg/kcharts/6.0.1/template/index', './assets/tip.css']});

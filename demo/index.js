@@ -1,5 +1,5 @@
 KISSY.Config.combine = true;
-KISSY.use("node,event,ajax,kg/kcharts/2.0.0/linechart/index,kg/kcharts/2.0.0/barchart/index,kg/kcharts/2.0.0/scatterchart/index",function(S,Node,Event,Ajax,LineChart,BarChart,ScatterChart){
+KISSY.use("node,event,ajax,kg/kcharts/6.0.1/linechart/index,kg/kcharts/6.0.1/barchart/index,kg/kcharts/6.0.1/scatterchart/index",function(S,Node,Event,Ajax,LineChart,BarChart,ScatterChart){
 
 
   var linechartData = (function data() {
@@ -430,7 +430,7 @@ var barChart = new BarChart({
          });
 
 
-KISSY.use("kg/kcharts/2.0.0/datetime/index",function(S,DateTime){
+KISSY.use("kg/kcharts/6.0.1/datetime/index",function(S,DateTime){
          var data = [ 
     { 
       "text" : "North America" , 
@@ -541,7 +541,7 @@ var series = (function(){
 
 
 
-KISSY.use("kg/kcharts/2.0.0/piechart/index,kg/kcharts/2.0.0/tip/index",function(S,Pie,Tip){
+KISSY.use("kg/kcharts/6.0.1/piechart/index,kg/kcharts/6.0.1/tip/index",function(S,Pie,Tip){
 			function pie1(){
 				var tip
 				function getTip(){

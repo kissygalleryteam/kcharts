@@ -25,15 +25,21 @@
   <body>
     <div id="J_Pie1" class="pi-con">
     </div>
-			<script charset="utf-8" src="//g.alicdn.com/kissy/k/5.0.1/seed.js"></script>
-<script type="text/javascript">
-
-        require("util,node,kg/kcharts/5.0.0/piechart/index,kg/kcharts/5.0.0/tip/index",function(Util,Node,Pie,Tip){
+		<script charset="utf-8" src="http://g.tbcdn.cn/kissy/k/1.4.1/seed-min.js"></script>
+		<script type="text/javascript">
+		KISSY.config({
+            packages:[{
+                name:"kg",
+                path:"http://g.tbcdn.cn/",
+                combine:true
+            }]
+        });
+			 KISSY.use("kg/kcharts/6.0.1/piechart/index,gallery/kcharts/1.1/tip/index",function(S,Pie,Tip){
 				 function pie1(){
 					 var tip
 					 function getTip(){
 						 if(!tip){
-							 tip = new Tip({rootNode:Node.one('#J_Pie1')});
+							 tip = new Tip({rootNode:S.one('#J_Pie1')});
 						 }
 						 return tip;
 					 }
@@ -164,7 +170,7 @@
 							 , $path = sector.get("$path")
 							 , groupindex = sector.get('groupIndex')
 							 , donutindex = sector.get('donutIndex')
-							 , donut = Util.indexOf(0,groupindex) == -1
+							 , donut = S.indexOf(0,groupindex) == -1
 							 , set = sector.get('set')
 
 							 , middleangle = sector.get('middleangle')
@@ -255,7 +261,7 @@
 							 , $tip = tip.getInstance()
 							 , groupindex = sector.get('groupIndex')
 							 , donutindex = sector.get('donutIndex')
-							 , donut = Util.indexOf(0,groupindex) == -1
+							 , donut = S.indexOf(0,groupindex) == -1
 							 , x
 							 , y
 

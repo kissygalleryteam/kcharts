@@ -1,10 +1,16 @@
-define('kg/kcharts/5.0.0/tools/graphtool/index',["util","kg/kcharts/5.0.0/raphael/index"],function(require, exports, module) {
+/*
+combined files : 
 
-	var Util = require("util"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index");
+kg/kcharts/6.0.1/tools/graphtool/index
+
+*/
+//简单图形绘制的工具
+;KISSY.add('kg/kcharts/6.0.1/tools/graphtool/index',function(S,Raphael){
+
 	var sqrt = Math.sqrt;
+
 	var graphTool = {};
-	
+	//等边三角形
 	var triangle = function(paper,x,y,r,deg){
 		var	path = [
 				"M" + [x,y-r].join(","),
@@ -16,12 +22,12 @@ define('kg/kcharts/5.0.0/tools/graphtool/index',["util","kg/kcharts/5.0.0/raphae
 
 		if(paper && paper.path){
 			el = paper.path(path);
-			
+			// el.attr({cx:x,cy:y});	//伪造中心点
 			el.rotate(deg,x,y);
 			return el;
 		}
 	};
-	
+	//菱形
 	var rhomb = function(paper,x,y,w,h,deg){
 		var path = [
 				"M" + [x,y-h/2].join(","),
@@ -33,7 +39,7 @@ define('kg/kcharts/5.0.0/tools/graphtool/index',["util","kg/kcharts/5.0.0/raphae
 			el;
 		if(paper && paper.path){
 			el = paper.path(path);
-			
+			// el.attr({cx:x,cy:y});	//伪造中心点
 			el.rotate(deg,x,y);
 			return el;
 		}
@@ -50,11 +56,11 @@ define('kg/kcharts/5.0.0/tools/graphtool/index',["util","kg/kcharts/5.0.0/raphae
 		}
 	}
 
-	graphTool = Util.merge(graphTool,{
+	graphTool = S.merge(graphTool,{
 		triangle:triangle,
 		rhomb:rhomb,
 		square:square
 	});
 
 	return graphTool;
-});
+},{requires:['kg/kcharts/6.0.1/raphael/index']});

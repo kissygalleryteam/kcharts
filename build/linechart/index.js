@@ -1,30 +1,384 @@
-define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/kcharts/5.0.0/tools/template/index","kg/kcharts/5.0.0/raphael/index","kg/kcharts/5.0.0/basechart/index","kg/kcharts/5.0.0/tools/color/index","kg/kcharts/5.0.0/tools/htmlpaper/index","kg/kcharts/5.0.0/legend/index","./theme","kg/kcharts/5.0.0/tools/touch/index","kg/kcharts/5.0.0/tip/index","kg/kcharts/5.0.0/animate/index","kg/kcharts/5.0.0/tools/graphtool/index","./cfg"],function(require, exports, module) {
+/*
+combined files : 
 
-	var Util = require("util"),
-		Node = require("node"),
-		Base = require("base"),
-		Evt = require('event-dom'),
-		Template = require("kg/kcharts/5.0.0/tools/template/index"),
-		Raphael = require("kg/kcharts/5.0.0/raphael/index"),
-		BaseChart = require("kg/kcharts/5.0.0/basechart/index"),
-		ColorLib = require("kg/kcharts/5.0.0/tools/color/index"),
-		HtmlPaper = require("kg/kcharts/5.0.0/tools/htmlpaper/index"),
-		Legend = require("kg/kcharts/5.0.0/legend/index"),
-		Theme = require("./theme"),
-		Touch = require("kg/kcharts/5.0.0/tools/touch/index"),
-		Tip = require("kg/kcharts/5.0.0/tip/index"),
-		Anim = require("kg/kcharts/5.0.0/animate/index"),
-		graphTool = require("kg/kcharts/5.0.0/tools/graphtool/index"),
-		Cfg = require("./cfg");
+kg/kcharts/6.0.1/linechart/theme
+kg/kcharts/6.0.1/linechart/cfg
+kg/kcharts/6.0.1/linechart/index
 
-	var $ = Node.all,
+*/
+;KISSY.add('kg/kcharts/6.0.1/linechart/theme',function(S){
+
+	var COLOR_TPL = "{COLOR}";
+
+	var themeCfg = {
+		//默认主题
+		"ks-chart-default":{
+			title:{
+		           content:"",
+		           css:{
+		            		"text-align":"center",
+		            		"font-size":"16px",
+		            		"font-weight": "bold",
+		            		"color":"#666"
+		           },
+		           isShow:true
+		    },
+		    subTitle:{
+		       content:"",
+		       css:{
+		            "text-align":"center",
+		            "font-size":"12px",
+		            "color":"#666"
+		        },
+		        isShow:true
+		    },
+			points:{
+				attr:{
+					stroke:"#fff",
+					"r":4,
+					"stroke-width":1.5,
+					"fill":COLOR_TPL
+				},
+				hoverAttr:{
+					stroke:"#fff",
+					"r":5,
+					"fill":COLOR_TPL,
+					"stroke-width":0
+				}
+			},
+			xGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yAxis:{
+				css:{
+					color:"#000"
+				}
+			},
+			xAxis:{
+				css:{
+					color:"#000"
+				}
+			},
+			xLabels:{
+				css:{
+					"color":"#000",
+					"font-size": "12px"
+				}
+			},
+			yLabels:{
+				css:{
+					"color":"#000",
+					"font-size": "12px"
+				}
+			},
+			pointLine:{
+				css:{
+					color:"#aaa"
+				}
+			}
+		},
+		"ks-chart-analytiks":{
+			title:{
+		           content:"",
+		           css:{
+		            		"text-align":"center",
+		            		"font-size":"16px",
+		            		"font-weight": "bold",
+		            		"color":"#666"
+		           },
+		           isShow:true
+		    },
+		    subTitle:{
+		       content:"",
+		       css:{
+		            "text-align":"center",
+		            "font-size":"12px",
+		            "color":"#666"
+		        },
+		        isShow:true
+		    },
+			points:{
+				attr:{
+				  type:"circle",
+	              stroke:"{COLOR}",
+	              fill:"#fff",
+	              "r":4,
+	              "stroke-width":2
+	            },
+	            hoverAttr:{
+	              type:"circle",
+	              stroke:"{COLOR}",
+	              fill:"#fff",
+	              "r":5,
+	              "stroke-width":2
+	            }
+			},
+			xGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yAxis:{
+				css:{
+					color:"#ccc"
+				}
+			},
+			xAxis:{
+				css:{
+					color:"#ccc"
+				}
+			},
+			xLabels:{
+				css:{
+					"color":"#666",
+					"font-size": "12px"
+				}
+			},
+			yLabels:{
+				css:{
+					"color":"#666",
+					"font-size": "12px"
+				}
+			},
+			pointLine:{
+				css:{
+					color:"#ccc"
+				}
+			}
+		},
+		"ks-chart-rainbow":{
+			title:{
+		           content:"",
+		           css:{
+		            		"text-align":"center",
+		            		"font-size":"16px",
+		            		"font-weight": "bold",
+		            		"color":"#666"
+		           },
+		           isShow:true
+		    },
+		    subTitle:{
+		       content:"",
+		       css:{
+		            "text-align":"center",
+		            "font-size":"12px",
+		            "color":"#666"
+		        },
+		        isShow:true
+		    },
+			points:{
+				attr:{
+					type:"circle",
+					stroke:"#fff",
+					"r":4,
+					"stroke-width":1.5,
+					"fill":COLOR_TPL
+				},
+				hoverAttr:{
+					type:"circle",
+					stroke:"#fff",
+					"r":5,
+					"fill":COLOR_TPL,
+					"stroke-width":0
+				}
+			},
+			xGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yGrids:{
+				css:{
+					color:"#eee"
+				}
+			},
+			yAxis:{
+				css:{
+					color:"#ccc"
+				}
+			},
+			xAxis:{
+				css:{
+					color:"#ccc"
+				}
+			},
+			xLabels:{
+				css:{
+					"color":"#666",
+					"font-size": "12px"
+				}
+			},
+			yLabels:{
+				css:{
+					"color":"#666",
+					"font-size": "12px"
+				}
+			},
+			pointLine:{
+				css:{
+					color:"#ccc"
+				}
+			}
+		}
+	};
+	return themeCfg;
+});
+;KISSY.add('kg/kcharts/6.0.1/linechart/cfg',function(S){
+	var clsPrefix = "ks-chart-",
+		themeCls = clsPrefix + "default",
+		COLOR_TPL = "{COLOR}";
+	return {
+				themeCls: themeCls,
+				autoRender: true,
+				comparable: false,
+				lineType: "straight",
+				colors: [],
+				title: {
+					content: "",
+					css: {
+						"text-align": "center",
+						"font-size": "16px"
+					},
+					isShow: true
+				},
+				subTitle: {
+					content: "",
+					css: {
+						"text-align": "center",
+						"font-size": "12px"
+					},
+					isShow: true
+				},
+				//圆形的点 r 为半径
+				points: {
+					isShow:true,
+					attr: {
+						type: "circle",
+						stroke: "#fff",
+						"r": 4,
+						"stroke-width": 1.5,
+						"fill": COLOR_TPL
+					},
+					hoverAttr: {
+						type: "circle",
+						stroke: "#fff",
+						"r": 5,
+						"fill": COLOR_TPL,
+						"stroke-width": 0
+					}
+				},
+				xLabels: {
+					isShow: true,
+					css: {
+						"color": "#666",
+						"font-size": "12px",
+						"white-space": "nowrap",
+						"position": "absolute" //修复ie7被遮住的Bug
+					}
+				},
+				yLabels: {
+					isShow: true,
+					css: {
+						"color": "#666",
+						"font-size": "12px",
+						"white-space": "nowrap",
+						"position": "absolute" //修复ie7被遮住的Bug
+					}
+				},
+				//横轴
+				xAxis: {
+					isShow: true,
+					css: {
+						zIndex: 10
+					}
+				},
+				//纵轴
+				yAxis: {
+					isShow: true,
+					css: {
+						zIndex: 10
+					},
+					num: 5
+				},
+				//x轴上纵向网格
+				xGrids: {
+					isShow: true,
+					css: {}
+				},
+				//y轴上横向网格
+				yGrids: {
+					isShow: true,
+					css: {}
+				},
+				//背景区域
+				areas: {
+					isShow:false,
+					attr: {
+						"fill": "90-#fff-" + COLOR_TPL,
+						"stroke-width": 0,
+						"opacity": 0.5
+					}
+				},
+				//折线
+				line: {
+					isShow: true,
+					attr: {
+						"stroke-width": "3px"
+					},
+					hoverAttr: {
+						"stroke-width": "4px"
+					}
+				},
+				//点的对齐线
+				pointLine: {
+					isShow: false,
+					css: {}
+				},
+				legend: {
+					isShow: false
+				},
+				tip: {
+					isShow: true,
+					clsName: "",
+					template: "",
+					css: {
+
+					},
+					offset: {
+						x: 0,
+						y: 0
+					},
+					boundryDetect: true
+				}
+
+			};
+})
+/**
+ * @fileOverview KChart 1.3  linechart
+ * @author huxiaoqi567@gmail.com
+ */
+;
+KISSY.add('kg/kcharts/6.0.1/linechart/index',function(S, Base, Node, D, Evt, Template, Raphael, BaseChart, ColorLib, HtmlPaper, Legend, Theme, Touch, Tip, Anim, graphTool, Cfg) {
+	var $ = S.all,
 		clsPrefix = "ks-chart-",
 		themeCls = clsPrefix + "default",
 		evtLayoutCls = clsPrefix + "evtlayout",
 		evtLayoutAreasCls = evtLayoutCls + "-areas",
 		evtLayoutRectsCls = evtLayoutCls + "-rects",
 		COLOR_TPL = "{COLOR}",
-		
+		//点的类型集合
 		POINTS_TYPE = ["circle", "triangle", "rhomb", "square"];
 	var methods = {
 		initializer: function() {
@@ -34,13 +388,15 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			var self = this,
 				points;
 			self.chartType = "linechart";
-			var defaultCfg = Util.clone(Cfg);
-			
-			self._cfg = Util.mix(defaultCfg, self.userConfig,undefined,undefined,true);
+			var defaultCfg = S.clone(Cfg);
+			// KISSY > 1.4 逻辑
+			self._cfg = S.mix(defaultCfg, self.userConfig,undefined,undefined,true);
 			BaseChart.prototype.init.call(self, self._cfg);
 			self._cfg.autoRender && self.render();
 		},
-		
+		/**
+			渲染
+		**/
 		render: function() {
 			var self = this,
 				w,
@@ -53,16 +409,16 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			BaseChart.prototype.dataFormat.call(self, self._cfg);
 
 			self._lines = {};
-			
+			//事件代理层清空
 			self._evtEls = {};
-			
+			//统计渲染完成的数组
 			self._finished = [];
-			
+			//hover 点
 			self._hoverstocks = {};
-			
+			//主题
 			themeCls = self._cfg.themeCls || Cfg.themeCls;
 
-			self._cfg = Util.mix(Util.clone(Util.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
+			self._cfg = S.mix(S.clone(S.mix(Cfg, Theme[themeCls], undefined, undefined, true)), self._cfg, undefined, undefined, true);
 
 			color = self.color = new ColorLib({
 				themeCls: themeCls
@@ -75,7 +431,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			for (var i in self._cfg.colors) {
 				color.setColor(self._cfg.colors[i]);
 			}
-			
+			//克隆详细配置 line points
 			self.__cfg = self.cloneSeriesConfig(['line', 'points']);
 
 			points = self._points[0];
@@ -83,13 +439,13 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			w = Math.round((points && points[0] && points[1] && points[1].x - points[0].x) || self.getInnerContainer().width)
 
 			w && self.set("area-width", w);
-			
+			//渲染前事件
 			self.beforeRender();
-			
+			//清空所有节点
 			self._$ctnNode.html("");
-			
+			//获取矢量画布
 			self.paper = Raphael(self._$ctnNode[0], _cfg.width||self._$ctnNode.width(), _cfg.height||self._$ctnNode.height());
-			
+			//渲染html画布
 			self.htmlPaper = new HtmlPaper(self._$ctnNode, {
 				clsName: themeCls
 			});
@@ -97,26 +453,26 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			BaseChart.Common.drawTitle.call(null, this, themeCls);
 
 			BaseChart.Common.drawSubTitle.call(null, this, themeCls);
-			
+			//渲染tip
 			self.renderTip();
-			
+			//画x轴上的平行线
 			BaseChart.Common.drawGridsX.call(null, this);
 
 			BaseChart.Common.drawGridsY.call(null, this);
 
 			self.drawPointLine();
-			
+			//画横轴
 			BaseChart.Common.drawAxisX.call(null, this);
 
 			BaseChart.Common.drawAxisY.call(null, this);
-			
+			//画横轴刻度
 			BaseChart.Common.drawLabelsX.call(null, this);
 
 			BaseChart.Common.drawLabelsY.call(null, this);
-			
+			//画折线
 			self.drawLines(function() {
 				self.__drawHoverStocks();
-				
+				//事件层
 				self.renderEvtLayout();
 
 				self.bindEvt();
@@ -126,17 +482,18 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				self.afterRender();
 			});
 
+			S.log(self);
 		},
-		
+		//获取属性
 		cloneSeriesConfig: function(wl) {
 			var self = this,
 				cfgs = {},
 				cfg;
-			var cloneCfg = Util.clone(self._cfg);
+			var cloneCfg = S.clone(self._cfg);
 			if (!wl) return;
 			for (var i in wl) {
 				for (var j in self._cfg.series) {
-					cfg = self._cfg.series[j][wl[i]] ? Util.mix(cloneCfg[wl[i]], self._cfg.series[j][wl[i]], undefined, undefined, true) : self._cfg[wl[i]];
+					cfg = self._cfg.series[j][wl[i]] ? S.mix(cloneCfg[wl[i]], self._cfg.series[j][wl[i]], undefined, undefined, true) : self._cfg[wl[i]];
 					if (cfg) {
 						if (!cfgs[wl[i]]) {
 							cfgs[wl[i]] = [];
@@ -147,7 +504,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			return cfgs;
 		},
-		
+		//画线
 		drawLine: function(lineIndex) {
 			var self = this,
 				points = self._points[lineIndex];
@@ -157,21 +514,21 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				var path = BaseChart.Common.getLinePath.call(null, self, points),
 					paper = self.paper,
 					color = self.color.getColor(lineIndex).DEFAULT,
-					
+					//获取线配置
 					lineAttr = self.__cfg['line'][lineIndex]['attr'],
 					line = paper.path(path).attr(lineAttr).attr({
 						"stroke": color
 					});
 
 				self._stocks[lineIndex]['stocks'] = self.drawStocks(lineIndex, self.processAttr(self._cfg.points.attr, color));
-				
+				//finish state
 				self._finished.push(true);
 
 				return line;
 			}
 		},
 		drawArea: function(lineIndex) {
-			
+			//不显示
 			if (!this._cfg.areas.isShow) return;
 			var self = this,
 				points = self._points[lineIndex];
@@ -179,7 +536,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				var path = self.getAreaPath(points),
 					paper = self.paper,
 					color = self.color.getColor(lineIndex).DEFAULT,
-					
+					//获取线配置
 					attr = self._cfg['areas']['attr'];
 				self._areas[lineIndex] = {
 					0: paper.path(path).attr(self.processAttr(attr, color)),
@@ -188,7 +545,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				};
 			}
 		},
-		
+		//获取块区域的路径
 		getAreaPath: function(points) {
 			var self = this;
 			var linepath = BaseChart.Common.getLinePath.call(null, self, points);
@@ -197,7 +554,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			var path = [linepath, " L", box.x2, ",", ctn.br.y, " ", box.x, ",", ctn.bl.y, " z"].join("");
 			return path;
 		},
-		
+		//获取第一个不为空数据的索引
 		getFirstUnEmptyPointIndex: function(lineIndex) {
 			var self = this,
 				points = self._points[lineIndex];
@@ -206,7 +563,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			return;
 		},
-		
+		//曲线动画
 		animateLine: function(lineIndex, cb) {
 			var self = this;
 			var	sub_path,
@@ -233,18 +590,18 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			first_index = self.getFirstUnEmptyPointIndex(lineIndex);
 			tmpStocks[first_index] = self.drawStock(lineIndex, first_index);
-			
+			//动画
 			var anim = new Anim({}, {}, {
 				duration: duration,
 				easing: easing,
 				frame: function() {
-					
+					//arguments[1] 代表经过缓动函数处理后的0到1之间的数值
 					to = arguments[1] * totalLen;
-					
+					//获取子路径
 					sub_path = Raphael.getSubpath(path, from, to);
-					
+					//获取路径所占的矩形区域
 					box = Raphael.pathBBox(sub_path);
-					
+					//当前渲染点的索引
 					idx = Math.floor((box.width * 1.01) / areaWidth) - (-first_index);
 					if (!tmpStocks[idx] && points[idx]) {
 						tmpStocks[idx] = self.drawStock(lineIndex, idx);
@@ -268,7 +625,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			});
 			return $line;
 		},
-		
+		//绘制hover上去的 点（stock） 替身
 		__drawHoverStocks:function(){
 			var self = this;
 			for(var i in self._stocks){
@@ -281,7 +638,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			self._hoverstocks[lineIndex] && self._hoverstocks[lineIndex].remove && self._hoverstocks[lineIndex].remove();
 			delete self._hoverstocks[lineIndex];
 		},
-		
+		//画线
 		drawLines: function(cb) {
 			var self = this,
 				_cfg = self._cfg,
@@ -297,7 +654,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 					hoverAttr = self.processAttr(self._cfg.points.hoverAttr, curColor.HOVER),
 					line;
 
-				
+				//保存点的信息
 				self._stocks[i] = {
 					points: self._points[i],
 					color: curColor,
@@ -313,7 +670,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 					path: path,
 					points: self._points[i],
 					color: curColor,
-					attr: Util.mix({
+					attr: S.mix({
 						stroke: curColor.DEFAULT
 					}, self._cfg.line.attr),
 					isShow: true
@@ -326,9 +683,9 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			return self._lines;
 		},
-		
+		//处理颜色模版
 		processAttr: function(attrs, color) {
-			var newAttrs = Util.clone(attrs);
+			var newAttrs = S.clone(attrs);
 			for (var i in newAttrs) {
 				if (newAttrs[i] && typeof newAttrs[i] == "string") {
 					newAttrs[i] = newAttrs[i].replace(COLOR_TPL, color);
@@ -336,9 +693,9 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			return newAttrs;
 		},
-		
+		//画圆点
 		drawStocks: function(lineIndex, attr) {
-			
+			// if (!this._cfg.points.isShow) return;
 			var self = this,
 				stocks = [];
 			for (var i in self._points[lineIndex]) {
@@ -346,7 +703,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			return stocks;
 		},
-		
+		//画单个圆点
 		drawStock: function(lineIndex, stockIndex,attrs) {
 			if (!this._cfg.points.isShow && attrs === undefined) return;
 			var self = this,
@@ -365,7 +722,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				$stock;
 
 			if (x !== undefined && y !== undefined) {
-				if (Util.isFunction(template)) {
+				if (S.isFunction(template)) {
 					return template({
 						paper: paper,
 						lineIndex: lineIndex,
@@ -396,7 +753,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			return;
 		},
-		
+		//参照线
 		drawPointLine: function() {
 			if (!this._cfg.comparable) return;
 			var self = this,
@@ -408,7 +765,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			});
 			return self._pointline;
 		},
-		
+		//渲染tip
 		renderTip: function() {
 			if (!this._cfg.tip.isShow) return;
 			var self = this,
@@ -420,7 +777,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 					width: ctn.width,
 					height: ctn.height
 				} : {},
-				tipCfg = Util.mix(_cfg.tip, {
+				tipCfg = S.mix(_cfg.tip, {
 					rootNode: self._$ctnNode,
 					clsName: _cfg.themeCls,
 					boundry: boundryCfg
@@ -428,7 +785,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			self.tip = new Tip(tipCfg);
 			return self.tip;
 		},
-		
+		//渲染事件层
 		renderEvtLayout: function() {
 			var self = this,
 				x,
@@ -443,7 +800,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			if (!self._evtEls.paper) {
 				paper = self._evtEls.paper = new HtmlPaper(self._$ctnNode, {
 					clsName: evtLayoutCls,
-					prependTo: false, 
+					prependTo: false, //appendTo
 					width: ctn.width,
 					height: h,
 					left: ctn.tl.x,
@@ -473,7 +830,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				var stocks = self._stocks[i],
 					tmp = [],
 					points = stocks['points'];
-				
+				// if (stocks['stocks']) {
 				for (var j in points) {
 					tmp[j] = {
 						x: points[j].x - w / 2,
@@ -483,10 +840,10 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 					};
 				}
 				rects[i] = tmp;
-				
+				// }
 			}
 		},
-		
+		//清除事件层
 		clearEvtLayout: function() {
 			var self = this;
 			if (self._evtEls._areas && self._evtEls._areas.length) {
@@ -505,11 +862,11 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			var stocks = self._stocks;
 
 			var innerContainer = self._innerContainer;
-			var colors = self.color._colors, 
+			var colors = self.color._colors, //legend icon 的颜色表，循环
 				len = colors.length,
 				cfg = self._cfg,
 				series = self._cfg.series
-			var __legendCfg = Util.map(series, function(serie, i) {
+			var __legendCfg = S.map(series, function(serie, i) {
 				i = i % len;
 				var item = {},
 					color = colors[i]
@@ -522,10 +879,10 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				return item;
 			});
 
-			var globalConfig = Util.merge({
-				interval: 20, 
-				iconright: 5, 
-				showicon: true 
+			var globalConfig = S.merge({
+				interval: 20, //legend之间的间隔
+				iconright: 5, //icon后面的空白
+				showicon: true //默认为true. 是否显示legend前面的小icon——可能用户有自定义的需求
 			}, cfg.legend.globalConfig);
 
 			self.legend = new Legend({
@@ -564,7 +921,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			var self = this,
 				_cfg = self._cfg,
 				evtEls = self._evtEls,
-				
+				//当前选中的直线 返回索引或undefined
 				curStockIndex = self.curStockIndex = (function() {
 					for (var i in self._stocks) {
 						if (self._stocks[i]['stocks']) {
@@ -574,7 +931,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				})();
 			self.curLineIndex = self.getFirstVisibleLineIndex();
 			Evt.detach(evtEls.paper.$paper, "mouseleave");
-			
+			// 绑定画布mouseleave事件
 			Evt.on(evtEls.paper.$paper, "mouseleave", function(e) {
 				self._lines[0]['line'].attr(self._lines[0]['attr']);
 				self.tip && self.tip.hide();
@@ -586,24 +943,24 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				self.paperLeave();
 			});
 			Evt.detach(evtEls.paper.$paper, "mousemove");
-			
+			// 绑定mousemove事件
 			Evt.on(evtEls.paper.$paper, "mousemove", function(e) {
-				
+				//fix firefox offset bug
 				e = self.getOffset(e);
-				
+				//mousemove代理
 				self.delegateMouseMove(e);
 			});
 
 			Evt.detach(evtEls.paper.$paper, "click");
-			
+			// 绑定mousemove事件
 			Evt.on(evtEls.paper.$paper, "click", function(e) {
-				
+				//fix firefox offset bug
 				e = self.getOffset(e);
-				
+				//mousemove代理
 				self.delegateClick(e);
 			});
 		},
-		
+		//mouseclick代理
 		delegateClick: function(e) {
 			var self = this,
 				ctn = self.getInnerContainer();
@@ -618,7 +975,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				}
 			}
 		},
-		
+		//mousemove代理
 		delegateMouseMove: function(e) {
 			var self = this,
 				ctn = self.getInnerContainer(),
@@ -645,7 +1002,9 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				}
 			}
 		},
-		
+		/**
+			TODO 线条切换
+		**/
 		lineChangeTo: function(lineIndex) {
 			var self = this,
 				_cfg = self._cfg,
@@ -673,10 +1032,10 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				currentPoints = self._points[lineIndex],
 				currentStocks = self._stocks[lineIndex],
 				curPoint = currentPoints[stockIndex],
-				color = self._lines[lineIndex]['color']['DEFAULT'], 
+				color = self._lines[lineIndex]['color']['DEFAULT'], //获取当前直线的填充色
 				tipData;
 			if (!tpl || !_cfg.tip.isShow || self.curStockIndex === undefined) return;
-			
+			// 如果tip需要展示多组数据 则存放数组
 			if (self._cfg.comparable) {
 				var tipAllDatas = {datas: {}};
 				var tmpArray = [];
@@ -684,7 +1043,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 					if (self._stocks[i]['stocks']) {
 						if (self._points[i][stockIndex].dataInfo) {
 							self._points[i][stockIndex].dataInfo.color = self._stocks[i]['color']['DEFAULT']
-							var tmp = Util.merge(self._points[i][stockIndex].dataInfo, series[i]);
+							var tmp = S.merge(self._points[i][stockIndex].dataInfo, series[i]);
 							delete tmp.data;
 							tipAllDatas.datas[i] = tmp;
 						}
@@ -695,7 +1054,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				tipAllDatas.datas = BaseChart.prototype.arraySort(tmpArray, true, "y");
 				tipData = tipAllDatas;
 			} else {
-				tipData = Util.merge(self._points[lineIndex][stockIndex].dataInfo, series[lineIndex]);
+				tipData = S.merge(self._points[lineIndex][stockIndex].dataInfo, series[lineIndex]);
 				delete tipData['data'];
 			}
 			self.stockChange(lineIndex,stockIndex);
@@ -734,7 +1093,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				}
 			}
 			if (self._points[lineIndex][stockIndex].dataInfo && self._lines[lineIndex]['isShow']) {
-				var e = Util.mix({
+				var e = S.mix({
 					target: tgt,
 					currentTarget: tgt,
 					lineIndex: Math.round(lineIndex),
@@ -743,7 +1102,10 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				self.fire("stockChange", e);
 			}
 		},
-		
+		/**
+			TODO 获取当前index的point不为空的lineIndex
+			@return lineIndex
+		**/
 		getFirstNotEmptyPointsLineIndex: function(pointIndex) {
 			var self = this;
 			for (var i in self._points) {
@@ -753,7 +1115,9 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			return "";
 		},
-		
+		/**
+			TODO 判断可见直线的index
+		**/
 		getFirstVisibleLineIndex: function() {
 			var self = this;
 			for (var i in self._lines) {
@@ -762,7 +1126,9 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				}
 			}
 		},
-		
+		/**
+			TODO 判断是否为空数据点
+		**/
 		isEmptyPoint: function(point) {
 			if (point && point['dataInfo']) {
 				return false;
@@ -783,21 +1149,21 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			}
 			delete self._stocks[lineIndex]['stocks'];
 		},
-		
+		//line area transform anim
 		transformLine: function(lineIndex) {
 			var self = this;
 			var duration = 500;
 			var newPath = BaseChart.Common.getLinePath.call(null, self, self._points[lineIndex]);
 			var oldPath = self._lines[lineIndex]['path'];
-			
+			//防止不必要的动画
 			if (oldPath != newPath && newPath != "") {
-				
+				// 动画状态
 				self._isAnimating = true;
-				
+				//区域动画
 				self.__transformArea(lineIndex,duration);
-				
+				//点动画
 				self.__transformStock(lineIndex,duration);
-				
+				//线动画
 				self.__transformLine(lineIndex,{path: newPath},duration,function(){
 					self._isAnimating = false;
 				});
@@ -825,7 +1191,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			for (var j in stocks['stocks']) {
 					if (stocks['stocks'][j]) {
 						stock = stocks['stocks'][j];
-						
+						//transform进行动画需要计算动画开始和结束的偏移量
 						stock.stop().animate({
 							transform: "T" + (stocks['points'][j]['x'] - stocks['stocks'][j].attr("cx")) + 
 							           "," + (stocks['points'][j]['y'] - stocks['stocks'][j].attr("cy"))
@@ -833,7 +1199,9 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 					}
 				}
 		},
-		
+		/*
+			TODO 移除直线及直线上的点和对应的区域
+		*/
 		removeLine: function(lineIndex) {
 			var self = this;
 			self._lines[lineIndex]['line'].remove();
@@ -847,7 +1215,9 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 				self._stocks[i]['points'] = self._points[i];
 			}
 		},
-		
+		/**
+			TODO 隐藏单条直线
+		**/
 		hideLine: function(lineIndex) {
 			var self = this,
 				stock;
@@ -856,7 +1226,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			if (lineIndex == self.curLineIndex) {
 				self.curLineIndex = self.getFirstVisibleLineIndex();
 			}
-			
+			//删除某条线的数据
 			BaseChart.prototype.removeData.call(self, lineIndex);
 			BaseChart.Common.animateGridsAndLabels.call(null, self);
 			self.removeLine(lineIndex);
@@ -868,8 +1238,11 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			self.clearEvtLayout();
 			self.renderEvtLayout();
 			self.bindEvt();
+			S.log(self)
 		},
-		
+		/**
+			TODO 显示单条直线
+		**/
 		showLine: function(lineIndex) {
 			var self = this,
 				duration = 500,
@@ -899,7 +1272,7 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			var self = this,
 				currentStocks = self._stocks[lineIndex],
 				tgt = currentStocks['stocks'] && currentStocks['stocks'][stockIndex];
-			var e = Util.mix({
+			var e = S.mix({
 				target: tgt,
 				currentTarget: tgt,
 				lineIndex: Math.round(lineIndex),
@@ -915,19 +1288,56 @@ define('kg/kcharts/5.0.0/linechart/index',["util","node","base","event-dom","kg/
 			var self = this;
 			self.fire("afterRender", self);
 		},
-		
+		/*
+			TODO get htmlpaper
+			@return {object} HtmlPaper
+		*/
 		getHtmlPaper: function() {
 			return this.htmlPaper;
 		},
-		
+		/*
+			TODO get raphael paper
+			@return {object} Raphael
+		*/
 		getRaphaelPaper: function() {
 			return this.paper;
 		},
-		
+		/*
+			TODO clear all nodes
+		*/
 		clear: function() {
 			this._$ctnNode.html("");
 		}
 	};
 
-	return BaseChart.extend(methods);
+	var LineChart;
+	if (Base.extend) {
+		LineChart = BaseChart.extend(methods);
+	} else {
+		LineChart = function(cfg) {
+			var self = this;
+			self.userConfig = cfg;
+			self.init();
+		};
+		S.extend(LineChart, BaseChart, methods);
+	}
+	return LineChart;
+}, {
+	requires: [
+		'base',
+		'node',
+		'dom', 'event',
+		'kg/kcharts/6.0.1/template/index',
+		'kg/kcharts/6.0.1/raphael/index',
+		'kg/kcharts/6.0.1/basechart/index',
+		'kg/kcharts/6.0.1/tools/color/index',
+		'kg/kcharts/6.0.1/tools/htmlpaper/index',
+		'kg/kcharts/6.0.1/legend/index',
+		'./theme',
+		'kg/kcharts/6.0.1/tools/touch/index',
+		'kg/kcharts/6.0.1/tip/index',
+		'kg/kcharts/6.0.1/animate/index',
+		'kg/kcharts/6.0.1/tools/graphtool/index',
+		'./cfg'
+	]
 });

@@ -1,10 +1,15 @@
-define('kg/kcharts/5.0.0/scatterchart/theme',[],function(require, exports, module) {
+/*
+combined files : 
 
+kg/kcharts/6.0.1/scatterchart/theme
+
+*/
+;KISSY.add('kg/kcharts/6.0.1/scatterchart/theme',function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
 	var themeCfg = {
-		
+		//默认主题
 		"ks-chart-default":{
 			title:{
 		           content:"",

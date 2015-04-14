@@ -1,18 +1,5 @@
-define(function(require,exports,module) {
-
-  var Util = require("util"),
-    Node = require("node"),
-    Base = require("base"),
-    D = require("dom"),
-    E = require("event-dom"),
-    Icons = require("kg/kcharts/5.0.0/icons/index"),
-    Animation = require("kg/kcharts/5.0.0/animate/index"),
-    Raphael = require("kg/kcharts/5.0.0/raphael/index");
-
-  var $ = Node.all;
-
-
-  var merge = Util.merge;
+;KISSY.add(function(S,Base,Node,D,E,Icons,Animation){
+  var merge = S.merge;
 
   var unit = Icons.BASIC[1];
 
@@ -21,9 +8,9 @@ define(function(require,exports,module) {
 
   //获取content的尺寸
   var $detector
-    , $body = Node.one(document.body)
+    , $body = S.one(document.body)
   function sizeof(html){
-    $detector || ($detector = Node.all("<div/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo($body));
+    $detector || ($detector = S.Node("<div/>").css({"visibility":"hidden","position":"fixed","left":'-9999em',"top":0}).appendTo($body));
     D.append(html,$detector);
     var ret = {
       width:D.outerWidth($detector),
@@ -74,10 +61,10 @@ define(function(require,exports,module) {
             "color":"#ccc"
           }
         };
-    if(Util.isFunction(o)){
-      style = Util.mix(style,o(this,this.index));
+    if(S.isFunction(o)){
+      style = S.mix(style,o(this,this.index));
     }else{
-      style = Util.mix(style,o)
+      style = S.mix(style,o)
     }
     var $icon = this.icon,
         $text = this.des
@@ -96,10 +83,10 @@ define(function(require,exports,module) {
             "color":item.DEFAULT
           }
         };
-    if(Util.isFunction(o)){
-      style = Util.mix(style,o(this,this.index));
+    if(S.isFunction(o)){
+      style = S.mix(style,o(this,this.index));
     }else{
-      style = Util.mix(style,o)
+      style = S.mix(style,o)
     }
     var $icon = this.icon,
         $text = this.des
@@ -120,7 +107,7 @@ define(function(require,exports,module) {
 
        //this.set("paper")
        //自定义的icon绘制函数
-       if(icon && Util.isFunction(icon)){
+       if(icon && S.isFunction(icon)){
          this.icon = icon;
        }
        this.align(align);
@@ -141,7 +128,7 @@ define(function(require,exports,module) {
      bindEvent:function(){
        var els = this.get("els")
          , that = this;
-       Util.each(els,function(el){
+       S.each(els,function(el){
          var $icon = el.icon
            , $text = el.des
            , evtdata = {
@@ -150,7 +137,7 @@ define(function(require,exports,module) {
              index:el.index,
              el:el
            };
-         Util.each(["click","mouseover","mouseout"],function(e,i){
+         S.each(["click","mouseover","mouseout"],function(e,i){
            $icon[e](function(){
              that.fire(e,evtdata)
            })
@@ -164,10 +151,10 @@ define(function(require,exports,module) {
      unbindEvent:function(){
        var els = this.get("els")
          , that = this;
-       Util.each(els,function(el){
+       S.each(els,function(el){
          var $icon = el.icon
            , $text = el.des
-         Util.each(["click","mouseover","mouseout"],function(e,i){
+         S.each(["click","mouseover","mouseout"],function(e,i){
            $icon['un'+e]();
            $text.detach(e);
          });
@@ -176,7 +163,7 @@ define(function(require,exports,module) {
      remmoveLegendIconAndText:function(){
        var els = this.get("els")
          , that = this;
-       Util.each(els,function(el){
+       S.each(els,function(el){
          var $icon = el.icon
            , $text = el.des
          $icon.remove();
@@ -292,9 +279,9 @@ define(function(require,exports,module) {
        //文案宽度
        var text_total_width = 0
          , cache = []
-       Util.each(config,function(item,key){
+       S.each(config,function(item,key){
          var text = item.text || "data"+key;
-         var $text = Node.all('<span class="kcharts-legend-item">'+text+'</span>');
+         var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
          var text_size = sizeof($text);
          text_total_width+=text_size.width;
          cache.push({el:$text,width:text_size.width,height:text_size.height,zIndex:10,cursor:"pointer"});
@@ -343,7 +330,7 @@ define(function(require,exports,module) {
          iconright:iconright
        };
 
-       Util.each(config,function(item,key){
+       S.each(config,function(item,key){
          if(alignhook){
            alignconfig = alignhook.call(that,alignconfig,key);
          }
@@ -354,7 +341,7 @@ define(function(require,exports,module) {
          var $icon = that.icon(cx,cy,$iconsize,item.icontype || alignconfig.icontype)
            , ibbox = $icon.getBBox()
          var attr = {};
-         Util.mix(attr,item,true,["DEFAULT","HOVER"]);
+         S.mix(attr,item,true,["DEFAULT","HOVER"]);
          var oo = {fill:attr.DEFAULT}
          if(attrhook){
            oo = S.merge({fill:attr.DEFAULT},attrhook.call(that,key));
@@ -367,7 +354,7 @@ define(function(require,exports,module) {
          D.html($text,text);
          var text_size = sizeof($text)
            , left , top
-         $text = $('<span class="kcharts-legend-item">'+text+'</span>');
+         $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
 
          left = x+alignconfig.iconsize+alignconfig.iconright
          top = y - (ibbox.height/2 + (text_size.height - ibbox.height)/2 );
@@ -469,7 +456,7 @@ define(function(require,exports,module) {
        $icon.remove();
 
        var text = item.text || "data";
-       var $text = $('<span class="kcharts-legend-item">'+text+'</span>');
+       var $text = S.Node('<span class="kcharts-legend-item">'+text+'</span>');
        var text_size = sizeof($text)
        var max_height = Math.max(text_size.height,ibbox.height)
        total_height += max_height*len + interval*(len-1)
@@ -479,8 +466,8 @@ define(function(require,exports,module) {
        var x0
          , y0
          , x , y
-       Util.each(config,function(item,key){
-         var $text = $('<span class="kcharts-legend-item">'+item.text+'</span>');
+       S.each(config,function(item,key){
+         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>');
          var text_size = sizeof($text)
          var text = item.text || "data"+key;
 
@@ -522,7 +509,7 @@ define(function(require,exports,module) {
          iconright:iconright
        };
 
-       Util.each(config,function(item,key){
+       S.each(config,function(item,key){
          if(alignhook){
            alignconfig = alignhook.call(that,alignconfig,key);
          }
@@ -539,7 +526,7 @@ define(function(require,exports,module) {
            , ibbox = $icon.getBBox()
            , cache_item = cache[key];
          var attr = {};
-         Util.mix(attr,item,true,["DEFAULT","HOVER"]);
+         S.mix(attr,item,true,["DEFAULT","HOVER"]);
          var oo = {fill:attr.DEFAULT}
          if(attrhook){
            oo = S.merge(oo,attrhook.call(that,key));
@@ -547,7 +534,7 @@ define(function(require,exports,module) {
          oo.stroke = oo.fill;
          $icon.attr(oo);
 
-         var $text = $('<span class="kcharts-legend-item">'+item.text+'</span>')//cache_item['el']
+         var $text = S.Node('<span class="kcharts-legend-item">'+item.text+'</span>')//cache_item['el']
            , left
            , top;
          if(!reverse){
@@ -621,5 +608,24 @@ define(function(require,exports,module) {
    };
 
 
-  return Base.extend(methods);
+   if(Base.extend){
+     Legend = Base.extend(methods);
+   }else{
+     Legend = function (opts){
+       opts = S.merge(dft,opts);
+       this.set(opts);
+       this.initializer();
+     }
+     S.extend(Legend,Base,methods);
+   }
+  return Legend;
+},{
+  requires:[
+    "base",
+    "node",
+    "dom","event",
+    "kg/kcharts/6.0.1/icons/index",
+    "kg/kcharts/6.0.1/animate/index",
+    "kg/kcharts/6.0.1/raphael/index"
+  ]
 });

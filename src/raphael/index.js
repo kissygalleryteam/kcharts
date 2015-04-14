@@ -1,4 +1,4 @@
-define(function(require,exports,module){
+;KISSY.add(function(S){
 
   (function(win){
       // ┌────────────────────────────────────────────────────────────────────┐ \\
@@ -604,7 +604,7 @@ define(function(require,exports,module){
         "font-weight": 400,
         gradient: 0,
         height: 0,
-        href: "http:\/\/raphaeljs.com\/",
+        href: "http://raphaeljs.com/",
         "letter-spacing": 0,
         opacity: 1,
         path: "M0,0",
@@ -747,7 +747,7 @@ define(function(require,exports,module){
      **
      * Can be “SVG”, “VML” or empty, depending on browser support.
     \*/
-    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http:\/\/www.w3.org\/TR\/SVG11\/feature#BasicStructure", "1.1") ? "SVG" : "VML");
+    R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ? "SVG" : "VML");
     if (R.type == "VML") {
       var d = g.doc.createElement("div"),
         b;
@@ -6082,7 +6082,7 @@ define(function(require,exports,module){
         eve = R.eve,
         E = "",
         S = " ";
-      var xlink = "http:\/\/www.w3.org\/1999\/xlink",
+      var xlink = "http://www.w3.org/1999/xlink",
         markers = {
           block: "M5,0 0,2.5 5,5z",
           classic: "M5,0 0,2.5 5,5 3.5,3 3.5,2z",
@@ -8602,6 +8602,6 @@ define(function(require,exports,module){
 
   })(window);
 
-  module.exports =  window.Raphael;
+  return window.Raphael;
 
 })

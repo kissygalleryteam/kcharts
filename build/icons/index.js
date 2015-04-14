@@ -1,13 +1,12 @@
-define('kg/kcharts/5.0.0/icons/index',["util","node","base","dom","event-dom"],function(require, exports, module) {
+/*
+combined files : 
 
-  var Util = require("util"),
-    Node = require("node"),
-    Base = require("base"),
-    D = require("dom"),
-    E = require("event-dom");
+kg/kcharts/6.0.1/icons/index
 
-  var merge = Util.merge
-    , isArray = Util.isArray
+*/
+;KISSY.add('kg/kcharts/6.0.1/icons/index',function(S){
+  var merge = S.merge
+    , isArray = S.isArray
 
   var BASIC_SIZE = [10,6];
   var M = "M",L="L",Z = "Z";
@@ -117,7 +116,7 @@ define('kg/kcharts/5.0.0/icons/index',["util","node","base","dom","event-dom"],f
         }else{
           _item = ret;
         }
-        _item.attr(Util.merge({"stroke-width":0},opt.attrs));
+        _item.attr(S.merge({"stroke-width":0},opt.attrs));
         return ret;
       }
     })(x);
@@ -125,3 +124,4 @@ define('kg/kcharts/5.0.0/icons/index',["util","node","base","dom","event-dom"],f
   Icons.BASIC = BASIC_SIZE;
   return Icons;
 });
+

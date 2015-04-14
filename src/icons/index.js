@@ -1,12 +1,6 @@
-define(function(require,exports,module) {
-  var Util = require("util"),
-    Node = require("node"),
-    Base = require("base"),
-    D = require("dom"),
-    E = require("event-dom");
-
-  var merge = Util.merge
-    , isArray = Util.isArray
+;KISSY.add(function(S){
+  var merge = S.merge
+    , isArray = S.isArray
 
   var BASIC_SIZE = [10,6];
   var M = "M",L="L",Z = "Z";
@@ -116,7 +110,7 @@ define(function(require,exports,module) {
         }else{
           _item = ret;
         }
-        _item.attr(Util.merge({"stroke-width":0},opt.attrs));
+        _item.attr(S.merge({"stroke-width":0},opt.attrs));
         return ret;
       }
     })(x);

@@ -1,10 +1,15 @@
-define('kg/kcharts/5.0.0/linechart/theme',[],function(require, exports, module) {
+/*
+combined files : 
 
+kg/kcharts/6.0.1/linechart/theme
+
+*/
+;KISSY.add('kg/kcharts/6.0.1/linechart/theme',function(S){
 
 	var COLOR_TPL = "{COLOR}";
 
 	var themeCfg = {
-		
+		//默认主题
 		"ks-chart-default":{
 			title:{
 		           content:"",

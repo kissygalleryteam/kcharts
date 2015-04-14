@@ -1,16 +1,23 @@
-define('kg/kcharts/5.0.0/dashboard/dashboard-ticks',["util","base"],function(require, exports, module) {
+/*
+combined files : 
 
-  var Util = require('util'),
-      Base = require('base');
+kg/kcharts/6.0.1/dashboard/dashboard-ticks
+
+*/
+/**
+ * 矢量画刻度
+ * @author cookieu@gmail.com
+ * */
+;KISSY.add('kg/kcharts/6.0.1/dashboard/dashboard-ticks',function(S,Base){
    var methods = {
      initializer:function(){
        var cfg = this.get('cfg')
-       var n          
-         , m          
-         , start      
+       var n          // 圆被分成的份数
+         , m          // 粗线
+         , start      // 始末弧度
          , end
-         , totalAngle 
-         , step       
+         , totalAngle //end - start
+         , step       // 步长
          , r = cfg.r1 || 100
          , r2 = cfg.r2 || 105
          , R = cfg.R || 110
@@ -35,7 +42,7 @@ define('kg/kcharts/5.0.0/dashboard/dashboard-ticks',["util","base"],function(req
        end -= Math.PI
 
        totalAngle = end - start
-       
+       // step = parseFloat((totalAngle / n).toFixed(2))
        step = totalAngle / n
 
        for(var i=0;i<=n;i+=1){
@@ -58,7 +65,7 @@ define('kg/kcharts/5.0.0/dashboard/dashboard-ticks',["util","base"],function(req
          , style4thin = {
 
          }
-       Util.mix(style4thin,cfg.thinStyle,true,['stroke-width','stroke'])
+       S.mix(style4thin,cfg.thinStyle,true,['stroke-width','stroke'])
        thinTick.attr(style4thin)
        if(m){
          var patharray4thick = []
@@ -77,10 +84,26 @@ define('kg/kcharts/5.0.0/dashboard/dashboard-ticks',["util","base"],function(req
            , style4thick = {
              'stroke-width':2
            }
-         Util.mix(style4thick,cfg.thickStyle,true,['stroke-width','stroke'])
+         S.mix(style4thick,cfg.thickStyle,true,['stroke-width','stroke'])
          thick.attr(style4thick)
        }
      }
    }
-   return Base.extend(methods);
- })
+
+   var Ticks;
+
+   if(Base.extend){
+     Ticks = Base.extend(methods);
+   }else{
+     Ticks = function (cfg){
+       this.set(cfg);
+       this.userConfig = cfg;
+       this.initializer();
+     }
+     S.extend(Ticks,Base,methods);
+   }
+   return Ticks
+ },{
+   requires:["base"]
+})
+
